@@ -90,7 +90,11 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
   };
 
   const maseVal = parseFloat(String(selectedMetrics.mase));
-  const beatsNaive = !isNaN(maseVal) && maseVal < 1.0;
+  const selectedRmse = parseFloat(String(selectedMetrics.rmse));
+  const naiveRmse = parseFloat(String(company.metrics.naive?.rmse));
+  const maseBelowDevelopmentScale = !isNaN(maseVal) && maseVal < 1.0;
+  const beatsNaive =
+    !isNaN(selectedRmse) && !isNaN(naiveRmse) && selectedRmse < naiveRmse;
   const productionDates = company.productionBacktestDates ?? [];
   const productionActual = company.productionBacktestActual ?? [];
   const productionByModel = company.productionBacktestByModel ?? {};
@@ -349,8 +353,8 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                 }`}
               >
                 {beatsNaive
-                  ? "✓ Beats Naive Baseline (MASE < 1.0)"
-                  : "⚠ Worse Than Naive (MASE ≥ 1.0)"}
+                  ? "✓ Lower held-out RMSE than Naive"
+                  : "⚠ Did not beat Naive held-out RMSE"}
               </span>
             </div>
           </div>
@@ -374,12 +378,12 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
               <p className="text-xs text-slate-400 mb-0.5">MASE</p>
               <p
                 className={`text-lg font-bold font-mono ${
-                  beatsNaive ? "text-green-400" : "text-amber-400"
+                  maseBelowDevelopmentScale ? "text-green-400" : "text-amber-400"
                 }`}
               >
                 {formatNum(selectedMetrics.mase, 4)}
               </p>
-              <p className="text-[11px] text-slate-500 mt-0.5">&lt; 1.0 beats naive</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">Compared with development scale</p>
             </div>
             <div className="bg-dark-bg border border-dark-border rounded-lg p-3.5">
               <p className="text-xs text-slate-400 mb-0.5">Goodness-of-Fit (R²)</p>
@@ -392,9 +396,10 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
 
           <p className="text-xs text-slate-400 mt-3.5 leading-relaxed">
             <strong className="text-slate-300">Note: </strong>
-            MASE below 1.0 indicates lower forecast error than the naive baseline (predicting
-            tomorrow&apos;s close equals today&apos;s close). R² is a supplementary goodness-of-fit
-            metric and is not a forecast confidence probability.
+            MASE below 1.0 means evaluation MAE is below the development-series one-step
+            scale; it does not by itself show that the selected model beat Naive on held-out
+            dates. R² can be negative and is supplementary—not percentage accuracy or a
+            forecast confidence probability.
           </p>
         </section>
       )}
@@ -552,14 +557,14 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             </p>
             <p>
               &bull; <strong className="text-slate-300">MASE Benchmark: </strong>
-              MASE &lt; 1.0 indicates better performance than the naive baseline, MASE = 1.0
-              indicates approximately equal performance, and MASE &gt; 1.0 indicates worse
-              performance.
+              MASE divides evaluation MAE by the development-series one-step error scale.
+              Compare held-out RMSE directly with Naive to determine which evaluated method
+              performed better.
             </p>
             <p>
               &bull; <strong className="text-slate-300">R² Interpretation: </strong>
-              R² measures explained variance in held-out price levels and is not a forecast
-              confidence probability.
+              R² is supplementary, can be negative, and is neither percentage accuracy nor a
+              forecast confidence probability. It does not select the winning model.
             </p>
           </div>
         </section>

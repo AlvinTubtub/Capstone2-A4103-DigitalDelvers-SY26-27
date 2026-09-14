@@ -82,7 +82,7 @@ const BEGINNER_GUIDE_CARDS: BeginnerGuideCardItem[] = [
     accent: "text-amber-400 bg-amber-500/15 border-amber-500/30",
     badgeLabel: "Rule 2",
     description:
-      "Always review the Backtest, Forecast Error, RMSE, MAE, MASE, and R² to see how accurately each model has performed historically before interpreting a forecast.",
+      "Always review the Backtest, Forecast Error, RMSE, MAE, MASE, and R² to understand historical evaluation performance before interpreting a forecast.",
   },
   {
     step: 3,

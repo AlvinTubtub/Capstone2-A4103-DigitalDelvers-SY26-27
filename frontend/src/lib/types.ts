@@ -74,9 +74,31 @@ export interface MetricsData {
   lastRunAt?: string | null;
   status?: string;
   aggregate: Record<string, { rmse: number; mae: number; mase: number; r2: number }>;
+  aggregateStatistic?: "median";
+  crossCompany?: {
+    companyCount: number;
+    selectionBasis: string;
+    tiePolicy: string;
+    bestEvaluatedMethod: string;
+    worstEvaluatedMethod: string;
+    methods: Record<string, {
+      medianMase: number;
+      medianRmseRank: number;
+      principalWinCount: number;
+      evaluatedWinCount: number;
+      beatsNaiveCount: number;
+    }>;
+  };
   bestModel: string;
   worstModel: string;
-  perCompany: Record<string, { metrics: Record<string, ModelMetric>; bestModel: string }>;
+  perCompany: Record<string, {
+    metrics: Record<string, ModelMetric>;
+    bestModel: string;
+    bestPrincipalModel?: string;
+    bestEvaluatedMethod?: string;
+    bestPrincipalBeatsNaive?: boolean;
+    allPrincipalsWorseThanNaive?: boolean;
+  }>;
   statisticalTests: Record<string, unknown>;
 }
 

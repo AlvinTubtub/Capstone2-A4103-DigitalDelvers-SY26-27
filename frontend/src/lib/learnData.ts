@@ -279,13 +279,13 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
   {
     term: "MASE (Mean Absolute Scaled Error)",
     category: "forecastph",
-    shortDef: "Benchmark comparison (< 1.0 beats the naive baseline).",
-    detailedDef: "Scale-free metric comparing model error against a naive 'tomorrow equals today' baseline. Values below 1.0 indicate the model outperformed the naive benchmark.",
+    shortDef: "Evaluation MAE scaled by development-series one-step changes.",
+    detailedDef: "Scale-free metric dividing evaluation MAE by the common one-step absolute-change scale from development Close. Values below 1.0 are below that development scale, but do not by themselves prove the model beat Naive on held-out dates.",
   },
   {
     term: "R² (Goodness-of-Fit)",
     category: "forecastph",
-    shortDef: "Proportion of held-out evaluation variance explained by the model.",
-    detailedDef: "Measures statistical goodness-of-fit against the mean. Note that in financial time-series forecasting, R² is an explanatory indicator and never a guarantee of accuracy.",
+    shortDef: "Supplementary held-out goodness-of-fit that can be negative.",
+    detailedDef: "Measures statistical goodness-of-fit against the mean. R² is not percentage accuracy, does not select the winning model, and never guarantees future performance.",
   },
 ];

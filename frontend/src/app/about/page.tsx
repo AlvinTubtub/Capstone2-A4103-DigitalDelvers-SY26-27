@@ -244,7 +244,7 @@ export default async function AboutPage() {
                 Backtest & Evaluation
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Chronological out-of-sample evaluation calculating RMSE, MAE, MASE (&lt; 1.0 threshold), and R² on common target dates.
+                Chronological out-of-sample evaluation calculating RMSE, MAE, development-scaled MASE, and supplementary R² on common target dates.
               </p>
             </div>
             <div className="text-[11px] font-semibold text-amber-400 pt-2 border-t border-dark-border/50 flex items-center justify-between">
@@ -507,15 +507,15 @@ export default async function AboutPage() {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">Metric 3</span>
               <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-500/20 text-brand-300 border border-brand-500/30">
-                &lt; 1.0 = Beats Naïve
+                &lt; 1.0 = Below Development Scale
               </span>
             </div>
             <h4 className="font-bold text-white text-base">MASE</h4>
             <p className="text-[11px] text-slate-400 font-medium">Mean Absolute Scaled Error</p>
             <p className="text-xs text-slate-300 leading-relaxed">
-              The gold-standard benchmark comparing model MAE against a <strong className="text-white">Naïve Persistence Baseline</strong> (predicting tomorrow equals today).
+              Evaluation MAE divided by one common one-step absolute-change scale calculated from each company&apos;s development Close series.
               <span className="block mt-1 text-emerald-300 font-semibold">
-                MASE &lt; 1.0 indicates lower scaled error than the Naive benchmark.
+                MASE &lt; 1.0 does not by itself prove lower held-out error than the separately evaluated Naive method.
               </span>
             </p>
           </div>
@@ -523,12 +523,12 @@ export default async function AboutPage() {
           <div className="bg-dark-bg/80 border border-dark-border rounded-xl p-4.5 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">Metric 4</span>
-              <span className="text-xs font-semibold text-emerald-400">Closer to 1.0 is better</span>
+              <span className="text-xs font-semibold text-emerald-400">Supplementary metric</span>
             </div>
             <h4 className="font-bold text-white text-base">R² Score</h4>
             <p className="text-[11px] text-slate-400 font-medium">Coefficient of Determination</p>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Quantifies the proportion of historical variance in closing prices explained by the model. Values closer to 1.0 indicate strong correlation with true price movements.
+              Measures goodness of fit on the evaluated sample. Higher is generally better, but values can be negative. R² is not percentage accuracy and is not used for tuning, winner selection, or deployment.
             </p>
           </div>
         </div>
@@ -540,7 +540,7 @@ export default async function AboutPage() {
             <span>Common Chronological Evaluation</span>
           </div>
           <p className="leading-relaxed text-slate-400">
-            ForecastPH evaluates Lag-Informed Regression, ARIMA, LSTM, and the Naive benchmark on the same held-out target dates for each company. Principal models are ranked by full-precision evaluation RMSE.
+            ForecastPH evaluates Lag-Informed Regression, ARIMA, LSTM, and the Naive benchmark on the same held-out target dates for each company. The best principal model is the lowest-RMSE deployable model; the best evaluated method also includes Naive and may therefore differ.
           </p>
         </div>
       </section>

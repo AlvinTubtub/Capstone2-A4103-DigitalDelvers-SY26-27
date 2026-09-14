@@ -23,7 +23,12 @@ from src.evaluation.metrics import (
     compute_evaluation_metrics,
     compute_mase_denominator,
 )
-from src.evaluation.model_selection import ModelRanking, rank_principal_models
+from src.evaluation.model_selection import (
+    CompanyModelSelection,
+    ModelRanking,
+    rank_evaluated_methods,
+    select_company_models,
+)
 from src.features.regression_features import build_regression_dataset
 from src.training.train_arima import train_arima_for_evaluation
 from src.training.train_lir import train_lir_for_evaluation
@@ -46,7 +51,7 @@ class ModelPredictionOutput:
 
 @dataclass(frozen=True, slots=True)
 class CompanyEvaluation:
-    """Aligned records, one shared MASE scale, metrics, and principal ranking."""
+    """Aligned records, shared MASE scale, and distinct evaluation conclusions."""
 
     symbol: str
     plan: CompanyEvaluationPlan
@@ -60,6 +65,35 @@ class CompanyEvaluation:
             return dict(self.metrics_by_model)[model]
         except KeyError as exc:
             raise BacktestAlignmentError(f"No metrics for model {model.value}") from exc
+
+    @property
+    def evaluated_ranking(self) -> ModelRanking:
+        """Rank all evaluated methods, including Naive, by company RMSE."""
+
+        return rank_evaluated_methods(dict(self.metrics_by_model))
+
+    @property
+    def best_principal_beats_naive(self) -> bool:
+        """Use a strict RMSE comparison; an exact tie is not a win."""
+
+        return (
+            self.metrics_for(self.principal_ranking.best_model).rmse
+            < self.metrics_for(ModelId.NAIVE).rmse
+        )
+
+    @property
+    def all_principals_worse_than_naive(self) -> bool:
+        """Return true only when Naive has strictly lower RMSE than all principals."""
+
+        naive_rmse = self.metrics_for(ModelId.NAIVE).rmse
+        return all(
+            self.metrics_for(model).rmse > naive_rmse
+            for model in (
+                ModelId.LAG_REGRESSION,
+                ModelId.ARIMA,
+                ModelId.LSTM,
+            )
+        )
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -76,7 +110,12 @@ class CompanyEvaluation:
                 model.value: metrics.as_dict()
                 for model, metrics in self.metrics_by_model
             },
+            "best_principal_model": self.principal_ranking.best_model.value,
+            "best_evaluated_method": self.evaluated_ranking.best_model.value,
+            "best_principal_beats_naive": self.best_principal_beats_naive,
+            "all_principals_worse_than_naive": self.all_principals_worse_than_naive,
             "principal_ranking": self.principal_ranking.as_dict(),
+            "evaluated_ranking": self.evaluated_ranking.as_dict(),
             "backtest": self.backtest.as_dict(),
         }
 
@@ -155,13 +194,24 @@ def evaluate_prediction_outputs(
             ModelId.NAIVE,
         )
     )
-    ranking = rank_principal_models(dict(metrics))
+    selection: CompanyModelSelection = select_company_models(
+        dict(metrics),
+        symbol=plan.symbol,
+    )
+    if selection.all_principals_worse_than_naive:
+        LOGGER.warning(
+            "All principal models underperform Naive by evaluation RMSE symbol=%s",
+            plan.symbol,
+        )
     LOGGER.info(
-        "Completed unified evaluation symbol=%s dates=%d mase_scale=%.10g best_model=%s",
+        "Completed unified evaluation symbol=%s dates=%d mase_scale=%.10g "
+        "best_principal=%s best_evaluated=%s beats_naive=%s",
         plan.symbol,
         len(plan.evaluation_pairs),
         mase_denominator,
-        ranking.best_model.value,
+        selection.best_principal_model.value,
+        selection.best_evaluated_method.value,
+        selection.best_principal_beats_naive,
     )
     return CompanyEvaluation(
         symbol=plan.symbol,
@@ -169,7 +219,7 @@ def evaluate_prediction_outputs(
         mase_denominator=mase_denominator,
         backtest=backtest,
         metrics_by_model=metrics,
-        principal_ranking=ranking,
+        principal_ranking=selection.principal_ranking,
     )
 
 

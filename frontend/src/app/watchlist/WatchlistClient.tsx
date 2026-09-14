@@ -33,12 +33,18 @@ export default function WatchlistClient({
         ([key]) => ({ lag_reg: "Lag-Informed Regression", arima: "ARIMA", lstm: "LSTM", naive: "Naive baseline" }[key] === company.bestModel)
       )?.[0];
       const selectedMetrics = modelKey ? companyMetrics?.metrics[modelKey] : undefined;
+      const selectedRmse = Number(selectedMetrics?.rmse);
+      const naiveRmse = Number(companyMetrics?.metrics.naive?.rmse);
 
       return {
         ...company,
         pesoChange: company.predictedClose - company.latestClose,
         rmse: selectedMetrics?.rmse,
         mase: selectedMetrics?.mase,
+        bestPrincipalBeatsNaive:
+          Number.isFinite(selectedRmse)
+          && Number.isFinite(naiveRmse)
+          && selectedRmse < naiveRmse,
       };
     }),
     [metrics, watchedCompanies]
@@ -252,8 +258,8 @@ export default function WatchlistClient({
                   <MetricRow label="Expected Change" companies={comparisonRows} render={(company) => <span className={company.pctChange >= 0 ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>{formatPeso(company.pesoChange)} ({formatPct(company.pctChange)})</span>} />
                   <MetricRow label="Selected Model" companies={comparisonRows} render={(company) => company.bestModel} />
                   <MetricRow label="Test RMSE (₱)" companies={comparisonRows} render={(company) => company.rmse === undefined ? "--" : formatNum(company.rmse)} />
-                  <MetricRow label="MASE (Scaled Error)" companies={comparisonRows} render={(company) => company.mase === undefined ? "--" : <span className={Number(company.mase) < 1 ? "text-green-400 font-semibold" : "text-amber-400 font-semibold"}>{formatNum(company.mase)}</span>} />
-                  <MetricRow label="Beats Naive Baseline?" companies={comparisonRows} render={(company) => company.mase === undefined ? "--" : Number(company.mase) < 1 ? <span className="text-green-400">✓ Yes (MASE &lt; 1)</span> : <span className="text-amber-400">△ No (MASE ≥ 1)</span>} />
+                  <MetricRow label="MASE (Development-Scaled)" companies={comparisonRows} render={(company) => company.mase === undefined ? "--" : formatNum(company.mase)} />
+                  <MetricRow label="Beats Naive on Held-Out RMSE?" companies={comparisonRows} render={(company) => company.rmse === undefined ? "--" : company.bestPrincipalBeatsNaive ? <span className="text-green-400">✓ Yes</span> : <span className="text-amber-400">△ No</span>} />
                 </tbody>
               </table>
             </div>
@@ -270,8 +276,8 @@ function MetricRow({
   render,
 }: {
   label: string;
-  companies: Array<CompanySummary & { pesoChange: number; rmse?: string | number; mase?: string | number }>;
-  render: (company: CompanySummary & { pesoChange: number; rmse?: string | number; mase?: string | number }) => React.ReactNode;
+  companies: Array<CompanySummary & { pesoChange: number; rmse?: string | number; mase?: string | number; bestPrincipalBeatsNaive: boolean }>;
+  render: (company: CompanySummary & { pesoChange: number; rmse?: string | number; mase?: string | number; bestPrincipalBeatsNaive: boolean }) => React.ReactNode;
 }) {
   return (
     <tr>

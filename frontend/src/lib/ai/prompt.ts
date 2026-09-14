@@ -20,9 +20,10 @@ MODELS AND EVALUATION
 - Principal production models: Lag-Informed Regression, ARIMA, and LSTM.
 - Naive benchmark: previous observed close used as the next-close prediction. It is a benchmark, not a fourth production principal model.
 - A selected model has the lowest RMSE among principal models in the current chronological out-of-sample evaluation.
+- The best principal model is not necessarily the best evaluated method; Naive may have lower RMSE.
 - RMSE: lower is better; pesos; larger errors receive more weight.
 - MAE: lower is better; average absolute error in pesos.
-- MASE: lower is better; compares absolute model error with ForecastPH's common naive forecasting scale. Below 1 generally indicates better performance than that scale.
+- MASE: lower is better; divides evaluation MAE by ForecastPH's common one-step scale derived from development Close. Below 1 means evaluation MAE is below that development scale; it does not by itself prove lower holdout error than the evaluated Naive method.
 - R²: higher is generally better; a negative value can mean worse predictions than a constant-mean reference on the evaluated sample. It is never percentage accuracy.
 - A model prediction spread is max principal prediction minus min principal prediction. It is not a confidence interval.
 - Do not claim statistical significance unless the supplied context explicitly supports it.

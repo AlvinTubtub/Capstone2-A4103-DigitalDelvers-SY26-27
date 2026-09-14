@@ -4,6 +4,7 @@ from dataclasses import replace
 from datetime import date, datetime, timedelta
 import json
 from pathlib import Path
+import statistics
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -15,6 +16,7 @@ from src.data.validator import OhlcvRecord
 from src.evaluation.evaluator import ModelPredictionOutput, evaluate_prediction_outputs
 from src.export import frontend_exporter as exporter_module
 from src.export.frontend_exporter import (
+    build_frontend_payloads,
     CompanyFrontendArtifacts,
     FrontendExportBundle,
     FrontendExportError,
@@ -179,6 +181,25 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     assert latest["generatedAt"].endswith("+08:00")
     assert latest["lastRunAt"].endswith("+08:00")
     assert metrics["statisticalTests"] == {}
+    assert metrics["aggregateStatistic"] == "median"
+    assert metrics["crossCompany"]["selectionBasis"].startswith(
+        "median_within_company_rmse_rank"
+    )
+    assert metrics["crossCompany"]["companyCount"] == len(export_bundle.companies)
+    assert set(metrics["crossCompany"]["methods"]) == {
+        MODEL_DISPLAY_LABELS[model] for model in EVALUATION_MODEL_IDS
+    }
+    assert all(
+        "bestPrincipalModel" in company
+        and "bestEvaluatedMethod" in company
+        and "bestPrincipalBeatsNaive" in company
+        and "allPrincipalsWorseThanNaive" in company
+        for company in metrics["perCompany"].values()
+    )
+    assert all(
+        isinstance(company["bestPrincipalBeatsNaive"], bool)
+        for company in metrics["perCompany"].values()
+    )
 
     source = next(item for item in export_bundle.companies if item.symbol == "ALI")
     detail = load_json(output_root / "company" / "ALI.json")
@@ -220,6 +241,40 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
             "mase": canonical_metric.mase,
             "r2": canonical_metric.r2,
         }
+
+
+def test_exporter_uses_medians_not_means_for_descriptive_aggregate(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    changed_sources: list[CompanyFrontendArtifacts] = []
+    lir_mase_values: list[float] = []
+    for index, source in enumerate(export_bundle.companies):
+        replacement_mase = 1_000.0 if index == 0 else 0.5
+        metrics_by_model = dict(source.evaluation.metrics_by_model)
+        metrics_by_model[ModelId.LAG_REGRESSION] = replace(
+            metrics_by_model[ModelId.LAG_REGRESSION],
+            mase=replacement_mase,
+        )
+        lir_mase_values.append(replacement_mase)
+        changed_sources.append(
+            replace(
+                source,
+                evaluation=replace(
+                    source.evaluation,
+                    metrics_by_model=tuple(metrics_by_model.items()),
+                ),
+            )
+        )
+
+    payloads = build_frontend_payloads(
+        replace(export_bundle, companies=tuple(changed_sources))
+    )
+    exported = payloads["metrics.json"]["aggregate"][
+        MODEL_DISPLAY_LABELS[ModelId.LAG_REGRESSION]
+    ]["mase"]
+
+    assert exported == statistics.median(lir_mase_values)
+    assert exported != statistics.fmean(lir_mase_values)
 
 
 def test_incomplete_next_day_artifact_cannot_replace_existing_export(

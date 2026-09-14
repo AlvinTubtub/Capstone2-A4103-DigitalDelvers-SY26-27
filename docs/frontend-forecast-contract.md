@@ -134,11 +134,30 @@ interface MetricsJson {
   lastRunAt: IsoDateTime | null;
   status: string;
   aggregate: Record<EvaluationModelLabel, ModelMetric>;
+  aggregateStatistic?: "median";
+  crossCompany?: {
+    companyCount: number;
+    selectionBasis: string;
+    tiePolicy: string;
+    bestEvaluatedMethod: EvaluationModelLabel;
+    worstEvaluatedMethod: EvaluationModelLabel;
+    methods: Record<EvaluationModelLabel, {
+      medianMase: number;
+      medianRmseRank: number;
+      principalWinCount: number;
+      evaluatedWinCount: number;
+      beatsNaiveCount: number;
+    }>;
+  };
   bestModel: EvaluationModelLabel;
   worstModel: EvaluationModelLabel;
   perCompany: Record<string, {
     metrics: Record<ModelId, ModelMetric>;
     bestModel: PrincipalModelLabel;
+    bestPrincipalModel?: PrincipalModelLabel;
+    bestEvaluatedMethod?: EvaluationModelLabel;
+    bestPrincipalBeatsNaive?: boolean;
+    allPrincipalsWorseThanNaive?: boolean;
   }>;
   statisticalTests: {};
 }
@@ -146,7 +165,9 @@ interface MetricsJson {
 
 `perCompany` must contain every configured symbol and exactly four metric entries per symbol. Canonical backend metrics retain full precision; the frontend formats them for display.
 
-`aggregate` contains one summary for each display label. `bestModel` and `worstModel` refer to that aggregate comparison. `statisticalTests` is an intentionally empty compatibility object; the operational training pipeline does not populate a statistical-inference lifecycle.
+`aggregate` contains descriptive medians for compatibility with existing consumers; raw peso RMSE/MAE values are not used to select an overall winner. `crossCompany` is the scale-independent summary emitted by the revised exporter. It reports median MASE, median within-company RMSE rank, principal and all-method win counts, and strict counts beating Naive. Its ordering uses median rank, then median MASE, then evaluated win count, then canonical order. The legacy-named `bestModel` and `worstModel` fields follow that scale-independent ordering.
+
+Per company, `bestModel` and `bestPrincipalModel` mean the lowest-RMSE result among LIR, ARIMA, and LSTM. `bestEvaluatedMethod` also includes Naive. `bestPrincipalBeatsNaive` is true only for strictly lower held-out RMSE; an exact tie is not a win. Exact RMSE ties are ordered LIR, ARIMA, LSTM, then Naive for deterministic reporting. The new fields are additive so already-published operational documents remain readable until the next normal fresh export. `statisticalTests` remains an intentionally empty compatibility object; the operational training pipeline does not populate a statistical-inference lifecycle.
 
 The Models page derives current principal-model RMSE wins, median comparisons, company rankings, and Naive-relative results from `perCompany`. The chatbot uses the same current operational data and does not load a separate study result.
 

@@ -41,7 +41,9 @@ The latest approximately 15% of target dates are reserved for evaluation and the
 
 All four methods are evaluated on the same chronological target dates. Model tuning uses expanding-window validation without shuffling, and preprocessing is fitted only on the applicable training block. The backend reports RMSE, MAE, MASE, and R². MASE uses one development-series denominator per company.
 
-Principal models are ranked by evaluation RMSE. Evaluation remains separate from production refitting: after configurations are selected, all three principal models are freshly refitted on all currently available validated history.
+The best principal model is the lowest-RMSE choice among LIR, ARIMA, and LSTM. The best evaluated method is reported separately and also includes Naive; an exact RMSE tie is resolved deterministically in canonical order: LIR, ARIMA, LSTM, then Naive. Evaluation remains separate from production refitting: after configurations are selected, all three principal models are freshly refitted on all currently available validated history.
+
+Cross-company reporting does not choose a winner from pooled or averaged peso RMSE/MAE. It uses median MASE, median within-company RMSE rank, win counts, and counts beating Naive. R² is supplementary and is never used for tuning, model selection, or deployment.
 
 ## Production architecture
 

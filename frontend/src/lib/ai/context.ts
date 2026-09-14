@@ -272,7 +272,7 @@ export function buildLearnStocksContext(): string {
     metricGuide: {
       RMSE: "Lower is better; measured in pesos and penalizes larger errors more strongly.",
       MAE: "Lower is better; average absolute forecast error in pesos.",
-      MASE: "Lower is better; compares absolute model error with the project's common naive forecasting scale. Below 1 generally means better than that scale.",
+      MASE: "Lower is better; evaluation MAE divided by the common one-step scale from development Close. Below 1 is below that scale, but does not by itself prove lower held-out error than the evaluated Naive method.",
       R2: "Higher is generally better; negative values can occur when predictions are worse than a constant-mean reference on the evaluated sample. It is not percentage accuracy.",
     },
     boundaries: "Explain concepts, not personalized investment decisions. Current schedules and broker details should be verified with official sources.",
@@ -299,9 +299,17 @@ export async function buildCompareContext(): Promise<string> {
     const rows = PRINCIPAL_MODEL_IDS.map((id) => ({ id, rmse: finiteNumber(metrics.perCompany[company.symbol]?.metrics[id]?.rmse) }))
       .filter((row): row is { id: (typeof PRINCIPAL_MODEL_IDS)[number]; rmse: number } => row.rmse !== null);
     const minimum = rows.length ? Math.min(...rows.map(({ rmse }) => rmse)) : null;
-    const winners = minimum === null ? [] : rows.filter(({ rmse }) => rmse === minimum);
-    if (winners.length === 1) wins[MODEL_NAMES[winners[0].id]] += 1;
-    return { ticker: company.symbol, winner: winners.length ? winners.map(({ id }) => MODEL_NAMES[id]).join(" / ") : "unavailable", tie: winners.length > 1, winningRmsePhp: minimum === null ? "unavailable" : formatNum(minimum, 4) };
+    const tied = minimum === null ? [] : rows.filter(({ rmse }) => rmse === minimum);
+    const winner = tied[0];
+    if (winner) wins[MODEL_NAMES[winner.id]] += 1;
+    return {
+      ticker: company.symbol,
+      winner: winner ? MODEL_NAMES[winner.id] : "unavailable",
+      exactTie: tied.length > 1,
+      tiedModels: tied.map(({ id }) => MODEL_NAMES[id]),
+      tiePolicy: "LIR, then ARIMA, then LSTM",
+      winningRmsePhp: minimum === null ? "unavailable" : formatNum(minimum, 4),
+    };
   });
 
   return asContext("compare", {
@@ -312,7 +320,8 @@ export async function buildCompareContext(): Promise<string> {
     metricsGeneratedAtPht: metrics.generatedAt ? formatDateTimePht(metrics.generatedAt) : "unavailable",
     principalModelWinnerCounts: wins,
     bestPrincipalModelByCompany: bestByCompany,
-    aggregateMetrics: Object.fromEntries(
+    descriptiveAggregateStatistic: metrics.aggregateStatistic ?? "legacy unspecified",
+    descriptiveAggregateMetrics: Object.fromEntries(
       Object.entries(metrics.aggregate).map(([name, values]) => [
         name === "Naive baseline" ? "Naive benchmark" : name,
         {
@@ -325,8 +334,11 @@ export async function buildCompareContext(): Promise<string> {
     ),
     perCompanyMetrics: Object.fromEntries(companies.map(({ symbol }) => [symbol, metricFacts(metrics.perCompany[symbol]?.metrics)])),
     comparisonRules: {
-      selection: "Lowest RMSE per company on the common chronological out-of-sample evaluation.",
-      naive: "Benchmark only, not a production principal model.",
+      principalSelection: "The best principal model is the lowest-RMSE LIR, ARIMA, or LSTM result per company on the common chronological out-of-sample evaluation.",
+      evaluatedSelection: "The best evaluated method uses the same RMSE rule but also includes Naive, so it can differ from the best principal model.",
+      crossCompany: "Do not select a winner from median or mean raw-peso RMSE/MAE. Use median MASE, within-company ranks, win counts, and counts beating Naive.",
+      r2: "R² is supplementary, may be negative, and is not percentage accuracy or a selection criterion.",
+      naive: "Separately evaluated benchmark, not a production principal model.",
       statisticalSignificance: "No statistical-significance claim is supplied in current operational context.",
     },
   });

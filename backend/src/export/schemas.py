@@ -80,6 +80,12 @@ def _integer(value: object, context: str) -> int:
     return value
 
 
+def _boolean(value: object, context: str) -> bool:
+    if not isinstance(value, bool):
+        raise FrontendSchemaError(f"{context} must be a boolean")
+    return value
+
+
 def _date_only(value: object, context: str) -> str:
     text = _string(value, context)
     try:
@@ -267,6 +273,76 @@ def validate_metrics_json(value: object) -> None:
     for field in ("bestModel", "worstModel"):
         if document[field] not in expected_labels:
             raise FrontendSchemaError(f"metrics.{field} is invalid")
+    if "aggregateStatistic" in document and document["aggregateStatistic"] != "median":
+        raise FrontendSchemaError("metrics.aggregateStatistic must be median")
+    if "crossCompany" in document:
+        cross_company = _object(document["crossCompany"], "metrics.crossCompany")
+        _required(
+            cross_company,
+            {
+                "companyCount",
+                "selectionBasis",
+                "tiePolicy",
+                "bestEvaluatedMethod",
+                "worstEvaluatedMethod",
+                "methods",
+            },
+            "metrics.crossCompany",
+        )
+        company_count = _integer(
+            cross_company["companyCount"], "metrics.crossCompany.companyCount"
+        )
+        if company_count < 1:
+            raise FrontendSchemaError("metrics.crossCompany.companyCount must be positive")
+        _string(cross_company["selectionBasis"], "metrics.crossCompany.selectionBasis")
+        _string(cross_company["tiePolicy"], "metrics.crossCompany.tiePolicy")
+        for field in ("bestEvaluatedMethod", "worstEvaluatedMethod"):
+            if cross_company[field] not in expected_labels:
+                raise FrontendSchemaError(f"metrics.crossCompany.{field} is invalid")
+        methods = _object(cross_company["methods"], "metrics.crossCompany.methods")
+        if set(methods) != expected_labels:
+            raise FrontendSchemaError(
+                "metrics.crossCompany.methods has an invalid model set"
+            )
+        for label, value in methods.items():
+            method = _object(value, f"metrics.crossCompany.methods.{label}")
+            _required(
+                method,
+                {
+                    "medianMase",
+                    "medianRmseRank",
+                    "principalWinCount",
+                    "evaluatedWinCount",
+                    "beatsNaiveCount",
+                },
+                f"metrics.crossCompany.methods.{label}",
+            )
+            _number(method["medianMase"], f"metrics.crossCompany.methods.{label}.medianMase")
+            median_rank = _number(
+                method["medianRmseRank"],
+                f"metrics.crossCompany.methods.{label}.medianRmseRank",
+            )
+            if not 1.0 <= median_rank <= len(EVALUATION_MODEL_IDS):
+                raise FrontendSchemaError(
+                    f"metrics.crossCompany.methods.{label}.medianRmseRank is invalid"
+                )
+            for field in (
+                "principalWinCount",
+                "evaluatedWinCount",
+                "beatsNaiveCount",
+            ):
+                count = _integer(
+                    method[field],
+                    f"metrics.crossCompany.methods.{label}.{field}",
+                )
+                if count < 0:
+                    raise FrontendSchemaError(
+                        f"metrics.crossCompany.methods.{label}.{field} cannot be negative"
+                    )
+                if count > company_count:
+                    raise FrontendSchemaError(
+                        f"metrics.crossCompany.methods.{label}.{field} exceeds companyCount"
+                    )
     per_company = _object(document["perCompany"], "metrics.perCompany")
     if not per_company:
         raise FrontendSchemaError("metrics.perCompany cannot be empty")
@@ -280,6 +356,22 @@ def validate_metrics_json(value: object) -> None:
             MODEL_DISPLAY_LABELS[model] for model in PRINCIPAL_MODEL_IDS
         }:
             raise FrontendSchemaError(f"metrics.perCompany.{symbol}.bestModel is invalid")
+        if "bestPrincipalModel" in company and company["bestPrincipalModel"] not in {
+            MODEL_DISPLAY_LABELS[model] for model in PRINCIPAL_MODEL_IDS
+        }:
+            raise FrontendSchemaError(
+                f"metrics.perCompany.{symbol}.bestPrincipalModel is invalid"
+            )
+        if "bestEvaluatedMethod" in company and company["bestEvaluatedMethod"] not in expected_labels:
+            raise FrontendSchemaError(
+                f"metrics.perCompany.{symbol}.bestEvaluatedMethod is invalid"
+            )
+        for field in (
+            "bestPrincipalBeatsNaive",
+            "allPrincipalsWorseThanNaive",
+        ):
+            if field in company:
+                _boolean(company[field], f"metrics.perCompany.{symbol}.{field}")
     if document["statisticalTests"] != {}:
         raise FrontendSchemaError(
             "metrics.statisticalTests must remain an empty compatibility object"

@@ -182,7 +182,7 @@ export default function LearnStocksPage() {
                 Check Historical Accuracy
               </h3>
               <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-                Evaluate out-of-sample backtests, RMSE, MAE, and the benchmark naive baseline (MASE &lt; 1.0).
+                Evaluate out-of-sample backtests, RMSE, MAE, MASE, and the separately evaluated Naive benchmark.
               </p>
             </div>
             <div className="pt-4 mt-3 border-t border-dark-border/60 flex items-center justify-between text-xs font-semibold text-brand-400 group-hover:text-brand-300">
@@ -698,7 +698,7 @@ export default function LearnStocksPage() {
                     Rigorous Out-of-Sample Empirical Evaluation
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    ForecastPH enforces strict chronological train/validation/test splits with zero lookahead bias. We compare all candidate models against the random-walk Naive Baseline (predicting tomorrow equals today). A model must achieve MASE &lt; 1.0 to prove genuine predictive utility over simple persistence.
+                    ForecastPH uses chronological development, validation, and evaluation periods with no lookahead. The Naive benchmark predicts that the next Close equals the current Close. MASE below 1 means evaluation MAE is below the one-step scale calculated from development Close changes; it does not by itself prove that a model beat Naive on the held-out dates.
                   </p>
                 </div>
               </div>
@@ -718,12 +718,12 @@ export default function LearnStocksPage() {
                 <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
                   <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wide">Key Benchmark</span>
                   <h4 className="font-bold text-white text-sm">MASE</h4>
-                  <p className="text-xs text-slate-400">Mean Absolute Scaled Error. Values below 1.0 indicate better performance than the naive baseline.</p>
+                  <p className="text-xs text-slate-400">Mean Absolute Scaled Error. Values below 1.0 are below the development-series one-step error scale; compare held-out model metrics directly to determine whether a principal model beat Naive.</p>
                 </div>
                 <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Goodness-of-Fit</span>
                   <h4 className="font-bold text-white text-sm">R² (Variance)</h4>
-                  <p className="text-xs text-slate-400">Explains the proportion of variance captured on out-of-sample data. Not a win-rate.</p>
+                  <p className="text-xs text-slate-400">A supplementary goodness-of-fit measure that can be negative. Higher is generally better, but it is not percentage accuracy and never selects the winning model.</p>
                 </div>
               </div>
 
@@ -1157,7 +1157,7 @@ export default function LearnStocksPage() {
                 <ul className="list-disc list-inside space-y-1 text-slate-300">
                   <li><strong className="text-white">Chronological Evaluation:</strong> LIR, ARIMA, LSTM, and Naive are compared on one common set of held-out target dates without random shuffling.</li>
                   <li><strong className="text-white">Production Refresh:</strong> All three principal models are freshly refitted during quarterly training. Daily updates load persisted models and perform inference without retraining.</li>
-                  <li><strong className="text-white">Naive Benchmark:</strong> The benchmark predicts that tomorrow&apos;s price equals today&apos;s price. MASE below one indicates lower scaled error than that benchmark.</li>
+                  <li><strong className="text-white">Naive Benchmark:</strong> The benchmark predicts that tomorrow&apos;s price equals today&apos;s price. MASE uses a development-series scale, so held-out RMSE must be compared directly to determine whether the best principal model beat Naive.</li>
                 </ul>
               </div>
             </div>

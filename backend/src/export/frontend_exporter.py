@@ -17,6 +17,7 @@ from config.model_config import ModelId
 from config.settings import BACKEND_ROOT, as_manila_time
 from src.data.validator import OhlcvRecord, require_chronological_records
 from src.evaluation.evaluator import CompanyEvaluation
+from src.evaluation.model_selection import summarize_cross_company_metrics
 from src.export.schemas import (
     BACKTEST_WINDOW,
     EVALUATION_MODEL_IDS,
@@ -319,10 +320,12 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
     gainers = [summary for summary in summaries if summary["pctChange"] > 0]
     losers = [summary for summary in summaries if summary["pctChange"] < 0]
     unchanged = [summary for summary in summaries if summary["pctChange"] == 0]
+    # Compatibility metrics are descriptive medians. They are never used to select
+    # a cross-company winner because raw peso RMSE/MAE are not scale-comparable.
     aggregate = {
         MODEL_DISPLAY_LABELS[model]: {
             metric_name: float(
-                statistics.fmean(
+                statistics.median(
                     getattr(evaluations[symbol].metrics_for(model), metric_name)
                     for symbol in sorted(evaluations)
                 )
@@ -331,14 +334,22 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
         }
         for model in EVALUATION_MODEL_IDS
     }
-    aggregate_order = {model: index for index, model in enumerate(EVALUATION_MODEL_IDS)}
-    ranked_aggregate = sorted(
-        EVALUATION_MODEL_IDS,
-        key=lambda model: (
-            aggregate[MODEL_DISPLAY_LABELS[model]]["rmse"],
-            aggregate_order[model],
-        ),
+    cross_company = summarize_cross_company_metrics(
+        {
+            symbol: dict(evaluation.metrics_by_model)
+            for symbol, evaluation in evaluations.items()
+        }
     )
+    cross_company_methods = {
+        MODEL_DISPLAY_LABELS[method.model]: {
+            "medianMase": method.median_mase,
+            "medianRmseRank": method.median_rmse_rank,
+            "principalWinCount": method.principal_win_count,
+            "evaluatedWinCount": method.evaluated_win_count,
+            "beatsNaiveCount": method.beats_naive_count,
+        }
+        for method in cross_company.methods
+    }
     generated_text = generated_at.isoformat()
     last_run_text = last_run_at.isoformat()
     dashboard: dict[str, object] = {
@@ -372,12 +383,35 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
         "lastRunAt": last_run_text,
         "status": bundle.status,
         "aggregate": aggregate,
-        "bestModel": MODEL_DISPLAY_LABELS[ranked_aggregate[0]],
-        "worstModel": MODEL_DISPLAY_LABELS[ranked_aggregate[-1]],
+        "aggregateStatistic": "median",
+        "crossCompany": {
+            "companyCount": cross_company.company_count,
+            "selectionBasis": (
+                "median_within_company_rmse_rank_then_median_mase_then_"
+                "evaluated_win_count"
+            ),
+            "tiePolicy": cross_company.as_dict()["tie_policy"],
+            "bestEvaluatedMethod": MODEL_DISPLAY_LABELS[cross_company.best_method],
+            "worstEvaluatedMethod": MODEL_DISPLAY_LABELS[cross_company.worst_method],
+            "methods": cross_company_methods,
+        },
+        # Retain compatibility names, now backed by scale-independent ordering.
+        "bestModel": MODEL_DISPLAY_LABELS[cross_company.best_method],
+        "worstModel": MODEL_DISPLAY_LABELS[cross_company.worst_method],
         "perCompany": {
             symbol: {
                 "metrics": details[symbol]["metrics"],
                 "bestModel": details[symbol]["model"],
+                "bestPrincipalModel": details[symbol]["model"],
+                "bestEvaluatedMethod": MODEL_DISPLAY_LABELS[
+                    evaluations[symbol].evaluated_ranking.best_model
+                ],
+                "bestPrincipalBeatsNaive": evaluations[
+                    symbol
+                ].best_principal_beats_naive,
+                "allPrincipalsWorseThanNaive": evaluations[
+                    symbol
+                ].all_principals_worse_than_naive,
             }
             for symbol in sorted(details)
         },

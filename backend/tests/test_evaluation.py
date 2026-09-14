@@ -241,6 +241,14 @@ def test_default_principal_ranking_uses_lowest_evaluation_rmse() -> None:
     assert ModelId.NAIVE not in {
         ranked.model for ranked in evaluation.principal_ranking.ranked_models
     }
+    assert evaluation.evaluated_ranking.criterion == "rmse"
+    assert evaluation.evaluated_ranking.best_model is ModelId.LAG_REGRESSION
+    assert evaluation.best_principal_beats_naive is True
+    payload = evaluation.as_dict()
+    assert payload["best_principal_model"] == "lag_reg"
+    assert payload["best_evaluated_method"] == "lag_reg"
+    assert payload["best_principal_beats_naive"] is True
+    assert payload["all_principals_worse_than_naive"] is False
 
 
 def test_company_evaluator_builds_dynamic_split_and_only_uses_oos_outputs(

@@ -53,7 +53,9 @@ One dynamic company plan reserves approximately 85% of target pairs for developm
 
 All model selection is chronological. The backend never uses shuffled validation or future-data backfilling.
 
-Evaluation produces canonical out-of-sample prediction records and full-precision RMSE, MAE, MASE, and R². One development-Close MASE denominator is shared by all four methods for a company. The three principal models are ranked by evaluation RMSE.
+Evaluation produces canonical out-of-sample prediction records and full-precision RMSE, MAE, MASE, and R². One development-Close MASE denominator is shared by all four methods for a company. The best principal model is the lowest-RMSE result among LIR, ARIMA, and LSTM; the best evaluated method is reported separately and also includes Naive. Exact RMSE ties use canonical order: LIR, ARIMA, LSTM, then Naive. A strict RMSE comparison determines whether the best principal model beat Naive on the held-out dates.
+
+Cross-company summaries use median MASE, median within-company RMSE rank, win counts, and counts beating Naive. Mean raw peso RMSE/MAE never selects an overall winner. R² is retained, including negative values, as a supplementary metric only.
 
 ## Model training
 
