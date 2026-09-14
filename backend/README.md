@@ -16,6 +16,7 @@ backend/
 │   ├── evaluation/     # OOS records, metrics, alignment, and ranking
 │   ├── export/         # Frontend schemas, validation, and atomic export
 │   ├── features/       # Forecast targets and LIR features
+│   ├── formal/         # Explicit formal-run readiness and immutable archives
 │   ├── inference/      # Persisted-model next-session prediction
 │   ├── ingestion/      # PSE EOD download, parsing, validation, and merge
 │   ├── models/         # LIR, ARIMA, and univariate LSTM
@@ -157,6 +158,35 @@ python scripts/validate_production_artifacts.py --verbose
 ```
 
 The daily workflow fails closed when a complete compatible package and manifest cannot be verified.
+
+## Formal evaluation runs
+
+Formal evaluation is an explicit, isolated research lifecycle. It does not replace
+production training, inference, or frontend export. Every invocation requires a
+human-selected run ID and cutoff date; the backend never chooses either value.
+
+Run the read-only readiness check first:
+
+```bash
+python scripts/run_formal_experiment.py \
+  --run-id research-run-001 \
+  --cutoff-date YYYY-MM-DD \
+  --check-only
+```
+
+Check-only mode does not create an archive or call model training. It reports raw
+hashes, calendar-session gaps, missing provenance, Git state, ARIMA-grid validity,
+LASSO upper-bound concerns, and run-ID availability. The intentionally empty
+`config/formal_provenance.json` and `config/corporate_actions.json` registries must
+only be populated from externally verified sources. Unknown source fields remain
+null and prevent formal readiness; they are never inferred from filenames or data.
+
+An approved non-check invocation writes only beneath
+`artifacts/evaluations/formal-runs/<RUN_ID>/`. Runs move from `IN_PROGRESS` to either
+`FAILED` or `FINALIZED`. Finalization requires every configured company, frozen raw
+CSV snapshots, complete model/evaluation evidence, cross-company statistics, and
+logs. A finalized run cannot be reused or changed through the archive API, and its
+integrity manifest detects modified, deleted, or added files.
 
 ## Tests
 
