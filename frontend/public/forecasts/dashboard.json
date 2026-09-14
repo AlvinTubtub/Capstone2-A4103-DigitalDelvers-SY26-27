@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-12T22:36:29.132720+08:00",
+  "generatedAt": "2026-09-15T03:17:13.323146+08:00",
   "forecastDate": "2026-09-14",
-  "lastRunAt": "2026-09-12T22:36:29.132720+08:00",
+  "lastRunAt": "2026-09-15T03:17:13.323146+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 7,
-    "losers": 8,
-    "unchanged": 0
+    "gainers": 6,
+    "losers": 4,
+    "unchanged": 5
   },
   "topGainer": {
     "symbol": "MBT",
     "name": "Metropolitan Bank & Trust Company",
     "sector": "Financials",
     "latestClose": 63.05,
-    "predictedClose": 63.24423755006485,
-    "pctChange": 0.3080690722678116,
+    "predictedClose": 63.24233135573277,
+    "pctChange": 0.30504576642787623,
     "direction": "bullish",
     "bestModel": "ARIMA",
     "forecastDate": "2026-09-14"
   },
   "topLoser": {
-    "symbol": "SHLPH",
-    "name": "Shell Pilipinas Corporation",
-    "sector": "Industrial",
-    "latestClose": 7.82,
-    "predictedClose": 7.78637883686876,
-    "pctChange": -0.4299381474583145,
+    "symbol": "ALI",
+    "name": "Ayala Land, Inc.",
+    "sector": "Property",
+    "latestClose": 15.06,
+    "predictedClose": 15.043048094940662,
+    "pctChange": -0.11256245059321582,
     "direction": "bearish",
-    "bestModel": "ARIMA",
+    "bestModel": "Lag-Informed Regression",
     "forecastDate": "2026-09-14"
   }
 }

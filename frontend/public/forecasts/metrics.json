@@ -1,472 +1,4778 @@
 {
-  "generatedAt": "2026-09-12T22:36:29.132720+08:00",
+  "generatedAt": "2026-09-15T03:17:13.323146+08:00",
   "forecastDate": "2026-09-14",
-  "lastRunAt": "2026-09-12T22:36:29.132720+08:00",
+  "lastRunAt": "2026-09-15T03:17:13.323146+08:00",
   "status": "complete",
   "aggregate": {
     "Lag-Informed Regression": {
-      "rmse": 4.541074514900788,
-      "mae": 3.188111292672742,
-      "mase": 1.5419377256688531,
-      "r2": 0.9443604452045086
+      "rmse": 0.8586167176242688,
+      "mae": 0.6336285362853629,
+      "mase": 1.0320002343544405,
+      "r2": 0.9493107065221714
     },
     "ARIMA": {
-      "rmse": 4.434513876889341,
-      "mae": 3.141561063221817,
-      "mase": 1.5503474550362772,
-      "r2": 0.9445004259443226
+      "rmse": 0.8566280230660991,
+      "mae": 0.6320699849903005,
+      "mase": 1.0359420165216466,
+      "r2": 0.9465643673818385
     },
     "LSTM": {
-      "rmse": 4.436846736738874,
-      "mae": 3.13654818029684,
-      "mase": 1.5400988061577352,
-      "r2": 0.9442450014944089
+      "rmse": 0.8579874342372474,
+      "mae": 0.6330400937077828,
+      "mase": 1.0410767482374768,
+      "r2": 0.9448068067114556
     },
     "Naive baseline": {
-      "rmse": 4.451028874162589,
-      "mae": 3.1531972789115645,
-      "mase": 1.5391571022784396,
-      "r2": 0.9440520261118036
+      "rmse": 0.8585770038527211,
+      "mae": 0.6333333333333334,
+      "mase": 1.0497316877718685,
+      "r2": 0.947940767077499
+    }
+  },
+  "aggregateStatistic": "median",
+  "crossCompany": {
+    "companyCount": 15,
+    "selectionBasis": "median_within_company_rmse_rank_then_median_mase_then_evaluated_win_count",
+    "tiePolicy": "Cross-company ordering uses lowest median within-company RMSE rank, then lowest median MASE, then highest evaluated-method win count, then canonical model order.",
+    "bestEvaluatedMethod": "ARIMA",
+    "worstEvaluatedMethod": "Naive baseline",
+    "methods": {
+      "Lag-Informed Regression": {
+        "medianMase": 1.0320002343544405,
+        "medianRmseRank": 3.0,
+        "principalWinCount": 3,
+        "evaluatedWinCount": 2,
+        "beatsNaiveCount": 7
+      },
+      "ARIMA": {
+        "medianMase": 1.0359420165216466,
+        "medianRmseRank": 1.5,
+        "principalWinCount": 8,
+        "evaluatedWinCount": 8,
+        "beatsNaiveCount": 6
+      },
+      "LSTM": {
+        "medianMase": 1.0410767482374768,
+        "medianRmseRank": 3.0,
+        "principalWinCount": 4,
+        "evaluatedWinCount": 4,
+        "beatsNaiveCount": 8
+      },
+      "Naive baseline": {
+        "medianMase": 1.0497316877718685,
+        "medianRmseRank": 3.0,
+        "principalWinCount": 0,
+        "evaluatedWinCount": 1,
+        "beatsNaiveCount": 0
+      }
     }
   },
   "bestModel": "ARIMA",
-  "worstModel": "Lag-Informed Regression",
+  "worstModel": "Naive baseline",
   "perCompany": {
     "ALI": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.4478246701814452,
-          "mae": 0.3466355771259757,
-          "mase": 0.6254501697329624,
-          "r2": 0.9846297222219483
+          "rmse": 0.4485503228048244,
+          "mae": 0.34763507635076374,
+          "mase": 0.6275425750746001,
+          "r2": 0.9850769007146927
         },
         "arima": {
-          "rmse": 0.4476396138617639,
-          "mae": 0.34637527781960703,
-          "mase": 0.6249804999815206,
-          "r2": 0.9846424226358962
+          "rmse": 0.44967648714318026,
+          "mae": 0.3491056910569105,
+          "mase": 0.6301972937794145,
+          "r2": 0.9850018725253848
         },
         "lstm": {
-          "rmse": 0.4463454115182194,
-          "mae": 0.34471602686635844,
-          "mase": 0.621986638823519,
-          "r2": 0.9847310970061794
+          "rmse": 0.4488864933108254,
+          "mae": 0.3481452261867932,
+          "mase": 0.6284634854301846,
+          "r2": 0.9850545238018124
         },
         "naive": {
-          "rmse": 0.448959795481938,
-          "mae": 0.34808163265306125,
-          "mase": 0.6280593527901599,
-          "r2": 0.9845517037271576
+          "rmse": 0.44967648714318026,
+          "mae": 0.3491056910569105,
+          "mase": 0.6301972937794145,
+          "r2": 0.9850018725253848
         }
       },
-      "bestModel": "LSTM"
+      "bestModel": "Lag-Informed Regression",
+      "bestPrincipalModel": "Lag-Informed Regression",
+      "bestEvaluatedMethod": "Lag-Informed Regression",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "ALI",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.9620285895156784,
+                "raw_p_value": 0.050891235857424694,
+                "holm_adjusted_p_value": 0.30534741514454816,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0010115510011186857,
+                "long_run_variance": 6.51224888555831e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.23769505182418954,
+                "raw_p_value": 0.8123162781236384,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.00030169178857755854,
+                "long_run_variance": 0.0003946869635111886,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.9620285895156784,
+                "raw_p_value": 0.050891235857424694,
+                "holm_adjusted_p_value": 0.30534741514454816,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0010115510011186857,
+                "long_run_variance": 6.51224888555831e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.5183578833767025,
+                "raw_p_value": 0.6046764096123283,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0007098592125411272,
+                "long_run_variance": 0.0004594636038036078,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.5183578833767025,
+                "raw_p_value": 0.6046764096123283,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0007098592125411272,
+                "long_run_variance": 0.0004594636038036078,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -2.636703734840667,
+                "raw_p_value": 0.008906646739551332,
+                "holm_adjusted_p_value": 0.05343988043730799,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0014706147061468056,
+                "long_run_variance": 7.621513528277026e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.3360493507162419,
+                "raw_p_value": 0.7371212716947366,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0005101498360295039,
+                "long_run_variance": 0.0005646189706056618,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -2.636703734840667,
+                "raw_p_value": 0.008906646739551332,
+                "holm_adjusted_p_value": 0.05343988043730799,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0014706147061468056,
+                "long_run_variance": 7.621513528277026e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.584019206039428,
+                "raw_p_value": 0.5597447100310917,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0009604648701173017,
+                "long_run_variance": 0.0006626356461345768,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.584019206039428,
+                "raw_p_value": 0.5597447100310917,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0009604648701173017,
+                "long_run_variance": 0.0006626356461345768,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "APX": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.5479106502516599,
-          "mae": 0.4054809031441233,
-          "mase": 7.494696330768911,
-          "r2": 0.9594288245697735
+          "rmse": 0.546859950777262,
+          "mae": 0.40434140341403424,
+          "mase": 7.490002241274249,
+          "r2": 0.9600509313990905
         },
         "arima": {
-          "rmse": 0.5552536871433986,
-          "mae": 0.41634564137010466,
-          "mase": 7.6955144533626765,
-          "r2": 0.9583340768998067
+          "rmse": 0.5542508697340377,
+          "mae": 0.4151210118887445,
+          "mase": 7.689683231036666,
+          "r2": 0.9589637953655027
         },
         "lstm": {
-          "rmse": 0.5474339768563765,
-          "mae": 0.4064389980923182,
-          "mase": 7.512405255251139,
-          "r2": 0.9594993863941829
+          "rmse": 0.5463721326217442,
+          "mae": 0.4052440387641154,
+          "mase": 7.506722618505167,
+          "r2": 0.9601221715365224
         },
         "naive": {
-          "rmse": 0.5482808009904176,
-          "mae": 0.405591836734694,
-          "mase": 7.496746769070105,
-          "r2": 0.9593739889019393
+          "rmse": 0.5472280480616523,
+          "mae": 0.4044715447154473,
+          "mase": 7.492412972975321,
+          "r2": 0.9599971330079675
         }
       },
-      "bestModel": "LSTM"
+      "bestModel": "LSTM",
+      "bestPrincipalModel": "LSTM",
+      "bestEvaluatedMethod": "LSTM",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "APX",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.2567888045266102,
+                "raw_p_value": 0.21002700708235686,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.008138220836827843,
+                "long_run_variance": 0.010273074055744314,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.5345728587456231,
+                "raw_p_value": 0.5934300367346442,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0005332984584765321,
+                "long_run_variance": 0.00024383325203953802,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.149932920971591,
+                "raw_p_value": 0.25129273067769736,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.00040273082125649685,
+                "long_run_variance": 3.0050437901646387e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.4338484705721164,
+                "raw_p_value": 0.15289052289790023,
+                "holm_adjusted_p_value": 0.9173431373874014,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.008671519295304377,
+                "long_run_variance": 0.008960865507863146,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.1950378131036468,
+                "raw_p_value": 0.2332277734651654,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.007735490015571349,
+                "long_run_variance": 0.010265460813302667,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.8318331859902689,
+                "raw_p_value": 0.4063131315059118,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0009360292797330287,
+                "long_run_variance": 0.00031022190991713866,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.9242782863267192,
+                "raw_p_value": 0.05547799889868107,
+                "holm_adjusted_p_value": 0.3328679933920864,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.010779608474710291,
+                "long_run_variance": 0.0076884058436445645,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.9146821737906657,
+                "raw_p_value": 0.36125783385291343,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0009026353500811586,
+                "long_run_variance": 0.0002385889520761138,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.4003246423478792,
+                "raw_p_value": 0.68926626142817,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.00013014130141299443,
+                "long_run_variance": 2.5892365351316795e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.8917262102151466,
+                "raw_p_value": 0.05970682386100395,
+                "holm_adjusted_p_value": 0.3328679933920864,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.009876973124629132,
+                "long_run_variance": 0.006678781972368363,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.8877715666908783,
+                "raw_p_value": 0.060238435406963976,
+                "holm_adjusted_p_value": 0.3328679933920864,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.010649467173297296,
+                "long_run_variance": 0.007796917908326143,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.6858231721833764,
+                "raw_p_value": 0.4934730775758454,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0007724940486681642,
+                "long_run_variance": 0.0003108365353051456,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "BPI": {
       "metrics": {
         "lag_reg": {
-          "rmse": 2.312819285929824,
-          "mae": 1.6807665513607992,
-          "mase": 1.1878239104949702,
-          "r2": 0.937881038206356
+          "rmse": 2.311849116277291,
+          "mae": 1.6716319139099112,
+          "mase": 1.1789162626426282,
+          "r2": 0.937690706533626
         },
         "arima": {
-          "rmse": 2.3096557939115963,
-          "mae": 1.6722779523109181,
-          "mase": 1.1818248852824025,
-          "r2": 0.9380508555761109
+          "rmse": 2.299839987011453,
+          "mae": 1.6634674223739876,
+          "mase": 1.1731582654616608,
+          "r2": 0.9383363687840005
         },
         "lstm": {
-          "rmse": 2.315872577633467,
-          "mae": 1.6841291087447972,
-          "mase": 1.1902002821914976,
-          "r2": 0.9377169159963377
+          "rmse": 2.3120494708831805,
+          "mae": 1.6743986381733453,
+          "mase": 1.1808674913798094,
+          "r2": 0.9376799060927115
         },
         "naive": {
-          "rmse": 2.3606856492752017,
-          "mae": 1.69061224489796,
-          "mase": 1.1947820155270916,
-          "r2": 0.9352831890682725
+          "rmse": 2.356098297395903,
+          "mae": 1.6857723577235781,
+          "mase": 1.1888887925005467,
+          "r2": 0.9352826590461588
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "BPI",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.6851613458747116,
+                "raw_p_value": 0.49388983674608394,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.055382370575250854,
+                "long_run_variance": 1.6007498113077534,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.014627643778456555,
+                "raw_p_value": 0.9883411495878569,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0009264193791025546,
+                "long_run_variance": 0.9827263376172537,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -2.2943433536024314,
+                "raw_p_value": 0.02261733396542359,
+                "holm_adjusted_p_value": 0.13570400379254155,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.2065528505597817,
+                "long_run_variance": 1.985690906772785,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.8253319326333,
+                "raw_p_value": 0.40998605914422015,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.056308789954353435,
+                "long_run_variance": 1.1404104193723648,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.6656029091209414,
+                "raw_p_value": 0.0970706255666,
+                "holm_adjusted_p_value": 0.485353127833,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.26193522113503265,
+                "long_run_variance": 6.059139376241259,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.643694880423368,
+                "raw_p_value": 0.10152185518895417,
+                "holm_adjusted_p_value": 0.485353127833,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.20562643118067922,
+                "long_run_variance": 3.8342599698378677,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.6246743427486645,
+                "raw_p_value": 0.5327661216991707,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.008164491535923642,
+                "long_run_variance": 0.0418520787263195,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.23111567435147415,
+                "raw_p_value": 0.8174178295011582,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.002766724263433488,
+                "long_run_variance": 0.03511066384826723,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.8879570084075061,
+                "raw_p_value": 0.3754347750022872,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.014140443813666486,
+                "long_run_variance": 0.062130991844023944,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.1700600346100913,
+                "raw_p_value": 0.2431137429955318,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.01093121579935713,
+                "long_run_variance": 0.021383890869741334,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.9250403612868151,
+                "raw_p_value": 0.3558551408997755,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.02230493534959013,
+                "long_run_variance": 0.14244481890618058,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.5105747431883925,
+                "raw_p_value": 0.6101085869838253,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.011373719550232997,
+                "long_run_variance": 0.12157729037029559,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "GLO": {
       "metrics": {
         "lag_reg": {
-          "rmse": 26.86351686546388,
-          "mae": 18.616069912871644,
-          "mase": 0.6100673133246615,
-          "r2": 0.9388214375817449
+          "rmse": 26.11552023130252,
+          "mae": 18.05284552845529,
+          "mase": 0.591017043505341,
+          "r2": 0.9422335421296699
         },
         "arima": {
-          "rmse": 26.166041443222472,
-          "mae": 18.09651610726269,
-          "mase": 0.5930410131550267,
-          "r2": 0.9419570360932885
+          "rmse": 26.11038170001207,
+          "mae": 18.052845528455286,
+          "mase": 0.5910170435053409,
+          "r2": 0.9422562723334597
         },
         "lstm": {
-          "rmse": 26.160661226390562,
-          "mae": 18.048839165397368,
-          "mase": 0.5914785918723691,
-          "r2": 0.9419809030298626
+          "rmse": 26.103605289583967,
+          "mae": 17.947633886030513,
+          "mase": 0.5875726073498208,
+          "r2": 0.9422862408284833
         },
         "naive": {
-          "rmse": 26.15979154881688,
-          "mae": 18.09795918367347,
-          "mase": 0.5930883042187672,
-          "r2": 0.9419847605064255
+          "rmse": 26.11038170001207,
+          "mae": 18.052845528455286,
+          "mase": 0.5910170435053409,
+          "r2": 0.9422562723334597
         }
       },
-      "bestModel": "LSTM"
+      "bestModel": "LSTM",
+      "bestPrincipalModel": "LSTM",
+      "bestEvaluatedMethod": "LSTM",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "GLO",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.2881106843807358,
+                "raw_p_value": 0.7735055949526116,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.26836443124589554,
+                "long_run_variance": 212.5676958119369,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.21802539042997424,
+                "raw_p_value": 0.8275908119978173,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.6221878371750172,
+                "long_run_variance": 1995.239218504475,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.2881106843807358,
+                "raw_p_value": 0.7735055949526116,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.26836443124589554,
+                "long_run_variance": 212.5676958119369,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.10256779969914855,
+                "raw_p_value": 0.9183898999928839,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.35382340592912304,
+                "long_run_variance": 2915.527376145027,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.10256779969914855,
+                "raw_p_value": 0.9183898999928839,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.35382340592912304,
+                "long_run_variance": 2915.527376145027,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.0,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.08679939197921058,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.0003351637878604,
+                "raw_p_value": 0.046567790218840714,
+                "holm_adjusted_p_value": 0.27940674131304427,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.10521164242477167,
+                "long_run_variance": 0.6777790581992119,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.0,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.08679939197921058,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.7558720025739407,
+                "raw_p_value": 0.08035983573842545,
+                "holm_adjusted_p_value": 0.4017991786921272,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.10521164242477167,
+                "long_run_variance": 0.8796460904437524,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.7558720025739407,
+                "raw_p_value": 0.08035983573842545,
+                "holm_adjusted_p_value": 0.4017991786921272,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.10521164242477167,
+                "long_run_variance": 0.8796460904437524,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "ICT": {
       "metrics": {
         "lag_reg": {
-          "rmse": 19.080761184645304,
-          "mae": 13.467565683443832,
-          "mase": 3.4289436821603263,
-          "r2": 0.986519554919345
+          "rmse": 19.022536753324733,
+          "mae": 13.452421186596569,
+          "mase": 3.4343659150596,
+          "r2": 0.9866683251049188
         },
         "arima": {
-          "rmse": 17.87711659971454,
-          "mae": 13.137178472771856,
-          "mase": 3.344824609320538,
-          "r2": 0.9881666479549729
+          "rmse": 17.86108759064609,
+          "mae": 13.139549485753182,
+          "mase": 3.3544906353416373,
+          "r2": 0.9882465963572497
         },
         "lstm": {
-          "rmse": 17.912293703615724,
-          "mae": 13.140850197234007,
-          "mase": 3.3457594580298786,
-          "r2": 0.9881200327644325
+          "rmse": 17.83325777453317,
+          "mae": 13.09593989039885,
+          "mase": 3.343357226286345,
+          "r2": 0.9882831943788248
         },
         "naive": {
-          "rmse": 18.234338541356973,
-          "mae": 13.239183673469388,
-          "mase": 3.3707959018837723,
-          "r2": 0.987689013161818
+          "rmse": 18.221688140762016,
+          "mae": 13.245528455284553,
+          "mase": 3.381546773089861,
+          "r2": 0.9877672226891242
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "LSTM",
+      "bestPrincipalModel": "LSTM",
+      "bestEvaluatedMethod": "LSTM",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "ICT",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.1244324016703902,
+                "raw_p_value": 0.2619300796380986,
+                "holm_adjusted_p_value": 0.9725108139260178,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 42.83845461085855,
+                "long_run_variance": 355604.2735497483,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.1700252761374186,
+                "raw_p_value": 0.24312770348150445,
+                "holm_adjusted_p_value": 0.9725108139260178,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 43.831821678642584,
+                "long_run_variance": 343838.60618402704,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.8000285694150107,
+                "raw_p_value": 0.4244692730759395,
+                "holm_adjusted_p_value": 0.9725108139260178,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 29.826985832403327,
+                "long_run_variance": 340544.46658515034,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.2711748163496697,
+                "raw_p_value": 0.7864849182451735,
+                "holm_adjusted_p_value": 0.9725108139260178,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.9933670677840301,
+                "long_run_variance": 3287.6599503231187,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.3245904657453575,
+                "raw_p_value": 0.18654123699033562,
+                "holm_adjusted_p_value": 0.9327061849516781,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -13.011468778455235,
+                "long_run_variance": 23640.43604729081,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.9193797529881504,
+                "raw_p_value": 0.05609784345769005,
+                "holm_adjusted_p_value": 0.3365870607461403,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -14.004835846239269,
+                "long_run_variance": 13043.685274198913,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.7826283150344906,
+                "raw_p_value": 0.4346011966473185,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.31287170084338684,
+                "long_run_variance": 39.15502790765855,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.9755063456277814,
+                "raw_p_value": 0.3302713468726136,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.35648129619772007,
+                "long_run_variance": 32.717445175383084,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.5689443057419036,
+                "raw_p_value": 0.5699151176244122,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.20689273131201535,
+                "long_run_variance": 32.39791339127926,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.4416669633078313,
+                "raw_p_value": 0.6591197857983732,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.043609595354333244,
+                "long_run_variance": 2.3885831691704755,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.47949010676716847,
+                "raw_p_value": 0.6320177374071719,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.1059789695313715,
+                "long_run_variance": 11.968677568831552,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.9539643642954575,
+                "raw_p_value": 0.3410419383520024,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.14958856488570474,
+                "long_run_variance": 6.024188770419432,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "JFC": {
       "metrics": {
         "lag_reg": {
-          "rmse": 4.023550950492024,
-          "mae": 2.8564380671027654,
-          "mase": 0.8760956169721672,
-          "r2": 0.9816226796353112
+          "rmse": 4.015965847295446,
+          "mae": 2.8490699906999066,
+          "mase": 0.8743497716218868,
+          "r2": 0.9818121296115243
         },
         "arima": {
-          "rmse": 4.021612146068393,
-          "mae": 2.854846232379521,
-          "mase": 0.8756073867388429,
-          "r2": 0.9816403861070528
+          "rmse": 4.013285862561269,
+          "mae": 2.8467479674796747,
+          "mase": 0.8736371669898707,
+          "r2": 0.9818363962277626
         },
         "lstm": {
-          "rmse": 4.029251416830557,
-          "mae": 2.843771640025988,
-          "mase": 0.8722107082207874,
-          "r2": 0.9815705696918328
+          "rmse": 4.027508911427758,
+          "mae": 2.836758241414952,
+          "mase": 0.8705714245785692,
+          "r2": 0.9817074247996347
         },
         "naive": {
-          "rmse": 4.020960388884674,
-          "mae": 2.8542857142857145,
-          "mase": 0.8754354707253738,
-          "r2": 0.9816463364772938
+          "rmse": 4.013285862561269,
+          "mae": 2.8467479674796747,
+          "mase": 0.8736371669898707,
+          "r2": 0.9818363962277626
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": false,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "JFC",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.3243577907215247,
+                "raw_p_value": 0.18661835007926336,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.02151827200928086,
+                "long_run_variance": 0.06468002947313253,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.8507626379241314,
+                "raw_p_value": 0.3957319221826333,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.09284634498658198,
+                "long_run_variance": 2.9179570136573627,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.3243577907215247,
+                "raw_p_value": 0.18661835007926336,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.02151827200928086,
+                "long_run_variance": 0.06468002947313253,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.9621672944438978,
+                "raw_p_value": 0.3369142306256507,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.11436461699586283,
+                "long_run_variance": 3.461371895859207,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.9621672944438978,
+                "raw_p_value": 0.3369142306256507,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.11436461699586283,
+                "long_run_variance": 3.461371895859207,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.291169812627584,
+                "raw_p_value": 0.19786171779747921,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.002322023220231429,
+                "long_run_variance": 0.0007923781177656409,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.9800007674926269,
+                "raw_p_value": 0.32805245660796994,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.01231174928495443,
+                "long_run_variance": 0.03866809516215804,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.291169812627584,
+                "raw_p_value": 0.19786171779747921,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.002322023220231429,
+                "long_run_variance": 0.0007923781177656409,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.7487412262524898,
+                "raw_p_value": 0.45473139937442364,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.009989726064723,
+                "long_run_variance": 0.043612376257697795,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.7487412262524898,
+                "raw_p_value": 0.45473139937442364,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.009989726064723,
+                "long_run_variance": 0.043612376257697795,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "MBT": {
       "metrics": {
         "lag_reg": {
-          "rmse": 1.1393807984723607,
-          "mae": 0.8380948369130063,
-          "mase": 1.0364100738216295,
-          "r2": 0.8653110368940814
+          "rmse": 1.137453048084884,
+          "mae": 0.8350428409246918,
+          "mase": 1.0320002343544405,
+          "r2": 0.8652843733165385
         },
         "arima": {
-          "rmse": 1.1372920855317892,
-          "mae": 0.8416005550108645,
-          "mase": 1.0407453368402897,
-          "r2": 0.8658044078840391
+          "rmse": 1.1344205595242243,
+          "mae": 0.8382323333973065,
+          "mase": 1.0359420165216466,
+          "r2": 0.8660017286898194
         },
         "lstm": {
-          "rmse": 1.1379708157784783,
-          "mae": 0.8424511535758455,
-          "mase": 1.0417972093524408,
-          "r2": 0.8656441855676729
+          "rmse": 1.1378738231532948,
+          "mae": 0.8423871008252957,
+          "mase": 1.0410767482374768,
+          "r2": 0.8651846848734985
         },
         "naive": {
-          "rmse": 1.1562033222789927,
-          "mae": 0.8524489795918371,
-          "mase": 1.054160783428921,
-          "r2": 0.8613044129631335
+          "rmse": 1.1538685374105737,
+          "mae": 0.8493902439024392,
+          "mase": 1.0497316877718685,
+          "r2": 0.8613679385469595
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "MBT",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.4410615702979625,
+                "raw_p_value": 0.6595573862030489,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.006889430726339196,
+                "long_run_variance": 0.05977702827677032,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.046564338693939146,
+                "raw_p_value": 0.9628983875176226,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0009574008199024276,
+                "long_run_variance": 0.10357305716934946,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -2.8653621831400704,
+                "raw_p_value": 0.004527041531605702,
+                "holm_adjusted_p_value": 0.02716224918963421,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.037613165028423635,
+                "long_run_variance": 0.042216944124708465,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.6148340877948818,
+                "raw_p_value": 0.5392348974620091,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.007846831546241615,
+                "long_run_variance": 0.03990606150831888,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -2.04105111583493,
+                "raw_p_value": 0.042317536761925886,
+                "holm_adjusted_p_value": 0.21158768380962945,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.04450259575476283,
+                "long_run_variance": 0.11647400483004873,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.3498079764872501,
+                "raw_p_value": 0.17832339313663778,
+                "holm_adjusted_p_value": 0.7132935725465511,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.036655764208521215,
+                "long_run_variance": 0.18067857654941838,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.490095240995904,
+                "raw_p_value": 0.6245050905208721,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0031894924726147767,
+                "long_run_variance": 0.010376437550719814,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.1065191579480662,
+                "raw_p_value": 0.2695871573477952,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.007344259900603988,
+                "long_run_variance": 0.010793052361330631,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -2.6355888906468485,
+                "raw_p_value": 0.008935132531935919,
+                "holm_adjusted_p_value": 0.05361079519161552,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.014347402977747486,
+                "long_run_variance": 0.007260346384237082,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.8925131587732303,
+                "raw_p_value": 0.3729937168458632,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.004154767427989211,
+                "long_run_variance": 0.005309214418116906,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.2850119840846714,
+                "raw_p_value": 0.20000159017600494,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.011157910505132708,
+                "long_run_variance": 0.018472151249946372,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.7566514553352462,
+                "raw_p_value": 0.44998569384234366,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.007003143077143497,
+                "long_run_variance": 0.020987482132846645,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "MEG": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.029011195569285896,
-          "mae": 0.02077918789376909,
-          "mase": 0.5554198035971812,
-          "r2": 0.918972949707632
+          "rmse": 0.028961834440373525,
+          "mae": 0.020743107431074374,
+          "mase": 0.5538944423688196,
+          "r2": 0.9190162149464312
         },
         "arima": {
-          "rmse": 0.02901124463290168,
-          "mae": 0.02077938900448216,
-          "mase": 0.5554251792101901,
-          "r2": 0.9189726756421653
+          "rmse": 0.02896920364349437,
+          "mae": 0.02081268598105775,
+          "mase": 0.5557523690209343,
+          "r2": 0.9189749978137609
         },
         "lstm": {
-          "rmse": 0.029096414472860956,
-          "mae": 0.020525716934337458,
-          "mase": 0.5486446210816354,
-          "r2": 0.9184962249228862
+          "rmse": 0.02904529123078646,
+          "mae": 0.02049266208351146,
+          "mase": 0.5472069059621761,
+          "r2": 0.9185488146723744
         },
         "naive": {
-          "rmse": 0.02894752465537374,
-          "mae": 0.020367346938775534,
-          "mase": 0.5444114512253165,
-          "r2": 0.9193282197981829
+          "rmse": 0.028895663162376066,
+          "mae": 0.02032520325203254,
+          "mase": 0.5427353234671253,
+          "r2": 0.9193858516652701
         }
       },
-      "bestModel": "Lag-Informed Regression"
+      "bestModel": "Lag-Informed Regression",
+      "bestPrincipalModel": "Lag-Informed Regression",
+      "bestEvaluatedMethod": "Naive baseline",
+      "bestPrincipalBeatsNaive": false,
+      "allPrincipalsWorseThanNaive": true,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "MEG",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.478294560334512,
+                "raw_p_value": 0.6328670809142647,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -4.269055866416674e-07,
+                "long_run_variance": 1.951816016234506e-10,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.9373963640143225,
+                "raw_p_value": 0.34947784264970877,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -4.841088529594974e-06,
+                "long_run_variance": 6.534398321408343e-09,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.8957215079334906,
+                "raw_p_value": 0.3712807212364819,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 3.828504558108668e-06,
+                "long_run_variance": 4.475879812590881e-09,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.744695878619028,
+                "raw_p_value": 0.45716930972874553,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -4.414182942953307e-06,
+                "long_run_variance": 8.608130458357626e-09,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.828835112444157,
+                "raw_p_value": 0.4080044522443157,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 4.255410144750338e-06,
+                "long_run_variance": 6.458217266434851e-09,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 2.9413997193957795,
+                "raw_p_value": 0.003580298671390876,
+                "holm_adjusted_p_value": 0.021481792028345256,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 8.669593087703643e-06,
+                "long_run_variance": 2.1284106298899806e-09,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -4.185283926344211,
+                "raw_p_value": 3.9725618938270654e-05,
+                "holm_adjusted_p_value": 0.00011917685681481197,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -6.95785499833765e-05,
+                "long_run_variance": 6.771220880781132e-08,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.5273847139456938,
+                "raw_p_value": 0.012121607395058185,
+                "holm_adjusted_p_value": 0.012121607395058185,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00025044534756291364,
+                "long_run_variance": 2.4057434505621893e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 4.719195459284347,
+                "raw_p_value": 3.983264925079561e-06,
+                "holm_adjusted_p_value": 1.9916324625397805e-05,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0004179041790418325,
+                "long_run_variance": 1.921248679455038e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.8057628951164224,
+                "raw_p_value": 0.005422900268046901,
+                "holm_adjusted_p_value": 0.010845800536093802,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0003200238975462901,
+                "long_run_variance": 3.187344230816573e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 4.674952463947603,
+                "raw_p_value": 4.8582823341899465e-06,
+                "holm_adjusted_p_value": 1.9916324625397805e-05,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.000487482729025209,
+                "long_run_variance": 2.663975052137673e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 5.117900052194837,
+                "raw_p_value": 6.245711880269033e-07,
+                "holm_adjusted_p_value": 3.7474271281614195e-06,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00016745883147891886,
+                "long_run_variance": 2.6230018482838143e-07,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "MER": {
       "metrics": {
         "lag_reg": {
-          "rmse": 10.183635644669922,
-          "mae": 7.199404304349828,
-          "mase": 1.5132867229614178,
-          "r2": 0.949090133724756
+          "rmse": 10.158319322544228,
+          "mae": 7.170597188231447,
+          "mase": 1.5068567596162374,
+          "r2": 0.9493107065221714
         },
         "arima": {
-          "rmse": 10.491634326644515,
-          "mae": 7.351170931187789,
-          "mase": 1.5451874763673297,
-          "r2": 0.9459640810017512
+          "rmse": 10.42987777952015,
+          "mae": 7.301403471820525,
+          "mase": 1.5343448930941541,
+          "r2": 0.9465643673818385
         },
         "lstm": {
-          "rmse": 10.470054095363365,
-          "mae": 7.312227213873533,
-          "mase": 1.5370016587825583,
-          "r2": 0.9461861452312972
+          "rmse": 10.600015550629143,
+          "mae": 7.351349376075116,
+          "mase": 1.5448407167285783,
+          "r2": 0.9448068067114556
         },
         "naive": {
-          "rmse": 10.315662749391512,
-          "mae": 7.41061224489796,
-          "mase": 1.557681808819063,
-          "r2": 0.9477615211821683
+          "rmse": 10.29467460404903,
+          "mae": 7.380487804878049,
+          "mase": 1.550963977769982,
+          "r2": 0.947940767077499
         }
       },
-      "bestModel": "Lag-Informed Regression"
+      "bestModel": "Lag-Informed Regression",
+      "bestPrincipalModel": "Lag-Informed Regression",
+      "bestEvaluatedMethod": "Lag-Informed Regression",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "MER",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.366413602220483,
+                "raw_p_value": 0.17306191959312295,
+                "holm_adjusted_p_value": 0.9174644196095108,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -5.590899036952697,
+                "long_run_variance": 4101.710744631114,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.433777591741451,
+                "raw_p_value": 0.15291073660158513,
+                "holm_adjusted_p_value": 0.9174644196095108,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -9.168878214804222,
+                "long_run_variance": 10019.243136254947,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.075295768703628,
+                "raw_p_value": 0.2833001247293804,
+                "holm_adjusted_p_value": 0.9174644196095108,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -2.788873744476593,
+                "long_run_variance": 1648.040643945159,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.3496056610337501,
+                "raw_p_value": 0.17838822698137377,
+                "holm_adjusted_p_value": 0.9174644196095108,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -3.5779791778515246,
+                "long_run_variance": 1721.9792724534973,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.43633233334450794,
+                "raw_p_value": 0.6629798784540604,
+                "holm_adjusted_p_value": 0.9356634847843007,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 2.8020252924761047,
+                "long_run_variance": 10103.582536686843,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.7271443930586258,
+                "raw_p_value": 0.46783174239215036,
+                "holm_adjusted_p_value": 0.9356634847843007,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 6.38000447032763,
+                "long_run_variance": 18861.087553541773,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.0427587388728772,
+                "raw_p_value": 0.29808787891940697,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.13080628358907706,
+                "long_run_variance": 3.855277305225183,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.2412233112785125,
+                "raw_p_value": 0.21571036143173966,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.18075218784366967,
+                "long_run_variance": 5.1955719446102515,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -2.3973834564099348,
+                "raw_p_value": 0.0172622852212253,
+                "holm_adjusted_p_value": 0.1035737113273518,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.2098906166466024,
+                "long_run_variance": 1.8779201554207297,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.9314058367677243,
+                "raw_p_value": 0.35256056205636854,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.049945904254592624,
+                "long_run_variance": 0.704511253395771,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.43964405832119513,
+                "raw_p_value": 0.6605824745990111,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.07908433305752537,
+                "long_run_variance": 7.927652059359077,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.14343753213549354,
+                "raw_p_value": 0.8860625468749178,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.029138428802932742,
+                "long_run_variance": 10.11050237565959,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "NIKL": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.1538022377969299,
-          "mae": 0.11208877701745397,
-          "mase": 1.2296696490010965,
-          "r2": 0.9394408939803645
+          "rmse": 0.15353678140646798,
+          "mae": 0.111880118801188,
+          "mase": 1.2288486578780478,
+          "r2": 0.9399211848248552
         },
         "arima": {
-          "rmse": 0.15372413692995002,
-          "mae": 0.11170555428584222,
-          "mase": 1.2254655049787482,
-          "r2": 0.9395023822639476
+          "rmse": 0.15346194593015597,
+          "mae": 0.11148823186003584,
+          "mase": 1.2245443208176758,
+          "r2": 0.9399797366715574
         },
         "lstm": {
-          "rmse": 0.15402392008812218,
-          "mae": 0.11250521702495082,
-          "mase": 1.2342382030657815,
-          "r2": 0.9392661948795037
+          "rmse": 0.1535951757141352,
+          "mae": 0.11194238210093889,
+          "mase": 1.2295325342731909,
+          "r2": 0.9398754768462191
         },
         "naive": {
-          "rmse": 0.15381940112763837,
-          "mae": 0.11208163265306123,
-          "mase": 1.229591271769326,
-          "r2": 0.9394273772204806
+          "rmse": 0.15355410052687585,
+          "mae": 0.11186991869918698,
+          "mase": 1.2287366238385018,
+          "r2": 0.9399076301455149
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "NIKL",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.2040452549059451,
+                "raw_p_value": 0.8384875235885583,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 2.2974395987420992e-05,
+                "long_run_variance": 3.1059988433048477e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.5161588363281321,
+                "raw_p_value": 0.6062090030457655,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -1.7934757998524013e-05,
+                "long_run_variance": 2.957947033407446e-07,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.4463585840813513,
+                "raw_p_value": 0.6557324984917597,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -5.318543960346919e-06,
+                "long_run_variance": 3.478434327494555e-08,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.368786945646785,
+                "raw_p_value": 0.7126050201811306,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -4.090915398594499e-05,
+                "long_run_variance": 3.0147826131109315e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.25172659065525976,
+                "raw_p_value": 0.8014634267460768,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -2.829293994776794e-05,
+                "long_run_variance": 3.0950242222962625e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.5227300088663492,
+                "raw_p_value": 0.6016345284890617,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 1.2616214038177092e-05,
+                "long_run_variance": 1.4271489931983458e-07,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.0329194546216613,
+                "raw_p_value": 0.30266012048290614,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00039188694115216644,
+                "long_run_variance": 3.5265882265016926e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.6238813789941259,
+                "raw_p_value": 0.5332859322473275,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -6.226329975088137e-05,
+                "long_run_variance": 2.4402049502016924e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.3049411373877716,
+                "raw_p_value": 0.7606698732590658,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 1.0200102001018247e-05,
+                "long_run_variance": 2.7412148898763874e-07,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.3205276625122633,
+                "raw_p_value": 0.18789113751176445,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0004541502409030478,
+                "long_run_variance": 2.897811793710464e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.0190014002020924,
+                "raw_p_value": 0.3092074810322047,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.00038168683915114815,
+                "long_run_variance": 3.437406498229959e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.9759905808476579,
+                "raw_p_value": 0.33003181181108787,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 7.246340175189961e-05,
+                "long_run_variance": 1.3505549760138176e-06,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "PGOLD": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.8597876632770014,
-          "mae": 0.6342242184909417,
-          "mase": 1.276825591185044,
-          "r2": 0.8969822578155392
+          "rmse": 0.8586167176242688,
+          "mae": 0.6336285362853629,
+          "mase": 1.2767313760094121,
+          "r2": 0.8970936639992806
         },
         "arima": {
-          "rmse": 0.8577469877425349,
-          "mae": 0.6324602131921223,
-          "mase": 1.2732742807133661,
-          "r2": 0.8974706953992252
+          "rmse": 0.8566280230660991,
+          "mae": 0.6320699849903005,
+          "mase": 1.2735909692480758,
+          "r2": 0.897569807232647
         },
         "lstm": {
-          "rmse": 0.8592372739661686,
-          "mae": 0.6335092790191199,
-          "mase": 1.2753862689593138,
-          "r2": 0.8971141083141226
+          "rmse": 0.8579874342372474,
+          "mae": 0.6330400937077828,
+          "mase": 1.2755456921919177,
+          "r2": 0.8972444495964437
         },
         "naive": {
-          "rmse": 0.8597341781869888,
-          "mae": 0.6338775510204082,
-          "mase": 1.2761276772847174,
-          "r2": 0.8969950743330829
+          "rmse": 0.8585770038527211,
+          "mae": 0.6333333333333334,
+          "mase": 1.2761365560959088,
+          "r2": 0.8971031832739955
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "PGOLD",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.44939323851955476,
+                "raw_p_value": 0.6535453012870859,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0034110978817400777,
+                "long_run_variance": 0.014115666209215996,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.14349205193010645,
+                "raw_p_value": 0.8860195374430291,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.001080230474858474,
+                "long_run_variance": 0.013884915551151063,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.22959872328024725,
+                "raw_p_value": 0.8185951639804964,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 6.819623915796484e-05,
+                "long_run_variance": 2.161463952646319e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.7630254513256364,
+                "raw_p_value": 0.4461822778676381,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0023308674068816078,
+                "long_run_variance": 0.0022862471316294685,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.4349590865463526,
+                "raw_p_value": 0.6639750123442504,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.003342901642582116,
+                "long_run_variance": 0.014471597194021779,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.13210070748155225,
+                "raw_p_value": 0.8950130583926896,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0010120342357005081,
+                "long_run_variance": 0.014379580152931873,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.39604754888498495,
+                "raw_p_value": 0.692414639327151,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0015585512950624181,
+                "long_run_variance": 0.00379414238997389,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.15232290067500873,
+                "raw_p_value": 0.8790576284597864,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0005884425775800481,
+                "long_run_variance": 0.0036563171539192637,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.5669069319457052,
+                "raw_p_value": 0.11842709941738803,
+                "holm_adjusted_p_value": 0.7105625965043282,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00029520295202947944,
+                "long_run_variance": 8.696030871745421e-06,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.4578782285357078,
+                "raw_p_value": 0.6474457495341561,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0009701087174823701,
+                "long_run_variance": 0.001099782768750203,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.3175167960854871,
+                "raw_p_value": 0.7511219318901521,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0012633483430329387,
+                "long_run_variance": 0.003878634956176558,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.0746726519552905,
+                "raw_p_value": 0.9405361009741812,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0002932396255505687,
+                "long_run_variance": 0.0037782287313354005,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "SCC": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.7846435533655487,
-          "mae": 0.4627014298350322,
-          "mase": 1.2017206261351014,
-          "r2": 0.974569230603107
+          "rmse": 0.7836134580754823,
+          "mae": 0.4629400543336144,
+          "mase": 1.203207241807836,
+          "r2": 0.9748009295889194
         },
         "arima": {
-          "rmse": 0.782476785229807,
-          "mae": 0.4614203913791868,
-          "mase": 1.1983935338980825,
-          "r2": 0.9747094891919943
+          "rmse": 0.7810900242713769,
+          "mae": 0.45747967479674795,
+          "mase": 1.189015408242615,
+          "r2": 0.9749629630517724
         },
         "lstm": {
-          "rmse": 0.7837861488462712,
-          "mae": 0.46011506369359706,
-          "mase": 1.1950033580687196,
-          "r2": 0.9746247782293144
+          "rmse": 0.7823955701107538,
+          "mae": 0.4592318662761224,
+          "mase": 1.1935694524591,
+          "r2": 0.9748791972486103
         },
         "naive": {
-          "rmse": 0.7820303245855805,
-          "mae": 0.45730612244897956,
-          "mase": 1.1877080215653033,
-          "r2": 0.9747383411572551
+          "rmse": 0.7810900242713769,
+          "mae": 0.45747967479674795,
+          "mase": 1.189015408242615,
+          "r2": 0.9749629630517724
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": false,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "SCC",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.6352491036713838,
+                "raw_p_value": 0.5258588069353631,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.003948425660755559,
+                "long_run_variance": 0.009465114977466183,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.34861593176566535,
+                "raw_p_value": 0.727677055646441,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.001907223548084342,
+                "long_run_variance": 0.007332884150952101,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.6352491036713838,
+                "raw_p_value": 0.5258588069353631,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.003948425660755559,
+                "long_run_variance": 0.009465114977466183,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.3986899714145138,
+                "raw_p_value": 0.1631705580700123,
+                "holm_adjusted_p_value": 0.9790233484200738,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.002041202112671217,
+                "long_run_variance": 0.0005217893139566575,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 1.3986899714145138,
+                "raw_p_value": 0.1631705580700123,
+                "holm_adjusted_p_value": 0.9790233484200738,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.002041202112671217,
+                "long_run_variance": 0.0005217893139566575,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.3372395008049105,
+                "raw_p_value": 0.18238466222912716,
+                "holm_adjusted_p_value": 0.7295386489165087,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.005460379536866402,
+                "long_run_variance": 0.0040850121418429634,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.914128738077502,
+                "raw_p_value": 0.36154794770736237,
+                "holm_adjusted_p_value": 0.7295386489165087,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0037081880574919976,
+                "long_run_variance": 0.004031576095096534,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.3372395008049105,
+                "raw_p_value": 0.18238466222912716,
+                "holm_adjusted_p_value": 0.7295386489165087,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.005460379536866402,
+                "long_run_variance": 0.0040850121418429634,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -2.837713625083243,
+                "raw_p_value": 0.004924378144652193,
+                "holm_adjusted_p_value": 0.02954626886791316,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0017521914793744043,
+                "long_run_variance": 9.340972246174806e-05,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.837713625083243,
+                "raw_p_value": 0.004924378144652193,
+                "holm_adjusted_p_value": 0.02954626886791316,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0017521914793744043,
+                "long_run_variance": 9.340972246174806e-05,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "SECB": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.9640069452398157,
-          "mae": 0.6959381123202601,
-          "mase": 0.5125806026010677,
-          "r2": 0.9006490859925665
+          "rmse": 0.9652278123634048,
+          "mae": 0.6981614316143167,
+          "mase": 0.5140293162957094,
+          "r2": 0.9014018230079588
         },
         "arima": {
-          "rmse": 0.9644647425897623,
-          "mae": 0.6971016822536227,
-          "mase": 0.5134376089455298,
-          "r2": 0.9005547020568768
+          "rmse": 0.9650656071046467,
+          "mae": 0.6932926829268293,
+          "mase": 0.5104446445482914,
+          "r2": 0.9014349588102927
         },
         "lstm": {
-          "rmse": 0.9795444660099305,
-          "mae": 0.7106125848840792,
-          "mase": 0.5233888193899677,
-          "r2": 0.8974206714374473
+          "rmse": 0.9665142180224633,
+          "mae": 0.6982611685869996,
+          "mase": 0.5141027487793101,
+          "r2": 0.9011388347842632
         },
         "naive": {
-          "rmse": 0.9642380940622584,
-          "mae": 0.6914285714285713,
-          "mase": 0.5092591819936958,
-          "r2": 0.9006014357134036
+          "rmse": 0.9650656071046467,
+          "mae": 0.6932926829268293,
+          "mase": 0.5104446445482914,
+          "r2": 0.9014349588102927
         }
       },
-      "bestModel": "Lag-Informed Regression"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": false,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "SECB",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.03626081318232374,
+                "raw_p_value": 0.971103922545155,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00031310374358374765,
+                "long_run_variance": 0.01826701250931644,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.1483247653993325,
+                "raw_p_value": 0.8822084758797752,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.002485003879729405,
+                "long_run_variance": 0.06876902807044341,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.03626081318232374,
+                "raw_p_value": 0.971103922545155,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00031310374358374765,
+                "long_run_variance": 0.01826701250931644,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.19320517162958192,
+                "raw_p_value": 0.8469583603407643,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.00279810762331315,
+                "long_run_variance": 0.05138749165856398,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.19320517162958192,
+                "raw_p_value": 0.8469583603407643,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00279810762331315,
+                "long_run_variance": 0.05138749165856398,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.0807658659266637,
+                "raw_p_value": 0.28086397866368534,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.004868748687487342,
+                "long_run_variance": 0.0049720737360929345,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.014009835795141931,
+                "raw_p_value": 0.9888335356052667,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -9.97369726830847e-05,
+                "long_run_variance": 0.012416876399390693,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.0807658659266637,
+                "raw_p_value": 0.28086397866368534,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.004868748687487342,
+                "long_run_variance": 0.0049720737360929345,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.7553243313543939,
+                "raw_p_value": 0.45077991868599687,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.004968485660170427,
+                "long_run_variance": 0.010601009311811078,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 0.7553243313543939,
+                "raw_p_value": 0.45077991868599687,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.004968485660170427,
+                "long_run_variance": 0.010601009311811078,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "SHLPH": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.3129299392790595,
-          "mae": 0.18651035480661976,
-          "mase": 1.0214802057918329,
-          "r2": 0.9749448929492839
+          "rmse": 0.31234147772082455,
+          "mae": 0.18611286112861125,
+          "mase": 1.017587060767795,
+          "r2": 0.9751278667700082
         },
         "arima": {
-          "rmse": 0.3119063008327269,
-          "mae": 0.1895200179901114,
-          "mase": 1.0379635338688433,
-          "r2": 0.9751085425048984
+          "rmse": 0.3114116821385442,
+          "mae": 0.18398373983739835,
+          "mase": 1.0059459185941424,
+          "r2": 0.9752757278762758
         },
         "lstm": {
-          "rmse": 0.31629468455390497,
-          "mae": 0.19429104890272994,
-          "mase": 1.0640935235067581,
-          "r2": 0.9744031915808934
+          "rmse": 0.3126025348547117,
+          "mae": 0.18906950740687262,
+          "mase": 1.0337527624704137,
+          "r2": 0.975086272798379
         },
         "naive": {
-          "rmse": 0.3119674237310488,
-          "mae": 0.18428571428571427,
-          "mase": 1.0092962910731915,
-          "r2": 0.9750987858113258
+          "rmse": 0.3114116821385442,
+          "mae": 0.18398373983739835,
+          "mase": 1.0059459185941424,
+          "r2": 0.9752757278762758
         }
       },
-      "bestModel": "ARIMA"
+      "bestModel": "ARIMA",
+      "bestPrincipalModel": "ARIMA",
+      "bestEvaluatedMethod": "ARIMA",
+      "bestPrincipalBeatsNaive": false,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "SHLPH",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.771619240402899,
+                "raw_p_value": 0.44108356585798736,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0005799629324706548,
+                "long_run_variance": 0.00013840776700531303,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.09334448792884037,
+                "raw_p_value": 0.9257061777372405,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0001631460927628966,
+                "long_run_variance": 0.0007484143113419453,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.771619240402899,
+                "raw_p_value": 0.44108356585798736,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0005799629324706548,
+                "long_run_variance": 0.00013840776700531303,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -0.4615655081537384,
+                "raw_p_value": 0.6448024734856371,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0007431090252335512,
+                "long_run_variance": 0.0006350449421487559,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.4615655081537384,
+                "raw_p_value": 0.6448024734856371,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0007431090252335512,
+                "long_run_variance": 0.0006350449421487559,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.102101429460672,
+                "raw_p_value": 0.03656542704191834,
+                "holm_adjusted_p_value": 0.14626170816767337,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0021291212912129148,
+                "long_run_variance": 0.0002513388103442435,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.915245669451637,
+                "raw_p_value": 0.056625462001393484,
+                "holm_adjusted_p_value": 0.14626170816767337,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0029566462782613643,
+                "long_run_variance": 0.000583869577491795,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.102101429460672,
+                "raw_p_value": 0.03656542704191834,
+                "holm_adjusted_p_value": 0.14626170816767337,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0021291212912129148,
+                "long_run_variance": 0.0002513388103442435,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -2.8551931867437506,
+                "raw_p_value": 0.004669651449904811,
+                "holm_adjusted_p_value": 0.028017908699428863,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.005085767569474279,
+                "long_run_variance": 0.0007773347866902799,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": null,
+                "raw_p_value": 1.0,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0,
+                "long_run_variance": 0.0,
+                "available": false,
+                "unavailable_reason": "zero or degenerate HAC long-run variance"
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 2.8551931867437506,
+                "raw_p_value": 0.004669651449904811,
+                "holm_adjusted_p_value": 0.028017908699428863,
+                "reject": true,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.005085767569474279,
+                "long_run_variance": 0.0007773347866902799,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     },
     "SMPH": {
       "metrics": {
         "lag_reg": {
-          "rmse": 0.41253613887775753,
-          "mae": 0.2989714734150797,
-          "mase": 0.5585955864844284,
-          "r2": 0.9565429392658189
+          "rmse": 0.4125305852427846,
+          "mae": 0.29940242330937794,
+          "mase": 0.5593519934765685,
+          "r2": 0.9569011624748848
         },
         "arima": {
-          "rmse": 0.4121322592839525,
-          "mae": 0.2941175301085373,
-          "mase": 0.5495265228807721,
-          "r2": 0.9566279879528119
+          "rmse": 0.4120385392019876,
+          "mae": 0.2944723437022614,
+          "mase": 0.5501414806632193,
+          "r2": 0.9570039134757905
         },
         "lstm": {
-          "rmse": 0.41083491915910986,
-          "mae": 0.2932402901835679,
-          "mase": 0.547887495769662,
-          "r2": 0.9569006173701692
+          "rmse": 0.41138176666785087,
+          "mae": 0.29281053345344765,
+          "mase": 0.5470368402091464,
+          "r2": 0.9571408722327802
         },
         "naive": {
-          "rmse": 0.4198133696133584,
-          "mae": 0.29983673469387745,
-          "mase": 0.5602122328017889,
-          "r2": 0.9549962316551143
+          "rmse": 0.41939561624655686,
+          "mae": 0.29983739837398365,
+          "mase": 0.5601646260758992,
+          "r2": 0.9554547886421223
         }
       },
-      "bestModel": "LSTM"
+      "bestModel": "LSTM",
+      "bestPrincipalModel": "LSTM",
+      "bestEvaluatedMethod": "LSTM",
+      "bestPrincipalBeatsNaive": true,
+      "allPrincipalsWorseThanNaive": false,
+      "evaluationMetadata": {
+        "fullSessionCount": 246,
+        "fullStartDate": "2025-09-10",
+        "fullEndDate": "2026-09-11",
+        "displayedSessionCount": 60,
+        "displayedStartDate": "2026-06-18",
+        "displayedEndDate": "2026-09-11",
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation"
+      },
+      "statisticalTests": {
+        "diebold_mariano": {
+          "company": "SMPH",
+          "alpha": 0.05,
+          "scope": "complete_aligned_evaluation",
+          "hac_lag_policy": "floor(4*(n/100)^(2/9)), capped at n-1",
+          "hln_small_sample_correction": true,
+          "p_value_sidedness": "two_sided",
+          "holm_families": {
+            "squared_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.1371890264166518,
+                "raw_p_value": 0.8909940572297527,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.00040572597304652677,
+                "long_run_variance": 0.0021428558508886455,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.2768055521064173,
+                "raw_p_value": 0.7821628052911846,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0009465258139922952,
+                "long_run_variance": 0.0028647149601369994,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.2082915246740686,
+                "raw_p_value": 0.22810010394111063,
+                "holm_adjusted_p_value": 0.9124004157644425,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.005711199166074778,
+                "long_run_variance": 0.005473652684538577,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": 0.4682450217473998,
+                "raw_p_value": 0.6400256764729295,
+                "holm_adjusted_p_value": 1.0,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0005407998409457676,
+                "long_run_variance": 0.00032680813398584563,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.6939600292979313,
+                "raw_p_value": 0.09154370391597891,
+                "holm_adjusted_p_value": 0.5492622234958735,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.006116925139121306,
+                "long_run_variance": 0.003194670698017808,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "squared_error",
+                "sample_size": 246,
+                "dm_statistic": -1.6676529664217374,
+                "raw_p_value": 0.09666225939935195,
+                "holm_adjusted_p_value": 0.5492622234958735,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.006657724980067075,
+                "long_run_variance": 0.0039048686158309476,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ],
+            "absolute_error": [
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "arima"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "arima",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.0180734726271765,
+                "raw_p_value": 0.3096473228136111,
+                "holm_adjusted_p_value": 0.8335788729593276,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0049300796071166005,
+                "long_run_variance": 0.005745339614398145,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "lstm"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.2613158630681869,
+                "raw_p_value": 0.2083947182398319,
+                "holm_adjusted_p_value": 0.8335788729593276,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0065918898559303015,
+                "long_run_variance": 0.006691727589557215,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lag_reg",
+                  "naive"
+                ],
+                "model_1": "lag_reg",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -0.06486881858845889,
+                "raw_p_value": 0.9483313451117259,
+                "holm_adjusted_p_value": 0.9483313451117259,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0004349750646057007,
+                "long_run_variance": 0.011015972166905896,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "lstm"
+                ],
+                "model_1": "arima",
+                "model_2": "lstm",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": 1.191431334451742,
+                "raw_p_value": 0.23463719485473924,
+                "holm_adjusted_p_value": 0.8335788729593276,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": 0.0016618102488137007,
+                "long_run_variance": 0.00047664047084379594,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "arima",
+                  "naive"
+                ],
+                "model_1": "arima",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.48406772766528,
+                "raw_p_value": 0.1390763148331773,
+                "holm_adjusted_p_value": 0.6953815741658865,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.005365054671722301,
+                "long_run_variance": 0.003201893968644452,
+                "available": true,
+                "unavailable_reason": null
+              },
+              {
+                "model_pair": [
+                  "lstm",
+                  "naive"
+                ],
+                "model_1": "lstm",
+                "model_2": "naive",
+                "loss_type": "absolute_error",
+                "sample_size": 246,
+                "dm_statistic": -1.843796347698784,
+                "raw_p_value": 0.06642037709612354,
+                "holm_adjusted_p_value": 0.3985222625767413,
+                "reject": false,
+                "hac_lag": 4,
+                "forecast_horizon": 1,
+                "hln_correction_factor": 0.9979654098963519,
+                "mean_loss_differential": -0.0070268649205360014,
+                "long_run_variance": 0.003558470695747087,
+                "available": true,
+                "unavailable_reason": null
+              }
+            ]
+          }
+        }
+      }
     }
   },
-  "statisticalTests": {}
+  "statisticalTests": {
+    "schema_id": "forecastph.evaluation-statistics",
+    "schema_version": 1,
+    "scope": "complete_aligned_evaluation",
+    "across_company": {
+      "company_count": 15,
+      "metric": "mase",
+      "models": [
+        "lag_reg",
+        "arima",
+        "lstm",
+        "naive"
+      ],
+      "alpha": 0.05,
+      "friedman": {
+        "statistic": 2.041666666666675,
+        "raw_p_value": 0.563803824821747,
+        "reject": false
+      },
+      "posthoc_performed": false,
+      "posthoc_correction": null,
+      "pairwise_wilcoxon": []
+    }
+  }
 }
