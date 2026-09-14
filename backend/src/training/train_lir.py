@@ -35,6 +35,52 @@ class AlphaGridBoundaryWarning(UserWarning):
 
 
 @dataclass(frozen=True, slots=True)
+class AlphaGridPosition:
+    """Structured location of the selected alpha within the configured grid."""
+
+    classification: str
+    lower: bool
+    upper: bool
+    interior: bool
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "classification": self.classification,
+            "lower": self.lower,
+            "upper": self.upper,
+            "interior": self.interior,
+        }
+
+
+def classify_alpha_grid_position(
+    chosen_alpha: float,
+    alpha_grid: Sequence[float],
+) -> AlphaGridPosition:
+    """Classify a selected grid value without hiding a singleton upper boundary."""
+
+    grid = tuple(alpha_grid)
+    if not grid or chosen_alpha not in grid:
+        raise ValueError("chosen_alpha must be present in a non-empty alpha_grid")
+    lower = chosen_alpha == grid[0]
+    upper = chosen_alpha == grid[-1]
+    interior = not lower and not upper
+    if lower and upper:
+        classification = "lower_and_upper"
+    elif lower:
+        classification = "lower"
+    elif upper:
+        classification = "upper"
+    else:
+        classification = "interior"
+    return AlphaGridPosition(
+        classification=classification,
+        lower=lower,
+        upper=upper,
+        interior=interior,
+    )
+
+
+@dataclass(frozen=True, slots=True)
 class LIRFoldScore:
     """Reproducible result for one alpha on one chronological fold."""
 
@@ -77,7 +123,13 @@ class LIRTuningResult:
     chosen_alpha: float
     mean_validation_rmse: tuple[tuple[float, float], ...]
     fold_scores: tuple[LIRFoldScore, ...]
-    alpha_at_grid_boundary: bool
+    alpha_grid_position: AlphaGridPosition
+
+    @property
+    def alpha_at_grid_boundary(self) -> bool:
+        """Retain the existing aggregate boundary signal for compatibility."""
+
+        return self.alpha_grid_position.lower or self.alpha_grid_position.upper
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -86,6 +138,7 @@ class LIRTuningResult:
                 str(alpha): score for alpha, score in self.mean_validation_rmse
             },
             "alpha_at_grid_boundary": self.alpha_at_grid_boundary,
+            "alpha_grid_position": self.alpha_grid_position.as_dict(),
             "fold_scores": [score.as_dict() for score in self.fold_scores],
         }
 
@@ -207,24 +260,26 @@ def tune_lir_alpha(
         (alpha, float(np.mean(scores_by_alpha[alpha]))) for alpha in config.alpha_grid
     )
     chosen_alpha = min(means, key=lambda item: (item[1], item[0]))[0]
-    at_boundary = chosen_alpha in (config.alpha_grid[0], config.alpha_grid[-1])
-    if at_boundary:
+    grid_position = classify_alpha_grid_position(chosen_alpha, config.alpha_grid)
+    if grid_position.lower or grid_position.upper:
+        boundary_label = grid_position.classification.replace("_and_", " and ")
         warnings.warn(
-            f"Winning LASSO alpha {chosen_alpha} is at the configured grid boundary",
+            f"Winning LASSO alpha {chosen_alpha} is at the configured "
+            f"{boundary_label} grid boundary",
             AlphaGridBoundaryWarning,
             stacklevel=2,
         )
     LOGGER.info(
-        "Completed LIR tuning chosen_alpha=%s boundary=%s mean_rmse=%.8f",
+        "Completed LIR tuning chosen_alpha=%s grid_position=%s mean_rmse=%.8f",
         chosen_alpha,
-        at_boundary,
+        grid_position.classification,
         dict(means)[chosen_alpha],
     )
     return LIRTuningResult(
         chosen_alpha=chosen_alpha,
         mean_validation_rmse=means,
         fold_scores=tuple(scores),
-        alpha_at_grid_boundary=at_boundary,
+        alpha_grid_position=grid_position,
     )
 
 

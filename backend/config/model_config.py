@@ -72,6 +72,9 @@ class LagRegressionConfig:
         0.1,
         0.3,
         1.0,
+        3.0,
+        10.0,
+        30.0,
     )
     cv_splits: int = 5
     pacf_max_lag: int = 20
@@ -104,8 +107,8 @@ class ArimaConfig:
     d_values: tuple[int, ...] = (0, 1, 2)
     q_values: tuple[int, ...] = (0, 1, 2, 3)
     trend_options_by_d: tuple[tuple[int, tuple[str, ...]], ...] = (
-        (0, ("c",)),
-        (1, ("t",)),
+        (0, ("n", "c")),
+        (1, ("n", "t")),
         (2, ("n",)),
     )
     cv_splits: int = 5

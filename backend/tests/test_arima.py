@@ -71,7 +71,8 @@ def test_default_grid_includes_all_bounded_orders_and_random_walks() -> None:
     specifications = candidate_specifications(ArimaConfig())
     orders = {specification.order for specification in specifications}
 
-    assert len(specifications) == 48
+    assert len(specifications) == 80
+    assert len(set(specifications)) == 80
     assert orders == {
         (p, d, q)
         for p in range(4)
@@ -79,13 +80,14 @@ def test_default_grid_includes_all_bounded_orders_and_random_walks() -> None:
         for q in range(4)
     }
     assert {(0, d, 0) for d in range(3)} <= orders
+    assert ArimaSpecification((0, 1, 0), "n") in specifications
 
 
 def test_trend_and_drift_policy_is_explicit_and_configurable() -> None:
     config = ArimaConfig()
 
-    assert config.trends_for_d(0) == ("c",)
-    assert config.trends_for_d(1) == ("t",)
+    assert config.trends_for_d(0) == ("n", "c")
+    assert config.trends_for_d(1) == ("n", "t")
     assert config.trends_for_d(2) == ("n",)
     assert ArimaSpecification((0, 1, 0), "t").drift_enabled
     assert not ArimaSpecification((0, 1, 0), "n").drift_enabled

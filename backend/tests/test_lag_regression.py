@@ -23,6 +23,7 @@ from src.training.cross_validation import expanding_window_folds
 from src.training.train_lir import (
     AlphaGridBoundaryWarning,
     LIR_EVALUATION_SCHEMA_ID,
+    classify_alpha_grid_position,
     persist_lir_metadata,
     refit_lir_for_production,
     train_lir_for_evaluation,
@@ -55,6 +56,46 @@ def quick_config() -> LagRegressionConfig:
         cv_splits=3,
         pacf_max_lag=5,
     )
+
+
+def test_default_lasso_alpha_grid_includes_expanded_upper_range() -> None:
+    assert LagRegressionConfig().alpha_grid == (
+        0.0001,
+        0.0003,
+        0.001,
+        0.003,
+        0.01,
+        0.03,
+        0.1,
+        0.3,
+        1.0,
+        3.0,
+        10.0,
+        30.0,
+    )
+
+
+@pytest.mark.parametrize(
+    ("chosen_alpha", "classification", "lower", "upper", "interior"),
+    [
+        (0.001, "lower", True, False, False),
+        (0.01, "interior", False, False, True),
+        (0.1, "upper", False, True, False),
+    ],
+)
+def test_alpha_grid_position_distinguishes_boundaries_and_interior(
+    chosen_alpha: float,
+    classification: str,
+    lower: bool,
+    upper: bool,
+    interior: bool,
+) -> None:
+    position = classify_alpha_grid_position(chosen_alpha, quick_config().alpha_grid)
+
+    assert position.classification == classification
+    assert position.lower is lower
+    assert position.upper is upper
+    assert position.interior is interior
 
 
 def development_samples(dataset, plan):
@@ -232,20 +273,51 @@ def test_training_and_production_refits_are_deterministic() -> None:
     assert first_production.fit_metadata == second_production.fit_metadata
 
 
-def test_boundary_alpha_emits_an_explicit_warning(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize(
+    ("fold_scores", "chosen_alpha", "classification", "lower", "upper"),
+    [
+        ((1.0, 2.0, 3.0), 0.001, "lower", True, False),
+        ((3.0, 2.0, 1.0), 0.1, "upper", False, True),
+    ],
+)
+def test_boundary_alpha_emits_warning_and_structured_metadata(
+    monkeypatch: pytest.MonkeyPatch,
+    fold_scores: tuple[float, ...],
+    chosen_alpha: float,
+    classification: str,
+    lower: bool,
+    upper: bool,
+) -> None:
     dataset = build_regression_dataset(synthetic_records())
     plan = build_company_evaluation_plan("ALI", synthetic_records())
     samples = development_samples(dataset, plan)
-    boundary_config = replace(quick_config(), alpha_grid=(0.001,))
     monkeypatch.setattr(
         "src.training.train_lir.select_pacf_lags",
         lambda training_returns, *, max_lag, significance_z: (1,),
     )
+    scores = iter(fold_scores * quick_config().cv_splits)
+    monkeypatch.setattr(
+        "src.training.train_lir._rmse",
+        lambda actual, predicted: next(scores),
+    )
 
-    with pytest.warns(AlphaGridBoundaryWarning, match="grid boundary"):
-        result = tune_lir_alpha(dataset, samples, config=boundary_config)
+    with pytest.warns(
+        AlphaGridBoundaryWarning,
+        match=f"{classification} grid boundary",
+    ):
+        result = tune_lir_alpha(dataset, samples, config=quick_config())
 
     assert result.alpha_at_grid_boundary is True
+    assert result.chosen_alpha == chosen_alpha
+    assert result.alpha_grid_position.as_dict() == {
+        "classification": classification,
+        "lower": lower,
+        "upper": upper,
+        "interior": False,
+    }
+    assert result.as_dict()["alpha_grid_position"] == (
+        result.alpha_grid_position.as_dict()
+    )
 
 
 def test_reproducibility_metadata_persists_only_under_artifacts(
