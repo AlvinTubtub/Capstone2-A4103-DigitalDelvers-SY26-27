@@ -18,6 +18,7 @@ from config.settings import BACKEND_ROOT, as_manila_time
 from src.data.validator import OhlcvRecord, require_chronological_records
 from src.evaluation.evaluator import CompanyEvaluation
 from src.evaluation.model_selection import summarize_cross_company_metrics
+from src.evaluation.statistical_tests import compare_methods_across_companies
 from src.export.schemas import (
     BACKTEST_WINDOW,
     EVALUATION_MODEL_IDS,
@@ -340,6 +341,12 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
             for symbol, evaluation in evaluations.items()
         }
     )
+    across_company_tests = compare_methods_across_companies(
+        {
+            symbol: dict(evaluation.metrics_by_model)
+            for symbol, evaluation in evaluations.items()
+        }
+    )
     cross_company_methods = {
         MODEL_DISPLAY_LABELS[method.model]: {
             "medianMase": method.median_mase,
@@ -412,10 +419,18 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
                 "allPrincipalsWorseThanNaive": evaluations[
                     symbol
                 ].all_principals_worse_than_naive,
+                "statisticalTests": {
+                    "diebold_mariano": evaluations[symbol].dm_tests.as_dict(),
+                },
             }
             for symbol in sorted(details)
         },
-        "statisticalTests": {},
+        "statisticalTests": {
+            "schema_id": "forecastph.evaluation-statistics",
+            "schema_version": 1,
+            "scope": "complete_aligned_evaluation",
+            "across_company": across_company_tests.as_dict(),
+        },
     }
     payloads["companies.json"] = summaries
     payloads["dashboard.json"] = dashboard

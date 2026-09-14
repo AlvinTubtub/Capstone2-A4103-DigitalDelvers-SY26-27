@@ -158,8 +158,9 @@ interface MetricsJson {
     bestEvaluatedMethod?: EvaluationModelLabel;
     bestPrincipalBeatsNaive?: boolean;
     allPrincipalsWorseThanNaive?: boolean;
+    statisticalTests?: Record<string, unknown>;
   }>;
-  statisticalTests: {};
+  statisticalTests: Record<string, unknown>;
 }
 ```
 
@@ -167,7 +168,9 @@ interface MetricsJson {
 
 `aggregate` contains descriptive medians for compatibility with existing consumers; raw peso RMSE/MAE values are not used to select an overall winner. `crossCompany` is the scale-independent summary emitted by the revised exporter. It reports median MASE, median within-company RMSE rank, principal and all-method win counts, and strict counts beating Naive. Its ordering uses median rank, then median MASE, then evaluated win count, then canonical order. The legacy-named `bestModel` and `worstModel` fields follow that scale-independent ordering.
 
-Per company, `bestModel` and `bestPrincipalModel` mean the lowest-RMSE result among LIR, ARIMA, and LSTM. `bestEvaluatedMethod` also includes Naive. `bestPrincipalBeatsNaive` is true only for strictly lower held-out RMSE; an exact tie is not a win. Exact RMSE ties are ordered LIR, ARIMA, LSTM, then Naive for deterministic reporting. The new fields are additive so already-published operational documents remain readable until the next normal fresh export. `statisticalTests` remains an intentionally empty compatibility object; the operational training pipeline does not populate a statistical-inference lifecycle.
+Per company, `bestModel` and `bestPrincipalModel` mean the lowest-RMSE result among LIR, ARIMA, and LSTM. `bestEvaluatedMethod` also includes Naive. `bestPrincipalBeatsNaive` is true only for strictly lower held-out RMSE; an exact tie is not a win. Exact RMSE ties are ordered LIR, ARIMA, LSTM, then Naive for deterministic reporting. The new fields are additive so already-published operational documents remain readable until the next normal fresh export.
+
+New exports use `statisticalTests` for reporting-only evidence calculated from the complete aligned evaluation records. It contains an across-company MASE Friedman result, a `posthoc_performed` flag, and Holm-adjusted Wilcoxon results only when the Friedman test rejects. Each `perCompany` entry also contains two separately Holm-corrected six-pair Diebold-Mariano families for squared and absolute error. Existing published `{}` values remain schema-compatible until a normal future export; Phase 3 does not regenerate production JSON.
 
 The Models page derives current principal-model RMSE wins, median comparisons, company rankings, and Naive-relative results from `perCompany`. The chatbot uses the same current operational data and does not load a separate study result.
 

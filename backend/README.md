@@ -57,6 +57,8 @@ Evaluation produces canonical out-of-sample prediction records and full-precisio
 
 Cross-company summaries use median MASE, median within-company RMSE rank, win counts, and counts beating Naive. Mean raw peso RMSE/MAE never selects an overall winner. R² is retained, including negative values, as a supplementary metric only.
 
+Reporting-only inference uses the complete date-aligned evaluation records. Each company receives six pairwise Diebold-Mariano comparisons under squared- and absolute-error loss with Newey-West variance, Harvey-Leybourne-Newbold correction, and separate Holm families. Across-company comparison uses MASE in a Friedman test and runs Holm-corrected pairwise Wilcoxon tests only after a significant Friedman result. These tests do not participate in tuning, production selection, refitting, or daily inference.
+
 ## Model training
 
 ### Lag-Informed Regression

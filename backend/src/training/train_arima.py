@@ -18,6 +18,12 @@ from src.artifacts.io import atomic_write_json
 from src.artifacts.manager import ArtifactManager
 from src.data.split import CompanyEvaluationPlan
 from src.data.validator import OhlcvRecord, require_chronological_records
+from src.evaluation.arima_diagnostics import (
+    ArimaDiagnostics,
+    SelectedArimaFitDiagnostics,
+    compute_fitted_arima_diagnostics,
+    compute_holdout_error_diagnostics,
+)
 from src.models.arima import (
     ArimaError,
     ArimaFitAttempt,
@@ -152,6 +158,7 @@ class ArimaEvaluationResult:
     actual_closes: tuple[float, ...]
     adf_diagnostic: AdfDiagnostic
     development_fit_metadata: dict[str, object]
+    diagnostics: ArimaDiagnostics
     configuration: ArimaConfig
 
     def as_metadata_dict(self) -> dict[str, object]:
@@ -163,6 +170,7 @@ class ArimaEvaluationResult:
             "adf_diagnostic": self.adf_diagnostic.as_dict(),
             "tuning": self.tuning.as_dict(),
             "development_fit": self.development_fit_metadata,
+            "diagnostics": self.diagnostics.as_dict(),
             "evaluation_target_dates": [value.isoformat() for value in self.target_dates],
         }
 
@@ -174,6 +182,7 @@ class ArimaProductionFit:
     model: FittedArimaModel
     fit_metadata: dict[str, object]
     adf_diagnostic: AdfDiagnostic
+    fitted_diagnostics: SelectedArimaFitDiagnostics
 
 
 def _rmse(actual: Sequence[float], predicted: Sequence[float]) -> float:
@@ -372,6 +381,10 @@ def train_arima_for_evaluation(
         config=config,
     )
     development_fit_metadata = fitted.fit_metadata()
+    fitted_diagnostics = compute_fitted_arima_diagnostics(
+        getattr(fitted, "result", None),
+        order=tuning.selected_specification.order,
+    )
     predicted: list[float] = []
     actual: list[float] = []
     target_dates: list[date] = []
@@ -398,6 +411,15 @@ def train_arima_for_evaluation(
         actual_closes=tuple(actual),
         adf_diagnostic=compute_adf_diagnostic(development_closes),
         development_fit_metadata=development_fit_metadata,
+        diagnostics=ArimaDiagnostics(
+            selected_fitted_model=fitted_diagnostics,
+            holdout_forecast_errors=compute_holdout_error_diagnostics(
+                tuple(
+                    prediction - observed
+                    for prediction, observed in zip(predicted, actual, strict=True)
+                )
+            ),
+        ),
         configuration=config,
     )
 
@@ -419,10 +441,18 @@ def refit_arima_for_production(
         selected_specification.trend,
     )
     fitted = fit_arima(close_values, selected_specification, config=config)
+    fitted_diagnostics = compute_fitted_arima_diagnostics(
+        fitted.result,
+        order=selected_specification.order,
+    )
     return ArimaProductionFit(
         model=fitted,
-        fit_metadata=fitted.fit_metadata(),
+        fit_metadata={
+            **fitted.fit_metadata(),
+            "diagnostics": fitted_diagnostics.as_dict(),
+        },
         adf_diagnostic=compute_adf_diagnostic(close_values),
+        fitted_diagnostics=fitted_diagnostics,
     )
 
 

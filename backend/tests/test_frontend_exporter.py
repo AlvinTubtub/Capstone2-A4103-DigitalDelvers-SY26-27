@@ -180,7 +180,13 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     assert latest["forecastDate"] == "2026-07-21"
     assert latest["generatedAt"].endswith("+08:00")
     assert latest["lastRunAt"].endswith("+08:00")
-    assert metrics["statisticalTests"] == {}
+    assert metrics["statisticalTests"]["schema_id"] == (
+        "forecastph.evaluation-statistics"
+    )
+    assert metrics["statisticalTests"]["scope"] == "complete_aligned_evaluation"
+    across_company_tests = metrics["statisticalTests"]["across_company"]
+    assert across_company_tests["metric"] == "mase"
+    assert isinstance(across_company_tests["posthoc_performed"], bool)
     assert metrics["aggregateStatistic"] == "median"
     assert metrics["crossCompany"]["selectionBasis"].startswith(
         "median_within_company_rmse_rank"
@@ -195,6 +201,16 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
         and "bestPrincipalBeatsNaive" in company
         and "allPrincipalsWorseThanNaive" in company
         for company in metrics["perCompany"].values()
+    )
+    assert all(
+        len(
+            company["statisticalTests"]["diebold_mariano"]["holm_families"][
+                loss_type
+            ]
+        )
+        == 6
+        for company in metrics["perCompany"].values()
+        for loss_type in ("squared_error", "absolute_error")
     )
     assert all(
         isinstance(company["bestPrincipalBeatsNaive"], bool)

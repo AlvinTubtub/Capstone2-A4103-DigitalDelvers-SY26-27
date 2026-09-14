@@ -337,6 +337,17 @@ def test_statsmodels_evaluation_pipeline_integration() -> None:
         result.development_fit_metadata["convergence_status"]
         == "confirmed_converged"
     )
+    diagnostics = result.as_metadata_dict()["diagnostics"]
+    assert set(diagnostics) == {
+        "selected_fitted_model",
+        "holdout_forecast_errors",
+    }
+    assert diagnostics["holdout_forecast_errors"]["observations"] == len(
+        plan.evaluation_pairs
+    )
+    assert diagnostics["holdout_forecast_errors"]["source"] == (
+        "complete_aligned_holdout_forecast_errors"
+    )
 
 
 def test_adf_records_result_or_explicit_unavailability() -> None:

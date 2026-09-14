@@ -23,11 +23,16 @@ from src.evaluation.metrics import (
     compute_evaluation_metrics,
     compute_mase_denominator,
 )
+from src.evaluation.holdout import CanonicalHoldout, aligned_holdout_from_backtest
 from src.evaluation.model_selection import (
     CompanyModelSelection,
     ModelRanking,
     rank_evaluated_methods,
     select_company_models,
+)
+from src.evaluation.statistical_tests import (
+    WithinCompanyDMTests,
+    run_within_company_dm_tests,
 )
 from src.features.regression_features import build_regression_dataset
 from src.training.train_arima import train_arima_for_evaluation
@@ -71,6 +76,18 @@ class CompanyEvaluation:
         """Rank all evaluated methods, including Naive, by company RMSE."""
 
         return rank_evaluated_methods(dict(self.metrics_by_model))
+
+    @property
+    def aligned_holdout(self) -> CanonicalHoldout:
+        """Expose one complete date-keyed row per OOS target date."""
+
+        return aligned_holdout_from_backtest(self.backtest)
+
+    @property
+    def dm_tests(self) -> WithinCompanyDMTests:
+        """Compute reporting-only DM evidence from the complete aligned holdout."""
+
+        return run_within_company_dm_tests(self.aligned_holdout)
 
     @property
     def best_principal_beats_naive(self) -> bool:
@@ -117,6 +134,10 @@ class CompanyEvaluation:
             "principal_ranking": self.principal_ranking.as_dict(),
             "evaluated_ranking": self.evaluated_ranking.as_dict(),
             "backtest": self.backtest.as_dict(),
+            "aligned_holdout": self.aligned_holdout.as_dict(),
+            "statistical_tests": {
+                "diebold_mariano": self.dm_tests.as_dict(),
+            },
         }
 
     def to_json(self) -> str:

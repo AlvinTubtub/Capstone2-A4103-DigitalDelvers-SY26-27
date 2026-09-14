@@ -372,9 +372,75 @@ def validate_metrics_json(value: object) -> None:
         ):
             if field in company:
                 _boolean(company[field], f"metrics.perCompany.{symbol}.{field}")
-    if document["statisticalTests"] != {}:
-        raise FrontendSchemaError(
-            "metrics.statisticalTests must remain an empty compatibility object"
+        if "statisticalTests" in company:
+            tests = _object(
+                company["statisticalTests"],
+                f"metrics.perCompany.{symbol}.statisticalTests",
+            )
+            _required(
+                tests,
+                {"diebold_mariano"},
+                f"metrics.perCompany.{symbol}.statisticalTests",
+            )
+            dm = _object(
+                tests["diebold_mariano"],
+                f"metrics.perCompany.{symbol}.statisticalTests.diebold_mariano",
+            )
+            _required(
+                dm,
+                {"company", "scope", "holm_families"},
+                f"metrics.perCompany.{symbol}.statisticalTests.diebold_mariano",
+            )
+            if dm["company"] != symbol or dm["scope"] != "complete_aligned_evaluation":
+                raise FrontendSchemaError(
+                    f"metrics.perCompany.{symbol} DM identity or scope is invalid"
+                )
+            families = _object(
+                dm["holm_families"],
+                f"metrics.perCompany.{symbol}.DM.holm_families",
+            )
+            if set(families) != {"squared_error", "absolute_error"}:
+                raise FrontendSchemaError(
+                    f"metrics.perCompany.{symbol} DM families are invalid"
+                )
+            if any(
+                len(_array(family, f"metrics.perCompany.{symbol}.DM family")) != 6
+                for family in families.values()
+            ):
+                raise FrontendSchemaError(
+                    f"metrics.perCompany.{symbol} DM families must contain six tests"
+                )
+    statistical_tests = _object(document["statisticalTests"], "metrics.statisticalTests")
+    if statistical_tests:
+        _required(
+            statistical_tests,
+            {"schema_id", "schema_version", "scope", "across_company"},
+            "metrics.statisticalTests",
+        )
+        if (
+            statistical_tests["schema_id"] != "forecastph.evaluation-statistics"
+            or _integer(
+                statistical_tests["schema_version"],
+                "metrics.statisticalTests.schema_version",
+            )
+            != 1
+            or statistical_tests["scope"] != "complete_aligned_evaluation"
+        ):
+            raise FrontendSchemaError("metrics.statisticalTests metadata is invalid")
+        across_company = _object(
+            statistical_tests["across_company"],
+            "metrics.statisticalTests.across_company",
+        )
+        _required(
+            across_company,
+            {"metric", "friedman", "posthoc_performed", "pairwise_wilcoxon"},
+            "metrics.statisticalTests.across_company",
+        )
+        if across_company["metric"] != "mase":
+            raise FrontendSchemaError("Across-company statistics must use MASE")
+        _boolean(
+            across_company["posthoc_performed"],
+            "metrics.statisticalTests.across_company.posthoc_performed",
         )
 
 
