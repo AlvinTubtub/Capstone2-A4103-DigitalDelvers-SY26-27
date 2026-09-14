@@ -24,6 +24,7 @@ from src.export.frontend_exporter import (
 )
 from src.export.schemas import (
     EVALUATION_MODEL_IDS,
+    FrontendSchemaError,
     MODEL_DISPLAY_LABELS,
     NEXT_CLOSE_KEYS,
     PRINCIPAL_MODEL_IDS,
@@ -228,6 +229,24 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     assert detail["backtestActual"] == list(
         source.evaluation.backtest.actual_closes[-60:]
     )
+    assert detail["evaluationMetadata"] == {
+        "fullSessionCount": 64,
+        "fullStartDate": "2026-05-17",
+        "fullEndDate": "2026-07-19",
+        "displayedSessionCount": 60,
+        "displayedStartDate": detail["backtestDates"][0],
+        "displayedEndDate": detail["backtestDates"][-1],
+        "displayWindowLimit": 60,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation",
+    }
+    assert detail["bestPrincipalModel"] == "Lag-Informed Regression"
+    assert detail["bestEvaluatedMethod"] == "Lag-Informed Regression"
+    assert detail["bestPrincipalBeatsNaive"] is True
+    assert detail["allPrincipalsWorseThanNaive"] is False
+    assert metrics["perCompany"]["ALI"]["evaluationMetadata"] == detail[
+        "evaluationMetadata"
+    ]
     assert detail["productionBacktestDates"] == []
     assert detail["productionBacktestActual"] == []
     assert all(not values for values in detail["productionBacktestByModel"].values())
@@ -257,6 +276,16 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
             "mase": canonical_metric.mase,
             "r2": canonical_metric.r2,
         }
+
+
+def test_company_schema_rejects_display_metadata_that_misrepresents_full_holdout(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    detail = build_frontend_payloads(export_bundle)["company/ALI.json"]
+    detail["evaluationMetadata"]["fullSessionCount"] = 59
+
+    with pytest.raises(FrontendSchemaError, match="60-session display subset"):
+        validate_document("company/ALI.json", detail)
 
 
 def test_exporter_uses_medians_not_means_for_descriptive_aggregate(

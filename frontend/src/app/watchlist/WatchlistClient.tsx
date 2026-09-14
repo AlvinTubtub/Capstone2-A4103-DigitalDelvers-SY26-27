@@ -7,7 +7,18 @@ import CompanyLogo from "@/components/CompanyLogo";
 import ChangeBadge from "@/components/ChangeBadge";
 import { useWatchlist } from "@/context/WatchlistContext";
 import { formatDate, formatNum, formatPeso, formatPct } from "@/lib/format";
+import { resolveCompanyModelReporting } from "@/lib/modelReporting";
 import type { CompanySummary, MetricsData } from "@/lib/types";
+
+type ComparisonRow = CompanySummary & {
+  pesoChange: number;
+  rmse?: string | number;
+  mase?: string | number;
+  bestPrincipalModel: string;
+  bestEvaluatedMethod: string;
+  bestPrincipalBeatsNaive: boolean;
+  allPrincipalsWorseThanNaive: boolean;
+};
 
 export default function WatchlistClient({
   allCompanies,
@@ -29,22 +40,23 @@ export default function WatchlistClient({
   const comparisonRows = useMemo(
     () => watchedCompanies.map((company) => {
       const companyMetrics = metrics?.perCompany[company.symbol];
+      const reporting = companyMetrics
+        ? resolveCompanyModelReporting(companyMetrics)
+        : null;
       const modelKey = Object.entries(companyMetrics?.metrics ?? {}).find(
-        ([key]) => ({ lag_reg: "Lag-Informed Regression", arima: "ARIMA", lstm: "LSTM", naive: "Naive baseline" }[key] === company.bestModel)
+        ([key]) => ({ lag_reg: "Lag-Informed Regression", arima: "ARIMA", lstm: "LSTM", naive: "Naive baseline" }[key] === (reporting?.bestPrincipalModel ?? company.bestModel))
       )?.[0];
       const selectedMetrics = modelKey ? companyMetrics?.metrics[modelKey] : undefined;
-      const selectedRmse = Number(selectedMetrics?.rmse);
-      const naiveRmse = Number(companyMetrics?.metrics.naive?.rmse);
 
       return {
         ...company,
         pesoChange: company.predictedClose - company.latestClose,
         rmse: selectedMetrics?.rmse,
         mase: selectedMetrics?.mase,
-        bestPrincipalBeatsNaive:
-          Number.isFinite(selectedRmse)
-          && Number.isFinite(naiveRmse)
-          && selectedRmse < naiveRmse,
+        bestPrincipalModel: reporting?.bestPrincipalModel ?? company.bestModel,
+        bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "--",
+        bestPrincipalBeatsNaive: reporting?.bestPrincipalBeatsNaive ?? false,
+        allPrincipalsWorseThanNaive: reporting?.allPrincipalsWorseThanNaive ?? false,
       };
     }),
     [metrics, watchedCompanies]
@@ -108,6 +120,13 @@ export default function WatchlistClient({
         </div>
       ) : (
         <>
+          {comparisonRows.some((company) => company.allPrincipalsWorseThanNaive) && (
+            <section role="status" className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              <strong>Naive benchmark warning:</strong> for one or more watched companies,
+              all three principal models had higher RMSE than Naive during the evaluation
+              period. See the comparison table for each best evaluated method.
+            </section>
+          )}
           {/* Contextual Help & Privacy Note */}
           <div className="p-4 bg-dark-bg/70 border border-dark-border/70 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
             <p>
@@ -160,7 +179,7 @@ export default function WatchlistClient({
                     </p>
                   </div>
                   <div>
-                    <p className="text-[11px] text-slate-400">Selected Model</p>
+                    <p className="text-[11px] text-slate-400">Best Principal Model</p>
                     <p className="text-xs font-medium text-brand-400 truncate">
                       {company.bestModel}
                     </p>
@@ -256,7 +275,8 @@ export default function WatchlistClient({
                   <MetricRow label="Previous Close" companies={comparisonRows} render={(company) => formatPeso(company.latestClose)} />
                   <MetricRow label="Forecasted Close" companies={comparisonRows} render={(company) => <span className="font-semibold text-white">{formatPeso(company.predictedClose)}</span>} />
                   <MetricRow label="Expected Change" companies={comparisonRows} render={(company) => <span className={company.pctChange >= 0 ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>{formatPeso(company.pesoChange)} ({formatPct(company.pctChange)})</span>} />
-                  <MetricRow label="Selected Model" companies={comparisonRows} render={(company) => company.bestModel} />
+                  <MetricRow label="Best Principal Model" companies={comparisonRows} render={(company) => company.bestPrincipalModel} />
+                  <MetricRow label="Best Evaluated Method" companies={comparisonRows} render={(company) => company.bestEvaluatedMethod} />
                   <MetricRow label="Test RMSE (₱)" companies={comparisonRows} render={(company) => company.rmse === undefined ? "--" : formatNum(company.rmse)} />
                   <MetricRow label="MASE (Development-Scaled)" companies={comparisonRows} render={(company) => company.mase === undefined ? "--" : formatNum(company.mase)} />
                   <MetricRow label="Beats Naive on Held-Out RMSE?" companies={comparisonRows} render={(company) => company.rmse === undefined ? "--" : company.bestPrincipalBeatsNaive ? <span className="text-green-400">✓ Yes</span> : <span className="text-amber-400">△ No</span>} />
@@ -276,8 +296,8 @@ function MetricRow({
   render,
 }: {
   label: string;
-  companies: Array<CompanySummary & { pesoChange: number; rmse?: string | number; mase?: string | number; bestPrincipalBeatsNaive: boolean }>;
-  render: (company: CompanySummary & { pesoChange: number; rmse?: string | number; mase?: string | number; bestPrincipalBeatsNaive: boolean }) => React.ReactNode;
+  companies: ComparisonRow[];
+  render: (company: ComparisonRow) => React.ReactNode;
 }) {
   return (
     <tr>

@@ -3,7 +3,7 @@
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 import json
 import logging
 import math
@@ -197,6 +197,28 @@ def _ohlcv_payload(records: Sequence[OhlcvRecord]) -> list[dict[str, str | float
     ]
 
 
+def _evaluation_metadata(
+    evaluation: CompanyEvaluation,
+    displayed_dates: Sequence[date],
+) -> dict[str, object]:
+    """Describe the complete evaluation and its presentation-only chart subset."""
+
+    full_dates = evaluation.backtest.target_dates
+    if not full_dates or not displayed_dates:
+        raise FrontendExportError("Evaluation metadata requires dated observations")
+    return {
+        "fullSessionCount": len(full_dates),
+        "fullStartDate": full_dates[0].isoformat(),
+        "fullEndDate": full_dates[-1].isoformat(),
+        "displayedSessionCount": len(displayed_dates),
+        "displayedStartDate": displayed_dates[0].isoformat(),
+        "displayedEndDate": displayed_dates[-1].isoformat(),
+        "displayWindowLimit": BACKTEST_WINDOW,
+        "metricsScope": "complete_aligned_evaluation",
+        "statisticalTestsScope": "complete_aligned_evaluation",
+    }
+
+
 def _company_payload(
     source: CompanyFrontendArtifacts,
     company: Company,
@@ -259,6 +281,15 @@ def _company_payload(
             "alignment": "common_target_date",
             "window": BACKTEST_WINDOW,
         },
+        "evaluationMetadata": _evaluation_metadata(evaluation, window_dates),
+        "bestPrincipalModel": MODEL_DISPLAY_LABELS[
+            evaluation.principal_ranking.best_model
+        ],
+        "bestEvaluatedMethod": MODEL_DISPLAY_LABELS[
+            evaluation.evaluated_ranking.best_model
+        ],
+        "bestPrincipalBeatsNaive": evaluation.best_principal_beats_naive,
+        "allPrincipalsWorseThanNaive": evaluation.all_principals_worse_than_naive,
     }
     summary = {
         "symbol": company.symbol,
@@ -419,6 +450,7 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
                 "allPrincipalsWorseThanNaive": evaluations[
                     symbol
                 ].all_principals_worse_than_naive,
+                "evaluationMetadata": details[symbol]["evaluationMetadata"],
                 "statisticalTests": {
                     "diebold_mariano": evaluations[symbol].dm_tests.as_dict(),
                 },

@@ -1,5 +1,6 @@
 import { getCompanyDetail, getCompanies, getDashboard, getLatest, getMetrics } from "@/lib/data";
 import { formatDate, formatDateTimePht, formatNum, formatPct, formatPeso } from "@/lib/format";
+import { resolveCompanyModelReporting } from "@/lib/modelReporting";
 import type { CompanyDetail, CompanySummary, ModelMetric } from "@/lib/types";
 
 export interface ContextOptions {
@@ -109,6 +110,7 @@ function visibleBacktestFacts(company: CompanyDetail) {
     : null;
   return {
     source: "Chronological out-of-sample predicted-versus-actual observations exported by ForecastPH.",
+    displayLabel: "Latest 60 Evaluation Sessions",
     selectedModel: company.model,
     sessions: usable,
     firstTargetDate: dates[0] ? formatDate(dates[0]) : "unavailable",
@@ -123,6 +125,14 @@ function visibleBacktestFacts(company: CompanyDetail) {
     } : "unavailable",
     chartMeaning: "Backtest compares one-step-ahead predicted closes with actual closes on unseen evaluation dates.",
     errorChartMeaning: "Forecast Error Over Time plots predicted close minus actual close for those same out-of-sample dates.",
+    presentationScope: "This chart window is a presentation subset; it is not the complete evaluation used for metrics or statistical tests.",
+    fullEvaluation: company.evaluationMetadata ? {
+      sessions: company.evaluationMetadata.fullSessionCount,
+      firstTargetDate: formatDate(company.evaluationMetadata.fullStartDate),
+      lastTargetDate: formatDate(company.evaluationMetadata.fullEndDate),
+      metricsScope: company.evaluationMetadata.metricsScope,
+      statisticalTestsScope: company.evaluationMetadata.statisticalTestsScope,
+    } : "Unavailable in this previously published payload; do not infer it from the 60-session display subset.",
   };
 }
 
@@ -139,6 +149,14 @@ export async function buildCompanyContext(symbol: string): Promise<string> {
   }
 
   const chosenMetric = selectedMetric(company);
+  const reporting = resolveCompanyModelReporting({
+    metrics: company.metrics,
+    bestModel: company.model,
+    bestPrincipalModel: company.bestPrincipalModel,
+    bestEvaluatedMethod: company.bestEvaluatedMethod,
+    bestPrincipalBeatsNaive: company.bestPrincipalBeatsNaive,
+    allPrincipalsWorseThanNaive: company.allPrincipalsWorseThanNaive,
+  });
   return asContext("company", {
     company: { ticker: company.symbol, name: company.name, sector: company.sector },
     currentForecast: {
@@ -148,6 +166,11 @@ export async function buildCompanyContext(symbol: string): Promise<string> {
       projectedPercentageChange: formatPct(company.pctChange),
       directionLabel: company.direction,
       selectedPrincipalModel: company.model,
+      bestPrincipalModel: reporting?.bestPrincipalModel ?? company.model,
+      bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "unavailable",
+      bestPrincipalBeatNaive: reporting?.bestPrincipalBeatsNaive ?? "unavailable",
+      allPrincipalsHadHigherRmseThanNaive:
+        reporting?.allPrincipalsWorseThanNaive ?? "unavailable",
       selectionRule: "Lowest RMSE among the three principal models on the common chronological out-of-sample evaluation.",
       principalModelPredictions: predictionFacts(company),
       modelPredictionSpread: modelPredictionSpread(company),
@@ -226,10 +249,20 @@ export async function buildWatchlistContext(watchlist?: string[]): Promise<strin
   const rows = selected.map((company) => {
     const detail = detailBySymbol.get(company.symbol);
     const metric = detail ? selectedMetric(detail) : undefined;
+    const reporting = detail ? resolveCompanyModelReporting({
+      metrics: detail.metrics,
+      bestModel: detail.model,
+      bestPrincipalModel: detail.bestPrincipalModel,
+      bestEvaluatedMethod: detail.bestEvaluatedMethod,
+      bestPrincipalBeatsNaive: detail.bestPrincipalBeatsNaive,
+      allPrincipalsWorseThanNaive: detail.allPrincipalsWorseThanNaive,
+    }) : null;
     return {
       ...companySummary(company),
       selectedModelRmsePhp: metric ? formatNum(metric.rmse, 4) : "unavailable",
       modelPredictionSpread: detail ? modelPredictionSpread(detail) : null,
+      bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "unavailable",
+      bestPrincipalBeatNaive: reporting?.bestPrincipalBeatsNaive ?? "unavailable",
     };
   });
   const byChange = [...selected].sort((a, b) => a.pctChange - b.pctChange);
@@ -273,7 +306,7 @@ export function buildLearnStocksContext(): string {
       RMSE: "Lower is better; measured in pesos and penalizes larger errors more strongly.",
       MAE: "Lower is better; average absolute forecast error in pesos.",
       MASE: "Lower is better; evaluation MAE divided by the common one-step scale from development Close. Below 1 is below that scale, but does not by itself prove lower held-out error than the evaluated Naive method.",
-      R2: "Higher is generally better; negative values can occur when predictions are worse than a constant-mean reference on the evaluated sample. It is not percentage accuracy.",
+      R2: "Holdout R² is supplementary. It compares squared errors with an evaluation-period mean reference, can be negative, is not percentage accuracy, and never selects or promotes a model.",
     },
     boundaries: "Explain concepts, not personalized investment decisions. Current schedules and broker details should be verified with official sources.",
   });
@@ -296,6 +329,10 @@ export async function buildCompareContext(): Promise<string> {
 
   const wins = Object.fromEntries(PRINCIPAL_MODEL_IDS.map((id) => [MODEL_NAMES[id], 0])) as Record<string, number>;
   const bestByCompany = companies.map((company) => {
+    const companyEvaluation = metrics.perCompany[company.symbol];
+    const reporting = companyEvaluation
+      ? resolveCompanyModelReporting(companyEvaluation)
+      : null;
     const rows = PRINCIPAL_MODEL_IDS.map((id) => ({ id, rmse: finiteNumber(metrics.perCompany[company.symbol]?.metrics[id]?.rmse) }))
       .filter((row): row is { id: (typeof PRINCIPAL_MODEL_IDS)[number]; rmse: number } => row.rmse !== null);
     const minimum = rows.length ? Math.min(...rows.map(({ rmse }) => rmse)) : null;
@@ -309,6 +346,11 @@ export async function buildCompareContext(): Promise<string> {
       tiedModels: tied.map(({ id }) => MODEL_NAMES[id]),
       tiePolicy: "LIR, then ARIMA, then LSTM",
       winningRmsePhp: minimum === null ? "unavailable" : formatNum(minimum, 4),
+      bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "unavailable",
+      bestPrincipalBeatNaive: reporting?.bestPrincipalBeatsNaive ?? "unavailable",
+      allPrincipalsHadHigherRmseThanNaive:
+        reporting?.allPrincipalsWorseThanNaive ?? "unavailable",
+      fullEvaluation: companyEvaluation?.evaluationMetadata ?? "unavailable",
     };
   });
 
@@ -337,9 +379,9 @@ export async function buildCompareContext(): Promise<string> {
       principalSelection: "The best principal model is the lowest-RMSE LIR, ARIMA, or LSTM result per company on the common chronological out-of-sample evaluation.",
       evaluatedSelection: "The best evaluated method uses the same RMSE rule but also includes Naive, so it can differ from the best principal model.",
       crossCompany: "Do not select a winner from median or mean raw-peso RMSE/MAE. Use median MASE, within-company ranks, win counts, and counts beating Naive.",
-      r2: "R² is supplementary, may be negative, and is not percentage accuracy or a selection criterion.",
+      r2: "Holdout R² is supplementary, uses the evaluation-period mean reference, may be negative, and is not percentage accuracy or a selection or promotion criterion.",
       naive: "Separately evaluated benchmark, not a production principal model.",
-      statisticalSignificance: "No statistical-significance claim is supplied in current operational context.",
+      statisticalSignificance: "No finalized formal-run evidence is supplied in current operational context. Describe numerical differences only as lower error during the evaluation period; do not make statistical-significance claims.",
     },
   });
 }

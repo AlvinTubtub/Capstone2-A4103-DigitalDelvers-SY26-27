@@ -30,6 +30,28 @@ export interface ModelMetric {
   ljung_box_pvalue?: string | number;
 }
 
+export interface EvaluationMetadata {
+  fullSessionCount: number;
+  fullStartDate: string;
+  fullEndDate: string;
+  displayedSessionCount: number;
+  displayedStartDate: string;
+  displayedEndDate: string;
+  displayWindowLimit: 60;
+  metricsScope: "complete_aligned_evaluation";
+  statisticalTestsScope: "complete_aligned_evaluation";
+}
+
+export interface CompanyEvaluationMetrics {
+  metrics: Record<string, ModelMetric>;
+  bestModel: string;
+  bestPrincipalModel?: string;
+  bestEvaluatedMethod?: string;
+  bestPrincipalBeatsNaive?: boolean;
+  allPrincipalsWorseThanNaive?: boolean;
+  evaluationMetadata?: EvaluationMetadata;
+}
+
 export interface CompanyDetail {
   symbol: string;
   name: string;
@@ -53,6 +75,11 @@ export interface CompanyDetail {
   forecastDate?: string;
   dataAsOf?: string | null;
   inferenceAt?: string | null;
+  evaluationMetadata?: EvaluationMetadata;
+  bestPrincipalModel?: string;
+  bestEvaluatedMethod?: string;
+  bestPrincipalBeatsNaive?: boolean;
+  allPrincipalsWorseThanNaive?: boolean;
 }
 
 export interface DashboardData {
@@ -91,14 +118,7 @@ export interface MetricsData {
   };
   bestModel: string;
   worstModel: string;
-  perCompany: Record<string, {
-    metrics: Record<string, ModelMetric>;
-    bestModel: string;
-    bestPrincipalModel?: string;
-    bestEvaluatedMethod?: string;
-    bestPrincipalBeatsNaive?: boolean;
-    allPrincipalsWorseThanNaive?: boolean;
-  }>;
+  perCompany: Record<string, CompanyEvaluationMetrics>;
   statisticalTests: Record<string, unknown>;
 }
 

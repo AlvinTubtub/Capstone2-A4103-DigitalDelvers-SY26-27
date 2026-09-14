@@ -21,7 +21,7 @@ export function getStarterQuestions(
       questions: [
         `What does ${symbol}'s forecast mean?`,
         `Which model performed best for ${symbol}?`,
-        `How accurate is ${symbol}'s selected model?`,
+        `How did ${symbol}'s best principal model perform?`,
         `Why do ${symbol}'s three model forecasts differ?`,
         `What does the Backtest chart show for ${symbol}?`,
       ],

@@ -11,6 +11,7 @@ import StatCard from "@/components/StatCard";
 import WatchlistStar from "@/components/watchlist/WatchlistStar";
 import { getCompanyProfile } from "@/lib/companyProfiles";
 import { formatDate, formatNum, formatPeso } from "@/lib/format";
+import { resolveCompanyModelReporting } from "@/lib/modelReporting";
 import type { CompanyDetail } from "@/lib/types";
 
 interface CompanyDetailViewProps {
@@ -93,8 +94,16 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
   const selectedRmse = parseFloat(String(selectedMetrics.rmse));
   const naiveRmse = parseFloat(String(company.metrics.naive?.rmse));
   const maseBelowDevelopmentScale = !isNaN(maseVal) && maseVal < 1.0;
-  const beatsNaive =
-    !isNaN(selectedRmse) && !isNaN(naiveRmse) && selectedRmse < naiveRmse;
+  const reporting = resolveCompanyModelReporting({
+    metrics: company.metrics,
+    bestModel: company.model,
+    bestPrincipalModel: company.bestPrincipalModel,
+    bestEvaluatedMethod: company.bestEvaluatedMethod,
+    bestPrincipalBeatsNaive: company.bestPrincipalBeatsNaive,
+    allPrincipalsWorseThanNaive: company.allPrincipalsWorseThanNaive,
+  });
+  const beatsNaive = reporting?.bestPrincipalBeatsNaive
+    ?? (!isNaN(selectedRmse) && !isNaN(naiveRmse) && selectedRmse < naiveRmse);
   const productionDates = company.productionBacktestDates ?? [];
   const productionActual = company.productionBacktestActual ?? [];
   const productionByModel = company.productionBacktestByModel ?? {};
@@ -320,10 +329,10 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           </div>
         </div>
 
-        {/* Item 4: Selected Model Card (Hidden in Beginner, Shown in Advanced) */}
+        {/* Item 4: Best Principal Model Card (Hidden in Beginner, Shown in Advanced) */}
         {viewMode === "advanced" && (
           <div className="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-slate-400 mb-1">Selected Model</p>
+            <p className="text-xs uppercase tracking-wide text-slate-400 mb-1">Best Principal Model</p>
             <p className="text-base font-bold text-white truncate" title={company.model}>
               {company.model}
             </p>
@@ -332,13 +341,13 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
         )}
       </section>
 
-      {/* 3. Selected Model Summary Panel (Hidden in Beginner, Shown in Advanced) */}
+      {/* 3. Best Principal Model Summary Panel (Hidden in Beginner, Shown in Advanced) */}
       {viewMode === "advanced" && (
         <section className="bg-dark-card border border-dark-border rounded-xl p-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 pb-3 border-b border-dark-border/60">
             <div>
               <h2 className="text-lg font-semibold text-white">
-                Selected Model Summary: {company.model}
+                Best Principal Model Summary: {company.model}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
                 Metrics calculated strictly for this company&apos;s out-of-sample test split.
@@ -356,6 +365,11 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                   ? "✓ Lower held-out RMSE than Naive"
                   : "⚠ Did not beat Naive held-out RMSE"}
               </span>
+              {reporting && (
+                <span className="text-xs px-2.5 py-1 rounded-full font-semibold border border-slate-600 bg-slate-800/70 text-slate-200">
+                  Best evaluated: {reporting.bestEvaluatedMethod}
+                </span>
+              )}
             </div>
           </div>
 
@@ -386,11 +400,11 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
               <p className="text-[11px] text-slate-500 mt-0.5">Compared with development scale</p>
             </div>
             <div className="bg-dark-bg border border-dark-border rounded-lg p-3.5">
-              <p className="text-xs text-slate-400 mb-0.5">Goodness-of-Fit (R²)</p>
+              <p className="text-xs text-slate-400 mb-0.5">Holdout R² — supplementary</p>
               <p className="text-lg font-bold text-white font-mono">
                 {formatNum(selectedMetrics.r2, 4)}
               </p>
-              <p className="text-[11px] text-slate-500 mt-0.5">Test set variance explained</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">Compared with the holdout mean</p>
             </div>
           </div>
 
@@ -401,6 +415,15 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             dates. R² can be negative and is supplementary—not percentage accuracy or a
             forecast confidence probability.
           </p>
+        </section>
+      )}
+
+      {reporting?.allPrincipalsWorseThanNaive && (
+        <section role="status" className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+          <strong>Naive benchmark warning:</strong> all three principal models had higher
+          RMSE than Naive during this evaluation period. {reporting.bestPrincipalModel} is
+          still the best principal model, while {reporting.bestEvaluatedMethod} is the best
+          evaluated method.
         </section>
       )}
 
@@ -432,7 +455,7 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
       <section className="bg-dark-card border border-dark-border rounded-xl p-6">
         <div className="flex flex-wrap items-center gap-2 mb-1">
           <h2 className="text-lg font-semibold text-white">
-            Backtest: Predicted vs. Actual (Last 60 Sessions)
+            Backtest: Predicted vs. Actual — Latest 60 Evaluation Sessions
           </h2>
           <span className="rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
             Chronological evaluation
@@ -444,9 +467,22 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           )}
         </div>
         <p className="text-sm text-slate-400 mb-4">
-          Latest chronological evaluation followed by verified live ForecastPH forecasts. The
-          vertical marker separates the stored evaluation window from prospective operational
-          history.
+          {company.evaluationMetadata ? (
+            <>
+              The chart displays the latest {company.evaluationMetadata.displayedSessionCount} of
+              {" "}{company.evaluationMetadata.fullSessionCount} complete evaluation sessions.
+              Full evaluation: {formatDate(company.evaluationMetadata.fullStartDate)} –{" "}
+              {formatDate(company.evaluationMetadata.fullEndDate)}. Metrics and statistical tests
+              use the complete aligned evaluation, not only the displayed subset.
+            </>
+          ) : (
+            <>
+              This previously published payload contains the latest {auditedDates.length}
+              evaluation sessions. Full evaluation count and range will appear after the next
+              fresh export; they are not inferred from the display window.
+            </>
+          )}{" "}
+          Verified live forecasts follow when available, with a vertical marker separating them.
         </p>
         <PredictionChart
           dates={chartDates}
@@ -461,7 +497,9 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
       {viewMode === "advanced" && (
         <section className="bg-dark-card border border-dark-border rounded-xl p-6">
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <h2 className="text-lg font-semibold text-white">Forecast Error Over Time</h2>
+            <h2 className="text-lg font-semibold text-white">
+              Forecast Error Over Time — Latest 60 Evaluation Sessions
+            </h2>
             <span className="rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
               Chronological evaluation
             </span>
@@ -506,7 +544,7 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                 <th className="text-right py-2 px-3">RMSE (₱)</th>
                 <th className="text-right py-2 px-3">MAE (₱)</th>
                 <th className="text-right py-2 px-3">MASE</th>
-                <th className="text-right py-2 px-3">R²</th>
+                <th className="text-right py-2 px-3">Holdout R² (supp.)</th>
               </tr>
             </thead>
             <tbody>
@@ -552,7 +590,7 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           <div className="mt-4 pt-3 border-t border-dark-border/60 text-xs text-slate-400 space-y-1">
             <p>
               &bull; <strong className="text-slate-300">Model Selection: </strong>
-              The displayed model is the lowest-RMSE principal model from the latest chronological
+              The best principal model is the lowest-RMSE result among LIR, ARIMA, and LSTM in the latest chronological
               evaluation. Current cross-company rankings are available on the Models page.
             </p>
             <p>

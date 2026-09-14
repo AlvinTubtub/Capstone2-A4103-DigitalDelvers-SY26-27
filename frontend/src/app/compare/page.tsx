@@ -2,11 +2,11 @@ import ModelsDashboard, {
   type ModelPerformanceRow,
   type OperationalModelId,
 } from "./ModelsDashboard";
-import { getCompanies, getCompanyDetail, getMetrics } from "@/lib/data";
+import { getCompanies, getMetrics } from "@/lib/data";
+import { resolveCompanyModelReporting } from "@/lib/modelReporting";
 
 const PRINCIPAL_MODELS: OperationalModelId[] = ["lag_reg", "arima", "lstm"];
 const ALL_MODELS: OperationalModelId[] = [...PRINCIPAL_MODELS, "naive"];
-const EVALUATION_PROPORTION = 0.15;
 
 function numericMetric(value: string | number | undefined): number | null {
   const parsed = typeof value === "number" ? value : Number(value);
@@ -15,24 +15,25 @@ function numericMetric(value: string | number | undefined): number | null {
 
 export default async function ComparePage() {
   const [companies, metrics] = await Promise.all([getCompanies(), getMetrics()]);
-  const details = await Promise.all(
-    companies.map((company) => getCompanyDetail(company.symbol)),
-  );
 
-  if (!metrics || companies.length === 0 || details.some((detail) => !detail)) {
+  if (!metrics || companies.length === 0) {
     return <UnavailableState />;
   }
 
   const rows: ModelPerformanceRow[] = [];
-  const observationCounts = new Set<number>();
   const evaluationCounts = new Set<number>();
   const evaluationStarts = new Set<string>();
   const evaluationEnds = new Set<string>();
+  let evaluationForecasts = 0;
+  let completeEvaluationMetadata = true;
 
-  for (const [index, company] of companies.entries()) {
-    const detail = details[index];
-    const companyMetrics = metrics.perCompany[company.symbol]?.metrics;
-    if (!detail || !companyMetrics || detail.ohlcv.length < 2) return <UnavailableState />;
+  for (const company of companies) {
+    const companyEvaluation = metrics.perCompany[company.symbol];
+    const companyMetrics = companyEvaluation?.metrics;
+    const reporting = companyEvaluation
+      ? resolveCompanyModelReporting(companyEvaluation)
+      : null;
+    if (!companyMetrics || !reporting) return <UnavailableState />;
 
     const parsedMetrics = Object.fromEntries(
       ALL_MODELS.map((model) => [
@@ -50,36 +51,37 @@ export default async function ComparePage() {
       return <UnavailableState />;
     }
 
-    const observationCount = detail.ohlcv.length;
-    const evaluationCount = Math.ceil((observationCount - 1) * EVALUATION_PROPORTION);
-    observationCounts.add(observationCount);
-    evaluationCounts.add(evaluationCount);
-    evaluationStarts.add(detail.ohlcv[observationCount - evaluationCount].date);
-    evaluationEnds.add(detail.ohlcv[observationCount - 1].date);
+    const evaluationMetadata = companyEvaluation.evaluationMetadata;
+    if (evaluationMetadata) {
+      evaluationCounts.add(evaluationMetadata.fullSessionCount);
+      evaluationStarts.add(evaluationMetadata.fullStartDate);
+      evaluationEnds.add(evaluationMetadata.fullEndDate);
+      evaluationForecasts += evaluationMetadata.fullSessionCount * ALL_MODELS.length;
+    } else {
+      completeEvaluationMetadata = false;
+    }
 
     rows.push({
       symbol: company.symbol,
       name: company.name,
       metrics: parsedMetrics as ModelPerformanceRow["metrics"],
+      ...reporting,
     });
   }
 
-  if (
-    observationCounts.size !== 1 ||
-    evaluationCounts.size !== 1 ||
-    evaluationStarts.size !== 1 ||
-    evaluationEnds.size !== 1
-  ) {
-    return <UnavailableState />;
-  }
+  const commonEvaluationWindow = completeEvaluationMetadata
+    && evaluationCounts.size === 1
+    && evaluationStarts.size === 1
+    && evaluationEnds.size === 1;
 
   return (
     <ModelsDashboard
       rows={rows.sort((a, b) => a.symbol.localeCompare(b.symbol))}
-      observationCount={[...observationCounts][0]}
-      evaluationCount={[...evaluationCounts][0]}
-      evaluationStart={[...evaluationStarts][0]}
-      evaluationEnd={[...evaluationEnds][0]}
+      evaluationForecasts={completeEvaluationMetadata ? evaluationForecasts : null}
+      evaluationCount={commonEvaluationWindow ? [...evaluationCounts][0] : null}
+      evaluationStart={commonEvaluationWindow ? [...evaluationStarts][0] : null}
+      evaluationEnd={commonEvaluationWindow ? [...evaluationEnds][0] : null}
+      evaluationMetadataAvailable={completeEvaluationMetadata}
     />
   );
 }

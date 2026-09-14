@@ -66,11 +66,11 @@ Reporting-only inference uses the complete date-aligned evaluation records. Each
 
 ### Lag-Informed Regression
 
-LIR predicts next-day `ΔClose`. It uses causal OHLCV-derived candidates, fold-local PACF selection on training returns, a fold-local `StandardScaler`, and LASSO as the final estimator. Alpha is selected by mean expanding-window validation RMSE.
+LIR predicts next-day `ΔClose`. It uses causal OHLCV-derived candidates, fold-local PACF selection on training returns, a fold-local `StandardScaler`, and LASSO as the final estimator. Alpha is selected by mean expanding-window validation RMSE from the declared grid ending at `3.0`, `10.0`, and `30.0`. Metadata classifies the winner as lower boundary, upper boundary, or interior; formal readiness rejects an unresolved upper-bound winner.
 
 ### ARIMA
 
-ARIMA models the chronological Close series. It searches configured orders within `p=0..3`, `d=0..2`, and `q=0..3`, including `(0,d,0)`. Every eligible candidate must complete all expanding-window folds and satisfy convergence requirements. Evaluation updates the fitted state with revealed actuals using `append(..., refit=False)`.
+ARIMA models the chronological Close series. Its 80-specification grid uses `p,q=0..3`, `d=0` with `n,c`, `d=1` with `n,t`, and `d=2` with `n`; no-drift `ARIMA(0,1,0)` is eligible. Every candidate must complete all expanding-window folds and satisfy convergence requirements. Evaluation updates the fitted state with revealed actuals using `append(..., refit=False)`. Selected-fit evidence separately records AR/MA roots and moduli, stability/invertibility, fitted-residual ACF and Ljung-Box, and holdout-error Ljung-Box diagnostics.
 
 ### LSTM
 
@@ -144,6 +144,8 @@ Review PSE/SCCP notices and add confirmed closures for the next year before year
 ## Frontend export
 
 The exporter builds the operational `frontend/public/forecasts/` documents from new evaluation results, production forecasts, and validated raw histories. It validates strict JSON, stages the complete payload, and atomically replaces destinations with rollback protection.
+
+Each new company payload describes both the complete evaluation count/date range and the latest 60-session display subset. Charts use only that subset for readability; canonical metrics and statistical tests remain based on every complete aligned evaluation record.
 
 Validate the committed frontend data without regenerating it:
 
@@ -223,6 +225,10 @@ python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose
 python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose
 python scripts/update_forecast_ledger.py --report-drift --all --verbose
 ```
+
+GitHub Actions receives the external `update-pse-data` `repository_dispatch` event
+or a manual `workflow_dispatch`. The EOD workflow contains no internal schedule and
+performs no training, tuning, refitting, or formal statistical experiment.
 
 ## Tests
 

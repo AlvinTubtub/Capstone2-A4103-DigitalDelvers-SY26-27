@@ -38,7 +38,13 @@ public/forecasts/
 
 The backend exporter generates and validates this complete tree. See `../docs/frontend-forecast-contract.md` for schemas and cross-file invariants.
 
-The Models page uses current per-company evaluation metrics to derive model comparisons and RMSE win counts. It does not require a separate fixed-study JSON document.
+The Models page reports the best principal model separately from the best evaluated method, which also includes Naive. Cross-company views use median MASE, within-company ranks, and win counts; raw peso RMSE/MAE do not select an overall winner. Holdout R² is supplementary and may be negative.
+
+Company charts label the latest 60 evaluation sessions as a presentation subset. New company exports carry the complete evaluation session count and date range beside that subset. Full metrics and statistical tests are calculated from the complete aligned evaluation, not from the chart window. Previously published payloads remain readable, but the UI does not invent missing full-evaluation metadata.
+
+Ask AI is grounded in the same operational documents. It distinguishes principal and evaluated winners, applies the development-scale interpretation of MASE, treats R² as supplementary, and does not make statistical-significance claims without finalized formal-run evidence.
+
+Daily publication is driven externally through the backend workflow's `update-pse-data` `repository_dispatch` event (or manual dispatch). The daily path resolves prior prospective outcomes, runs persisted-model inference, appends new ledger forecasts, reports drift evidence, and exports JSON without training or refitting.
 
 ## Production validation
 

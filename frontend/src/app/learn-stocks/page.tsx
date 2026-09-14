@@ -604,7 +604,7 @@ export default function LearnStocksPage() {
                     <p className="text-[11px] text-emerald-300">+₱2.50</p>
                   </div>
                   <div className="p-3 bg-dark-card border border-dark-border rounded-xl">
-                    <p className="text-xs text-slate-400">Selected Model</p>
+                    <p className="text-xs text-slate-400">Best Principal Model</p>
                     <p className="text-base font-bold text-white mt-0.5">LSTM</p>
                     <p className="text-[11px] text-brand-400">Best evaluation RMSE</p>
                   </div>
@@ -722,8 +722,8 @@ export default function LearnStocksPage() {
                 </div>
                 <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Goodness-of-Fit</span>
-                  <h4 className="font-bold text-white text-sm">R² (Variance)</h4>
-                  <p className="text-xs text-slate-400">A supplementary goodness-of-fit measure that can be negative. Higher is generally better, but it is not percentage accuracy and never selects the winning model.</p>
+                  <h4 className="font-bold text-white text-sm">Holdout R² — Supplementary Metric</h4>
+                  <p className="text-xs text-slate-400">Compares squared holdout errors with a reference based on the holdout-period mean. It can be negative, is not percentage accuracy, and never selects or promotes a model.</p>
                 </div>
               </div>
 
@@ -850,7 +850,7 @@ export default function LearnStocksPage() {
                 <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    60-Session Backtest Comparison
+                    Latest 60 Evaluation Sessions
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Overlays actual closing prices against the stored chronological-evaluation forecasts and later prospective operational forecasts shown on company pages.
@@ -1112,7 +1112,7 @@ export default function LearnStocksPage() {
           {openSections["research-methodology"] && (
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               <p>
-                ForecastPH is an academic capstone research project evaluating whether machine learning and deep learning models can outperform traditional time-series methods on the Philippine Stock Exchange across diverse market sectors.
+                ForecastPH is an academic capstone research project comparing machine learning and traditional time-series methods on the Philippine Stock Exchange across diverse market sectors.
               </p>
 
               {/* The 3 Core Models */}

@@ -412,7 +412,7 @@ export default async function AboutPage() {
 
             <div className="pt-3 border-t border-dark-border/60 space-y-2 text-xs">
               <div className="text-slate-400">
-                <strong className="text-slate-200">Key Strengths:</strong> Rigorous mathematical formulation, proven track record in financial economics, and effective mean-reversion modeling.
+                <strong className="text-slate-200">Key Strengths:</strong> Rigorous mathematical formulation, longstanding use in financial economics, and explicit mean-reversion structure.
               </div>
               <div className="text-slate-400">
                 <strong className="text-slate-200">Best Suited For:</strong> Stocks exhibiting pronounced cyclical patterns or stationary short-term fluctuations.
@@ -525,10 +525,10 @@ export default async function AboutPage() {
               <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">Metric 4</span>
               <span className="text-xs font-semibold text-emerald-400">Supplementary metric</span>
             </div>
-            <h4 className="font-bold text-white text-base">R² Score</h4>
+            <h4 className="font-bold text-white text-base">Holdout R² — Supplementary Metric</h4>
             <p className="text-[11px] text-slate-400 font-medium">Coefficient of Determination</p>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Measures goodness of fit on the evaluated sample. Higher is generally better, but values can be negative. R² is not percentage accuracy and is not used for tuning, winner selection, or deployment.
+              Compares squared holdout errors with a reference based on the holdout-period mean. Higher is generally better, but values can be negative. R² is not percentage accuracy and is not used for tuning, winner selection, promotion, or deployment.
             </p>
           </div>
         </div>

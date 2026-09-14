@@ -120,6 +120,65 @@ def validate_model_metric(value: object, context: str) -> None:
         _number(number, f"{context}.{name}")
 
 
+def _validate_evaluation_metadata(
+    value: object,
+    context: str,
+    *,
+    displayed_dates: Sequence[str] | None = None,
+) -> None:
+    metadata = _object(value, context)
+    required = {
+        "fullSessionCount",
+        "fullStartDate",
+        "fullEndDate",
+        "displayedSessionCount",
+        "displayedStartDate",
+        "displayedEndDate",
+        "displayWindowLimit",
+        "metricsScope",
+        "statisticalTestsScope",
+    }
+    _required(metadata, required, context)
+    if set(metadata) != required:
+        raise FrontendSchemaError(f"{context} contains unsupported fields")
+    full_count = _integer(metadata["fullSessionCount"], f"{context}.fullSessionCount")
+    displayed_count = _integer(
+        metadata["displayedSessionCount"], f"{context}.displayedSessionCount"
+    )
+    display_limit = _integer(
+        metadata["displayWindowLimit"], f"{context}.displayWindowLimit"
+    )
+    if full_count < BACKTEST_WINDOW or displayed_count != BACKTEST_WINDOW:
+        raise FrontendSchemaError(
+            f"{context} must describe a full evaluation with a 60-session display subset"
+        )
+    if display_limit != BACKTEST_WINDOW or displayed_count > full_count:
+        raise FrontendSchemaError(f"{context} contains invalid session counts")
+    full_start = _date_only(metadata["fullStartDate"], f"{context}.fullStartDate")
+    full_end = _date_only(metadata["fullEndDate"], f"{context}.fullEndDate")
+    displayed_start = _date_only(
+        metadata["displayedStartDate"], f"{context}.displayedStartDate"
+    )
+    displayed_end = _date_only(
+        metadata["displayedEndDate"], f"{context}.displayedEndDate"
+    )
+    if not full_start <= displayed_start <= displayed_end or displayed_end != full_end:
+        raise FrontendSchemaError(
+            f"{context} display dates must be the latest subset of the full evaluation"
+        )
+    for field in ("metricsScope", "statisticalTestsScope"):
+        if metadata[field] != "complete_aligned_evaluation":
+            raise FrontendSchemaError(f"{context}.{field} has an invalid scope")
+    if displayed_dates is not None and (
+        len(displayed_dates) != displayed_count
+        or displayed_dates[0] != displayed_start
+        or displayed_dates[-1] != displayed_end
+    ):
+        raise FrontendSchemaError(
+            f"{context} does not match the exported backtest display arrays"
+        )
+
+
 def validate_company_summary(value: object, context: str = "company summary") -> None:
     summary = _object(value, context)
     required = {
@@ -372,6 +431,11 @@ def validate_metrics_json(value: object) -> None:
         ):
             if field in company:
                 _boolean(company[field], f"metrics.perCompany.{symbol}.{field}")
+        if "evaluationMetadata" in company:
+            _validate_evaluation_metadata(
+                company["evaluationMetadata"],
+                f"metrics.perCompany.{symbol}.evaluationMetadata",
+            )
         if "statisticalTests" in company:
             tests = _object(
                 company["statisticalTests"],
@@ -570,6 +634,20 @@ def validate_company_json(value: object) -> None:
     _string(methodology["alignment"], "company.backtestMethodology.alignment")
     if _integer(methodology["window"], "company.backtestMethodology.window") != BACKTEST_WINDOW:
         raise FrontendSchemaError("company.backtestMethodology.window must be 60")
+    if "evaluationMetadata" in company:
+        _validate_evaluation_metadata(
+            company["evaluationMetadata"],
+            "company.evaluationMetadata",
+            displayed_dates=validated_dates,
+        )
+    principal_labels = {MODEL_DISPLAY_LABELS[model] for model in PRINCIPAL_MODEL_IDS}
+    if "bestPrincipalModel" in company and company["bestPrincipalModel"] not in principal_labels:
+        raise FrontendSchemaError("company.bestPrincipalModel is invalid")
+    if "bestEvaluatedMethod" in company and company["bestEvaluatedMethod"] not in expected_labels:
+        raise FrontendSchemaError("company.bestEvaluatedMethod is invalid")
+    for field in ("bestPrincipalBeatsNaive", "allPrincipalsWorseThanNaive"):
+        if field in company:
+            _boolean(company[field], f"company.{field}")
     ohlcv = company["ohlcv"]
     latest_ohlcv = ohlcv[-1]
     if data_as_of != latest_ohlcv["date"]:

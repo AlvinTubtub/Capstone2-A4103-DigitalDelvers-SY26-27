@@ -62,6 +62,18 @@ interface OhlcvPoint {
   close: number;
   volume: number;
 }
+
+interface EvaluationMetadata {
+  fullSessionCount: number;
+  fullStartDate: DateOnly;
+  fullEndDate: DateOnly;
+  displayedSessionCount: 60;
+  displayedStartDate: DateOnly;
+  displayedEndDate: DateOnly;
+  displayWindowLimit: 60;
+  metricsScope: "complete_aligned_evaluation";
+  statisticalTestsScope: "complete_aligned_evaluation";
+}
 ```
 
 All numbers must be finite JSON numbers. Do not emit `NaN`, infinity, numeric strings, blank values, or null in required numeric fields. Market-session dates must be unique and ascending. Display timestamps are generated with Asia/Manila compatibility.
@@ -158,6 +170,7 @@ interface MetricsJson {
     bestEvaluatedMethod?: EvaluationModelLabel;
     bestPrincipalBeatsNaive?: boolean;
     allPrincipalsWorseThanNaive?: boolean;
+    evaluationMetadata?: EvaluationMetadata;
     statisticalTests?: Record<string, unknown>;
   }>;
   statisticalTests: Record<string, unknown>;
@@ -209,6 +222,11 @@ interface CompanyDetailJson {
     alignment: string;
     window: 60;
   };
+  evaluationMetadata?: EvaluationMetadata;
+  bestPrincipalModel?: PrincipalModelLabel;
+  bestEvaluatedMethod?: EvaluationModelLabel;
+  bestPrincipalBeatsNaive?: boolean;
+  allPrincipalsWorseThanNaive?: boolean;
 }
 ```
 
@@ -224,7 +242,9 @@ Required cross-field invariants:
 - `metrics` contains `lag_reg`, `arima`, `lstm`, and `naive`.
 - `nextClose` contains fresh finite forecasts from all three principal models.
 
-Company pages consume every summary field, the OHLCV chart, the three next-session projections, evaluation metrics, the predicted-versus-actual chart, and forecast errors. AI company context also uses the most recent five evaluation rows.
+Company pages consume every summary field, the OHLCV chart, the three next-session projections, evaluation metrics, the predicted-versus-actual chart, and forecast errors. The reporting fields distinguish the best deployable principal model from the best evaluated method including Naive. AI company context uses the exported display window and complete-evaluation metadata.
+
+`evaluationMetadata` and the four winner/benchmark fields are additive for compatibility with operational JSON published before Phase 6. Every new backend export includes them. A frontend reading an older payload may derive winner labels from the complete metric map using the documented tie order, but it must not infer a complete evaluation count or range from OHLCV length or the 60-session display arrays.
 
 ## Backtest arrays
 
@@ -237,6 +257,8 @@ backtestByModel[model][i]
 ```
 
 Every model series must have exactly 60 values. Dates are ascending, all arrays are index-aligned, and all four evaluation methods use the same target dates and actual values. The frontend does not perform a date join or repair malformed arrays.
+
+This is a presentation subset labeled **Latest 60 Evaluation Sessions**. `evaluationMetadata.fullSessionCount`, `fullStartDate`, and `fullEndDate` describe the complete aligned evaluation. Its metrics and statistical tests have `complete_aligned_evaluation` scope and are never recalculated from the displayed 60 values. The metadata count is dynamic; consumers must not assume 245 sessions or reconstruct it from the configured split proportion.
 
 The Predicted vs Actual chart consumes these values directly. Forecast Error Over Time calculates:
 
@@ -274,6 +296,7 @@ The OHLCV array must exactly match the corresponding company document. This dire
 - `dashboard.topGainer`, `dashboard.topLoser`, and global `lastRunAt` fields are the only explicitly nullable contract fields.
 - Required company dates, timestamps, prices, predictions, metrics, and arrays are non-null.
 - Prospective backtest arrays may be empty but must be present.
+- Additive Phase 6 evaluation metadata may be absent only in previously published operational payloads. The UI reports it as unavailable instead of inventing values.
 - Frontend readers return `null` when a JSON document is missing or invalid; `getCompanies()` returns an empty array.
 - The Models page renders an unavailable state if any configured company or required metric set is incomplete.
 
@@ -289,3 +312,10 @@ The exporter must:
 6. roll back already replaced files if publication fails.
 
 The exporter must not read existing frontend numeric values as model input. The website must never receive a partially written operational dataset.
+
+The daily publisher is triggered by the external `update-pse-data`
+`repository_dispatch` event or manual `workflow_dispatch`; it has no internal GitHub
+Actions cron. After a new EOD actual is validated, it resolves prior prospective
+outcomes, runs persisted-model inference, appends new forecasts including Naive,
+reports drift, and then validates and publishes this JSON tree. It does not train,
+tune, refit, or execute a formal statistical experiment.

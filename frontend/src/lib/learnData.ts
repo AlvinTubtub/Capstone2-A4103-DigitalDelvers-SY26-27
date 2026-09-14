@@ -262,7 +262,7 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
     term: "Backtest",
     category: "forecastph",
     shortDef: "Simulating past predictions using historical holdout data.",
-    detailedDef: "A rigorous 60-session out-of-sample evaluation where models predict each day one session at a time without seeing future data.",
+    detailedDef: "A presentation view of the latest 60 out-of-sample evaluation sessions. Full metrics and statistical tests use the complete aligned holdout, whose count and dates are reported separately.",
   },
   {
     term: "RMSE (Root Mean Squared Error)",
@@ -283,9 +283,9 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
     detailedDef: "Scale-free metric dividing evaluation MAE by the common one-step absolute-change scale from development Close. Values below 1.0 are below that development scale, but do not by themselves prove the model beat Naive on held-out dates.",
   },
   {
-    term: "R² (Goodness-of-Fit)",
+    term: "Holdout R² (Supplementary)",
     category: "forecastph",
     shortDef: "Supplementary held-out goodness-of-fit that can be negative.",
-    detailedDef: "Measures statistical goodness-of-fit against the mean. R² is not percentage accuracy, does not select the winning model, and never guarantees future performance.",
+    detailedDef: "Compares squared holdout errors with a reference based on the holdout-period mean. R² can be negative, is not percentage accuracy, does not select or promote a model, and never guarantees future performance.",
   },
 ];
