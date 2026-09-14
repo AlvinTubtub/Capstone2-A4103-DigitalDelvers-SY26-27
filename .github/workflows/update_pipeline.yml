@@ -118,10 +118,25 @@ jobs:
         working-directory: backend
         run: python scripts/validate_raw.py --all --verbose
 
+      - name: Resolve prior prospective forecast outcomes
+        if: steps.ingestion.outputs.raw_changed == 'true'
+        working-directory: backend
+        run: python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose
+
       - name: Forecast from persisted models without training
         if: steps.ingestion.outputs.raw_changed == 'true'
         working-directory: backend
         run: python scripts/forecast_all.py --all --verbose
+
+      - name: Append new prospective forecasts including Naive
+        if: steps.ingestion.outputs.raw_changed == 'true'
+        working-directory: backend
+        run: python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose
+
+      - name: Report prospective drift evidence
+        if: steps.ingestion.outputs.raw_changed == 'true'
+        working-directory: backend
+        run: python scripts/update_forecast_ledger.py --report-drift --all --verbose
 
       - name: Validate generated frontend JSON
         if: steps.ingestion.outputs.raw_changed == 'true'
@@ -132,9 +147,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -- backend/data/raw frontend/public/forecasts
+          git add -- backend/data/raw backend/data/forecast_ledger/events.jsonl frontend/public/forecasts
           if git diff --cached --quiet; then
-            echo "No raw or frontend forecast changes to commit."
+            echo "No raw, prospective-ledger, or frontend forecast changes to commit."
           else
             git commit -m "Automated persisted-model forecast ($(date -u +'%Y-%m-%d %H:%M UTC'))"
             git push

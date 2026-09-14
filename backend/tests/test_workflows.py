@@ -62,9 +62,12 @@ def test_daily_workflow_validates_before_ingestion_and_never_trains() -> None:
         "Validate restored production artifacts",
         "python scripts/update_eod.py --verbose",
         "python scripts/validate_raw.py --all --verbose",
+        "python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose",
         "python scripts/forecast_all.py --all --verbose",
+        "python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose",
+        "python scripts/update_forecast_ledger.py --report-drift --all --verbose",
         "python scripts/validate_frontend_forecasts.py --verbose",
-        "git add -- backend/data/raw frontend/public/forecasts",
+        "git add -- backend/data/raw backend/data/forecast_ledger/events.jsonl frontend/public/forecasts",
     )
     positions = [text.index(item) for item in required_in_order]
 
@@ -79,6 +82,10 @@ def test_daily_workflow_validates_before_ingestion_and_never_trains() -> None:
         "Run PSE Fresh Model Training manually first."
     ) in text
     assert "steps.ingestion.outputs.raw_changed == 'true'" in text
+    assert "repository_dispatch:" in text
+    assert "types: [update-pse-data]" in text
+    assert "workflow_dispatch: {}" in text
+    assert "schedule:" not in text
 
 
 def test_workflows_have_no_legacy_backend_references() -> None:

@@ -19,7 +19,9 @@ backend/
 │   ├── formal/         # Explicit formal-run readiness and immutable archives
 │   ├── inference/      # Persisted-model next-session prediction
 │   ├── ingestion/      # PSE EOD download, parsing, validation, and merge
+│   ├── ledger/         # Append-only prospective forecast evidence
 │   ├── models/         # LIR, ARIMA, and univariate LSTM
+│   ├── monitoring/     # Reporting-only prospective drift evidence
 │   └── training/       # CV, tuning, orchestration, and production refit
 ├── scripts/            # Supported command-line entry points
 ├── tests/              # Unit, integration, contract, and workflow tests
@@ -187,6 +189,40 @@ An approved non-check invocation writes only beneath
 CSV snapshots, complete model/evaluation evidence, cross-company statistics, and
 logs. A finalized run cannot be reused or changed through the archive API, and its
 integrity manifest detects modified, deleted, or added files.
+
+## Prospective forecast ledger and drift monitoring
+
+`data/forecast_ledger/events.jsonl` is the append-only production evidence stream.
+It contains `forecast_issued` and `forecast_outcome_observed` events. A forecast ID
+is the SHA-256 identity of its schema version, symbol, origin date, target date, and
+method. This creates one immutable issuance slot per method and session; model
+version changes cannot bypass an already-issued slot. Exact semantic retries are
+idempotent, while changed predictions, model metadata, or outcomes fail.
+
+After a new EOD row is validated, the daily workflow first resolves pending events
+on that exact target date. It then runs persisted-model inference and appends the
+three principal forecasts plus a prospective Naive forecast equal to the latest
+known Close. Production artifact run ID, source commit, and model version/checksum
+are preserved with each issuance. Outcomes are separate events and never rewrite
+issued predictions.
+
+The drift monitor reads resolved prospective events only. For each principal model,
+it reports rolling MAE, signed error (bias), Naive MAE, the MAE ratio to Naive, and
+the count/proportion of sessions with lower absolute error than Naive. Operational
+defaults in `config/ledger_config.py` use 20-session review and 60-session
+consideration windows. `INSUFFICIENT_DATA`, `OK`, `WATCH`, and `DRIFT_SIGNAL` are
+reporting states, not automatic training, refitting, promotion, or deployment
+decisions. Candidate deployment remains unapproved without a separate manual
+decision; insufficient evidence returns `INSUFFICIENT_PROSPECTIVE_EVIDENCE`.
+
+The two workflow operations can also be run explicitly after their corresponding
+EOD stages:
+
+```bash
+python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose
+python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose
+python scripts/update_forecast_ledger.py --report-drift --all --verbose
+```
 
 ## Tests
 
