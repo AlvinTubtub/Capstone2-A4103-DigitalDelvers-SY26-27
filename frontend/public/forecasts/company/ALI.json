@@ -2,10 +2,10 @@
   "symbol": "ALI",
   "name": "Ayala Land, Inc.",
   "sector": "Property",
-  "previousClose": 15.06,
-  "predictedClose": 15.043048094940662,
+  "previousClose": 15.12,
+  "predictedClose": 15.103048094940661,
   "pesoChange": -0.0169519050593383,
-  "pctChange": -0.11256245059321582,
+  "pctChange": -0.11211577420197291,
   "direction": "bearish",
   "model": "Lag-Informed Regression",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 15.043048094940662,
-    "arima": 15.06,
-    "lstm": 15.035588024844609
+    "lag": 15.103048094940661,
+    "arima": 15.12,
+    "lstm": 15.09552485455513
   },
   "ohlcv": [
     {
@@ -13119,6 +13119,14 @@
       "low": 14.64,
       "close": 15.06,
       "volume": 9551800.0
+    },
+    {
+      "date": "2026-09-14",
+      "open": 15.06,
+      "high": 15.16,
+      "low": 14.9,
+      "close": 15.12,
+      "volume": 5871300.0
     }
   ],
   "backtestDates": [
@@ -13502,9 +13510,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-14",
-  "dataAsOf": "2026-09-11",
-  "inferenceAt": "2026-09-15T00:25:49.585596+08:00",
+  "forecastDate": "2026-09-15",
+  "dataAsOf": "2026-09-14",
+  "inferenceAt": "2026-09-15T09:17:30.430948+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

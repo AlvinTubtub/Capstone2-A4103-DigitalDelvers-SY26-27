@@ -2,10 +2,10 @@
   "symbol": "ICT",
   "name": "International Container Terminal Services, Inc.",
   "sector": "Services",
-  "previousClose": 985.0,
-  "predictedClose": 984.0734744502843,
-  "pesoChange": -0.9265255497157341,
-  "pctChange": -0.09406350758535371,
+  "previousClose": 990.0,
+  "predictedClose": 988.9215863404578,
+  "pesoChange": -1.078413659542207,
+  "pctChange": -0.108930672681031,
   "direction": "bearish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 984.2634336773716,
-    "arima": 982.8858341996721,
-    "lstm": 984.0734744502843
+    "lag": 989.2686780004649,
+    "arima": 988.1815389058149,
+    "lstm": 988.9215863404578
   },
   "ohlcv": [
     {
@@ -13119,6 +13119,14 @@
       "low": 975.0,
       "close": 985.0,
       "volume": 1520360.0
+    },
+    {
+      "date": "2026-09-14",
+      "open": 980.0,
+      "high": 996.5,
+      "low": 980.0,
+      "close": 990.0,
+      "volume": 1290580.0
     }
   ],
   "backtestDates": [
@@ -13502,9 +13510,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-14",
-  "dataAsOf": "2026-09-11",
-  "inferenceAt": "2026-09-15T01:15:16.363602+08:00",
+  "forecastDate": "2026-09-15",
+  "dataAsOf": "2026-09-14",
+  "inferenceAt": "2026-09-15T09:17:30.783892+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

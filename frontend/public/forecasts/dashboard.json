@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-15T03:17:13.323146+08:00",
-  "forecastDate": "2026-09-14",
-  "lastRunAt": "2026-09-15T03:17:13.323146+08:00",
+  "generatedAt": "2026-09-15T09:17:31.454736+08:00",
+  "forecastDate": "2026-09-15",
+  "lastRunAt": "2026-09-15T09:17:31.454736+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -29,29 +29,29 @@
   ],
   "marketSummary": {
     "gainers": 6,
-    "losers": 4,
-    "unchanged": 5
+    "losers": 5,
+    "unchanged": 4
   },
   "topGainer": {
-    "symbol": "MBT",
-    "name": "Metropolitan Bank & Trust Company",
+    "symbol": "BPI",
+    "name": "Bank of the Philippine Islands",
     "sector": "Financials",
-    "latestClose": 63.05,
-    "predictedClose": 63.24233135573277,
-    "pctChange": 0.30504576642787623,
+    "latestClose": 102.3,
+    "predictedClose": 102.5237381570075,
+    "pctChange": 0.2187078758626618,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-14"
+    "forecastDate": "2026-09-15"
   },
   "topLoser": {
-    "symbol": "ALI",
-    "name": "Ayala Land, Inc.",
-    "sector": "Property",
-    "latestClose": 15.06,
-    "predictedClose": 15.043048094940662,
-    "pctChange": -0.11256245059321582,
+    "symbol": "MER",
+    "name": "Manila Electric Company",
+    "sector": "Industrial",
+    "latestClose": 485.4,
+    "predictedClose": 484.0148370841425,
+    "pctChange": -0.285365248425515,
     "direction": "bearish",
     "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-09-14"
+    "forecastDate": "2026-09-15"
   }
 }

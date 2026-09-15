@@ -2,10 +2,10 @@
   "symbol": "MBT",
   "name": "Metropolitan Bank & Trust Company",
   "sector": "Financials",
-  "previousClose": 63.05,
-  "predictedClose": 63.24233135573277,
-  "pesoChange": 0.19233135573277593,
-  "pctChange": 0.30504576642787623,
+  "previousClose": 63.3,
+  "predictedClose": 63.35955113132759,
+  "pesoChange": 0.05955113132759493,
+  "pctChange": 0.09407761663127162,
   "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 63.17962443641214,
-    "arima": 63.24233135573277,
-    "lstm": 63.319506176251686
+    "lag": 63.34187629817898,
+    "arima": 63.35955113132759,
+    "lstm": 63.41234216013733
   },
   "ohlcv": [
     {
@@ -13119,6 +13119,14 @@
       "low": 63.05,
       "close": 63.05,
       "volume": 3649550.0
+    },
+    {
+      "date": "2026-09-14",
+      "open": 63.1,
+      "high": 63.9,
+      "low": 63.0,
+      "close": 63.3,
+      "volume": 2431660.0
     }
   ],
   "backtestDates": [
@@ -13502,9 +13510,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-14",
-  "dataAsOf": "2026-09-11",
-  "inferenceAt": "2026-09-15T01:40:33.591841+08:00",
+  "forecastDate": "2026-09-15",
+  "dataAsOf": "2026-09-14",
+  "inferenceAt": "2026-09-15T09:17:30.915170+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

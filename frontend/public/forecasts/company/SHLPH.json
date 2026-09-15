@@ -2,8 +2,8 @@
   "symbol": "SHLPH",
   "name": "Shell Pilipinas Corporation",
   "sector": "Industrial",
-  "previousClose": 7.82,
-  "predictedClose": 7.82,
+  "previousClose": 8.1,
+  "predictedClose": 8.1,
   "pesoChange": 0.0,
   "pctChange": 0.0,
   "direction": "bullish",
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 7.8066770768269835,
-    "arima": 7.82,
-    "lstm": 7.805393912566875
+    "lag": 8.086677076826982,
+    "arima": 8.1,
+    "lstm": 8.09661884116369
   },
   "ohlcv": [
     {
@@ -13119,6 +13119,14 @@
       "low": 7.81,
       "close": 7.82,
       "volume": 286900.0
+    },
+    {
+      "date": "2026-09-14",
+      "open": 7.82,
+      "high": 8.25,
+      "low": 7.75,
+      "close": 8.1,
+      "volume": 319300.0
     }
   ],
   "backtestDates": [
@@ -13502,9 +13510,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-14",
-  "dataAsOf": "2026-09-11",
-  "inferenceAt": "2026-09-15T03:03:26.090050+08:00",
+  "forecastDate": "2026-09-15",
+  "dataAsOf": "2026-09-14",
+  "inferenceAt": "2026-09-15T09:17:31.366344+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

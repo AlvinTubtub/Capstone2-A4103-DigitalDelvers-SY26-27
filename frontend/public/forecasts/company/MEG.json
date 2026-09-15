@@ -2,10 +2,10 @@
   "symbol": "MEG",
   "name": "Megaworld Corporation",
   "sector": "Property",
-  "previousClose": 2.18,
-  "predictedClose": 2.1788444722048723,
+  "previousClose": 2.22,
+  "predictedClose": 2.2188444722048724,
   "pesoChange": -0.001155527795127842,
-  "pctChange": -0.05300586216182761,
+  "pctChange": -0.05205080158233522,
   "direction": "bearish",
   "model": "Lag-Informed Regression",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 2.1788444722048723,
-    "arima": 2.1784396904406576,
-    "lstm": 2.1815248867574786
+    "lag": 2.2188444722048724,
+    "arima": 2.2184110609074588,
+    "lstm": 2.216719574338353
   },
   "ohlcv": [
     {
@@ -13119,6 +13119,14 @@
       "low": 2.18,
       "close": 2.18,
       "volume": 3606000.0
+    },
+    {
+      "date": "2026-09-14",
+      "open": 2.2,
+      "high": 2.24,
+      "low": 2.2,
+      "close": 2.22,
+      "volume": 2653000.0
     }
   ],
   "backtestDates": [
@@ -13502,9 +13510,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-14",
-  "dataAsOf": "2026-09-11",
-  "inferenceAt": "2026-09-15T01:51:52.652374+08:00",
+  "forecastDate": "2026-09-15",
+  "dataAsOf": "2026-09-14",
+  "inferenceAt": "2026-09-15T09:17:30.977333+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
