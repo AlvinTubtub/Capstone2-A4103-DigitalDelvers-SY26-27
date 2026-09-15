@@ -2,10 +2,10 @@
   "symbol": "APX",
   "name": "Apex Mining Co., Inc.",
   "sector": "Mining and Oil",
-  "previousClose": 17.88,
-  "predictedClose": 17.885761721164165,
-  "pesoChange": 0.005761721164166289,
-  "pctChange": 0.03222439129846918,
+  "previousClose": 17.98,
+  "predictedClose": 17.9899550647423,
+  "pesoChange": 0.009955064742300124,
+  "pctChange": 0.055367434606786003,
   "direction": "bullish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 17.894243477999353,
-    "arima": 17.872918545187485,
-    "lstm": 17.885761721164165
+    "lag": 17.99672262870492,
+    "arima": 17.972550861878435,
+    "lstm": 17.9899550647423
   },
   "ohlcv": [
     {
@@ -13127,6 +13127,14 @@
       "low": 17.74,
       "close": 17.88,
       "volume": 7988200.0
+    },
+    {
+      "date": "2026-09-15",
+      "open": 17.6,
+      "high": 18.44,
+      "low": 17.6,
+      "close": 17.98,
+      "volume": 11554800.0
     }
   ],
   "backtestDates": [
@@ -13510,9 +13518,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-15",
-  "dataAsOf": "2026-09-14",
-  "inferenceAt": "2026-09-15T09:17:30.584796+08:00",
+  "forecastDate": "2026-09-16",
+  "dataAsOf": "2026-09-15",
+  "inferenceAt": "2026-09-15T17:39:38.232233+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
