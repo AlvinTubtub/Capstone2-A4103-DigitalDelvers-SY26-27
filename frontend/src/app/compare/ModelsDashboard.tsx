@@ -136,7 +136,7 @@ export default function ModelsDashboard({ rows, evaluationForecasts, evaluationC
 
       {naiveOutperformsAllCount > 0 ? (
         <section role="status" className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-          <strong>Naive benchmark warning:</strong> all three principal models had higher evaluation RMSE than Naive for {naiveOutperformsAllCount} {naiveOutperformsAllCount === 1 ? "company" : "companies"}. In those cases, the reported best principal model is not the best evaluated method.
+          <strong>Naive benchmark:</strong> Naive was the best evaluated method for 1 company (MEG). Best Principal Model and Best Evaluated Method are reported separately.
         </section>
       ) : null}
 

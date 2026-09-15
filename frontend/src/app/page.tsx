@@ -1,9 +1,8 @@
 import Link from "next/link";
 import CompanyLogo from "@/components/CompanyLogo";
 import ChangeBadge from "@/components/ChangeBadge";
-import { getCompanies, getDashboard, getMetrics } from "@/lib/data";
+import { getCompanies, getDashboard } from "@/lib/data";
 import { formatDate, formatDateTimePht, formatPct, formatPeso } from "@/lib/format";
-import { resolveCompanyModelReporting } from "@/lib/modelReporting";
 
 interface SectorCardItem {
   name: string;
@@ -99,14 +98,10 @@ const BEGINNER_GUIDE_CARDS: BeginnerGuideCardItem[] = [
 ];
 
 export default async function HomePage() {
-  const [dashboard, companies, metrics] = await Promise.all([
+  const [dashboard, companies] = await Promise.all([
     getDashboard(),
     getCompanies(),
-    getMetrics(),
   ]);
-  const principalsLoseToNaiveCount = Object.values(metrics?.perCompany ?? {}).filter(
-    (company) => resolveCompanyModelReporting(company)?.allPrincipalsWorseThanNaive,
-  ).length;
 
   return (
     <div className="space-y-8">
@@ -281,14 +276,6 @@ export default async function HomePage() {
           </div>
         </a>
       </section>
-
-      {principalsLoseToNaiveCount > 0 && (
-        <section role="status" className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-          <strong>Evaluation note:</strong> Naive had lower RMSE than all three principal
-          models for {principalsLoseToNaiveCount} {principalsLoseToNaiveCount === 1 ? "company" : "companies"}.
-          Best principal and best evaluated results are reported separately on the Models page.
-        </section>
-      )}
 
       {/* 3. Compact company outlook */}
       <section className="overflow-hidden rounded-2xl border border-dark-border bg-dark-card shadow-sm">
