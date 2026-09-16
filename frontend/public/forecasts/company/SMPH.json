@@ -2,10 +2,10 @@
   "symbol": "SMPH",
   "name": "SM Prime Holdings, Inc.",
   "sector": "Property",
-  "previousClose": 17.6,
-  "predictedClose": 17.621593197059294,
-  "pesoChange": 0.021593197059292635,
-  "pctChange": 0.12268861965507177,
+  "previousClose": 17.36,
+  "predictedClose": 17.410806585128384,
+  "pesoChange": 0.05080658512838454,
+  "pctChange": 0.29266466087779114,
   "direction": "bullish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 17.652878849461526,
-    "arima": 17.610929622582546,
-    "lstm": 17.621593197059294
+    "lag": 17.413087124492087,
+    "arima": 17.390732917764826,
+    "lstm": 17.410806585128384
   },
   "ohlcv": [
     {
@@ -13135,6 +13135,14 @@
       "low": 17.54,
       "close": 17.6,
       "volume": 16250100.0
+    },
+    {
+      "date": "2026-09-16",
+      "open": 17.6,
+      "high": 17.6,
+      "low": 17.26,
+      "close": 17.36,
+      "volume": 13237400.0
     }
   ],
   "backtestDates": [
@@ -13518,9 +13526,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-16",
-  "dataAsOf": "2026-09-15",
-  "inferenceAt": "2026-09-15T17:39:38.884944+08:00",
+  "forecastDate": "2026-09-17",
+  "dataAsOf": "2026-09-16",
+  "inferenceAt": "2026-09-16T16:02:44.226513+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

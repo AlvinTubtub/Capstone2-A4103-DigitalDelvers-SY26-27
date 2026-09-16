@@ -2,11 +2,11 @@
   "symbol": "PGOLD",
   "name": "Puregold Price Club, Inc.",
   "sector": "Services",
-  "previousClose": 40.0,
-  "predictedClose": 39.98905141530203,
-  "pesoChange": -0.010948584697970887,
-  "pctChange": -0.027371461744927213,
-  "direction": "bearish",
+  "previousClose": 39.8,
+  "predictedClose": 39.814598112930625,
+  "pesoChange": 0.014598112930627849,
+  "pctChange": 0.0366786757050951,
+  "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
     "lag_reg": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 40.00106183635228,
-    "arima": 39.98905141530203,
-    "lstm": 40.018152084674846
+    "lag": 39.801061836352275,
+    "arima": 39.814598112930625,
+    "lstm": 39.831452552938735
   },
   "ohlcv": [
     {
@@ -13135,6 +13135,14 @@
       "low": 39.4,
       "close": 40.0,
       "volume": 1365200.0
+    },
+    {
+      "date": "2026-09-16",
+      "open": 40.0,
+      "high": 40.05,
+      "low": 39.5,
+      "close": 39.8,
+      "volume": 1422000.0
     }
   ],
   "backtestDates": [
@@ -13518,9 +13526,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-16",
-  "dataAsOf": "2026-09-15",
-  "inferenceAt": "2026-09-15T17:39:38.689584+08:00",
+  "forecastDate": "2026-09-17",
+  "dataAsOf": "2026-09-16",
+  "inferenceAt": "2026-09-16T16:02:43.863583+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

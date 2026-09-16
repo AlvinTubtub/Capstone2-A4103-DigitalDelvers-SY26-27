@@ -3,10 +3,10 @@
   "name": "Manila Electric Company",
   "sector": "Industrial",
   "previousClose": 486.0,
-  "predictedClose": 487.5373908292072,
-  "pesoChange": 1.5373908292071974,
-  "pctChange": 0.31633556156526693,
-  "direction": "bullish",
+  "predictedClose": 484.67111675402714,
+  "pesoChange": -1.328883245972861,
+  "pctChange": -0.2734327666610825,
+  "direction": "bearish",
   "model": "Lag-Informed Regression",
   "metrics": {
     "lag_reg": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 487.5373908292072,
-    "arima": 485.5452104296497,
-    "lstm": 485.9768937004464
+    "lag": 484.67111675402714,
+    "arima": 485.84299687241236,
+    "lstm": 486.15381071975133
   },
   "ohlcv": [
     {
@@ -13135,6 +13135,14 @@
       "low": 485.6,
       "close": 486.0,
       "volume": 128610.0
+    },
+    {
+      "date": "2026-09-16",
+      "open": 486.0,
+      "high": 486.8,
+      "low": 474.2,
+      "close": 486.0,
+      "volume": 125430.0
     }
   ],
   "backtestDates": [
@@ -13518,9 +13526,9 @@
     "ARIMA": [],
     "LSTM": []
   },
-  "forecastDate": "2026-09-16",
-  "dataAsOf": "2026-09-15",
-  "inferenceAt": "2026-09-15T17:39:38.588683+08:00",
+  "forecastDate": "2026-09-17",
+  "dataAsOf": "2026-09-16",
+  "inferenceAt": "2026-09-16T16:02:43.677294+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
