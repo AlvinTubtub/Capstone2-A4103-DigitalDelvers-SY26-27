@@ -22,6 +22,10 @@ from src.export.frontend_exporter import (
     FrontendExportError,
     export_frontend_forecasts,
 )
+from src.export.production_history import (
+    ProductionHistoryPoint,
+    ProductionModelEvidence,
+)
 from src.export.schemas import (
     EVALUATION_MODEL_IDS,
     FrontendSchemaError,
@@ -139,6 +143,81 @@ def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def production_point(
+    symbol: str,
+    *,
+    target_date: date,
+    actual_close: float,
+    source: str = "prospective",
+) -> ProductionHistoryPoint:
+    origin_date = target_date - timedelta(days=1)
+    return ProductionHistoryPoint(
+        symbol=symbol,
+        origin_date=origin_date,
+        target_date=target_date,
+        actual_close=actual_close,
+        models=tuple(
+            ProductionModelEvidence(
+                forecast_id=(
+                    None
+                    if source == "post_formal_backfill"
+                    else f"forecast-{symbol}-{target_date}-{model.value}"
+                ),
+                method=model,
+                prediction=actual_close + index / 10,
+                error=index / 10,
+                model_version=f"version-{model.value}",
+                production_run_id=None if source == "post_formal_backfill" else "run-123",
+                source_commit=None if source == "post_formal_backfill" else "a" * 40,
+                created_at=(
+                    None
+                    if source == "post_formal_backfill"
+                    else datetime(
+                        target_date.year,
+                        target_date.month,
+                        target_date.day,
+                        9,
+                        0,
+                        tzinfo=MANILA,
+                    ).isoformat()
+                ),
+                observed_at=(
+                    None
+                    if source == "post_formal_backfill"
+                    else datetime(
+                        target_date.year,
+                        target_date.month,
+                        target_date.day,
+                        17,
+                        0,
+                        tzinfo=MANILA,
+                    ).isoformat()
+                ),
+                artifact_sha256=(
+                    {
+                        ModelId.LAG_REGRESSION: "a",
+                        ModelId.ARIMA: "b",
+                        ModelId.LSTM: "c",
+                    }[model]
+                    * 64
+                    if source == "post_formal_backfill" and model is not ModelId.NAIVE
+                    else None
+                ),
+                artifact_created_at=(
+                    "2026-07-20T18:00:00+08:00"
+                    if source == "post_formal_backfill" and model is not ModelId.NAIVE
+                    else None
+                ),
+                artifact_trained_through=(
+                    origin_date if source == "post_formal_backfill" else None
+                ),
+            )
+            for index, model in enumerate(EVALUATION_MODEL_IDS, start=1)
+        ),
+        source=source,
+    )
+
+
 def test_every_operational_file_matches_contract_and_new_artifacts(
     tmp_path: Path,
     export_bundle: FrontendExportBundle,
@@ -149,7 +228,13 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
         '[{"latestClose":999999}]\n', encoding="utf-8"
     )
 
-    result = export_frontend_forecasts(export_bundle, output_root=output_root)
+    result = export_frontend_forecasts(
+        export_bundle,
+        output_root=output_root,
+        ledger_path=None,
+        backfill_path=None,
+        formal_display_path=None,
+    )
 
     expected_relative_paths = {
         "companies.json",
@@ -250,6 +335,7 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     assert detail["productionBacktestDates"] == []
     assert detail["productionBacktestActual"] == []
     assert all(not values for values in detail["productionBacktestByModel"].values())
+    assert detail["productionBacktestProvenance"] == []
     assert set(detail["nextClose"]) == {"lag", "arima", "lstm"}
     for model in PRINCIPAL_MODEL_IDS:
         prediction = source.next_day_forecast.prediction_for(model)
@@ -286,6 +372,114 @@ def test_company_schema_rejects_display_metadata_that_misrepresents_full_holdout
 
     with pytest.raises(FrontendSchemaError, match="60-session display subset"):
         validate_document("company/ALI.json", detail)
+
+
+def test_resolved_production_history_appends_without_changing_formal_evidence(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    baseline = build_frontend_payloads(export_bundle)
+    formal_detail = baseline["company/ALI.json"]
+    formal_metrics = baseline["metrics.json"]
+    point = production_point(
+        "ALI",
+        target_date=date(2026, 7, 20),
+        actual_close=82.5,
+    )
+
+    with_production = build_frontend_payloads(
+        export_bundle,
+        production_history_by_symbol={"ALI": (point,)},
+    )
+    detail = with_production["company/ALI.json"]
+
+    assert detail["backtestDates"] == formal_detail["backtestDates"]
+    assert detail["backtestActual"] == formal_detail["backtestActual"]
+    assert detail["backtestByModel"] == formal_detail["backtestByModel"]
+    assert detail["evaluationMetadata"] == formal_detail["evaluationMetadata"]
+    assert with_production["metrics.json"] == formal_metrics
+    assert detail["productionBacktestDates"] == ["2026-07-20"]
+    assert detail["productionBacktestActual"] == [82.5]
+    assert detail["productionBacktestProvenance"][0]["source"] == "prospective"
+    assert detail["productionBacktestProvenance"][0]["originDate"] == "2026-07-19"
+    assert set(detail["productionBacktestProvenance"][0]["models"]) == {
+        MODEL_DISPLAY_LABELS[model] for model in EVALUATION_MODEL_IDS
+    }
+    for index, model in enumerate(EVALUATION_MODEL_IDS, start=1):
+        label = MODEL_DISPLAY_LABELS[model]
+        assert detail["productionBacktestByModel"][label] == [82.5 + index / 10]
+        assert detail["productionBacktestProvenance"][0]["models"][label][
+            "error"
+        ] == pytest.approx(index / 10)
+
+
+def test_sixty_formal_points_remain_when_bridge_and_prospective_points_append(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    baseline = build_frontend_payloads(export_bundle)
+    formal_detail = baseline["company/ALI.json"]
+    bridge = production_point(
+        "ALI",
+        target_date=date(2026, 7, 20),
+        actual_close=82.5,
+        source="post_formal_backfill",
+    )
+    prospective = production_point(
+        "ALI",
+        target_date=date(2026, 7, 21),
+        actual_close=82.8,
+    )
+
+    payloads = build_frontend_payloads(
+        export_bundle,
+        production_history_by_symbol={"ALI": (bridge, prospective)},
+    )
+    detail = payloads["company/ALI.json"]
+
+    assert len(detail["backtestDates"]) == 60
+    assert detail["backtestDates"] == formal_detail["backtestDates"]
+    assert detail["backtestActual"] == formal_detail["backtestActual"]
+    assert detail["backtestByModel"] == formal_detail["backtestByModel"]
+    assert detail["metrics"] == formal_detail["metrics"]
+    assert detail["productionBacktestDates"] == ["2026-07-20", "2026-07-21"]
+    assert [point["source"] for point in detail["productionBacktestProvenance"]] == [
+        "post_formal_backfill",
+        "prospective",
+    ]
+    assert len(detail["backtestDates"]) + len(detail["productionBacktestDates"]) == 62
+
+
+def test_company_schema_rejects_production_without_provenance(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    point = production_point(
+        "ALI",
+        target_date=date(2026, 7, 20),
+        actual_close=82.5,
+    )
+    detail = build_frontend_payloads(
+        export_bundle,
+        production_history_by_symbol={"ALI": (point,)},
+    )["company/ALI.json"]
+    del detail["productionBacktestProvenance"]
+
+    with pytest.raises(FrontendSchemaError, match="require provenance"):
+        validate_document("company/ALI.json", detail)
+
+
+def test_company_schema_rejects_production_on_or_before_formal_cutoff(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    point = production_point(
+        "ALI",
+        target_date=date(2026, 7, 19),
+        actual_close=82.5,
+    )
+
+    with pytest.raises(FrontendSchemaError, match="follow the formal evaluation cutoff"):
+        build_frontend_payloads(
+            export_bundle,
+            production_history_by_symbol={"ALI": (point,)},
+        )
 
 
 def test_exporter_uses_medians_not_means_for_descriptive_aggregate(
@@ -343,10 +537,78 @@ def test_incomplete_next_day_artifact_cannot_replace_existing_export(
     )
 
     with pytest.raises(FrontendExportError, match="exactly three"):
-        export_frontend_forecasts(invalid_bundle, output_root=output_root)
+        export_frontend_forecasts(
+            invalid_bundle,
+            output_root=output_root,
+            ledger_path=None,
+            backfill_path=None,
+            formal_display_path=None,
+        )
 
     assert companies_path.read_bytes() == previous
     assert not (output_root / "dashboard.json").exists()
+
+
+def test_frontend_export_combines_backfill_and_resolved_ledger_by_formal_cutoff(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    export_bundle: FrontendExportBundle,
+) -> None:
+    output_root = tmp_path / "forecasts"
+    ledger_path = tmp_path / "events.jsonl"
+    backfill_path = tmp_path / "backfill.json"
+    bridge = production_point(
+        "ALI",
+        target_date=date(2026, 7, 20),
+        actual_close=82.5,
+        source="post_formal_backfill",
+    )
+    prospective = production_point(
+        "ALI",
+        target_date=date(2026, 7, 21),
+        actual_close=82.8,
+    )
+    captured: dict[str, object] = {}
+
+    def load_history(*, formal_cutoffs, ledger_path):
+        captured["formal_cutoffs"] = formal_cutoffs
+        captured["ledger_path"] = ledger_path
+        return {"ALI": (prospective,)}
+
+    def load_backfill(*, formal_cutoffs, records_by_symbol, path):
+        captured["backfill_cutoffs"] = formal_cutoffs
+        captured["records_by_symbol"] = records_by_symbol
+        captured["backfill_path"] = path
+        return {"ALI": (bridge,)}
+
+    monkeypatch.setattr(
+        exporter_module,
+        "load_resolved_production_history",
+        load_history,
+    )
+    monkeypatch.setattr(exporter_module, "load_post_formal_backfill", load_backfill)
+
+    export_frontend_forecasts(
+        export_bundle,
+        output_root=output_root,
+        ledger_path=ledger_path,
+        backfill_path=backfill_path,
+        formal_display_path=None,
+    )
+
+    detail = load_json(output_root / "company" / "ALI.json")
+    assert captured["ledger_path"] == ledger_path
+    assert captured["backfill_path"] == backfill_path
+    assert captured["formal_cutoffs"]["ALI"] == date(2026, 7, 19)
+    assert captured["backfill_cutoffs"] == captured["formal_cutoffs"]
+    assert set(captured["records_by_symbol"]) == {
+        company.symbol for company in COMPANIES
+    }
+    assert detail["productionBacktestDates"] == ["2026-07-20", "2026-07-21"]
+    assert [point["source"] for point in detail["productionBacktestProvenance"]] == [
+        "post_formal_backfill",
+        "prospective",
+    ]
 
 
 def test_publish_failure_rolls_back_every_replaced_file(
@@ -373,7 +635,13 @@ def test_publish_failure_rolls_back_every_replaced_file(
     monkeypatch.setattr(exporter_module, "_replace_staged_file", fail_second_replace)
 
     with pytest.raises(FrontendExportError, match="Atomic frontend export failed"):
-        export_frontend_forecasts(export_bundle, output_root=output_root)
+        export_frontend_forecasts(
+            export_bundle,
+            output_root=output_root,
+            ledger_path=None,
+            backfill_path=None,
+            formal_display_path=None,
+        )
 
     assert (output_root / "companies.json").read_bytes() == previous_companies
     assert (output_root / "dashboard.json").read_bytes() == previous_dashboard

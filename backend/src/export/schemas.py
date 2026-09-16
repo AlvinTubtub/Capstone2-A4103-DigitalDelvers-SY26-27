@@ -601,9 +601,8 @@ def validate_company_json(value: object) -> None:
     production = _object(
         company["productionBacktestByModel"], "company.productionBacktestByModel"
     )
-    principal_labels = {MODEL_DISPLAY_LABELS[model] for model in PRINCIPAL_MODEL_IDS}
-    if set(production) != principal_labels:
-        raise FrontendSchemaError("Production backtest must contain the three principal models")
+    if set(production) != expected_labels:
+        raise FrontendSchemaError("Production backtest must contain all evaluated methods")
     if len(production_dates) != len(production_actual) or any(
         len(_array(series, f"company.productionBacktestByModel.{label}"))
         != len(production_dates)
@@ -623,6 +622,128 @@ def validate_company_json(value: object) -> None:
     for label, values in production.items():
         for index, number in enumerate(values):
             _number(number, f"company.productionBacktestByModel.{label}[{index}]")
+    raw_provenance = company.get("productionBacktestProvenance")
+    if raw_provenance is None and production_dates:
+        raise FrontendSchemaError("Production dates require provenance")
+    provenance = (
+        []
+        if raw_provenance is None
+        else _array(raw_provenance, "company.productionBacktestProvenance")
+    )
+    if len(provenance) != len(production_dates):
+        raise FrontendSchemaError("Production provenance must align with production dates")
+    expected_methods = {
+        model.value: MODEL_DISPLAY_LABELS[model] for model in EVALUATION_MODEL_IDS
+    }
+    backfill_count = 0
+    for index, raw_point in enumerate(provenance):
+        context = f"company.productionBacktestProvenance[{index}]"
+        point = _object(raw_point, context)
+        _required(
+            point,
+            {"source", "symbol", "originDate", "targetDate", "actualClose", "models"},
+            context,
+        )
+        source = point["source"]
+        if source not in {"prospective", "post_formal_backfill"}:
+            raise FrontendSchemaError(f"{context}.source is invalid")
+        backfill_count += int(source == "post_formal_backfill")
+        if _string(point["symbol"], f"{context}.symbol") != symbol:
+            raise FrontendSchemaError(f"{context}.symbol differs from company symbol")
+        origin_date = _date_only(point["originDate"], f"{context}.originDate")
+        target_date = _date_only(point["targetDate"], f"{context}.targetDate")
+        if target_date != validated_production_dates[index] or origin_date >= target_date:
+            raise FrontendSchemaError(f"{context} dates are inconsistent")
+        actual_close = _number(point["actualClose"], f"{context}.actualClose")
+        if actual_close != _number(production_actual[index], f"production actual {index}"):
+            raise FrontendSchemaError(f"{context}.actualClose is inconsistent")
+        models = _object(point["models"], f"{context}.models")
+        if set(models) != expected_labels:
+            raise FrontendSchemaError(f"{context}.models must contain all evaluated methods")
+        for method, label in expected_methods.items():
+            model_context = f"{context}.models.{label}"
+            evidence = _object(models[label], model_context)
+            _required(
+                evidence,
+                {
+                    "forecastId", "method", "prediction", "error", "modelVersion",
+                    "productionRunId", "sourceCommit", "createdAt", "observedAt",
+                    "artifactSha256", "artifactCreatedAt", "artifactTrainedThrough",
+                },
+                model_context,
+            )
+            if evidence["method"] != method:
+                raise FrontendSchemaError(f"{model_context}.method is inconsistent")
+            prediction = _number(evidence["prediction"], f"{model_context}.prediction")
+            if prediction != _number(
+                production[label][index], f"company.productionBacktestByModel.{label}[{index}]"
+            ):
+                raise FrontendSchemaError(f"{model_context}.prediction is inconsistent")
+            error = _number(evidence["error"], f"{model_context}.error")
+            if not math.isclose(
+                error,
+                prediction - actual_close,
+                rel_tol=1e-12,
+                abs_tol=1e-12,
+            ):
+                raise FrontendSchemaError(f"{model_context}.error is inconsistent")
+            _string(evidence["modelVersion"], f"{model_context}.modelVersion")
+            for nullable_field in ("productionRunId", "sourceCommit"):
+                value = evidence[nullable_field]
+                if value is not None:
+                    _string(value, f"{model_context}.{nullable_field}")
+            if source == "prospective":
+                _string(evidence["forecastId"], f"{model_context}.forecastId")
+                _timestamp(evidence["createdAt"], f"{model_context}.createdAt")
+                _timestamp(evidence["observedAt"], f"{model_context}.observedAt")
+                for field in (
+                    "artifactSha256",
+                    "artifactCreatedAt",
+                    "artifactTrainedThrough",
+                ):
+                    if evidence[field] is not None:
+                        raise FrontendSchemaError(
+                            f"{model_context}.{field} is invalid for prospective evidence"
+                        )
+            else:
+                if any(
+                    evidence[field] is not None
+                    for field in ("forecastId", "createdAt", "observedAt")
+                ):
+                    raise FrontendSchemaError(
+                        f"{model_context} backfill must not claim a ledger issuance"
+                    )
+                trained_through = _date_only(
+                    evidence["artifactTrainedThrough"],
+                    f"{model_context}.artifactTrainedThrough",
+                )
+                if trained_through != origin_date:
+                    raise FrontendSchemaError(
+                        f"{model_context} backfill artifact boundary is inconsistent"
+                    )
+                if method == ModelId.NAIVE.value:
+                    if (
+                        evidence["artifactSha256"] is not None
+                        or evidence["artifactCreatedAt"] is not None
+                    ):
+                        raise FrontendSchemaError(
+                            f"{model_context} Naive evidence cannot claim a model artifact"
+                        )
+                else:
+                    artifact_sha = _string(
+                        evidence["artifactSha256"],
+                        f"{model_context}.artifactSha256",
+                    )
+                    if len(artifact_sha) != 64:
+                        raise FrontendSchemaError(
+                            f"{model_context}.artifactSha256 is invalid"
+                        )
+                    _timestamp(
+                        evidence["artifactCreatedAt"],
+                        f"{model_context}.artifactCreatedAt",
+                    )
+    if backfill_count > 1:
+        raise FrontendSchemaError("Company history may contain only one backfill bridge")
     forecast_date = _date_only(company["forecastDate"], "company.forecastDate")
     data_as_of = _date_only(company["dataAsOf"], "company.dataAsOf")
     if forecast_date <= data_as_of:
@@ -640,6 +761,22 @@ def validate_company_json(value: object) -> None:
             "company.evaluationMetadata",
             displayed_dates=validated_dates,
         )
+        evaluation_metadata = _object(
+            company["evaluationMetadata"], "company.evaluationMetadata"
+        )
+        formal_end = _date_only(
+            evaluation_metadata["fullEndDate"],
+            "company.evaluationMetadata.fullEndDate",
+        )
+        if any(value <= formal_end for value in validated_production_dates):
+            raise FrontendSchemaError(
+                "Production backtest dates must follow the formal evaluation cutoff"
+            )
+        for point in provenance:
+            if point["source"] == "post_formal_backfill" and point["originDate"] != formal_end:
+                raise FrontendSchemaError(
+                    "Post-formal backfill must originate at the formal evaluation cutoff"
+                )
     principal_labels = {MODEL_DISPLAY_LABELS[model] for model in PRINCIPAL_MODEL_IDS}
     if "bestPrincipalModel" in company and company["bestPrincipalModel"] not in principal_labels:
         raise FrontendSchemaError("company.bestPrincipalModel is invalid")

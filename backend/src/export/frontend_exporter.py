@@ -13,12 +13,25 @@ import statistics
 import tempfile
 
 from config.companies import COMPANIES, Company, get_company
+from config.ledger_config import DEFAULT_FORECAST_LEDGER_PATH
 from config.model_config import ModelId
 from config.settings import BACKEND_ROOT, as_manila_time
 from src.data.validator import OhlcvRecord, require_chronological_records
 from src.evaluation.evaluator import CompanyEvaluation
 from src.evaluation.model_selection import summarize_cross_company_metrics
 from src.evaluation.statistical_tests import compare_methods_across_companies
+from src.export.formal_display import (
+    DEFAULT_FORMAL_DISPLAY_PATH,
+    FormalDisplaySnapshot,
+    load_formal_display_snapshot,
+)
+from src.export.production_history import (
+    DEFAULT_POST_FORMAL_BACKFILL_PATH,
+    ProductionHistoryPoint,
+    combine_post_formal_history,
+    load_post_formal_backfill,
+    load_resolved_production_history,
+)
 from src.export.schemas import (
     BACKTEST_WINDOW,
     EVALUATION_MODEL_IDS,
@@ -222,6 +235,8 @@ def _evaluation_metadata(
 def _company_payload(
     source: CompanyFrontendArtifacts,
     company: Company,
+    production_history: Sequence[ProductionHistoryPoint] = (),
+    formal_evidence: Mapping[str, object] | None = None,
 ) -> tuple[dict[str, object], dict[str, object]]:
     evaluation = source.evaluation
     forecast = source.next_day_forecast
@@ -252,6 +267,46 @@ def _company_payload(
         for model in PRINCIPAL_MODEL_IDS
     }
     ohlcv = _ohlcv_payload(source.records)
+    production_points = tuple(production_history)
+    production_dates = [point.target_date.isoformat() for point in production_points]
+    production_actual = [float(point.actual_close) for point in production_points]
+    production_by_model = {
+        MODEL_DISPLAY_LABELS[model]: [
+            float(point.evidence_for(model).prediction) for point in production_points
+        ]
+        for model in EVALUATION_MODEL_IDS
+    }
+    production_provenance = [
+        {
+            "source": point.source,
+            "symbol": point.symbol,
+            "originDate": point.origin_date.isoformat(),
+            "targetDate": point.target_date.isoformat(),
+            "actualClose": float(point.actual_close),
+            "models": {
+                MODEL_DISPLAY_LABELS[model]: {
+                    "forecastId": point.evidence_for(model).forecast_id,
+                    "method": point.evidence_for(model).method.value,
+                    "prediction": float(point.evidence_for(model).prediction),
+                    "error": float(point.evidence_for(model).error),
+                    "modelVersion": point.evidence_for(model).model_version,
+                    "productionRunId": point.evidence_for(model).production_run_id,
+                    "sourceCommit": point.evidence_for(model).source_commit,
+                    "createdAt": point.evidence_for(model).created_at,
+                    "observedAt": point.evidence_for(model).observed_at,
+                    "artifactSha256": point.evidence_for(model).artifact_sha256,
+                    "artifactCreatedAt": point.evidence_for(model).artifact_created_at,
+                    "artifactTrainedThrough": (
+                        point.evidence_for(model).artifact_trained_through.isoformat()
+                        if point.evidence_for(model).artifact_trained_through
+                        else None
+                    ),
+                }
+                for model in EVALUATION_MODEL_IDS
+            },
+        }
+        for point in production_points
+    ]
     detail: dict[str, object] = {
         "symbol": company.symbol,
         "name": company.name,
@@ -268,11 +323,10 @@ def _company_payload(
         "backtestDates": [value.isoformat() for value in window_dates],
         "backtestActual": [float(value) for value in window_actual],
         "backtestByModel": backtest_by_model,
-        "productionBacktestDates": [],
-        "productionBacktestActual": [],
-        "productionBacktestByModel": {
-            MODEL_DISPLAY_LABELS[model]: [] for model in PRINCIPAL_MODEL_IDS
-        },
+        "productionBacktestDates": production_dates,
+        "productionBacktestActual": production_actual,
+        "productionBacktestByModel": production_by_model,
+        "productionBacktestProvenance": production_provenance,
         "forecastDate": forecast.forecast_for.isoformat(),
         "dataAsOf": source.records[-1].trading_date.isoformat(),
         "inferenceAt": as_manila_time(selected_prediction.inference_at).isoformat(),
@@ -291,13 +345,37 @@ def _company_payload(
         "bestPrincipalBeatsNaive": evaluation.best_principal_beats_naive,
         "allPrincipalsWorseThanNaive": evaluation.all_principals_worse_than_naive,
     }
+    if formal_evidence is not None:
+        detail.update(formal_evidence)
+        selected_label = detail["model"]
+        model_by_label = {
+            MODEL_DISPLAY_LABELS[model]: model for model in PRINCIPAL_MODEL_IDS
+        }
+        try:
+            frozen_selected_model = model_by_label[selected_label]
+        except (KeyError, TypeError) as exc:
+            raise FrontendExportError(
+                f"Frozen formal model is invalid for {company.symbol}"
+            ) from exc
+        frozen_prediction = float(
+            detail["nextClose"][NEXT_CLOSE_KEYS[frozen_selected_model]]
+        )
+        frozen_change = frozen_prediction - previous_close
+        detail.update(
+            {
+                "predictedClose": frozen_prediction,
+                "pesoChange": frozen_change,
+                "pctChange": frozen_change / previous_close * 100.0,
+                "direction": "bullish" if frozen_change >= 0 else "bearish",
+            }
+        )
     summary = {
         "symbol": company.symbol,
         "name": company.name,
         "sector": company.sector,
         "latestClose": previous_close,
-        "predictedClose": predicted_close,
-        "pctChange": pct_change,
+        "predictedClose": detail["predictedClose"],
+        "pctChange": detail["pctChange"],
         "direction": detail["direction"],
         "bestModel": detail["model"],
         "forecastDate": detail["forecastDate"],
@@ -305,7 +383,14 @@ def _company_payload(
     return detail, summary
 
 
-def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
+def build_frontend_payloads(
+    bundle: FrontendExportBundle,
+    *,
+    production_history_by_symbol: Mapping[
+        str, Sequence[ProductionHistoryPoint]
+    ] | None = None,
+    formal_display_snapshot: FormalDisplaySnapshot | None = None,
+) -> dict[str, object]:
     """Build every operational JSON document without reading frontend output files."""
 
     if not bundle.status.strip():
@@ -335,10 +420,20 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
     histories: dict[str, dict[str, object]] = {}
     evaluations: dict[str, CompanyEvaluation] = {}
     forecast_dates: set[str] = set()
+    production_history_by_symbol = production_history_by_symbol or {}
     for symbol in sorted(source_by_symbol):
         source = source_by_symbol[symbol]
         company = _validate_source(source)
-        detail, summary = _company_payload(source, company)
+        detail, summary = _company_payload(
+            source,
+            company,
+            production_history_by_symbol.get(symbol, ()),
+            (
+                formal_display_snapshot.company(symbol)
+                if formal_display_snapshot is not None
+                else None
+            ),
+        )
         details[symbol] = detail
         summaries.append(summary)
         histories[symbol] = {"symbol": symbol, "ohlcv": detail["ohlcv"]}
@@ -464,6 +559,8 @@ def build_frontend_payloads(bundle: FrontendExportBundle) -> dict[str, object]:
             "across_company": across_company_tests.as_dict(),
         },
     }
+    if formal_display_snapshot is not None:
+        metrics.update(formal_display_snapshot.static_metrics())
     payloads["companies.json"] = summaries
     payloads["dashboard.json"] = dashboard
     payloads["latest.json"] = latest
@@ -597,10 +694,49 @@ def export_frontend_forecasts(
     bundle: FrontendExportBundle,
     *,
     output_root: Path = FRONTEND_FORECASTS_DIR,
+    ledger_path: Path | None = DEFAULT_FORECAST_LEDGER_PATH,
+    backfill_path: Path | None = DEFAULT_POST_FORMAL_BACKFILL_PATH,
+    formal_display_path: Path | None = DEFAULT_FORMAL_DISPLAY_PATH,
 ) -> FrontendExportResult:
     """Validate, stage, and atomically replace all operational frontend files."""
 
-    payloads = build_frontend_payloads(bundle)
+    formal_cutoffs = {
+        source.symbol: source.evaluation.backtest.target_dates[-1]
+        for source in bundle.companies
+    }
+    prospective_history = (
+        load_resolved_production_history(
+            formal_cutoffs=formal_cutoffs,
+            ledger_path=ledger_path,
+        )
+        if ledger_path is not None
+        else {}
+    )
+    backfill_history = (
+        load_post_formal_backfill(
+            formal_cutoffs=formal_cutoffs,
+            records_by_symbol={
+                source.symbol: source.records for source in bundle.companies
+            },
+            path=backfill_path,
+        )
+        if backfill_path is not None
+        else {}
+    )
+    production_history = combine_post_formal_history(
+        backfill_history,
+        prospective_history,
+    )
+    formal_snapshot = (
+        load_formal_display_snapshot(formal_display_path)
+        if formal_display_path is not None
+        else None
+    )
+    payloads = build_frontend_payloads(
+        bundle,
+        production_history_by_symbol=production_history,
+        formal_display_snapshot=formal_snapshot,
+    )
     files = _atomic_publish(payloads, output_root)
     LOGGER.info("Published frontend forecast files root=%s count=%d", output_root, len(files))
     return FrontendExportResult(output_root=Path(output_root), files=files)

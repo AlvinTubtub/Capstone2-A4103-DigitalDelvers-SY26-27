@@ -1,0 +1,308 @@
+{
+  "reconstructed_at": "2026-09-15T20:53:40.056632+08:00",
+  "records": [
+    {
+      "actual_close": 15.12,
+      "artifact_created_at": "2026-09-14T21:43:17.144835+08:00",
+      "artifact_sha256": {
+        "arima": "662e9692c4186a6f8a6b8d3d826098b538ac01e6096884e3f2e3de3eebb99653",
+        "lag_reg": "0e308aef5053c067e0bcc6dad38e0a709a5408971a640868f3af39ab750c57bc",
+        "lstm": "da7eb10a2031d1182230dfd39e6cf0929c1d002351c05215ccef8a73b6e052bf"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 15.06,
+        "lag_reg": 15.043048094940662,
+        "lstm": 15.03558803560066,
+        "naive": 15.06
+      },
+      "symbol": "ALI",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 17.88,
+      "artifact_created_at": "2026-09-14T21:50:07.238627+08:00",
+      "artifact_sha256": {
+        "arima": "7b54944f897a8a2bdf4d68d48e2322db73cd3d1f0abad910b6c4c54355ca6a31",
+        "lag_reg": "f313c914811d21bae54b022813c3695648357f333194d376a70a8dfb9153b663",
+        "lstm": "1f111947ab63bafddf30b467374651fe16c25c85418d0a1e323ba237fa33eef5"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 18.140017892939508,
+        "lag_reg": 18.172479252096768,
+        "lstm": 18.173418565736426,
+        "naive": 18.16
+      },
+      "symbol": "APX",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 102.3,
+      "artifact_created_at": "2026-09-14T21:56:24.558458+08:00",
+      "artifact_sha256": {
+        "arima": "2d873a759b97c31dede9f8120e5c62eb5cef3919ab08565c90eea07fda65edce",
+        "lag_reg": "1d3bf4b83f8175636b401777a26b22209d77cd8d4d60bd597c5cd6866be66ecd",
+        "lstm": "54901461c25c5c876245904609237f71d3416804f020ccbc85e94a64e22dbe1c"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 103.28328816584047,
+        "lag_reg": 103.26094644203918,
+        "lstm": 103.24599878670956,
+        "naive": 103.1
+      },
+      "symbol": "BPI",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 1598.0,
+      "artifact_created_at": "2026-09-14T22:03:40.331915+08:00",
+      "artifact_sha256": {
+        "arima": "fbed4a6b2cf5947ca1b925366ed42c46eb2240b68bfbd0d4d7dbecd105ba8a9d",
+        "lag_reg": "3be03557bab9fa814bf0925a53c68dd46e7d27eac88a85c8c81eaae855a5cb3d",
+        "lstm": "2dfe71be4d0ac957591d17ed1dee599c4c6cc297cc5315de63dd140c018e6d8c"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 1600.0,
+        "lag_reg": 1599.8007495315428,
+        "lstm": 1599.5189459919764,
+        "naive": 1600.0
+      },
+      "symbol": "GLO",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 990.0,
+      "artifact_created_at": "2026-09-14T22:11:53.592778+08:00",
+      "artifact_sha256": {
+        "arima": "3af35cd83b0fbf37619f634a2e797d5e4564b851e4a3420b20ae7d692d2920a8",
+        "lag_reg": "d0034ed22166eb857716e6d393d506cca00b8bdf16a5583ebf8c1d44cdc4f23e",
+        "lstm": "879995880be4c01b56ed5e22e8a8c7caeded40cf1bd01f1b505985d2e711a60e"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 982.8858342948924,
+        "lag_reg": 984.2634336773716,
+        "lstm": 984.0734743183978,
+        "naive": 985.0
+      },
+      "symbol": "ICT",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 147.9,
+      "artifact_created_at": "2026-09-14T22:18:51.337754+08:00",
+      "artifact_sha256": {
+        "arima": "b0a74ccf917526e63fc44db94df723076ef08e59b9bddad98dd2b166ac6bf762",
+        "lag_reg": "037a1d24daa7a20374caddf06d4982f9c19965cd85fde8fc757995b64e5621f0",
+        "lstm": "7504a310a8dcf5ba42dbe2228e260ba032a42857a09b0c6e3d9ad431df9ab1bd"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 147.5,
+        "lag_reg": 147.47720174890694,
+        "lstm": 147.3562513744611,
+        "naive": 147.5
+      },
+      "symbol": "JFC",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 63.3,
+      "artifact_created_at": "2026-09-14T22:26:01.083379+08:00",
+      "artifact_sha256": {
+        "arima": "1649e45c66568d71154f31a95863e2f79677e673c3701a50d3c61b8d813802a0",
+        "lag_reg": "5ae563bfc8e06a31f4f0e2955d00cff1d300ca490834b019292b9cd71a2062d3",
+        "lstm": "36ccf6ef04842c86feb78259fe099ac9f5df1a317a6ae3cc7bb4808b3809ff22"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 63.24233135573277,
+        "lag_reg": 63.17962443641214,
+        "lstm": 63.31950615953615,
+        "naive": 63.05
+      },
+      "symbol": "MBT",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 2.22,
+      "artifact_created_at": "2026-09-14T22:31:53.577111+08:00",
+      "artifact_sha256": {
+        "arima": "2036906103c1cd441983acb899b22f6234f8e059b1a4430d2d4ed70d652ef8ec",
+        "lag_reg": "ea937ef4da038f9fdb4cc6284bad19343ea08489d62c487e685a99dba3c2fc75",
+        "lstm": "cf61aabe154a726788f0d30892012102cb32999f654bb37d707b067234f62fd4"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 2.1784396903509307,
+        "lag_reg": 2.1788444722048723,
+        "lstm": 2.1815140181185146,
+        "naive": 2.18
+      },
+      "symbol": "MEG",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 485.4,
+      "artifact_created_at": "2026-09-14T22:39:44.104417+08:00",
+      "artifact_sha256": {
+        "arima": "1294b18ff480171e466c47091252216d59596d483152161874294ea68de5c0ea",
+        "lag_reg": "b358c8704c29da419afd7f03428029b56216056610bd0e4588a9bb60a7a564bf",
+        "lstm": "7a424be4ff9b155ded190f79a05543c30cace7ae05adf8aa7b37862664dd90b0"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 480.1364870148854,
+        "lag_reg": 481.38453028798153,
+        "lstm": 480.29642775046466,
+        "naive": 480.0
+      },
+      "symbol": "MER",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 4.56,
+      "artifact_created_at": "2026-09-14T22:46:31.692537+08:00",
+      "artifact_sha256": {
+        "arima": "550585bc501841369a22b2ff28af946a0e7a3ee86fa345a114c83b676a3bd392",
+        "lag_reg": "375e9eab3367a907493692aca311046433592bf35cf828c308cfeb52463f4534",
+        "lstm": "76fd31c3a19d4bc72ff8b4719a24d30b94e606f83824b0d05cbc5506d48aaa63"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 4.54,
+        "lag_reg": 4.541230480949407,
+        "lstm": 4.5422926396963845,
+        "naive": 4.54
+      },
+      "symbol": "NIKL",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 39.85,
+      "artifact_created_at": "2026-09-14T22:53:36.977242+08:00",
+      "artifact_sha256": {
+        "arima": "5df63dc1fde3eb086fadc1e0db7ee74e6969d94c4d7d011d6921071c2e21fb16",
+        "lag_reg": "2005dafdd0c10a770165a292b12a242a6157b58f78704fbc3b506fbcbbc361e2",
+        "lstm": "00ac4848119edf9ea7309b19af7c65ec2f6ade2f3550f35af47c240f2fb6dfd8"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 40.0,
+        "lag_reg": 40.00106183635228,
+        "lstm": 40.03058535464923,
+        "naive": 40.0
+      },
+      "symbol": "PGOLD",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 17.24,
+      "artifact_created_at": "2026-09-14T22:59:28.285356+08:00",
+      "artifact_sha256": {
+        "arima": "d2aa88a239acd2dc3c53c0d276c4dc3dca55348cbd756ab9eaf8867e65a49c6e",
+        "lag_reg": "cc1df7b3fee1e32204fb1ea43ebd75b5dd2ea97efa0534e353956fe579c2f62a",
+        "lstm": "0299791ee599dd8fa88b55eb3e4f5b6b63a23d7ec70c1af26875bed1cc42a8b2"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 17.5,
+        "lag_reg": 17.514187348662652,
+        "lstm": 17.49861832574737,
+        "naive": 17.5
+      },
+      "symbol": "SCC",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 64.0,
+      "artifact_created_at": "2026-09-14T23:05:48.944101+08:00",
+      "artifact_sha256": {
+        "arima": "db1faccbd4d07f9de5d16681a8ac957eaec9e8dcd66ddf2a5ab05177f7d731fd",
+        "lag_reg": "09daf4a00c3a754ef7e2b312debd4db40c5b6b098588ed944c4f2446fc0b1630",
+        "lstm": "4eb2e7e4a7d4f3d13f377a7762627939283650adeb364f0283db829c9ccba76b"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 63.55,
+        "lag_reg": 63.48294815740162,
+        "lstm": 63.467555385365635,
+        "naive": 63.55
+      },
+      "symbol": "SECB",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 8.1,
+      "artifact_created_at": "2026-09-14T23:12:25.078648+08:00",
+      "artifact_sha256": {
+        "arima": "708b52bed8a842fdec3c094764ce2cce526f2ecc62abc779fbbb76a1cc56079e",
+        "lag_reg": "f83c5ed3f2f9948fab11238656985cae94cb9933b511c770a1ba2e02a741feff",
+        "lstm": "0d27099be0ce3b6dc6cce066fe9f0ff1641d1e25ec7818c11bfbafa7bb4c6eff"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 7.82,
+        "lag_reg": 7.8066770768269835,
+        "lstm": 7.805393917165795,
+        "naive": 7.82
+      },
+      "symbol": "SHLPH",
+      "target_date": "2026-09-14"
+    },
+    {
+      "actual_close": 17.74,
+      "artifact_created_at": "2026-09-14T23:21:13.660317+08:00",
+      "artifact_sha256": {
+        "arima": "f938274a6a47d982278c9a4179e5b6f61a9cf5d6b311d24b8ad0ce0c4353b012",
+        "lag_reg": "57bff76294b3b2d5358a62f4c12f42b3ac27c7a0941418bce4ba49b4d38e96ac",
+        "lstm": "b45ffb3bf6793c50ad31819cdf9eb414df3d3525e0f075bea14c6a47c0ed21d1"
+      },
+      "artifact_trained_through": "2026-09-11",
+      "model_implementation_version": "backend-from-scratch-v1",
+      "origin_date": "2026-09-11",
+      "predictions": {
+        "arima": 17.74929401004061,
+        "lag_reg": 17.756021849761673,
+        "lstm": 17.76687877119354,
+        "naive": 17.72
+      },
+      "symbol": "SMPH",
+      "target_date": "2026-09-14"
+    }
+  ],
+  "schema_id": "forecastph.post-formal-backfill",
+  "schema_version": 1,
+  "source": "post_formal_backfill"
+}

@@ -42,6 +42,35 @@ export interface EvaluationMetadata {
   statisticalTestsScope: "complete_aligned_evaluation";
 }
 
+export type ForecastEvidenceSource =
+  | "formal_evaluation"
+  | "post_formal_backfill"
+  | "prospective";
+
+export interface ProductionModelEvidence {
+  forecastId: string | null;
+  method: "lag_reg" | "arima" | "lstm" | "naive";
+  prediction: number;
+  error: number;
+  modelVersion: string;
+  productionRunId: string | null;
+  sourceCommit: string | null;
+  createdAt: string | null;
+  observedAt: string | null;
+  artifactSha256: string | null;
+  artifactCreatedAt: string | null;
+  artifactTrainedThrough: string | null;
+}
+
+export interface ProductionBacktestProvenance {
+  source: Exclude<ForecastEvidenceSource, "formal_evaluation">;
+  symbol: string;
+  originDate: string;
+  targetDate: string;
+  actualClose: number;
+  models: Record<string, ProductionModelEvidence>;
+}
+
 export interface CompanyEvaluationMetrics {
   metrics: Record<string, ModelMetric>;
   bestModel: string;
@@ -72,6 +101,7 @@ export interface CompanyDetail {
   productionBacktestDates?: string[];
   productionBacktestActual?: number[];
   productionBacktestByModel?: Record<string, number[]>;
+  productionBacktestProvenance?: ProductionBacktestProvenance[];
   forecastDate?: string;
   dataAsOf?: string | null;
   inferenceAt?: string | null;

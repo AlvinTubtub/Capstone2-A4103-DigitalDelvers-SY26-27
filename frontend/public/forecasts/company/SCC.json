@@ -37,7 +37,7 @@
   "nextClose": {
     "lag": 16.698359100344515,
     "arima": 16.7,
-    "lstm": 16.69075472785628
+    "lstm": 16.690754723706135
   },
   "ohlcv": [
     {
@@ -13519,16 +13519,238 @@
       17.82
     ]
   },
-  "productionBacktestDates": [],
-  "productionBacktestActual": [],
+  "productionBacktestDates": [
+    "2026-09-14",
+    "2026-09-15",
+    "2026-09-16"
+  ],
+  "productionBacktestActual": [
+    17.24,
+    17.58,
+    16.7
+  ],
   "productionBacktestByModel": {
-    "Lag-Informed Regression": [],
-    "ARIMA": [],
-    "LSTM": []
+    "Lag-Informed Regression": [
+      17.514187348662652,
+      17.295816266606693,
+      17.61208448934595
+    ],
+    "ARIMA": [
+      17.5,
+      17.24,
+      17.58
+    ],
+    "LSTM": [
+      17.49861832574737,
+      17.235602019257854,
+      17.578812139321407
+    ],
+    "Naive baseline": [
+      17.5,
+      17.24,
+      17.58
+    ]
   },
+  "productionBacktestProvenance": [
+    {
+      "source": "post_formal_backfill",
+      "symbol": "SCC",
+      "originDate": "2026-09-11",
+      "targetDate": "2026-09-14",
+      "actualClose": 17.24,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": null,
+          "method": "lag_reg",
+          "prediction": 17.514187348662652,
+          "error": 0.2741873486626538,
+          "modelVersion": "backend-from-scratch-v1:cc1df7b3fee1e32204fb1ea43ebd75b5dd2ea97efa0534e353956fe579c2f62a",
+          "productionRunId": null,
+          "sourceCommit": null,
+          "createdAt": null,
+          "observedAt": null,
+          "artifactSha256": "cc1df7b3fee1e32204fb1ea43ebd75b5dd2ea97efa0534e353956fe579c2f62a",
+          "artifactCreatedAt": "2026-09-14T22:59:28.285356+08:00",
+          "artifactTrainedThrough": "2026-09-11"
+        },
+        "ARIMA": {
+          "forecastId": null,
+          "method": "arima",
+          "prediction": 17.5,
+          "error": 0.26000000000000156,
+          "modelVersion": "backend-from-scratch-v1:d2aa88a239acd2dc3c53c0d276c4dc3dca55348cbd756ab9eaf8867e65a49c6e",
+          "productionRunId": null,
+          "sourceCommit": null,
+          "createdAt": null,
+          "observedAt": null,
+          "artifactSha256": "d2aa88a239acd2dc3c53c0d276c4dc3dca55348cbd756ab9eaf8867e65a49c6e",
+          "artifactCreatedAt": "2026-09-14T22:59:28.285356+08:00",
+          "artifactTrainedThrough": "2026-09-11"
+        },
+        "LSTM": {
+          "forecastId": null,
+          "method": "lstm",
+          "prediction": 17.49861832574737,
+          "error": 0.25861832574737065,
+          "modelVersion": "backend-from-scratch-v1:0299791ee599dd8fa88b55eb3e4f5b6b63a23d7ec70c1af26875bed1cc42a8b2",
+          "productionRunId": null,
+          "sourceCommit": null,
+          "createdAt": null,
+          "observedAt": null,
+          "artifactSha256": "0299791ee599dd8fa88b55eb3e4f5b6b63a23d7ec70c1af26875bed1cc42a8b2",
+          "artifactCreatedAt": "2026-09-14T22:59:28.285356+08:00",
+          "artifactTrainedThrough": "2026-09-11"
+        },
+        "Naive baseline": {
+          "forecastId": null,
+          "method": "naive",
+          "prediction": 17.5,
+          "error": 0.26000000000000156,
+          "modelVersion": "naive-origin-close-v1",
+          "productionRunId": null,
+          "sourceCommit": null,
+          "createdAt": null,
+          "observedAt": null,
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": "2026-09-11"
+        }
+      }
+    },
+    {
+      "source": "prospective",
+      "symbol": "SCC",
+      "originDate": "2026-09-14",
+      "targetDate": "2026-09-15",
+      "actualClose": 17.58,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-9cee79e419dd1c7e718744016b05879a30ecfaf78eb757de7429c7b654432eab",
+          "method": "lag_reg",
+          "prediction": 17.295816266606693,
+          "error": -0.2841837333933057,
+          "modelVersion": "backend-from-scratch-v1:bcbae9c6bcedf42ad1f1f6954632f8ec288143b768b583f0f8ed39033c344e94",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T09:17:31.237041+08:00",
+          "observedAt": "2026-09-15T17:39:35.823175+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-36bd68d9ab30958aa4e1b6ecbd2e9b464db31277457309e54092066d4848fdee",
+          "method": "arima",
+          "prediction": 17.24,
+          "error": -0.33999999999999986,
+          "modelVersion": "backend-from-scratch-v1:b45efe2428a89fca7f9d467bdb360edacc9df563ec655463c36f60439ac824f0",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T09:17:31.237041+08:00",
+          "observedAt": "2026-09-15T17:39:35.823175+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-cc01aeb5aa4afb7d10e86fd1d38e3c393edae532bf5e84b5d26f4b4a795f1df2",
+          "method": "lstm",
+          "prediction": 17.235602019257854,
+          "error": -0.3443979807421442,
+          "modelVersion": "backend-from-scratch-v1:a93b77ee89b04fc9f28da7ebeeb81f385e517221c4927f00097f6895277c27fb",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T09:17:31.237041+08:00",
+          "observedAt": "2026-09-15T17:39:35.823175+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-4dd41f55a610ad388294675a97067b61978a028db46f082049e3ae559ecf32ca",
+          "method": "naive",
+          "prediction": 17.24,
+          "error": -0.33999999999999986,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T09:17:31.237041+08:00",
+          "observedAt": "2026-09-15T17:39:35.823175+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
+    },
+    {
+      "source": "prospective",
+      "symbol": "SCC",
+      "originDate": "2026-09-15",
+      "targetDate": "2026-09-16",
+      "actualClose": 16.7,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-ec7e7a79ac020335b83e14f01a548c0e34de0e2ae169448c947fa892dfe23a09",
+          "method": "lag_reg",
+          "prediction": 17.61208448934595,
+          "error": 0.9120844893459505,
+          "modelVersion": "backend-from-scratch-v1:bcbae9c6bcedf42ad1f1f6954632f8ec288143b768b583f0f8ed39033c344e94",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T17:39:38.737869+08:00",
+          "observedAt": "2026-09-16T16:02:39.540371+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-396b87bca78898d3b15cf65d133e183408388c1c1d0eeb6649e2cd1b253f21de",
+          "method": "arima",
+          "prediction": 17.58,
+          "error": 0.879999999999999,
+          "modelVersion": "backend-from-scratch-v1:b45efe2428a89fca7f9d467bdb360edacc9df563ec655463c36f60439ac824f0",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T17:39:38.737869+08:00",
+          "observedAt": "2026-09-16T16:02:39.540371+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-8275859529c82e09f652fb0ea45c2ec89a58558a033959d7b1d9b812eaf7309a",
+          "method": "lstm",
+          "prediction": 17.578812139321407,
+          "error": 0.8788121393214077,
+          "modelVersion": "backend-from-scratch-v1:a93b77ee89b04fc9f28da7ebeeb81f385e517221c4927f00097f6895277c27fb",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T17:39:38.737869+08:00",
+          "observedAt": "2026-09-16T16:02:39.540371+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-14688bbee1616e8ca862977c3f2d5bdb4e62cccefc5f3b9a6581aca8b9e20184",
+          "method": "naive",
+          "prediction": 17.58,
+          "error": 0.879999999999999,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-15T17:39:38.737869+08:00",
+          "observedAt": "2026-09-16T16:02:39.540371+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
+    }
+  ],
   "forecastDate": "2026-09-17",
   "dataAsOf": "2026-09-16",
-  "inferenceAt": "2026-09-16T16:02:43.953439+08:00",
+  "inferenceAt": "2026-09-16T16:47:43.920721+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

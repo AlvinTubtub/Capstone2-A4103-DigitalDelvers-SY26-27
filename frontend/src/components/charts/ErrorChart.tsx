@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import ChartGestureControls, { ChartResetButton } from "./ChartGestureControls";
 import { useChartInteractions } from "@/hooks/useChartTouchGestures";
+import type { ForecastEvidenceSource } from "@/lib/types";
 
 const MODEL_COLORS: Record<string, string> = {
   ARIMA: "#f59e0b",
@@ -58,10 +59,18 @@ export interface ErrorChartProps {
   actual: number[];
   byModel: Record<string, number[]>;
   selectedModel?: string;
-  liveStartDate?: string;
+  sources?: ForecastEvidenceSource[];
+  formalBoundaryDate?: string;
 }
 
-export default function ErrorChart({ dates, actual, byModel, selectedModel, liveStartDate }: ErrorChartProps) {
+export default function ErrorChart({
+  dates,
+  actual,
+  byModel,
+  selectedModel,
+  sources,
+  formalBoundaryDate,
+}: ErrorChartProps) {
   const data = useMemo(() => {
     return actual.map((value, i) => {
       const rawDate = dates?.[i] || `Day ${i + 1}`;
@@ -69,6 +78,7 @@ export default function ErrorChart({ dates, actual, byModel, selectedModel, live
         step: rawDate,
         displayDate: dates?.[i] ? formatShortDate(rawDate) : `Day ${i + 1}`,
         fullDate: dates?.[i] ? formatFullDate(rawDate) : `Day ${i + 1}`,
+        source: sources?.[i] ?? "formal_evaluation",
       };
       for (const [model, series] of Object.entries(byModel)) {
         if (series[i] !== undefined) {
@@ -78,7 +88,7 @@ export default function ErrorChart({ dates, actual, byModel, selectedModel, live
       }
       return row;
     });
-  }, [actual, dates, byModel]);
+  }, [actual, dates, byModel, sources]);
 
   const gestures = useChartInteractions({
     totalPoints: data.length,
@@ -127,11 +137,19 @@ export default function ErrorChart({ dates, actual, byModel, selectedModel, live
     if (!active || !payload || !payload.length) return null;
     const point = payload[0]?.payload;
     const headerDate = point?.fullDate || point?.displayDate || point?.step;
+    const sourceLabel = point?.source === "prospective"
+      ? "Verified prospective"
+      : point?.source === "post_formal_backfill"
+      ? "Post-formal backfill"
+      : "Formal evaluation";
 
     return (
       <div className="bg-dark-card border border-dark-border rounded-xl p-3 shadow-xl text-xs space-y-1.5 min-w-[230px]">
         <p className="font-semibold text-white border-b border-dark-border pb-1.5 mb-1.5">
           {headerDate}
+        </p>
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+          {sourceLabel}
         </p>
         {payload.map((entry: any) => {
           const isSelected = selectedModel && entry.dataKey === selectedModel;
@@ -187,10 +205,10 @@ export default function ErrorChart({ dates, actual, byModel, selectedModel, live
           Showing {visibleData.length} of {data.length} trading sessions &middot; Positive =
           Overprediction, Negative = Underprediction
         </span>
-        {liveStartDate && (
+        {formalBoundaryDate && (
           <span className="inline-flex items-center gap-1.5 rounded-md border border-teal-400/40 bg-teal-400/10 px-2 py-1 font-semibold text-teal-100">
             <span className="h-3 border-l-2 border-dashed border-teal-300" aria-hidden="true" />
-            Live forecast begins
+            Formal evaluation ends {formatShortDate(formalBoundaryDate)}
           </span>
         )}
       </div>
@@ -210,9 +228,9 @@ export default function ErrorChart({ dates, actual, byModel, selectedModel, live
             margin={{ top: 10, right: 15, left: 10, bottom: 5 }}
           >
             <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
-            {liveStartDate && (
+            {formalBoundaryDate && (
               <ReferenceLine
-                x={liveStartDate}
+                x={formalBoundaryDate}
                 stroke="#2dd4bf"
                 strokeWidth={2.5}
                 strokeDasharray="7 4"

@@ -75,13 +75,15 @@ class CompanyNextDayForecast:
         }
 
 
-def _predict_from_artifacts(
+def predict_next_day_with_artifacts(
     symbol: str,
     records: Sequence[OhlcvRecord],
     artifacts: Sequence[ProductionModelArtifact],
     *,
     calendar: PSETradingCalendar,
 ) -> CompanyNextDayForecast:
+    """Forecast from already-loaded, checksum-validated production artifacts."""
+
     company = get_company(symbol)
     history = tuple(records)
     require_chronological_records(history)
@@ -141,7 +143,7 @@ def predict_next_day_from_fresh_refit(
     history = (
         load_company_history(refit.symbol) if records is None else tuple(records)
     )
-    return _predict_from_artifacts(
+    return predict_next_day_with_artifacts(
         refit.symbol,
         history,
         refit.artifacts,
@@ -165,7 +167,7 @@ def predict_next_day_from_artifacts(
         load_production_model(company.symbol, model)
         for model in PRINCIPAL_MODELS
     )
-    return _predict_from_artifacts(
+    return predict_next_day_with_artifacts(
         company.symbol,
         history,
         artifacts,

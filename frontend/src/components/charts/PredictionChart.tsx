@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import ChartGestureControls, { ChartResetButton } from "./ChartGestureControls";
 import { useChartInteractions } from "@/hooks/useChartTouchGestures";
+import type { ForecastEvidenceSource } from "@/lib/types";
 
 const MODEL_COLORS: Record<string, string> = {
   Actual: "#22c55e",
@@ -59,7 +60,8 @@ export interface PredictionChartProps {
   actual: number[];
   byModel: Record<string, number[]>;
   selectedModel?: string;
-  liveStartDate?: string;
+  sources?: ForecastEvidenceSource[];
+  formalBoundaryDate?: string;
 }
 
 export default function PredictionChart({
@@ -67,7 +69,8 @@ export default function PredictionChart({
   actual,
   byModel,
   selectedModel,
-  liveStartDate,
+  sources,
+  formalBoundaryDate,
 }: PredictionChartProps) {
   const data = useMemo(() => actual.map((value, i) => {
     const rawDate = dates?.[i] || `Day ${i + 1}`;
@@ -75,13 +78,14 @@ export default function PredictionChart({
       step: rawDate,
       displayDate: dates?.[i] ? formatShortDate(rawDate) : `Day ${i + 1}`,
       fullDate: dates?.[i] ? formatFullDate(rawDate) : `Day ${i + 1}`,
+      source: sources?.[i] ?? "formal_evaluation",
       Actual: value,
     };
     for (const [model, series] of Object.entries(byModel)) {
       if (series[i] !== undefined) row[model] = series[i];
     }
     return row;
-  }), [actual, byModel, dates]);
+  }), [actual, byModel, dates, sources]);
 
   const gestures = useChartInteractions({
     totalPoints: data.length,
@@ -113,11 +117,19 @@ export default function PredictionChart({
     if (!active || !payload || !payload.length) return null;
     const point = payload[0]?.payload;
     const headerDate = point?.fullDate || point?.displayDate || point?.step;
+    const sourceLabel = point?.source === "prospective"
+      ? "Verified prospective"
+      : point?.source === "post_formal_backfill"
+      ? "Post-formal backfill"
+      : "Formal evaluation";
 
     return (
       <div className="bg-dark-card border border-dark-border rounded-xl p-3 shadow-xl text-xs space-y-1.5 min-w-[210px]">
         <p className="font-semibold text-white border-b border-dark-border pb-1.5 mb-1.5">
           {headerDate}
+        </p>
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+          {sourceLabel}
         </p>
         {payload.map((entry: any) => {
           const isActual = entry.dataKey === "Actual";
@@ -170,10 +182,10 @@ export default function PredictionChart({
         <span className="text-slate-400">
           Showing {visibleData.length} of {data.length} trading sessions &middot; Hover points to inspect prices
         </span>
-        {liveStartDate && (
+        {formalBoundaryDate && (
           <span className="inline-flex items-center gap-1.5 rounded-md border border-teal-400/40 bg-teal-400/10 px-2 py-1 font-semibold text-teal-100">
             <span className="h-3 border-l-2 border-dashed border-teal-300" aria-hidden="true" />
-            Live forecast begins
+            Formal evaluation ends {formatShortDate(formalBoundaryDate)}
           </span>
         )}
       </div>
@@ -193,9 +205,9 @@ export default function PredictionChart({
             margin={{ top: 10, right: 15, left: 10, bottom: 5 }}
           >
             <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
-            {liveStartDate && (
+            {formalBoundaryDate && (
               <ReferenceLine
-                x={liveStartDate}
+                x={formalBoundaryDate}
                 stroke="#2dd4bf"
                 strokeWidth={2.5}
                 strokeDasharray="7 4"
