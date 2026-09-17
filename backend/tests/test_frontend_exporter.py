@@ -27,7 +27,10 @@ from src.export.production_history import (
     ProductionModelEvidence,
 )
 from src.export.schemas import (
+    DOCUMENT_CONTRACT_VERSIONS,
     EVALUATION_MODEL_IDS,
+    FRONTEND_BUNDLE_SCHEMA_ID,
+    FRONTEND_BUNDLE_SCHEMA_VERSION,
     FrontendSchemaError,
     MODEL_DISPLAY_LABELS,
     NEXT_CLOSE_KEYS,
@@ -38,6 +41,7 @@ from src.inference.next_day import CompanyNextDayForecast, NextDayPrediction
 
 
 MANILA = ZoneInfo("Asia/Manila")
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
 def synthetic_records(symbol_index: int, count: int = 80) -> tuple[OhlcvRecord, ...]:
@@ -237,6 +241,7 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     )
 
     expected_relative_paths = {
+        "manifest.json",
         "companies.json",
         "dashboard.json",
         "latest.json",
@@ -247,17 +252,27 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     assert {path.relative_to(output_root).as_posix() for path in result.files} == (
         expected_relative_paths
     )
-    assert len(result.files) == 4 + 2 * len(COMPANIES)
+    assert len(result.files) == 5 + 2 * len(COMPANIES)
 
     for path in result.files:
         relative_path = path.relative_to(output_root).as_posix()
         validate_document(relative_path, load_json(path))
 
     companies = load_json(output_root / "companies.json")
+    manifest = load_json(output_root / "manifest.json")
     dashboard = load_json(output_root / "dashboard.json")
     latest = load_json(output_root / "latest.json")
     metrics = load_json(output_root / "metrics.json")
     assert len(companies) == len(COMPANIES)
+    assert manifest == {
+        "schemaId": FRONTEND_BUNDLE_SCHEMA_ID,
+        "schemaVersion": FRONTEND_BUNDLE_SCHEMA_VERSION,
+        "generatedAt": "2026-07-20T18:45:00+08:00",
+        "forecastDate": "2026-07-21",
+        "expectedCompanyCount": len(COMPANIES),
+        "documentContracts": dict(DOCUMENT_CONTRACT_VERSIONS),
+    }
+    assert all("confidence" not in company for company in companies)
     assert all(company["latestClose"] != 999999 for company in companies)
     assert dashboard["totalCompanies"] == len(COMPANIES)
     assert dashboard["missingCompanies"] == []
@@ -307,6 +322,7 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
     detail = load_json(output_root / "company" / "ALI.json")
     history = load_json(output_root / "history" / "ALI.json")
     assert history == {"symbol": "ALI", "ohlcv": detail["ohlcv"]}
+    assert "confidence" not in detail
     assert len(detail["backtestDates"]) == 60
     assert detail["backtestDates"] == [
         value.isoformat() for value in source.evaluation.backtest.target_dates[-60:]
@@ -362,6 +378,36 @@ def test_every_operational_file_matches_contract_and_new_artifacts(
             "mase": canonical_metric.mase,
             "r2": canonical_metric.r2,
         }
+
+
+def test_confidence_is_rejected_and_absent_from_typescript_contract(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    payloads = build_frontend_payloads(export_bundle)
+    summary = dict(payloads["companies.json"][0])
+    detail = dict(payloads["company/ALI.json"])
+    summary["confidence"] = 95.0
+    detail["confidence"] = 95.0
+
+    with pytest.raises(FrontendSchemaError, match="confidence is not part"):
+        validate_document("companies.json", [summary])
+    with pytest.raises(FrontendSchemaError, match="confidence is not part"):
+        validate_document("company/ALI.json", detail)
+
+    typescript_contract = (
+        REPOSITORY_ROOT / "frontend" / "src" / "lib" / "types.ts"
+    ).read_text(encoding="utf-8")
+    assert "confidence?: number" not in typescript_contract
+
+
+def test_manifest_rejects_unsupported_schema_version(
+    export_bundle: FrontendExportBundle,
+) -> None:
+    manifest = dict(build_frontend_payloads(export_bundle)["manifest.json"])
+    manifest["schemaVersion"] = FRONTEND_BUNDLE_SCHEMA_VERSION + 1
+
+    with pytest.raises(FrontendSchemaError, match="schemaVersion is unsupported"):
+        validate_document("manifest.json", manifest)
 
 
 def test_company_schema_rejects_display_metadata_that_misrepresents_full_holdout(
@@ -645,5 +691,6 @@ def test_publish_failure_rolls_back_every_replaced_file(
 
     assert (output_root / "companies.json").read_bytes() == previous_companies
     assert (output_root / "dashboard.json").read_bytes() == previous_dashboard
+    assert not (output_root / "manifest.json").exists()
     assert not (output_root / "latest.json").exists()
     assert not any(output_root.parent.glob(".forecast-export-*"))

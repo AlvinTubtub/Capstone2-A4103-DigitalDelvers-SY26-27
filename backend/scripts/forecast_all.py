@@ -15,12 +15,41 @@ from config.settings import manila_now
 from scripts._common import add_runtime_options, add_symbol_selection, selected_symbols
 from src.data.calendar import PSETradingCalendar
 from src.data.loader import load_company_history
-from src.export.frontend_exporter import FrontendExportBundle, export_frontend_forecasts
+from src.data.validator import OhlcvValidationError
+from src.export.formal_display import FormalDisplayError
+from src.export.frontend_exporter import (
+    FrontendExportBundle,
+    FrontendExportError,
+    export_frontend_forecasts,
+)
+from src.export.production_history import ProductionHistoryError
+from src.export.schemas import FrontendSchemaError
+from src.inference.next_day import NextDayInferenceError
+from src.ledger.schema import LedgerValidationError
 from src.logging_config import configure_structured_logging
-from src.training.orchestration import forecast_company_from_artifacts
+from src.training.orchestration import (
+    OrchestrationError,
+    forecast_company_from_artifacts,
+)
+from src.training.production_refit import ModelArtifactCompatibilityError
 
 
 LOGGER = logging.getLogger(__name__)
+FORECAST_OPERATIONAL_ERRORS = (
+    OhlcvValidationError,
+    OrchestrationError,
+    ModelArtifactCompatibilityError,
+    NextDayInferenceError,
+    OSError,
+)
+EXPORT_OPERATIONAL_ERRORS = (
+    FrontendExportError,
+    FrontendSchemaError,
+    FormalDisplayError,
+    ProductionHistoryError,
+    LedgerValidationError,
+    OSError,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -43,8 +72,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("--symbol requires --no-export; a frontend export requires all companies")
     try:
         symbols = selected_symbols(arguments)
-    except ValueError:
-        LOGGER.exception("Forecasting rejected an unknown symbol")
+    except ValueError as exc:
+        LOGGER.error("Forecasting rejected an unknown symbol error=%s", exc)
         return 2
     calendar = PSETradingCalendar.with_holidays(arguments.holiday)
     completed = []
@@ -66,9 +95,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             )
             LOGGER.info("Persisted-model forecast completed symbol=%s", symbol)
-        except Exception as exc:
+        except FORECAST_OPERATIONAL_ERRORS as exc:
             errors.append(f"{symbol}: {type(exc).__name__}: {exc}")
-            LOGGER.exception("Persisted-model forecast failed symbol=%s", symbol)
+            LOGGER.error(
+                "Operational persisted-model forecast rejected symbol=%s error_type=%s error=%s",
+                symbol,
+                type(exc).__name__,
+                exc,
+            )
+        except Exception:
+            LOGGER.exception(
+                "Unexpected persisted-model forecasting failure symbol=%s",
+                symbol,
+            )
+            return 1
     if errors:
         LOGGER.error("Forecast run failed errors=%s", errors)
         return 1
@@ -83,8 +123,15 @@ def main(argv: Sequence[str] | None = None) -> int:
                     status="complete",
                 )
             )
+        except EXPORT_OPERATIONAL_ERRORS as exc:
+            LOGGER.error(
+                "Operational frontend forecast update rejected error_type=%s error=%s",
+                type(exc).__name__,
+                exc,
+            )
+            return 1
         except Exception:
-            LOGGER.exception("Frontend forecast update failed")
+            LOGGER.exception("Unexpected frontend forecast update failure")
             return 1
     LOGGER.info(
         "Forecast run completed symbols=%d exported=%s",

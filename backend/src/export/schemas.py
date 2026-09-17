@@ -11,6 +11,18 @@ from config.model_config import ModelId
 
 
 BACKTEST_WINDOW: Final[int] = 60
+FRONTEND_BUNDLE_SCHEMA_ID: Final[str] = "forecastph.frontend-forecast-bundle"
+FRONTEND_BUNDLE_SCHEMA_VERSION: Final[int] = 1
+DOCUMENT_CONTRACT_VERSIONS: Final[Mapping[str, int]] = MappingProxyType(
+    {
+        "companies": 1,
+        "dashboard": 1,
+        "latest": 1,
+        "metrics": 1,
+        "companyDetail": 1,
+        "history": 1,
+    }
+)
 MODEL_DISPLAY_LABELS: Final[Mapping[ModelId, str]] = MappingProxyType(
     {
         ModelId.LAG_REGRESSION: "Lag-Informed Regression",
@@ -181,6 +193,8 @@ def _validate_evaluation_metadata(
 
 def validate_company_summary(value: object, context: str = "company summary") -> None:
     summary = _object(value, context)
+    if "confidence" in summary:
+        raise FrontendSchemaError(f"{context}.confidence is not part of the contract")
     required = {
         "symbol",
         "name",
@@ -212,8 +226,6 @@ def validate_company_summary(value: object, context: str = "company summary") ->
     }:
         raise FrontendSchemaError(f"{context}.bestModel is invalid")
     _date_only(summary["forecastDate"], f"{context}.forecastDate")
-    if "confidence" in summary:
-        _number(summary["confidence"], f"{context}.confidence")
 
 
 def validate_companies_json(value: object) -> None:
@@ -225,6 +237,37 @@ def validate_companies_json(value: object) -> None:
     symbols = [company["symbol"] for company in companies]
     if len(set(symbols)) != len(symbols):
         raise FrontendSchemaError("companies.json symbols must be unique")
+
+
+def validate_manifest_json(value: object) -> None:
+    manifest = _object(value, "manifest.json")
+    required = {
+        "schemaId",
+        "schemaVersion",
+        "generatedAt",
+        "forecastDate",
+        "expectedCompanyCount",
+        "documentContracts",
+    }
+    _required(manifest, required, "manifest.json")
+    if set(manifest) != required:
+        raise FrontendSchemaError("manifest.json contains unsupported fields")
+    if manifest["schemaId"] != FRONTEND_BUNDLE_SCHEMA_ID:
+        raise FrontendSchemaError("manifest.schemaId is unsupported")
+    if (
+        _integer(manifest["schemaVersion"], "manifest.schemaVersion")
+        != FRONTEND_BUNDLE_SCHEMA_VERSION
+    ):
+        raise FrontendSchemaError("manifest.schemaVersion is unsupported")
+    _timestamp(manifest["generatedAt"], "manifest.generatedAt")
+    _date_only(manifest["forecastDate"], "manifest.forecastDate")
+    if _integer(
+        manifest["expectedCompanyCount"], "manifest.expectedCompanyCount"
+    ) < 1:
+        raise FrontendSchemaError("manifest.expectedCompanyCount must be positive")
+    contracts = _object(manifest["documentContracts"], "manifest.documentContracts")
+    if dict(contracts) != dict(DOCUMENT_CONTRACT_VERSIONS):
+        raise FrontendSchemaError("manifest.documentContracts is unsupported")
 
 
 def validate_dashboard_json(value: object) -> None:
@@ -525,6 +568,8 @@ def validate_ohlcv(value: object, context: str) -> None:
 
 def validate_company_json(value: object) -> None:
     company = _object(value, "company JSON")
+    if "confidence" in company:
+        raise FrontendSchemaError("company.confidence is not part of the contract")
     required = {
         "symbol",
         "name",
@@ -830,7 +875,9 @@ def validate_history_json(value: object) -> None:
 def validate_document(relative_path: str, value: object) -> None:
     """Validate one generated operational file based on its contract path."""
 
-    if relative_path == "companies.json":
+    if relative_path == "manifest.json":
+        validate_manifest_json(value)
+    elif relative_path == "companies.json":
         validate_companies_json(value)
     elif relative_path == "dashboard.json":
         validate_dashboard_json(value)

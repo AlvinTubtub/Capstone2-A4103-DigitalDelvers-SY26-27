@@ -18,6 +18,7 @@ class FrontendForecastValidationError(RuntimeError):
 
 def operational_forecast_paths() -> tuple[str, ...]:
     return (
+        "manifest.json",
         "companies.json",
         "dashboard.json",
         "latest.json",
@@ -70,10 +71,15 @@ def validate_frontend_forecasts(
         ) from exc
 
     configured = {company.symbol for company in COMPANIES}
+    manifest = decoded[root / "manifest.json"]
     companies = decoded[root / "companies.json"]
+    dashboard = decoded[root / "dashboard.json"]
+    latest = decoded[root / "latest.json"]
     metrics = decoded[root / "metrics.json"]
     if (
-        not isinstance(companies, list)
+        not isinstance(manifest, dict)
+        or manifest.get("expectedCompanyCount") != len(COMPANIES)
+        or not isinstance(companies, list)
         or {item.get("symbol") for item in companies if isinstance(item, dict)}
         != configured
         or not isinstance(metrics, dict)
@@ -81,6 +87,24 @@ def validate_frontend_forecasts(
     ):
         raise FrontendForecastValidationError(
             "Frontend summary documents do not contain the configured company universe"
+        )
+    if not (
+        manifest.get("forecastDate")
+        == dashboard.get("forecastDate")
+        == latest.get("forecastDate")
+        == metrics.get("forecastDate")
+    ):
+        raise FrontendForecastValidationError(
+            "Frontend operational documents disagree on forecastDate"
+        )
+    if not (
+        manifest.get("generatedAt")
+        == dashboard.get("generatedAt")
+        == latest.get("generatedAt")
+        == metrics.get("generatedAt")
+    ):
+        raise FrontendForecastValidationError(
+            "Frontend operational documents disagree on generatedAt"
         )
     for symbol in configured:
         company = decoded[root / "company" / f"{symbol}.json"]

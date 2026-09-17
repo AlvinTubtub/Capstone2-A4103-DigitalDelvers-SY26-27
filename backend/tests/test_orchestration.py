@@ -423,6 +423,74 @@ def test_train_and_forecast_cli_return_nonzero_on_company_failure(
     assert forecast_all.main(["--symbol", "ALI", "--no-export"]) == 1
 
 
+def test_forecast_cli_classifies_operational_failure_and_never_exports(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    records = synthetic_records()
+    exports: list[object] = []
+    monkeypatch.setattr(forecast_all, "load_company_history", lambda symbol: records)
+    monkeypatch.setattr(
+        forecast_all,
+        "forecast_company_from_artifacts",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            OrchestrationError("artifact boundary mismatch")
+        ),
+    )
+    monkeypatch.setattr(
+        forecast_all,
+        "export_frontend_forecasts",
+        lambda bundle: exports.append(bundle),
+    )
+
+    with caplog.at_level("ERROR"):
+        status = forecast_all.main(["--all"])
+
+    assert status == 1
+    assert exports == []
+    matching = [
+        record
+        for record in caplog.records
+        if "Operational persisted-model forecast rejected" in record.getMessage()
+    ]
+    assert matching
+    assert all(record.exc_info is None for record in matching)
+
+
+def test_forecast_cli_logs_unexpected_failure_with_traceback_and_never_exports(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    records = synthetic_records()
+    exports: list[object] = []
+    monkeypatch.setattr(forecast_all, "load_company_history", lambda symbol: records)
+    monkeypatch.setattr(
+        forecast_all,
+        "forecast_company_from_artifacts",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            RuntimeError("unexpected defect")
+        ),
+    )
+    monkeypatch.setattr(
+        forecast_all,
+        "export_frontend_forecasts",
+        lambda bundle: exports.append(bundle),
+    )
+
+    with caplog.at_level("ERROR"):
+        status = forecast_all.main(["--all"])
+
+    assert status == 1
+    assert exports == []
+    matching = [
+        record
+        for record in caplog.records
+        if "Unexpected persisted-model forecasting failure" in record.getMessage()
+    ]
+    assert len(matching) == 1
+    assert matching[0].exc_info is not None
+
+
 def test_validate_raw_and_reset_cli_confirmation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

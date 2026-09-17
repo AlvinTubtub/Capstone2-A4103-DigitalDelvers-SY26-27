@@ -34,7 +34,10 @@ from src.export.production_history import (
 )
 from src.export.schemas import (
     BACKTEST_WINDOW,
+    DOCUMENT_CONTRACT_VERSIONS,
     EVALUATION_MODEL_IDS,
+    FRONTEND_BUNDLE_SCHEMA_ID,
+    FRONTEND_BUNDLE_SCHEMA_VERSION,
     MODEL_DISPLAY_LABELS,
     NEXT_CLOSE_KEYS,
     PRINCIPAL_MODEL_IDS,
@@ -561,6 +564,14 @@ def build_frontend_payloads(
     }
     if formal_display_snapshot is not None:
         metrics.update(formal_display_snapshot.static_metrics())
+    payloads["manifest.json"] = {
+        "schemaId": FRONTEND_BUNDLE_SCHEMA_ID,
+        "schemaVersion": FRONTEND_BUNDLE_SCHEMA_VERSION,
+        "generatedAt": generated_text,
+        "forecastDate": forecast_date,
+        "expectedCompanyCount": len(COMPANIES),
+        "documentContracts": dict(DOCUMENT_CONTRACT_VERSIONS),
+    }
     payloads["companies.json"] = summaries
     payloads["dashboard.json"] = dashboard
     payloads["latest.json"] = latest
@@ -582,6 +593,7 @@ def _validate_payload_set(payloads: Mapping[str, object]) -> None:
     for relative_path, payload in payloads.items():
         validate_document(relative_path, payload)
     companies = payloads["companies.json"]
+    manifest = payloads["manifest.json"]
     symbols = [summary["symbol"] for summary in companies]
     dashboard = payloads["dashboard.json"]
     latest = payloads["latest.json"]
@@ -590,12 +602,22 @@ def _validate_payload_set(payloads: Mapping[str, object]) -> None:
         raise FrontendSchemaError("Company and metrics symbol sets differ")
     if dashboard["totalCompanies"] != len(symbols):
         raise FrontendSchemaError("Dashboard company total is inconsistent")
+    if manifest["expectedCompanyCount"] != len(COMPANIES):
+        raise FrontendSchemaError("Manifest company count is inconsistent")
     if not (
-        dashboard["forecastDate"]
+        manifest["forecastDate"]
+        == dashboard["forecastDate"]
         == latest["forecastDate"]
         == metrics["forecastDate"]
     ):
         raise FrontendSchemaError("Top-level forecast dates differ")
+    if not (
+        manifest["generatedAt"]
+        == dashboard["generatedAt"]
+        == latest["generatedAt"]
+        == metrics["generatedAt"]
+    ):
+        raise FrontendSchemaError("Top-level generation timestamps differ")
     summary_by_symbol = {summary["symbol"]: summary for summary in companies}
     for symbol in symbols:
         detail = payloads[f"company/{symbol}.json"]

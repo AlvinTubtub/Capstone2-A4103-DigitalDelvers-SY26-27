@@ -9,7 +9,6 @@ export interface CompanySummary {
   pctChange: number;
   direction: Direction;
   bestModel: string;
-  confidence?: number;
   forecastDate?: string;
 }
 
@@ -91,7 +90,6 @@ export interface CompanyDetail {
   pctChange: number;
   direction: Direction;
   model: string;
-  confidence?: number;
   metrics: Record<string, ModelMetric>;
   nextClose: Record<string, number>;
   ohlcv: OhlcvPoint[];
