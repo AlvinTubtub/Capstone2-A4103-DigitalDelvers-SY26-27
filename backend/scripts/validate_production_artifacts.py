@@ -6,10 +6,6 @@ import argparse
 from collections.abc import Sequence
 import logging
 from pathlib import Path
-import sys
-
-if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from config.settings import SETTINGS
 from scripts._common import add_verbose_option

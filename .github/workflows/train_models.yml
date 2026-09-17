@@ -57,16 +57,16 @@ jobs:
 
       - name: Validate raw OHLCV inputs
         working-directory: backend
-        run: python scripts/validate_raw.py --all --verbose
+        run: python -m scripts.validate_raw --all --verbose
 
       - name: Run complete fresh training lifecycle
         working-directory: backend
-        run: python scripts/train_all.py --all --fresh --verbose
+        run: python -m scripts.train_all --all --fresh --verbose
 
       - name: Validate complete fresh artifacts
         working-directory: backend
         run: |
-          python scripts/validate_production_artifacts.py \
+          python -m scripts.validate_production_artifacts \
             --skip-manifest \
             --require-forecasts \
             --require-current-data \
@@ -74,12 +74,12 @@ jobs:
 
       - name: Validate generated frontend JSON
         working-directory: backend
-        run: python scripts/validate_frontend_forecasts.py --verbose
+        run: python -m scripts.validate_frontend_forecasts --verbose
 
       - name: Create and validate production manifest
         working-directory: backend
         run: |
-          python scripts/validate_production_artifacts.py \
+          python -m scripts.validate_production_artifacts \
             --create-manifest \
             --run-id "${{ github.run_id }}" \
             --source-commit "${{ github.sha }}" \

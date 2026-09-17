@@ -57,7 +57,7 @@ jobs:
               echo "Training run $run_id has no downloadable production artifact; checking older runs."
               continue
             fi
-            if python scripts/validate_production_artifacts.py \
+            if python -m scripts.validate_production_artifacts \
               --artifacts-root "$candidate_root" \
               --expected-run-id "$run_id" \
               --expected-source-commit "$source_commit" \
@@ -90,13 +90,13 @@ jobs:
         env:
           ARTIFACT_ROOT: ${{ steps.production_artifact.outputs.artifact_root }}
         run: |
-          python scripts/reset_artifacts.py --yes
+          python -m scripts.reset_artifacts --yes
           cp -a "$ARTIFACT_ROOT/." artifacts/
 
       - name: Validate restored production artifacts
         working-directory: backend
         run: |
-          python scripts/validate_production_artifacts.py \
+          python -m scripts.validate_production_artifacts \
             --expected-run-id "${{ steps.production_artifact.outputs.run_id }}" \
             --expected-source-commit "${{ steps.production_artifact.outputs.source_commit }}" \
             --expected-source-branch "${{ github.ref_name }}" \
@@ -106,7 +106,7 @@ jobs:
         id: ingestion
         working-directory: backend
         run: |
-          python scripts/update_eod.py --verbose
+          python -m scripts.update_eod --verbose
           if git diff --quiet -- data/raw; then
             echo "raw_changed=false" >> "$GITHUB_OUTPUT"
             echo "No new market-session rows were added; persisted inference will not be regenerated."
@@ -116,32 +116,32 @@ jobs:
 
       - name: Validate raw OHLCV inputs
         working-directory: backend
-        run: python scripts/validate_raw.py --all --verbose
+        run: python -m scripts.validate_raw --all --verbose
 
       - name: Resolve prior prospective forecast outcomes
         if: steps.ingestion.outputs.raw_changed == 'true'
         working-directory: backend
-        run: python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose
+        run: python -m scripts.update_forecast_ledger --resolve-outcomes --all --verbose
 
       - name: Forecast from persisted models without training
         if: steps.ingestion.outputs.raw_changed == 'true'
         working-directory: backend
-        run: python scripts/forecast_all.py --all --verbose
+        run: python -m scripts.forecast_all --all --verbose
 
       - name: Append new prospective forecasts including Naive
         if: steps.ingestion.outputs.raw_changed == 'true'
         working-directory: backend
-        run: python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose
+        run: python -m scripts.update_forecast_ledger --issue-forecasts --all --verbose
 
       - name: Report prospective drift evidence
         if: steps.ingestion.outputs.raw_changed == 'true'
         working-directory: backend
-        run: python scripts/update_forecast_ledger.py --report-drift --all --verbose
+        run: python -m scripts.update_forecast_ledger --report-drift --all --verbose
 
       - name: Validate generated frontend JSON
         if: steps.ingestion.outputs.raw_changed == 'true'
         working-directory: backend
-        run: python scripts/validate_frontend_forecasts.py --verbose
+        run: python -m scripts.validate_frontend_forecasts --verbose
 
       - name: Commit raw and forecast data if changed
         run: |

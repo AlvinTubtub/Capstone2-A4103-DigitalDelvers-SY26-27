@@ -119,11 +119,11 @@ GitHub Actions stores the complete production-model package as an artifact. Its 
 Run from `backend/` after installing `requirements.txt`:
 
 ```bash
-python scripts/validate_raw.py --all --verbose
-python scripts/train_all.py --all --fresh --verbose
-python scripts/forecast_all.py --all --verbose
-python scripts/update_eod.py --verbose
-python scripts/reset_artifacts.py --yes
+python -m scripts.validate_raw --all --verbose
+python -m scripts.train_all --all --fresh --verbose
+python -m scripts.forecast_all --all --verbose
+python -m scripts.update_eod --verbose
+python -m scripts.reset_artifacts --yes
 python -m pytest -q
 ```
 

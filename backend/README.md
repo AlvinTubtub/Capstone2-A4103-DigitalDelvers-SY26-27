@@ -37,7 +37,7 @@ The loader and validator require canonical `YYYY-MM-DD` dates and finite Open, H
 Validate every configured file:
 
 ```bash
-python scripts/validate_raw.py --all --verbose
+python -m scripts.validate_raw --all --verbose
 ```
 
 ## Evaluation design
@@ -95,7 +95,7 @@ Model metadata records the schema identity, symbol, family, training cutoff, dat
 Start a complete fresh run:
 
 ```bash
-python scripts/train_all.py --all --fresh --verbose
+python -m scripts.train_all --all --fresh --verbose
 ```
 
 Useful options:
@@ -109,7 +109,7 @@ Useful options:
 Reset generated artifacts without touching raw data:
 
 ```bash
-python scripts/reset_artifacts.py --yes
+python -m scripts.reset_artifacts --yes
 ```
 
 ## Persisted-model inference
@@ -117,7 +117,7 @@ python scripts/reset_artifacts.py --yes
 Inference loads only compatible models from `artifacts/models/`, verifies their checksums and training boundaries, and creates one next-PSE-session prediction for each principal model. It does not tune or refit.
 
 ```bash
-python scripts/forecast_all.py --all --verbose
+python -m scripts.forecast_all --all --verbose
 ```
 
 The command requires the matching persisted evaluation evidence used by the frontend exporter. A single-symbol inference check must use `--no-export`.
@@ -129,8 +129,8 @@ The ingestion pipeline downloads official PSE EDGE quotation PDFs into gitignore
 Existing identical rows are idempotent no-ops. Conflicting historical rows fail rather than being overwritten silently. HTTP 404 means that a report is unpublished, a weekend, or a closure and is not itself a fatal failure.
 
 ```bash
-python scripts/update_eod.py --verbose
-python scripts/update_eod.py --start-date 2026-09-01 --end-date 2026-09-10 --verbose
+python -m scripts.update_eod --verbose
+python -m scripts.update_eod --start-date 2026-09-01 --end-date 2026-09-10 --verbose
 ```
 
 Ingestion performs no training, inference, or frontend export.
@@ -150,7 +150,7 @@ Each new company payload describes both the complete evaluation count/date range
 Validate the committed frontend data without regenerating it:
 
 ```bash
-python scripts/validate_frontend_forecasts.py --verbose
+python -m scripts.validate_frontend_forecasts --verbose
 ```
 
 ## Production artifact validation
@@ -158,7 +158,7 @@ python scripts/validate_frontend_forecasts.py --verbose
 GitHub Actions creates and restores the production-model package. Validate a restored package with:
 
 ```bash
-python scripts/validate_production_artifacts.py --verbose
+python -m scripts.validate_production_artifacts --verbose
 ```
 
 The daily workflow fails closed when a complete compatible package and manifest cannot be verified.
@@ -172,7 +172,7 @@ human-selected run ID and cutoff date; the backend never chooses either value.
 Run the read-only readiness check first:
 
 ```bash
-python scripts/run_formal_experiment.py \
+python -m scripts.run_formal_experiment \
   --run-id research-run-001 \
   --cutoff-date YYYY-MM-DD \
   --check-only
@@ -221,9 +221,9 @@ The two workflow operations can also be run explicitly after their corresponding
 EOD stages:
 
 ```bash
-python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose
-python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose
-python scripts/update_forecast_ledger.py --report-drift --all --verbose
+python -m scripts.update_forecast_ledger --resolve-outcomes --all --verbose
+python -m scripts.update_forecast_ledger --issue-forecasts --all --verbose
+python -m scripts.update_forecast_ledger --report-drift --all --verbose
 ```
 
 GitHub Actions receives the external `update-pse-data` `repository_dispatch` event

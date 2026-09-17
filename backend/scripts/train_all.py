@@ -5,11 +5,6 @@ from __future__ import annotations
 import argparse
 from collections.abc import Sequence
 import logging
-from pathlib import Path
-import sys
-
-if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from config.settings import manila_now
 from scripts._common import add_runtime_options, add_symbol_selection, selected_symbols

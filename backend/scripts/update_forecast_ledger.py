@@ -7,10 +7,6 @@ from collections.abc import Sequence
 import json
 import logging
 from pathlib import Path
-import sys
-
-if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from config.ledger_config import DEFAULT_FORECAST_LEDGER_PATH
 from config.settings import SETTINGS

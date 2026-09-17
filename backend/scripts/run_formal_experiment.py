@@ -7,10 +7,6 @@ from collections.abc import Sequence
 from datetime import date
 import json
 from pathlib import Path
-import sys
-
-if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from config.settings import BACKEND_ROOT
 from scripts._common import add_verbose_option

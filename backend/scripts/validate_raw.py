@@ -5,11 +5,6 @@ from __future__ import annotations
 import argparse
 import logging
 from collections.abc import Sequence
-from pathlib import Path
-import sys
-
-if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts._common import add_symbol_selection, add_verbose_option, selected_symbols
 from src.data.loader import load_company_history

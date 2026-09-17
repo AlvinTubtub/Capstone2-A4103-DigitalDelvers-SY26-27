@@ -35,10 +35,10 @@ def test_training_workflow_has_fresh_fail_closed_sequence() -> None:
         "actions/setup-python@v5",
         "python -m pytest -q",
         "clean imports: PASS",
-        "python scripts/validate_raw.py --all --verbose",
-        "python scripts/train_all.py --all --fresh --verbose",
+        "python -m scripts.validate_raw --all --verbose",
+        "python -m scripts.train_all --all --fresh --verbose",
         "--skip-manifest",
-        "python scripts/validate_frontend_forecasts.py --verbose",
+        "python -m scripts.validate_frontend_forecasts --verbose",
         "--create-manifest",
         "actions/upload-artifact@v4",
         "git add -- frontend/public/forecasts",
@@ -60,13 +60,13 @@ def test_daily_workflow_validates_before_ingestion_and_never_trains() -> None:
         "Locate latest valid Phase 14 training artifact",
         "Restore verified production artifact layout",
         "Validate restored production artifacts",
-        "python scripts/update_eod.py --verbose",
-        "python scripts/validate_raw.py --all --verbose",
-        "python scripts/update_forecast_ledger.py --resolve-outcomes --all --verbose",
-        "python scripts/forecast_all.py --all --verbose",
-        "python scripts/update_forecast_ledger.py --issue-forecasts --all --verbose",
-        "python scripts/update_forecast_ledger.py --report-drift --all --verbose",
-        "python scripts/validate_frontend_forecasts.py --verbose",
+        "python -m scripts.update_eod --verbose",
+        "python -m scripts.validate_raw --all --verbose",
+        "python -m scripts.update_forecast_ledger --resolve-outcomes --all --verbose",
+        "python -m scripts.forecast_all --all --verbose",
+        "python -m scripts.update_forecast_ledger --issue-forecasts --all --verbose",
+        "python -m scripts.update_forecast_ledger --report-drift --all --verbose",
+        "python -m scripts.validate_frontend_forecasts --verbose",
         "git add -- backend/data/raw backend/data/forecast_ledger/events.jsonl frontend/public/forecasts",
     )
     positions = [text.index(item) for item in required_in_order]
@@ -92,3 +92,4 @@ def test_workflows_have_no_legacy_backend_references() -> None:
     combined = workflow("train_models.yml") + workflow("update_pipeline.yml")
 
     assert all(reference not in combined for reference in FORBIDDEN_LEGACY_REFERENCES)
+    assert "python scripts/" not in combined
