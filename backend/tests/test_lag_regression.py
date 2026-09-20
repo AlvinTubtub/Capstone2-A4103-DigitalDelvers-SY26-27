@@ -14,8 +14,13 @@ from config.settings import SETTINGS
 from src.data.split import build_company_evaluation_plan
 from src.data.validator import OhlcvRecord
 from src.features.regression_features import (
+    FeatureConstructionError,
+    RegressionFeatureContract,
+    RegressionFeatureGroup,
     build_regression_dataset,
     feature_names_for_pacf_lags,
+    regression_feature_contract,
+    regression_feature_names,
 )
 from src.models.base import reconstruct_close
 from src.models.lag_regression import LagRegressionModel
@@ -145,6 +150,111 @@ def test_all_approved_causal_feature_families_are_available() -> None:
     assert np.isfinite(dataset.matrix()).all()
 
 
+def test_feature_contract_exactly_classifies_unchanged_candidate_tuple() -> None:
+    config = RegressionFeatureConfig(raw_price_lags=(1, 5))
+    names_before_contract = regression_feature_names(config)
+    contract = regression_feature_contract(config)
+
+    assert contract.candidate_feature_names == names_before_contract
+    assert regression_feature_names(config) == names_before_contract
+    groups = dict(contract.feature_groups)
+    flattened = tuple(name for names in groups.values() for name in names)
+    assert len(flattened) == len(set(flattened)) == len(names_before_contract)
+    assert set(flattened) == set(names_before_contract)
+    assert groups[RegressionFeatureGroup.RAW_PRICE_LEVEL_FEATURES] == (
+        "raw_close_lag_1",
+        "raw_close_lag_5",
+    )
+    assert "return_lag_1" in groups[RegressionFeatureGroup.RETURN_FEATURES]
+    assert "return_std_20" in groups[RegressionFeatureGroup.RETURN_FEATURES]
+    assert "range_pct" in groups[RegressionFeatureGroup.NORMALIZED_PRICE_FEATURES]
+    assert "rsi_14" in groups[RegressionFeatureGroup.NORMALIZED_PRICE_FEATURES]
+    assert "volume_change_1" in groups[
+        RegressionFeatureGroup.NORMALIZED_VOLUME_FEATURES
+    ]
+    assert "volume_z_20" in groups[
+        RegressionFeatureGroup.NORMALIZED_VOLUME_FEATURES
+    ]
+    assert groups[RegressionFeatureGroup.TRANSFORMED_VOLUME_LEVEL_FEATURES] == (
+        "volume_log",
+    )
+    assert "volume_log" not in groups[
+        RegressionFeatureGroup.RAW_VOLUME_LEVEL_FEATURES
+    ]
+    assert groups[RegressionFeatureGroup.RAW_VOLUME_LEVEL_FEATURES] == ()
+    payload = contract.as_dict()
+    assert payload["ordered_candidate_feature_names"] == list(names_before_contract)
+    json.dumps(payload, allow_nan=False)
+
+
+def test_feature_contract_rejects_target_fields_and_duplicate_membership() -> None:
+    with pytest.raises(FeatureConstructionError, match="Target fields"):
+        RegressionFeatureContract(
+            candidate_feature_names=("target_delta",),
+            feature_groups=(
+                (RegressionFeatureGroup.RETURN_FEATURES, ("target_delta",)),
+            ),
+        )
+    with pytest.raises(FeatureConstructionError, match="exactly one group"):
+        RegressionFeatureContract(
+            candidate_feature_names=("return_lag_1",),
+            feature_groups=(
+                (RegressionFeatureGroup.RETURN_FEATURES, ("return_lag_1",)),
+                (
+                    RegressionFeatureGroup.NORMALIZED_PRICE_FEATURES,
+                    ("return_lag_1",),
+                ),
+            ),
+        )
+
+
+def test_contract_creation_does_not_change_feature_matrix_values() -> None:
+    config = RegressionFeatureConfig(raw_price_lags=(1, 5))
+    before = build_regression_dataset(synthetic_records(), config)
+
+    regression_feature_contract(config)
+    after = build_regression_dataset(synthetic_records(), config)
+
+    assert after.feature_names == before.feature_names
+    np.testing.assert_array_equal(after.matrix(), before.matrix())
+
+
+def test_feature_contract_validation_does_not_change_lir_predictions(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = synthetic_records()
+    dataset = build_regression_dataset(source)
+    plan = build_company_evaluation_plan("ALI", source)
+    monkeypatch.setattr(
+        "src.training.train_lir.select_pacf_lags",
+        lambda training_returns, *, max_lag, significance_z: (1, 2),
+    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", AlphaGridBoundaryWarning)
+        validated = train_lir_for_evaluation(dataset, plan, config=quick_config())
+
+    monkeypatch.setattr(
+        "src.training.train_lir._validate_candidate_contract",
+        lambda dataset, config: None,
+    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", AlphaGridBoundaryWarning)
+        without_contract_check = train_lir_for_evaluation(
+            dataset,
+            plan,
+            config=quick_config(),
+        )
+
+    np.testing.assert_array_equal(
+        validated.predicted_deltas,
+        without_contract_check.predicted_deltas,
+    )
+    np.testing.assert_array_equal(
+        validated.predicted_closes,
+        without_contract_check.predicted_closes,
+    )
+
+
 def test_pacf_receives_fold_training_returns_only(monkeypatch: pytest.MonkeyPatch) -> None:
     dataset = build_regression_dataset(synthetic_records())
     plan = build_company_evaluation_plan("ALI", synthetic_records())
@@ -249,6 +359,47 @@ def test_selected_feature_and_reproduction_metadata_are_complete(
     assert len(fit_metadata.scaler_scale) == len(fit_metadata.feature_names)
     assert metadata["development_fit"]["pacf_selected_lags"] == [1, 2]
     assert metadata["tuning"]["fold_scores"]
+    contract = metadata["candidate_feature_contract"]
+    assert contract["ordered_candidate_feature_names"] == list(dataset.feature_names)
+    assert contract["target_name"] == "next_day_close_delta"
+    json.dumps(metadata, allow_nan=False)
+
+
+def test_fold_and_development_metadata_match_names_passed_to_lasso(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = synthetic_records()
+    dataset = build_regression_dataset(source)
+    plan = build_company_evaluation_plan(
+        "ALI", source, model_config=ModelConfig(evaluation_proportion=0.2)
+    )
+    monkeypatch.setattr(
+        "src.training.train_lir.select_pacf_lags",
+        lambda training_returns, *, max_lag, significance_z: (1, 2),
+    )
+    observed_names: list[tuple[str, ...]] = []
+    original_fit = LagRegressionModel.fit
+
+    def recording_fit(self, features, targets, feature_names):
+        observed_names.append(tuple(feature_names))
+        return original_fit(self, features, targets, feature_names)
+
+    monkeypatch.setattr(LagRegressionModel, "fit", recording_fit)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", AlphaGridBoundaryWarning)
+        result = train_lir_for_evaluation(dataset, plan, config=quick_config())
+
+    fold_count = len(result.tuning.fold_scores)
+    assert tuple(score.feature_names for score in result.tuning.fold_scores) == tuple(
+        observed_names[:fold_count]
+    )
+    assert result.fitted.fit_metadata.feature_names == observed_names[-1]
+    for score in result.tuning.fold_scores:
+        assert len(score.scaler_mean) == len(score.feature_names)
+        assert len(score.scaler_scale) == len(score.feature_names)
+        payload = score.as_dict()
+        assert tuple(payload["scaler_mean"]) == score.feature_names
+        assert tuple(payload["scaler_scale"]) == score.feature_names
 
 
 def test_training_and_production_refits_are_deterministic() -> None:
@@ -351,6 +502,9 @@ def test_reproducibility_metadata_persists_only_under_artifacts(
     )
     assert payload["schema_id"] == LIR_EVALUATION_SCHEMA_ID
     assert payload["schema_version"] == 1
+    assert payload["candidate_feature_contract"][
+        "ordered_candidate_feature_names"
+    ] == list(dataset.feature_names)
     assert payload["tuning"]["chosen_alpha"] == result.tuning.chosen_alpha
     assert payload["development_fit"]["selected_features"] == list(
         result.fitted.fit_metadata.selected_features

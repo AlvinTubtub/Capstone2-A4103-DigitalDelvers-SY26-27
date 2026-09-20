@@ -3,6 +3,7 @@
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from datetime import date
+from enum import StrEnum
 import logging
 import math
 
@@ -19,6 +20,84 @@ FloatArray = NDArray[np.float64]
 
 class FeatureConstructionError(ValueError):
     """Raised when a causal feature cannot be computed safely."""
+
+
+class RegressionFeatureGroup(StrEnum):
+    """Semantic groups for the existing LIR candidate predictors."""
+
+    RAW_PRICE_LEVEL_FEATURES = "raw_price_level_features"
+    RETURN_FEATURES = "return_features"
+    NORMALIZED_PRICE_FEATURES = "normalized_price_features"
+    NORMALIZED_VOLUME_FEATURES = "normalized_volume_features"
+    TRANSFORMED_VOLUME_LEVEL_FEATURES = "transformed_volume_level_features"
+    RAW_VOLUME_LEVEL_FEATURES = "raw_volume_level_features"
+
+
+@dataclass(frozen=True, slots=True)
+class RegressionFeatureContract:
+    """Validated taxonomy for the unchanged ordered regression feature set."""
+
+    candidate_feature_names: tuple[str, ...]
+    feature_groups: tuple[tuple[RegressionFeatureGroup, tuple[str, ...]], ...]
+    target_name: str = "next_day_close_delta"
+    causal_origin_rule: str = "predictors_use_only_values_available_at_or_before_origin"
+    schema_id: str = "forecastph.lir-feature-contract"
+    schema_version: int = 1
+
+    def __post_init__(self) -> None:
+        if not self.candidate_feature_names:
+            raise FeatureConstructionError("Feature contract cannot be empty")
+        if len(set(self.candidate_feature_names)) != len(self.candidate_feature_names):
+            raise FeatureConstructionError("Candidate feature names must be unique")
+        group_names = tuple(group for group, _ in self.feature_groups)
+        if len(set(group_names)) != len(group_names):
+            raise FeatureConstructionError("Feature groups must be unique")
+        grouped = tuple(
+            name for _, names in self.feature_groups for name in names
+        )
+        if len(grouped) != len(set(grouped)):
+            raise FeatureConstructionError(
+                "Every candidate feature must belong to exactly one group"
+            )
+        if set(grouped) != set(self.candidate_feature_names):
+            missing = sorted(set(self.candidate_feature_names) - set(grouped))
+            extra = sorted(set(grouped) - set(self.candidate_feature_names))
+            raise FeatureConstructionError(
+                f"Feature-group union mismatch; missing={missing} extra={extra}"
+            )
+        forbidden = {"target_delta", "target_date", "actual_close"}
+        invalid = tuple(
+            name
+            for name in self.candidate_feature_names
+            if name in forbidden or name.startswith("target_")
+        )
+        if invalid:
+            raise FeatureConstructionError(
+                f"Target fields cannot be candidate predictors: {invalid}"
+            )
+
+    def as_dict(self) -> dict[str, object]:
+        membership = {
+            name: group.value
+            for group, names in self.feature_groups
+            for name in names
+        }
+        return {
+            "schema_id": self.schema_id,
+            "schema_version": self.schema_version,
+            "target_name": self.target_name,
+            "causal_origin_rule": self.causal_origin_rule,
+            "ordered_candidate_feature_names": list(self.candidate_feature_names),
+            "ordered_feature_groups": [
+                group.value for group, _ in self.feature_groups
+            ],
+            "groups": {
+                group.value: list(names) for group, names in self.feature_groups
+            },
+            "group_membership": {
+                name: membership[name] for name in self.candidate_feature_names
+            },
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -174,6 +253,72 @@ def regression_feature_names(config: RegressionFeatureConfig) -> tuple[str, ...]
     )
     names.extend(f"raw_close_lag_{lag}" for lag in config.raw_price_lags)
     return tuple(names)
+
+
+def regression_feature_contract(
+    config: RegressionFeatureConfig,
+) -> RegressionFeatureContract:
+    """Classify every current candidate without changing names, order, or values."""
+
+    candidate_names = regression_feature_names(config)
+    return_features = tuple(
+        [f"return_lag_{lag}" for lag in config.return_lags]
+        + [
+            name
+            for window in config.rolling_return_windows
+            for name in (f"return_mean_{window}", f"return_std_{window}")
+        ]
+    )
+    normalized_price_features = (
+        "range_pct",
+        "open_close_spread_pct",
+        "close_location_in_range",
+        *(f"close_relative_sma_{window}" for window in config.rolling_return_windows),
+        f"rsi_{config.rsi_period}",
+        f"ema_relative_{config.ema_fast_period}",
+        f"ema_relative_{config.ema_slow_period}",
+        "macd_relative",
+        "macd_signal_relative",
+        "macd_histogram_relative",
+        f"bollinger_z_{config.bollinger_window}",
+        f"bollinger_width_{config.bollinger_window}",
+        f"bollinger_position_{config.bollinger_window}",
+    )
+    normalized_volume_features = (
+        "volume_change_1",
+        *(
+            name
+            for window in config.volume_windows
+            for name in (f"volume_ratio_{window}", f"volume_z_{window}")
+        ),
+    )
+    feature_groups = (
+        (
+            RegressionFeatureGroup.RAW_PRICE_LEVEL_FEATURES,
+            tuple(f"raw_close_lag_{lag}" for lag in config.raw_price_lags),
+        ),
+        (RegressionFeatureGroup.RETURN_FEATURES, return_features),
+        (
+            RegressionFeatureGroup.NORMALIZED_PRICE_FEATURES,
+            normalized_price_features,
+        ),
+        (
+            RegressionFeatureGroup.NORMALIZED_VOLUME_FEATURES,
+            normalized_volume_features,
+        ),
+        (
+            RegressionFeatureGroup.TRANSFORMED_VOLUME_LEVEL_FEATURES,
+            ("volume_log",),
+        ),
+        (RegressionFeatureGroup.RAW_VOLUME_LEVEL_FEATURES, ()),
+    )
+    contract = RegressionFeatureContract(
+        candidate_feature_names=candidate_names,
+        feature_groups=feature_groups,
+    )
+    if contract.candidate_feature_names != regression_feature_names(config):
+        raise FeatureConstructionError("Feature-contract ordering is not deterministic")
+    return contract
 
 
 @dataclass(frozen=True, slots=True)

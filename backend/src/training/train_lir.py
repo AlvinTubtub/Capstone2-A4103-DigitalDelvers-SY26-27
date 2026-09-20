@@ -20,6 +20,7 @@ from src.features.regression_features import (
     RegressionDataset,
     RegressionSample,
     feature_names_for_pacf_lags,
+    regression_feature_contract,
 )
 from src.models.lag_regression import LagRegressionFitMetadata, LagRegressionModel
 from src.training.cross_validation import expanding_window_folds, select_pacf_lags
@@ -177,6 +178,9 @@ class LIREvaluationResult:
             "symbol": self.symbol,
             "target": "next_day_close_delta",
             "configuration": asdict(self.configuration),
+            "candidate_feature_contract": regression_feature_contract(
+                self.configuration.features
+            ).as_dict(),
             "tuning": self.tuning.as_dict(),
             "development_fit": self.fitted.as_dict(),
             "evaluation_target_dates": [value.isoformat() for value in self.target_dates],
@@ -196,6 +200,38 @@ def _new_model(alpha: float, config: LagRegressionConfig) -> LagRegressionModel:
     )
 
 
+def _validate_candidate_contract(
+    dataset: RegressionDataset,
+    config: LagRegressionConfig,
+) -> None:
+    contract = regression_feature_contract(config.features)
+    if dataset.feature_names != contract.candidate_feature_names:
+        raise ValueError(
+            "Regression dataset feature order does not match the configured "
+            "candidate feature contract"
+        )
+
+
+def _validate_selected_fit_metadata(
+    expected_feature_names: Sequence[str],
+    metadata: LagRegressionFitMetadata,
+) -> None:
+    expected = tuple(expected_feature_names)
+    if metadata.feature_names != expected:
+        raise RuntimeError(
+            "Persisted selected feature names differ from names passed to LASSO"
+        )
+    if not (
+        len(metadata.scaler_mean)
+        == len(metadata.scaler_scale)
+        == len(metadata.scaler_variance)
+        == len(expected)
+    ):
+        raise RuntimeError(
+            "Scaler metadata does not align exactly with selected feature names"
+        )
+
+
 def tune_lir_alpha(
     dataset: RegressionDataset,
     development_samples: Sequence[RegressionSample],
@@ -204,6 +240,7 @@ def tune_lir_alpha(
 ) -> LIRTuningResult:
     """Tune LASSO alpha with expanding folds and fold-local PACF/scaling."""
 
+    _validate_candidate_contract(dataset, config)
     samples = tuple(development_samples)
     folds = expanding_window_folds(len(samples), n_splits=config.cv_splits)
     scores: list[LIRFoldScore] = []
@@ -237,6 +274,7 @@ def tune_lir_alpha(
             predicted = model.predict_delta(validation_matrix)
             score = _rmse(validation_targets, predicted)
             metadata = model.metadata
+            _validate_selected_fit_metadata(feature_names, metadata)
             scores_by_alpha[alpha].append(score)
             scores.append(
                 LIRFoldScore(
@@ -250,7 +288,7 @@ def tune_lir_alpha(
                     validation_size=len(validation),
                     rmse=score,
                     pacf_selected_lags=pacf_lags,
-                    feature_names=feature_names,
+                    feature_names=metadata.feature_names,
                     scaler_mean=metadata.scaler_mean,
                     scaler_scale=metadata.scaler_scale,
                 )
@@ -303,10 +341,12 @@ def _fit_with_local_pacf(
         dataset.targets(chosen_samples),
         feature_names,
     )
+    metadata = model.metadata
+    _validate_selected_fit_metadata(feature_names, metadata)
     return LIRFittedModel(
         model=model,
         pacf_selected_lags=pacf_lags,
-        fit_metadata=model.metadata,
+        fit_metadata=metadata,
     )
 
 
@@ -318,6 +358,7 @@ def train_lir_for_evaluation(
 ) -> LIREvaluationResult:
     """Tune on development only, refit fresh, then forecast common evaluation dates."""
 
+    _validate_candidate_contract(dataset, config)
     development_dates = set(plan.development_target_dates)
     development_samples = tuple(
         sample for sample in dataset.samples if sample.target_date in development_dates
@@ -369,6 +410,7 @@ def refit_lir_for_production(
 ) -> LIRFittedModel:
     """Fit a separate production estimator on all currently labeled samples."""
 
+    _validate_candidate_contract(dataset, config)
     LOGGER.info(
         "Refitting LIR production model samples=%d alpha=%s",
         len(dataset.samples),
