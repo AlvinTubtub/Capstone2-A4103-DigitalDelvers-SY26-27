@@ -8,7 +8,7 @@ import math
 import warnings
 
 import numpy as np
-from scipy.stats import friedmanchisquare, t as student_t, wilcoxon
+from scipy.stats import binomtest, friedmanchisquare, skew, t as student_t, wilcoxon
 
 from config.model_config import ModelId
 from src.evaluation.backtest import REQUIRED_EVALUATION_MODELS
@@ -130,6 +130,111 @@ class WilcoxonTestResult:
 
 
 @dataclass(frozen=True, slots=True)
+class ConditionalWilcoxonEvidence:
+    """Explicitly distinguish an executed post-hoc test from a gated test."""
+
+    performed: bool
+    sample_size: int | None
+    statistic: float | None
+    raw_p_value: float | None
+    holm_adjusted_p_value: float | None
+    reject: bool | None
+    reason: str | None = None
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "performed": self.performed,
+            "reason": self.reason,
+            "statistic": self.statistic,
+            "raw_p_value": self.raw_p_value,
+            "holm_adjusted_p_value": self.holm_adjusted_p_value,
+            "reject": self.reject,
+            "sample_size": self.sample_size,
+            "zero_method": "wilcox" if self.performed else None,
+            "alternative": "two-sided" if self.performed else None,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class SignTestEvidence:
+    """Two-sided paired sign test, reported only as robustness evidence."""
+
+    performed: bool
+    sample_size: int
+    positive_count: int
+    negative_count: int
+    zero_count: int
+    statistic_proportion: float | None
+    raw_p_value: float | None
+    reason: str | None = None
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "performed": self.performed,
+            "reason": self.reason,
+            "sample_size": self.sample_size,
+            "positive_count": self.positive_count,
+            "negative_count": self.negative_count,
+            "zero_count": self.zero_count,
+            "statistic_proportion": self.statistic_proportion,
+            "raw_p_value": self.raw_p_value,
+            "alternative": "two-sided",
+            "null_probability": 0.5,
+            "role": "supplementary_robustness_only",
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class PairedMaseEvidence:
+    """Full-precision company-paired MASE differences for one method pair."""
+
+    model_1: ModelId
+    model_2: ModelId
+    company_order: tuple[str, ...]
+    model_1_mase: tuple[float, ...]
+    model_2_mase: tuple[float, ...]
+    paired_differences: tuple[float, ...]
+    mean_difference: float
+    median_difference: float
+    standard_deviation: float
+    skewness: float | None
+    skewness_status: str
+    positive_count: int
+    negative_count: int
+    zero_count: int
+    wilcoxon: ConditionalWilcoxonEvidence
+    sign_test: SignTestEvidence
+
+    @property
+    def observation_count(self) -> int:
+        return len(self.company_order)
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "model_1": self.model_1.value,
+            "model_2": self.model_2.value,
+            "difference_direction": "model_1_mase_minus_model_2_mase",
+            "company_order": list(self.company_order),
+            "model_1_mase": list(self.model_1_mase),
+            "model_2_mase": list(self.model_2_mase),
+            "paired_differences": list(self.paired_differences),
+            "observation_count": self.observation_count,
+            "mean_difference": self.mean_difference,
+            "median_difference": self.median_difference,
+            "standard_deviation": self.standard_deviation,
+            "standard_deviation_convention": "sample_ddof_1",
+            "skewness": self.skewness,
+            "skewness_status": self.skewness_status,
+            "skewness_convention": "scipy_stats_skew_bias_false",
+            "positive_count": self.positive_count,
+            "negative_count": self.negative_count,
+            "zero_count": self.zero_count,
+            "wilcoxon": self.wilcoxon.as_dict(),
+            "sign_test": self.sign_test.as_dict(),
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class AcrossCompanyComparison:
     company_count: int
     metric: str
@@ -139,6 +244,7 @@ class AcrossCompanyComparison:
     friedman_reject: bool
     posthoc_performed: bool
     pairwise_wilcoxon: tuple[WilcoxonTestResult, ...]
+    paired_mase_evidence: tuple[PairedMaseEvidence, ...]
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -156,6 +262,26 @@ class AcrossCompanyComparison:
             "pairwise_wilcoxon": [
                 result.as_dict() for result in self.pairwise_wilcoxon
             ],
+        }
+
+    def paired_evidence_as_dict(self) -> dict[str, object]:
+        """Serialize supplementary evidence without changing the legacy result schema."""
+
+        return {
+            "schema_id": "forecastph.supplementary-paired-mase-evidence",
+            "schema_version": 1,
+            "metric": "mase",
+            "company_count": self.company_count,
+            "alpha": self.alpha,
+            "friedman": {
+                "statistic": self.friedman_statistic,
+                "raw_p_value": self.friedman_p_value,
+                "reject": self.friedman_reject,
+            },
+            "wilcoxon_gate": "performed_only_when_friedman_rejects",
+            "wilcoxon_holm_family_size": len(MODEL_PAIRS),
+            "sign_test_holm_corrected": False,
+            "pairs": [item.as_dict() for item in self.paired_mase_evidence],
         }
 
 
@@ -371,6 +497,118 @@ def _holm_adjust_wilcoxon(
     )
 
 
+def _sign_test_evidence(differences: np.ndarray) -> SignTestEvidence:
+    positive_count = int(np.count_nonzero(differences > 0.0))
+    negative_count = int(np.count_nonzero(differences < 0.0))
+    zero_count = int(np.count_nonzero(differences == 0.0))
+    sample_size = positive_count + negative_count
+    if sample_size == 0:
+        return SignTestEvidence(
+            performed=False,
+            sample_size=0,
+            positive_count=positive_count,
+            negative_count=negative_count,
+            zero_count=zero_count,
+            statistic_proportion=None,
+            raw_p_value=None,
+            reason="no_nonzero_paired_differences",
+        )
+    result = binomtest(
+        k=positive_count,
+        n=sample_size,
+        p=0.5,
+        alternative="two-sided",
+    )
+    statistic = float(result.statistic)
+    p_value = float(result.pvalue)
+    if not math.isfinite(statistic) or not math.isfinite(p_value):
+        raise StatisticalTestError("Sign test produced a non-finite result")
+    return SignTestEvidence(
+        performed=True,
+        sample_size=sample_size,
+        positive_count=positive_count,
+        negative_count=negative_count,
+        zero_count=zero_count,
+        statistic_proportion=statistic,
+        raw_p_value=p_value,
+    )
+
+
+def _paired_mase_evidence(
+    *,
+    companies: tuple[str, ...],
+    values: Mapping[ModelId, np.ndarray],
+    wilcoxon_by_pair: Mapping[tuple[ModelId, ModelId], WilcoxonTestResult],
+    friedman_reject: bool,
+) -> tuple[PairedMaseEvidence, ...]:
+    evidence: list[PairedMaseEvidence] = []
+    for model_1, model_2 in MODEL_PAIRS:
+        left = values[model_1]
+        right = values[model_2]
+        differences = left - right
+        if differences.size != len(companies) or not np.isfinite(differences).all():
+            raise StatisticalTestError("Paired MASE differences are incomplete or non-finite")
+        standard_deviation = float(np.std(differences, ddof=1))
+        if not math.isfinite(standard_deviation):
+            raise StatisticalTestError("Paired MASE standard deviation is non-finite")
+        if standard_deviation == 0.0:
+            skewness_value = None
+            skewness_status = "undefined_constant_differences"
+        else:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", RuntimeWarning)
+                computed_skewness = float(skew(differences, bias=False))
+            if math.isfinite(computed_skewness):
+                skewness_value = computed_skewness
+                skewness_status = "available"
+            else:
+                skewness_value = None
+                skewness_status = "undefined_numerical_result"
+
+        if friedman_reject:
+            result = wilcoxon_by_pair[(model_1, model_2)]
+            wilcoxon_evidence = ConditionalWilcoxonEvidence(
+                performed=True,
+                sample_size=result.sample_size,
+                statistic=result.statistic,
+                raw_p_value=result.raw_p_value,
+                holm_adjusted_p_value=result.holm_adjusted_p_value,
+                reject=result.reject,
+            )
+        else:
+            wilcoxon_evidence = ConditionalWilcoxonEvidence(
+                performed=False,
+                sample_size=None,
+                statistic=None,
+                raw_p_value=None,
+                holm_adjusted_p_value=None,
+                reject=None,
+                reason="friedman_not_significant",
+            )
+        sign_test = _sign_test_evidence(differences)
+        evidence.append(
+            PairedMaseEvidence(
+                model_1=model_1,
+                model_2=model_2,
+                company_order=companies,
+                model_1_mase=tuple(float(value) for value in left),
+                model_2_mase=tuple(float(value) for value in right),
+                paired_differences=tuple(float(value) for value in differences),
+                mean_difference=float(np.mean(differences)),
+                median_difference=float(np.median(differences)),
+                standard_deviation=standard_deviation,
+                skewness=skewness_value,
+                skewness_status=skewness_status,
+                positive_count=sign_test.positive_count,
+                negative_count=sign_test.negative_count,
+                zero_count=sign_test.zero_count,
+                wilcoxon=wilcoxon_evidence,
+                sign_test=sign_test,
+            )
+        )
+    return tuple(evidence)
+
+
 def compare_methods_across_companies(
     metrics_by_company: Mapping[str, Mapping[ModelId, EvaluationMetrics]],
     *,
@@ -439,6 +677,15 @@ def compare_methods_across_companies(
                 )
             )
         pairwise = _holm_adjust_wilcoxon(raw_results, alpha=alpha)
+    wilcoxon_by_pair = {
+        (result.model_1, result.model_2): result for result in pairwise
+    }
+    paired_evidence = _paired_mase_evidence(
+        companies=companies,
+        values=values,
+        wilcoxon_by_pair=wilcoxon_by_pair,
+        friedman_reject=friedman_reject,
+    )
     LOGGER.info(
         "Completed across-company MASE comparison companies=%d friedman_p=%.8g posthoc=%s",
         len(companies),
@@ -454,4 +701,5 @@ def compare_methods_across_companies(
         friedman_reject=friedman_reject,
         posthoc_performed=friedman_reject,
         pairwise_wilcoxon=pairwise,
+        paired_mase_evidence=paired_evidence,
     )

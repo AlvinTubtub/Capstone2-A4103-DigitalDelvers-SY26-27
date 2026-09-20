@@ -2,9 +2,11 @@
 
 from datetime import date, timedelta
 import json
+import warnings
 
 import numpy as np
 import pytest
+from scipy.stats import skew
 
 from config.model_config import ModelId
 from src.evaluation.backtest import BacktestAlignmentError, CanonicalPrediction
@@ -239,6 +241,12 @@ def test_significant_friedman_runs_six_holm_corrected_wilcoxon_tests() -> None:
         0.0 <= item.raw_p_value <= item.holm_adjusted_p_value <= 1.0
         for item in result.pairwise_wilcoxon
     )
+    assert len(result.paired_mase_evidence) == len(MODEL_PAIRS) == 6
+    assert all(item.wilcoxon.performed for item in result.paired_mase_evidence)
+    assert all(
+        item.wilcoxon.holm_adjusted_p_value is not None
+        for item in result.paired_mase_evidence
+    )
 
 
 def test_non_significant_friedman_does_not_run_wilcoxon() -> None:
@@ -248,6 +256,69 @@ def test_non_significant_friedman_does_not_run_wilcoxon() -> None:
     assert not result.friedman_reject
     assert not result.posthoc_performed
     assert result.pairwise_wilcoxon == ()
+    assert all(
+        not item.wilcoxon.performed
+        and item.wilcoxon.reason == "friedman_not_significant"
+        and item.wilcoxon.raw_p_value is None
+        for item in result.paired_mase_evidence
+    )
+
+
+def test_paired_mase_evidence_preserves_fifteen_companies_and_full_precision() -> None:
+    metrics = cross_company_metrics(companies=15)
+    result = compare_methods_across_companies(metrics)
+
+    assert len(result.paired_mase_evidence) == 6
+    expected_companies = tuple(sorted(metrics))
+    for item, expected_pair in zip(
+        result.paired_mase_evidence, MODEL_PAIRS, strict=True
+    ):
+        assert (item.model_1, item.model_2) == expected_pair
+        assert item.company_order == expected_companies
+        assert item.observation_count == 15
+        expected = np.asarray(item.model_1_mase) - np.asarray(item.model_2_mase)
+        assert np.array_equal(np.asarray(item.paired_differences), expected)
+        assert item.mean_difference == pytest.approx(float(np.mean(expected)))
+        assert item.median_difference == pytest.approx(float(np.median(expected)))
+        assert item.standard_deviation == pytest.approx(float(np.std(expected, ddof=1)))
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            expected_skewness = float(skew(expected, bias=False))
+        if np.isfinite(expected_skewness):
+            assert item.skewness == pytest.approx(expected_skewness)
+            assert item.skewness_status == "available"
+        else:
+            assert item.skewness is None
+            assert item.skewness_status.startswith("undefined_")
+        assert item.positive_count + item.negative_count + item.zero_count == 15
+        assert item.sign_test.sample_size == item.positive_count + item.negative_count
+        assert item.sign_test.zero_count == item.zero_count
+    json.dumps(result.paired_evidence_as_dict(), allow_nan=False)
+
+
+def test_sign_test_excludes_zeros_and_all_zero_pair_is_explicitly_unavailable() -> None:
+    mixed = cross_company_metrics(companies=15)
+    for index, symbol in enumerate(sorted(mixed)):
+        arima = mixed[symbol][ModelId.ARIMA]
+        mase = mixed[symbol][ModelId.LAG_REGRESSION].mase if index < 3 else arima.mase
+        mixed[symbol][ModelId.LAG_REGRESSION] = metric(arima.rmse, mase)
+    mixed_result = compare_methods_across_companies(mixed)
+    mixed_pair = mixed_result.paired_mase_evidence[0]
+    assert mixed_pair.zero_count == 12
+    assert mixed_pair.sign_test.sample_size == 3
+    assert mixed_pair.sign_test.performed
+
+    equal_result = compare_methods_across_companies(
+        cross_company_metrics(companies=15, equal=True)
+    )
+    all_zero = equal_result.paired_mase_evidence[0]
+    assert all_zero.zero_count == 15
+    assert not all_zero.sign_test.performed
+    assert all_zero.sign_test.sample_size == 0
+    assert all_zero.sign_test.raw_p_value is None
+    assert all_zero.sign_test.reason == "no_nonzero_paired_differences"
+    assert all_zero.skewness is None
+    assert all_zero.skewness_status == "undefined_constant_differences"
 
 
 def test_across_company_test_is_independent_of_raw_peso_rmse() -> None:
@@ -257,3 +328,14 @@ def test_across_company_test_is_independent_of_raw_peso_rmse() -> None:
     )
 
     assert ordinary.as_dict() == reversed_rmse.as_dict()
+    assert ordinary.paired_evidence_as_dict() == reversed_rmse.paired_evidence_as_dict()
+
+
+def test_paired_evidence_does_not_change_existing_dm_results() -> None:
+    holdout, _ = aligned_holdout(varied_errors(80))
+    before = run_within_company_dm_tests(holdout).as_dict()
+
+    compare_methods_across_companies(cross_company_metrics(companies=15))
+
+    after = run_within_company_dm_tests(holdout).as_dict()
+    assert after == before
