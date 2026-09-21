@@ -11,6 +11,7 @@ import pytest
 
 from config.model_config import ModelId, RegressionFeatureConfig
 from scripts import run_supplementary_evidence as cli
+from src.artifacts.io import validated_json_text
 from src.evaluation.statistical_tests import LossType, MODEL_PAIRS
 from src.evaluation.supplementary_archive import EVIDENCE_PATHS
 from src.evaluation.supplementary_archive import SupplementaryEvidenceArchive
@@ -19,6 +20,7 @@ from src.evaluation.supplementary_evidence import (
     SupplementaryEvidenceError,
     SupplementaryEvidencePlan,
     finalize_supplementary_plan,
+    load_and_validate_finalized_payloads,
     validate_supplementary_payloads,
     verify_source_linkage,
 )
@@ -187,6 +189,51 @@ def test_complete_semantics_and_arima_limitation_pass() -> None:
     validate_supplementary_payloads(valid_payloads())
 
 
+def test_sorted_json_round_trip_preserves_lir_feature_contract_semantics() -> None:
+    payloads = valid_payloads()
+    original_names = list(
+        payloads["methodology/lir_feature_contract.json"]
+        ["candidate_feature_contract"]["ordered_candidate_feature_names"]
+    )
+
+    reloaded = json.loads(validated_json_text(payloads))
+
+    membership = reloaded["methodology/lir_feature_contract.json"][
+        "candidate_feature_contract"
+    ]["group_membership"]
+    assert list(membership) == sorted(membership)
+    assert reloaded["methodology/lir_feature_contract.json"][
+        "candidate_feature_contract"
+    ]["ordered_candidate_feature_names"] == original_names
+    validate_supplementary_payloads(reloaded)
+
+
+@pytest.mark.parametrize(
+    "corruption",
+    ("wrong_membership", "missing_membership", "extra_membership", "duplicate_group"),
+)
+def test_lir_membership_and_group_union_corruption_is_rejected(
+    corruption: str,
+) -> None:
+    payloads = valid_payloads()
+    contract = payloads["methodology/lir_feature_contract.json"][
+        "candidate_feature_contract"
+    ]
+    membership = contract["group_membership"]
+    first_feature = contract["ordered_candidate_feature_names"][0]
+    if corruption == "wrong_membership":
+        membership[first_feature] = "raw_volume_level_features"
+    elif corruption == "missing_membership":
+        membership.pop(first_feature)
+    elif corruption == "extra_membership":
+        membership["not_a_candidate"] = "return_features"
+    else:
+        contract["groups"]["raw_volume_level_features"].append(first_feature)
+
+    with pytest.raises(SupplementaryEvidenceError, match="feature contract|taxonomy"):
+        validate_supplementary_payloads(payloads)
+
+
 @pytest.mark.parametrize(
     ("name", "mutate"),
     [
@@ -272,6 +319,69 @@ def test_valid_clean_plan_finalizes_and_verifies(tmp_path: Path) -> None:
 
     assert package.verify_integrity().valid
     assert package.path.is_dir()
+
+
+def test_finalized_sorted_json_package_loads_and_validates_semantically(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    payloads = valid_payloads()
+    formal_root = tmp_path / "formal"
+    formal_path = formal_root / "formal-test"
+    (formal_path / "companies").mkdir(parents=True)
+    (formal_path / "integrity_manifest.json").write_text(
+        json.dumps({"aggregate_sha256": "a" * 64}),
+        encoding="utf-8",
+    )
+    for company in payloads["historical/formal_holdout_index.json"]["companies"]:
+        company_path = formal_path / "companies" / company["symbol"]
+        company_path.mkdir()
+        records = [
+            dict(row, company=company["symbol"])
+            for row in company["rows"]
+        ]
+        (company_path / "evidence.json").write_text(
+            json.dumps({"canonical_holdout_records": records}),
+            encoding="utf-8",
+        )
+
+    class FakeFormal:
+        state = FormalRunState.FINALIZED
+
+        def __init__(self, run_id, *, root):
+            self.run_id = run_id
+            self.path = Path(root) / run_id
+
+        def verify_integrity(self):
+            return True
+
+    import src.evaluation.supplementary_evidence as module
+
+    monkeypatch.setattr(module, "FormalRunArchive", FakeFormal)
+    package = finalize_supplementary_plan(
+        PACKAGE_ID,
+        SupplementaryEvidencePlan(
+            "formal-test",
+            "a" * 64,
+            "b" * 64,
+            payloads,
+        ),
+        root=tmp_path / "packages",
+    )
+
+    loaded = load_and_validate_finalized_payloads(
+        package,
+        formal_runs_root=formal_root,
+    )
+    contract = loaded["methodology/lir_feature_contract.json"][
+        "candidate_feature_contract"
+    ]
+    assert list(contract["group_membership"]) == sorted(
+        contract["group_membership"]
+    )
+    assert contract["ordered_candidate_feature_names"] == payloads[
+        "methodology/lir_feature_contract.json"
+    ]["candidate_feature_contract"]["ordered_candidate_feature_names"]
 
 
 def test_source_linkage_separately_detects_formal_and_ledger_changes(

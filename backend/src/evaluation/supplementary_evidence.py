@@ -625,13 +625,19 @@ def validate_supplementary_payloads(
         raise SupplementaryEvidenceError("LIR candidate feature contract changed")
     names = candidate["ordered_candidate_feature_names"]
     groups = candidate["groups"]
-    flattened = [name for group in candidate["ordered_feature_groups"] for name in groups[group]]
+    ordered_groups = candidate["ordered_feature_groups"]
+    flattened = [name for group in ordered_groups for name in groups[group]]
+    expected_membership = {
+        feature: group
+        for group in ordered_groups
+        for feature in groups[group]
+    }
     membership = candidate.get("group_membership")
     if (
         set(flattened) != set(names)
         or len(flattened) != len(set(flattened))
         or not isinstance(membership, dict)
-        or list(membership) != names
+        or membership != expected_membership
         or "volume_log" not in groups["transformed_volume_level_features"]
     ):
         raise SupplementaryEvidenceError("LIR feature taxonomy is inconsistent")
