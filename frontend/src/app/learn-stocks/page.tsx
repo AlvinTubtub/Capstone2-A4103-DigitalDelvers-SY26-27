@@ -10,6 +10,35 @@ import {
   GLOSSARY_TERMS,
 } from "@/lib/learnData";
 
+function AccordionContent({
+  id,
+  isOpen,
+  children,
+}: {
+  id: string;
+  isOpen: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      id={`${id}-content`}
+      role="region"
+      aria-labelledby={`${id}-button`}
+      aria-hidden={!isOpen}
+      className={`grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none ${
+        isOpen
+          ? "grid-rows-[1fr] opacity-100 visible"
+          : "grid-rows-[0fr] opacity-0 invisible pointer-events-none"
+      }`}
+      {...(!isOpen ? { inert: true } : {})}
+    >
+      <div className="min-h-0 overflow-hidden">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function LearnStocksPage() {
   // Accordion open states (default: first open, or based on hash)
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -21,6 +50,23 @@ export default function LearnStocksPage() {
 
   // Track expanded terms in glossary
   const [expandedTerms, setExpandedTerms] = useState<Record<string, boolean>>({});
+
+  const scrollToSection = (id: string) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          const prefersReduced =
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          el.scrollIntoView({
+            behavior: prefersReduced ? "auto" : "smooth",
+            block: "start",
+          });
+        }
+      });
+    });
+  };
 
   // Auto-expand accordion if URL contains a hash
   useEffect(() => {
@@ -43,14 +89,12 @@ export default function LearnStocksPage() {
 
       const targetId = aliasMap[hash] || hash;
       setOpenSections({ [targetId]: true });
+      scrollToSection(targetId);
 
-      // Smooth scroll to the target section
-      setTimeout(() => {
-        const el = document.getElementById(targetId);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 100);
+      const timer = setTimeout(() => {
+        scrollToSection(targetId);
+      }, 120);
+      return () => clearTimeout(timer);
     };
 
     handleHash();
@@ -59,17 +103,16 @@ export default function LearnStocksPage() {
   }, []);
 
   const toggleSection = (id: string) => {
-    setOpenSections((prev) => (prev[id] ? {} : { [id]: true }));
+    const willOpen = !openSections[id];
+    setOpenSections(willOpen ? { [id]: true } : {});
+    if (willOpen) {
+      scrollToSection(id);
+    }
   };
 
   const navigateToSection = (id: string) => {
     setOpenSections({ [id]: true });
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 50);
+    scrollToSection(id);
   };
 
   const toggleTerm = (term: string) => {
@@ -90,10 +133,6 @@ export default function LearnStocksPage() {
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-400 uppercase tracking-wider mb-1">
-              <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
-              Recommended Curriculum
-            </div>
             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Start Here: 4-Step Learning Path
             </h1>
@@ -223,12 +262,14 @@ export default function LearnStocksPage() {
         {/* ================================================================
             STOCK TRADING 101
         ================================================================ */}
-        <section id="trading-101" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="trading-101" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="trading-101-button"
+            aria-controls="trading-101-content"
             onClick={() => toggleSection("trading-101")}
             aria-expanded={Boolean(openSections["trading-101"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <img
@@ -248,15 +289,15 @@ export default function LearnStocksPage() {
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["trading-101"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["trading-101"] && (
+          <AccordionContent id="trading-101" isOpen={Boolean(openSections["trading-101"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Image Left, Text Right */}
-              <div className="flex flex-col md:flex-row items-center gap-5 p-4 sm:p-5 rounded-2xl bg-dark-bg/80 border border-dark-border">
+              <div className="flex flex-col md:flex-row items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
                 <div className="w-full md:w-5/12 aspect-video overflow-hidden rounded-xl bg-slate-900 shrink-0 border border-dark-border/80">
                   <img
                     src="/images/learn/learn-before-you-trade.jpg"
@@ -279,42 +320,42 @@ export default function LearnStocksPage() {
 
               {/* 6 Concept Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-1.5">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-2.5">
                   <h3 className="font-bold text-white text-base">What is a Stock?</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     A stock (or equity) represents fractional ownership in a corporation. When you buy a stock, you become a <strong className="text-white">shareholder</strong> and own a tiny portion of the company&apos;s overall assets and future earnings.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-1.5">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-2.5">
                   <h3 className="font-bold text-white text-base">Shares & Public Companies</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     A company&apos;s total ownership is divided into individual units called <strong className="text-white">shares</strong>. Public companies offer their shares on the Philippine Stock Exchange (PSE) so any verified retail or institutional investor can buy and sell them.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-1.5">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-2.5">
                   <h3 className="font-bold text-white text-base">Capital Gains vs. Losses</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     A <strong className="text-emerald-400">capital gain</strong> occurs when you sell a stock for a higher price than what you paid for it. A <strong className="text-red-400">capital loss</strong> occurs if the market price drops and you sell below your purchase cost.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-1.5">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-2.5">
                   <h3 className="font-bold text-white text-base">Dividends</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Some profitable companies return a portion of their earnings directly to shareholders as <strong className="text-amber-400">cash dividends</strong> or additional <strong className="text-amber-400">stock dividends</strong>, providing passive income in addition to share price growth.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-1.5">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-2.5">
                   <h3 className="font-bold text-white text-base">Investing vs. Trading</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     <strong className="text-white">Investing</strong> focuses on long-term wealth accumulation by holding fundamentally sound businesses over years. <strong className="text-white">Trading</strong> focuses on short-term price movements over days, weeks, or months to capture price volatility.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-1.5">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-2.5">
                   <h3 className="font-bold text-white text-base">Risk & Diversification</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Stock prices fluctuate continuously based on supply, demand, and news. Spreading capital across diverse industries (e.g. banking, utilities, retail, real estate) helps prevent a downturn in one company from erasing your total portfolio value.
@@ -322,18 +363,20 @@ export default function LearnStocksPage() {
                 </div>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
             PHILIPPINE STOCK EXCHANGE BASICS
         ================================================================ */}
-        <section id="pse-basics" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="pse-basics" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="pse-basics-button"
+            aria-controls="pse-basics-content"
             onClick={() => toggleSection("pse-basics")}
             aria-expanded={Boolean(openSections["pse-basics"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <img
@@ -353,15 +396,15 @@ export default function LearnStocksPage() {
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["pse-basics"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["pse-basics"] && (
+          <AccordionContent id="pse-basics" isOpen={Boolean(openSections["pse-basics"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Text Left, Image Right */}
-              <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-4 sm:p-5 rounded-2xl bg-dark-bg/80 border border-dark-border">
+              <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
                 <div className="w-full md:w-5/12 aspect-video overflow-hidden rounded-xl bg-slate-900 shrink-0 border border-dark-border/80">
                   <img
                     src="/images/learn/pse-trading.jpg"
@@ -400,7 +443,7 @@ export default function LearnStocksPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {PSE_MARKET_SCHEDULE.map((item) => (
-                    <div key={item.phase} className="bg-dark-bg/80 border border-dark-border rounded-xl p-3.5 space-y-1">
+                    <div key={item.phase} className="bg-dark-bg/80 border border-dark-border rounded-xl p-4 space-y-1.5">
                       <span className="text-[11px] font-bold text-brand-400 uppercase tracking-wide">{item.time}</span>
                       <h4 className="text-sm font-semibold text-white">{item.phase}</h4>
                       <p className="text-xs text-slate-400 leading-normal">{item.description}</p>
@@ -410,27 +453,29 @@ export default function LearnStocksPage() {
               </div>
 
               {/* Holiday & Trading Awareness */}
-              <div className="p-4 bg-brand-950/30 border border-brand-500/30 rounded-xl space-y-2">
+              <div className="p-4 sm:p-5 bg-brand-950/30 border border-brand-500/30 rounded-xl space-y-2">
                 <h4 className="text-xs font-bold text-brand-300 uppercase tracking-wide flex items-center gap-1.5">
                   <span>📅</span> Philippine Holidays & Automated Calendar Guard
                 </h4>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  The PSE is closed on all regular and special non-working Philippine public holidays (e.g., National Heroes Day, Holy Week, Bonifacio Day). ForecastPH includes an automated calendar guard that skips holiday ingestion and generates forecasts only for valid upcoming trading sessions.
+                  The PSE is closed on all regular and special non-working Philippine public holidays (e.g., National Heroes Day, Holy Week, Bonifacio Day). PSE Pulse includes an automated calendar guard that skips holiday ingestion and generates forecasts only for valid upcoming trading sessions.
                 </p>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
             ESSENTIAL TRADING TERMS
         ================================================================ */}
-        <section id="trading-terms" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="trading-terms" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="trading-terms-button"
+            aria-controls="trading-terms-content"
             onClick={() => toggleSection("trading-terms")}
             aria-expanded={Boolean(openSections["trading-terms"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 text-xl font-bold">
@@ -444,16 +489,16 @@ export default function LearnStocksPage() {
                   Essential Trading Terms
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5 truncate">
-                  Quick reference glossary for market concepts and ForecastPH metrics
+                  Quick reference glossary for market concepts and PSE Pulse metrics
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["trading-terms"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["trading-terms"] && (
+          <AccordionContent id="trading-terms" isOpen={Boolean(openSections["trading-terms"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-4 text-sm text-slate-300 leading-relaxed">
               {/* Category Filter */}
               <div className="flex flex-wrap items-center gap-2">
@@ -488,7 +533,7 @@ export default function LearnStocksPage() {
                       : "bg-dark-bg border border-dark-border text-slate-400 hover:text-white"
                   }`}
                 >
-                  ForecastPH Terminology (8)
+                  PSE Pulse Terminology (8)
                 </button>
               </div>
 
@@ -505,7 +550,7 @@ export default function LearnStocksPage() {
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="font-bold text-white text-sm">{t.term}</h4>
                         <span className="text-[10px] px-2 py-0.5 rounded bg-dark-card border border-dark-border text-brand-400 font-mono shrink-0">
-                          {t.category === "forecastph" ? "ForecastPH" : "Market"}
+                          {t.category === "forecastph" ? "PSE Pulse" : "Market"}
                         </span>
                       </div>
                       <p className="text-xs text-slate-300 leading-snug">{t.shortDef}</p>
@@ -522,18 +567,20 @@ export default function LearnStocksPage() {
                 ))}
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
-            HOW TO READ A FORECASTPH PREDICTION
+            HOW TO READ A PSE PULSE PREDICTION
         ================================================================ */}
-        <section id="how-to-read" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="how-to-read" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="how-to-read-button"
+            aria-controls="how-to-read-content"
             onClick={() => toggleSection("how-to-read")}
             aria-expanded={Boolean(openSections["how-to-read"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <img
@@ -546,22 +593,22 @@ export default function LearnStocksPage() {
                   <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">Predictions</span>
                 </div>
                 <h2 className="text-base sm:text-lg font-bold text-white leading-snug truncate">
-                  How to Read a ForecastPH Prediction
+                  How to Read a PSE Pulse Prediction
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5 truncate">
                   Practical walkthrough of predicted values, models, and real-world factors
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["how-to-read"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["how-to-read"] && (
+          <AccordionContent id="how-to-read" isOpen={Boolean(openSections["how-to-read"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Image Left, Text Right */}
-              <div className="flex flex-col md:flex-row items-center gap-5 p-4 sm:p-5 rounded-2xl bg-dark-bg/80 border border-dark-border">
+              <div className="flex flex-col md:flex-row items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
                 <div className="w-full md:w-5/12 aspect-video overflow-hidden rounded-xl bg-slate-900 shrink-0 border border-dark-border/80">
                   <img
                     src="/images/learn/understand-forecast.jpg"
@@ -577,7 +624,7 @@ export default function LearnStocksPage() {
                     Contextualizing Next-Day Closing Targets
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    ForecastPH ingests official quotation reports published at the 3:15 PM PHT market close and generates algorithmic price forecasts for the next trading session. Forecasts reflect historical numerical patterns—not subjective speculation or guaranteed trading profits.
+                    PSE Pulse ingests official quotation reports published at the 3:15 PM PHT market close and generates algorithmic price forecasts for the next trading session. Forecasts reflect historical numerical patterns—not subjective speculation or guaranteed trading profits.
                   </p>
                 </div>
               </div>
@@ -590,27 +637,27 @@ export default function LearnStocksPage() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center sm:text-left">
-                  <div className="p-3 bg-dark-card border border-dark-border rounded-xl">
+                  <div className="p-3.5 sm:p-4 bg-dark-card border border-dark-border rounded-xl">
                     <p className="text-xs text-slate-400">Current Close</p>
                     <p className="text-xl font-bold text-white font-mono mt-0.5">₱100.00</p>
                   </div>
-                  <div className="p-3 bg-dark-card border border-dark-border rounded-xl">
+                  <div className="p-3.5 sm:p-4 bg-dark-card border border-dark-border rounded-xl">
                     <p className="text-xs text-slate-400">Forecasted Close</p>
                     <p className="text-xl font-bold text-brand-400 font-mono mt-0.5">₱102.50</p>
                   </div>
-                  <div className="p-3 bg-dark-card border border-dark-border rounded-xl">
+                  <div className="p-3.5 sm:p-4 bg-dark-card border border-dark-border rounded-xl">
                     <p className="text-xs text-slate-400">Expected Movement</p>
                     <p className="text-xl font-bold text-emerald-400 font-mono mt-0.5">▲ +2.50%</p>
                     <p className="text-[11px] text-emerald-300">+₱2.50</p>
                   </div>
-                  <div className="p-3 bg-dark-card border border-dark-border rounded-xl">
+                  <div className="p-3.5 sm:p-4 bg-dark-card border border-dark-border rounded-xl">
                     <p className="text-xs text-slate-400">Best Principal Model</p>
                     <p className="text-base font-bold text-white mt-0.5">LSTM</p>
                     <p className="text-[11px] text-brand-400">Best evaluation RMSE</p>
                   </div>
                 </div>
 
-                <div className="p-4 bg-dark-card border border-dark-border rounded-xl space-y-2">
+                <div className="p-4 sm:p-5 bg-dark-card border border-dark-border rounded-xl space-y-2">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider">What this means:</h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     &quot;The model estimates that the next trading day&apos;s closing price could be approximately <strong className="text-white">₱102.50</strong>.&quot;
@@ -628,33 +675,35 @@ export default function LearnStocksPage() {
                   Machine learning models evaluate historical numerical price and volume patterns. However, live markets react to unexpected real-time events that no purely historical model can anticipate:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div className="p-3 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1.5">
                     <strong className="text-white">Company Disclosures:</strong> Earnings surprises, dividend declarations, executive changes, or mergers.
                   </div>
-                  <div className="p-3 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1.5">
                     <strong className="text-white">Macroeconomic Data:</strong> BSP interest rate hikes, inflation reports, or currency fluctuations.
                   </div>
-                  <div className="p-3 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1.5">
                     <strong className="text-white">Market Sentiment:</strong> Global equity market trends, geopolitical events, or sudden shifts in foreign institutional flow.
                   </div>
-                  <div className="p-3 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg border border-dark-border rounded-xl text-xs space-y-1.5">
                     <strong className="text-white">Sector Dynamics:</strong> Changes in commodity prices (oil, metals), real estate regulations, or power utility tariff decisions.
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
             UNDERSTANDING HISTORICAL ACCURACY
         ================================================================ */}
-        <section id="forecast-accuracy" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="forecast-accuracy" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="forecast-accuracy-button"
+            aria-controls="forecast-accuracy-content"
             onClick={() => toggleSection("forecast-accuracy")}
             aria-expanded={Boolean(openSections["forecast-accuracy"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <img
@@ -674,15 +723,15 @@ export default function LearnStocksPage() {
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["forecast-accuracy"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["forecast-accuracy"] && (
+          <AccordionContent id="forecast-accuracy" isOpen={Boolean(openSections["forecast-accuracy"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Text Left, Image Right */}
-              <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-4 sm:p-5 rounded-2xl bg-dark-bg/80 border border-dark-border">
+              <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
                 <div className="w-full md:w-5/12 aspect-video overflow-hidden rounded-xl bg-slate-900 shrink-0 border border-dark-border/80">
                   <img
                     src="/images/learn/check-historical-accuracy.jpg"
@@ -698,50 +747,50 @@ export default function LearnStocksPage() {
                     Rigorous Out-of-Sample Empirical Evaluation
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    ForecastPH uses chronological development, validation, and evaluation periods with no lookahead. The Naive benchmark predicts that the next Close equals the current Close. MASE below 1 means evaluation MAE is below the one-step scale calculated from development Close changes; it does not by itself prove that a model beat Naive on the held-out dates.
+                    PSE Pulse uses chronological development, validation, and evaluation periods with no lookahead. The Naive benchmark predicts that the next Close equals the current Close. MASE below 1 means evaluation MAE is below the one-step scale calculated from development Close changes; it does not by itself prove that a model beat Naive on the held-out dates.
                   </p>
                 </div>
               </div>
 
               {/* 4 Core Metrics Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-1.5">
                   <span className="text-[11px] font-bold text-brand-400 uppercase tracking-wide">Primary Metric</span>
                   <h4 className="font-bold text-white text-sm">RMSE (₱)</h4>
-                  <p className="text-xs text-slate-400">Root Mean Squared Error. Heavily penalizes large prediction misses in Philippine Pesos.</p>
+                  <p className="text-xs text-slate-400 leading-relaxed">Root Mean Squared Error. Heavily penalizes large prediction misses in Philippine Pesos.</p>
                 </div>
-                <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-1.5">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Linear Error</span>
                   <h4 className="font-bold text-white text-sm">MAE (₱)</h4>
-                  <p className="text-xs text-slate-400">Mean Absolute Error. Average magnitude of forecast errors in Philippine Pesos.</p>
+                  <p className="text-xs text-slate-400 leading-relaxed">Mean Absolute Error. Average magnitude of forecast errors in Philippine Pesos.</p>
                 </div>
-                <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-1.5">
                   <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wide">Key Benchmark</span>
                   <h4 className="font-bold text-white text-sm">MASE</h4>
-                  <p className="text-xs text-slate-400">Mean Absolute Scaled Error. Values below 1.0 are below the development-series one-step error scale; compare held-out model metrics directly to determine whether a principal model beat Naive.</p>
+                  <p className="text-xs text-slate-400 leading-relaxed">Mean Absolute Scaled Error. Values below 1.0 are below the development-series one-step error scale; compare held-out model metrics directly to determine whether a principal model beat Naive.</p>
                 </div>
-                <div className="bg-dark-bg/80 border border-dark-border p-4 rounded-xl space-y-1">
+                <div className="bg-dark-bg/80 border border-dark-border p-4 sm:p-5 rounded-xl space-y-1.5">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Goodness-of-Fit</span>
                   <h4 className="font-bold text-white text-sm">Holdout R² — Supplementary Metric</h4>
-                  <p className="text-xs text-slate-400">Compares squared holdout errors with a reference based on the holdout-period mean. It can be negative, is not percentage accuracy, and never selects or promotes a model.</p>
+                  <p className="text-xs text-slate-400 leading-relaxed">Compares squared holdout errors with a reference based on the holdout-period mean. It can be negative, is not percentage accuracy, and never selects or promotes a model.</p>
                 </div>
               </div>
 
               {/* The 3 Models Compared */}
-              <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-3">
-                <h4 className="font-bold text-white text-sm">The Three Forecasting Architectures</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                  <div className="space-y-1">
-                    <strong className="text-brand-300">Lag-Informed Regression:</strong>
-                    <p className="text-slate-400">Interpretable statistical regression using autoregressive price and volume features with LASSO regularization.</p>
+              <div className="p-5 sm:p-6 bg-dark-bg/80 border border-dark-border rounded-2xl space-y-4">
+                <h4 className="font-bold text-white text-sm sm:text-base">The Three Forecasting Architectures</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 text-xs">
+                  <div className="space-y-1.5">
+                    <strong className="text-brand-300 font-semibold block">Lag-Informed Regression:</strong>
+                    <p className="text-slate-400 leading-relaxed">Interpretable statistical regression using autoregressive price and volume features with LASSO regularization.</p>
                   </div>
-                  <div className="space-y-1">
-                    <strong className="text-blue-300">ARIMA:</strong>
-                    <p className="text-slate-400">Classical autoregressive integrated moving average capturing cyclical trends and price mean-reversion.</p>
+                  <div className="space-y-1.5">
+                    <strong className="text-blue-300 font-semibold block">ARIMA:</strong>
+                    <p className="text-slate-400 leading-relaxed">Classical autoregressive integrated moving average capturing cyclical trends and price mean-reversion.</p>
                   </div>
-                  <div className="space-y-1">
-                    <strong className="text-purple-300">LSTM:</strong>
-                    <p className="text-slate-400">Recurrent deep neural network designed to capture non-linear sequence patterns across multi-session horizons.</p>
+                  <div className="space-y-1.5">
+                    <strong className="text-purple-300 font-semibold block">LSTM:</strong>
+                    <p className="text-slate-400 leading-relaxed">Recurrent deep neural network designed to capture non-linear sequence patterns across multi-session horizons.</p>
                   </div>
                 </div>
               </div>
@@ -750,33 +799,35 @@ export default function LearnStocksPage() {
               <div className="space-y-3">
                 <h4 className="font-bold text-white text-sm">Critical Principles for Responsible Learning</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-3 bg-dark-bg/80 border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg/80 border border-dark-border rounded-xl text-xs space-y-1.5">
                     <span className="text-amber-400 font-bold">Past Performance Rule</span>
-                    <p className="text-slate-400">High historical accuracy on past sessions does not guarantee future forecasts will be equally accurate.</p>
+                    <p className="text-slate-400 leading-relaxed">High historical accuracy on past sessions does not guarantee future forecasts will be equally accurate.</p>
                   </div>
-                  <div className="p-3 bg-dark-bg/80 border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg/80 border border-dark-border rounded-xl text-xs space-y-1.5">
                     <span className="text-amber-400 font-bold">Market Regime Shifts</span>
-                    <p className="text-slate-400">Sudden policy changes, macro shocks, or geopolitical events can cause models trained on calm periods to underperform.</p>
+                    <p className="text-slate-400 leading-relaxed">Sudden policy changes, macro shocks, or geopolitical events can cause models trained on calm periods to underperform.</p>
                   </div>
-                  <div className="p-3 bg-dark-bg/80 border border-dark-border rounded-xl text-xs space-y-1">
+                  <div className="p-3.5 sm:p-4 bg-dark-bg/80 border border-dark-border rounded-xl text-xs space-y-1.5">
                     <span className="text-amber-400 font-bold">Supplementary Signal</span>
-                    <p className="text-slate-400">Use forecasts as an educational demonstration of time-series modeling, never as a sole trading trigger.</p>
+                    <p className="text-slate-400 leading-relaxed">Use forecasts as an educational demonstration of time-series modeling, never as a sole trading trigger.</p>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
             INTERACTIVE FORECAST & HISTORICAL CHARTS
         ================================================================ */}
-        <section id="forecast-charts" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="forecast-charts" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="forecast-charts-button"
+            aria-controls="forecast-charts-content"
             onClick={() => toggleSection("forecast-charts")}
             aria-expanded={Boolean(openSections["forecast-charts"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <img
@@ -796,15 +847,15 @@ export default function LearnStocksPage() {
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["forecast-charts"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["forecast-charts"] && (
+          <AccordionContent id="forecast-charts" isOpen={Boolean(openSections["forecast-charts"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Image Left, Text Right */}
-              <div className="flex flex-col md:flex-row items-center gap-5 p-4 sm:p-5 rounded-2xl bg-dark-bg/80 border border-dark-border">
+              <div className="flex flex-col md:flex-row items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
                 <div className="w-full md:w-5/12 aspect-video overflow-hidden rounded-xl bg-slate-900 shrink-0 border border-dark-border/80">
                   <img
                     src="/images/learn/reading-charts.jpg"
@@ -817,50 +868,50 @@ export default function LearnStocksPage() {
                     Visual Data Analysis
                   </span>
                   <h3 className="text-lg font-bold text-white">
-                    Navigating ForecastPH Interactive Chart Suites
+                    Navigating PSE Pulse Interactive Chart Suites
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Visual charts communicate price action, volume velocity, and model divergence far more effectively than isolated tables. On every company detail page, ForecastPH presents synchronized time-series visualizers equipped with period filters and zoom controls.
+                    Visual charts communicate price action, volume velocity, and model divergence far more effectively than isolated tables. On every company detail page, PSE Pulse presents synchronized time-series visualizers equipped with period filters and zoom controls.
                   </p>
                 </div>
               </div>
 
               {/* 4 Chart Explanations */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2">
-                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-brand-400" />
-                    Historical OHLCV Chart
+                <div className="p-4 sm:p-5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2.5">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-brand-400 shrink-0" />
+                    <span>Historical OHLCV Chart</span>
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Displays continuous historical price movements alongside trading volume. Includes PSE EDGE-style date-range quick filters (1M, 3M, 6M, 1Y) and interactive zoom and pan controls.
                   </p>
                 </div>
 
-                <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2">
-                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-purple-400" />
-                    Next-Day Prediction Chart
+                <div className="p-4 sm:p-5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2.5">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0" />
+                    <span>Next-Day Prediction Chart</span>
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Plots the latest verified session close and projects broken dashed lines representing next-day targets from Lag Regression, ARIMA, and LSTM.
                   </p>
                 </div>
 
-                <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2">
-                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    Latest 60 Evaluation Sessions
+                <div className="p-4 sm:p-5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2.5">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0" />
+                    <span>Latest 60 Evaluation Sessions</span>
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Overlays actual closing prices against the stored chronological-evaluation forecasts and later prospective operational forecasts shown on company pages.
                   </p>
                 </div>
 
-                <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2">
-                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-rose-400" />
-                    Forecast Error Over Time (Residuals)
+                <div className="p-4 sm:p-5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2.5">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-400 shrink-0" />
+                    <span>Forecast Error Over Time (Residuals)</span>
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Plots the prediction residual (Predicted Close minus Actual Close in ₱). Oscillations around zero indicate balanced predictions, while consistent positive or negative drifts indicate directional bias.
@@ -868,18 +919,20 @@ export default function LearnStocksPage() {
                 </div>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
             WATCH & LEARN: EDUCATIONAL VIDEOS
         ================================================================ */}
-        <section id="watch-learn" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="watch-learn" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="watch-learn-button"
+            aria-controls="watch-learn-content"
             onClick={() => toggleSection("watch-learn")}
             aria-expanded={Boolean(openSections["watch-learn"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center shrink-0 text-xl font-bold">
@@ -897,12 +950,12 @@ export default function LearnStocksPage() {
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["watch-learn"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["watch-learn"] && (
+          <AccordionContent id="watch-learn" isOpen={Boolean(openSections["watch-learn"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-4 text-sm text-slate-300 leading-relaxed">
               <p className="text-xs text-slate-400">
                 Curated educational videos from verified finance educators and market analysts covering Philippine equity fundamentals, financial modeling, and risk discipline.
@@ -910,7 +963,7 @@ export default function LearnStocksPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {EDUCATIONAL_VIDEOS.map((v) => (
-                  <div key={v.id} className="bg-dark-bg/80 border border-dark-border rounded-xl p-4 space-y-3 flex flex-col justify-between">
+                  <div key={v.id} className="bg-dark-bg/80 border border-dark-border rounded-xl p-4 sm:p-5 space-y-3 flex flex-col justify-between">
                     <div className="space-y-2">
                       <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold bg-brand-500/15 text-brand-300 border border-brand-500/30">
                         {v.topic}
@@ -947,18 +1000,20 @@ export default function LearnStocksPage() {
                 ))}
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
             FINDING AN SEC-LICENSED STOCK BROKER
         ================================================================ */}
-        <section id="pse-brokers" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="pse-brokers" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="pse-brokers-button"
+            aria-controls="pse-brokers-content"
             onClick={() => toggleSection("pse-brokers")}
             aria-expanded={Boolean(openSections["pse-brokers"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <img
@@ -978,15 +1033,15 @@ export default function LearnStocksPage() {
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["pse-brokers"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["pse-brokers"] && (
+          <AccordionContent id="pse-brokers" isOpen={Boolean(openSections["pse-brokers"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Text Left, Image Right */}
-              <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-4 sm:p-5 rounded-2xl bg-dark-bg/80 border border-dark-border">
+              <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
                 <div className="w-full md:w-5/12 aspect-video overflow-hidden rounded-xl bg-slate-900 shrink-0 border border-dark-border/80">
                   <img
                     src="/images/learn/finding-a-broker.jpg"
@@ -1002,7 +1057,7 @@ export default function LearnStocksPage() {
                     Transacting Safely Through Registered Intermediaries
                   </h3>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    ForecastPH is an independent academic research platform. We do not accept funds, offer trading execution, or endorse commercial brokerages. To purchase actual shares of Philippine corporations, retail investors must open an account with a broker registered with the SEC and accredited by the PSE.
+                    PSE Pulse is an independent academic research platform. We do not accept funds, offer trading execution, or endorse commercial brokerages. To purchase actual shares of Philippine corporations, retail investors must open an account with a broker registered with the SEC and accredited by the PSE.
                   </p>
                 </div>
               </div>
@@ -1016,7 +1071,7 @@ export default function LearnStocksPage() {
                   {BROKER_DIRECTORY.map((b) => (
                     <div
                       key={b.id}
-                      className="bg-dark-bg/80 border border-dark-border rounded-xl p-4 flex flex-col justify-between space-y-3"
+                      className="bg-dark-bg/80 border border-dark-border rounded-xl p-4 sm:p-5 flex flex-col justify-between space-y-3"
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-start justify-between gap-2">
@@ -1055,9 +1110,9 @@ export default function LearnStocksPage() {
 
               {/* Checklist & Advisory */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4.5 bg-dark-bg/80 border border-dark-border rounded-xl space-y-2 text-xs">
-                  <h4 className="font-bold text-white text-sm">Checklist Before Opening an Account</h4>
-                  <ul className="list-disc list-inside space-y-1 text-slate-300">
+                <div className="p-5 sm:p-6 bg-dark-bg/80 border border-dark-border rounded-2xl space-y-3 text-xs">
+                  <h4 className="font-bold text-white text-sm sm:text-base">Checklist Before Opening an Account</h4>
+                  <ul className="list-disc pl-4 space-y-2 text-slate-300 leading-relaxed">
                     <li>Valid Philippine government-issued ID (Passport, UMID, Driver&apos;s License, PhilID).</li>
                     <li>Philippine Tax Identification Number (TIN).</li>
                     <li>Active Philippine bank account for online funding and dividend withdrawals.</li>
@@ -1065,28 +1120,30 @@ export default function LearnStocksPage() {
                   </ul>
                 </div>
 
-                <div className="p-4.5 bg-amber-950/20 border border-amber-500/30 rounded-xl space-y-2 text-xs text-amber-200">
-                  <h4 className="font-bold text-amber-300 text-sm flex items-center gap-1.5">
+                <div className="p-5 sm:p-6 bg-amber-950/20 border border-amber-500/30 rounded-2xl space-y-3 text-xs text-amber-200">
+                  <h4 className="font-bold text-amber-300 text-sm sm:text-base flex items-center gap-2">
                     <span>⚠️</span> Anti-Scam Advisory
                   </h4>
-                  <p className="leading-relaxed">
+                  <p className="leading-relaxed text-amber-200/90">
                     Always verify that your broker is listed on the official Securities and Exchange Commission (SEC) and PSE directories. Never send money to personal bank accounts, cryptocurrency wallets, or social media &quot;investment managers&quot; promising guaranteed trading returns.
                   </p>
                 </div>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
 
         {/* ================================================================
-            ABOUT THE FORECASTPH RESEARCH
+            ABOUT THE PSE PULSE RESEARCH
         ================================================================ */}
-        <section id="research-methodology" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-24">
+        <section id="research-methodology" className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-sm scroll-mt-28">
           <button
             type="button"
+            id="research-methodology-button"
+            aria-controls="research-methodology-content"
             onClick={() => toggleSection("research-methodology")}
             aria-expanded={Boolean(openSections["research-methodology"])}
-            className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-xl font-bold">
@@ -1097,71 +1154,71 @@ export default function LearnStocksPage() {
                   <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">Research & Methodology</span>
                 </div>
                 <h2 className="text-base sm:text-lg font-bold text-white leading-snug truncate">
-                  About the ForecastPH Research
+                  About the PSE Pulse Research
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5 truncate">
                   Machine learning architectures, walk-forward evaluation, and research methodology
                 </p>
               </div>
             </div>
-            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-transform duration-200">
+            <span className="text-sm font-bold text-brand-400 w-8 h-8 rounded-lg bg-dark-bg border border-dark-border flex items-center justify-center shrink-0 transition-all duration-200">
               {openSections["research-methodology"] ? "−" : "+"}
             </span>
           </button>
 
-          {openSections["research-methodology"] && (
+          <AccordionContent id="research-methodology" isOpen={Boolean(openSections["research-methodology"])}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               <p>
-                ForecastPH is an academic capstone research project comparing machine learning and traditional time-series methods on the Philippine Stock Exchange across diverse market sectors.
+                PSE Pulse is an academic capstone research project comparing machine learning and traditional time-series methods on the Philippine Stock Exchange across diverse market sectors.
               </p>
 
               {/* The 3 Core Models */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-2">
-                  <div className="flex items-center gap-2">
+                <div className="bg-dark-bg/80 border border-dark-border p-5 sm:p-6 rounded-2xl space-y-3">
+                  <div className="flex items-center gap-2.5">
                     <span className="text-xl">🧮</span>
                     <h3 className="font-bold text-white text-base">Lag Regression</h3>
                   </div>
                   <p className="text-xs font-semibold text-brand-400">&quot;The Pattern Spotter&quot;</p>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed pt-0.5">
                     An interpretable machine learning model analyzing historical price and volume lags. Uses Partial Autocorrelation Function (PACF) to identify repeating lag cycles and LASSO regularization to eliminate non-informative features without overfitting.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-2">
-                  <div className="flex items-center gap-2">
+                <div className="bg-dark-bg/80 border border-dark-border p-5 sm:p-6 rounded-2xl space-y-3">
+                  <div className="flex items-center gap-2.5">
                     <span className="text-xl">📈</span>
                     <h3 className="font-bold text-white text-base">ARIMA</h3>
                   </div>
                   <p className="text-xs font-semibold text-blue-400">&quot;The Trend Tracker&quot;</p>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed pt-0.5">
                     A classical statistical time-series standard (Autoregressive Integrated Moving Average). Uses statistical differencing to achieve stationarity, tracks underlying trends, and models error autocorrelation with strict convergence verification.
                   </p>
                 </div>
 
-                <div className="bg-dark-bg/80 border border-dark-border p-4.5 rounded-xl space-y-2">
-                  <div className="flex items-center gap-2">
+                <div className="bg-dark-bg/80 border border-dark-border p-5 sm:p-6 rounded-2xl space-y-3">
+                  <div className="flex items-center gap-2.5">
                     <span className="text-xl">🧠</span>
                     <h3 className="font-bold text-white text-base">LSTM</h3>
                   </div>
                   <p className="text-xs font-semibold text-purple-400">&quot;Deep Sequence Memory&quot;</p>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed pt-0.5">
                     A recurrent neural network with specialized input, forget, and output gates. Learns non-linear temporal dependencies across historical multi-day sequences using normalized training data with zero lookahead leakage.
                   </p>
                 </div>
               </div>
 
               {/* Current Methodology Notes */}
-              <div className="p-4.5 bg-dark-bg border border-dark-border rounded-xl space-y-2 text-xs text-slate-400">
+              <div className="p-4 sm:p-5 bg-dark-bg border border-dark-border rounded-xl space-y-3 text-xs text-slate-400">
                 <h4 className="font-bold text-slate-200 uppercase tracking-wide">Current Evaluation and Production:</h4>
-                <ul className="list-disc list-inside space-y-1 text-slate-300">
+                <ul className="list-disc pl-4 space-y-2 text-slate-300 leading-relaxed">
                   <li><strong className="text-white">Chronological Evaluation:</strong> LIR, ARIMA, LSTM, and Naive are compared on one common set of held-out target dates without random shuffling.</li>
                   <li><strong className="text-white">Production Refresh:</strong> All three principal models are freshly refitted during quarterly training. Daily updates load persisted models and perform inference without retraining.</li>
                   <li><strong className="text-white">Naive Benchmark:</strong> The benchmark predicts that tomorrow&apos;s price equals today&apos;s price. MASE uses a development-series scale, so held-out RMSE must be compared directly to determine whether the best principal model beat Naive.</li>
                 </ul>
               </div>
             </div>
-          )}
+          </AccordionContent>
         </section>
       </div>
 

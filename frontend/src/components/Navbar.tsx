@@ -4,13 +4,13 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import CompanyLogo from "@/components/CompanyLogo";
+import BrandLogo from "@/components/BrandLogo";
 import type { CompanySummary } from "@/lib/types";
 
 const LINKS = [
   { href: "/", label: "Home" },
   { href: "/companies", label: "Companies" },
   { href: "/watchlist", label: "My Watchlist" },
-  { href: "/compare", label: "Models" },
   { href: "/learn-stocks", label: "Learn Stocks" },
   { href: "/about", label: "About" },
 ];
@@ -49,15 +49,10 @@ export default function Navbar({
           {/* Logo */}
           <a
             href="/"
-            className="flex items-center gap-2 transition-transform hover:scale-105"
+            aria-label="PSE Pulse home"
+            className="flex items-center transition-transform hover:opacity-95"
           >
-            <span className="bg-brand-600 text-white p-1.5 rounded-lg text-sm leading-none">
-              📈
-            </span>
-
-            <span className="font-bold text-xl text-white tracking-tight">
-              Forecast<span className="text-brand-400">PH</span>
-            </span>
+            <BrandLogo variant="navbar" />
           </a>
 
           {/* Desktop Navigation */}

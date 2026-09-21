@@ -125,7 +125,7 @@ export default function ErrorChart({
         <div className="max-w-md space-y-2">
           <p className="text-sm font-medium text-slate-200">No realized production forecast errors yet</p>
           <p className="text-xs leading-relaxed text-slate-400">
-            Errors appear only after ForecastPH&apos;s previously issued prediction can be matched to the
+            Errors appear only after PSE Pulse&apos;s previously issued prediction can be matched to the
             actual close for that trading session.
           </p>
         </div>

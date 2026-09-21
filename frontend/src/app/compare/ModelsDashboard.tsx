@@ -125,7 +125,7 @@ export default function ModelsDashboard({ rows, evaluationForecasts, evaluationC
 
   return (
     <div className="space-y-8 sm:space-y-10">
-      <header><h1 className="text-2xl font-bold text-white sm:text-3xl">Models</h1><p className="mt-2 max-w-3xl text-sm text-slate-400 sm:text-base">Compare how ForecastPH models perform across all {rows.length} PSE-listed companies. Results come from the latest fresh model training and chronological out-of-sample evaluation.</p></header>
+      <header><h1 className="text-2xl font-bold text-white sm:text-3xl">Models</h1><p className="mt-2 max-w-3xl text-sm text-slate-400 sm:text-base">Compare how PSE Pulse models perform across all {rows.length} PSE-listed companies. Results come from the latest fresh model training and chronological out-of-sample evaluation.</p></header>
 
       <section aria-label="Model performance summary" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Companies" value={String(rows.length)} sublabel="Current operational evaluation" />

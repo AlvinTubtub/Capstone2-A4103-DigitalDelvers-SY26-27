@@ -107,7 +107,7 @@ export default function WatchlistClient({
           </div>
           <h2 className="text-xl font-bold text-white">No companies in your watchlist yet</h2>
           <p className="text-sm text-slate-400 leading-relaxed">
-            Add up to 5 companies to quickly monitor their latest ForecastPH predictions.
+            Add up to 5 companies to quickly monitor their latest PSE Pulse predictions.
           </p>
           <div className="pt-2">
             <Link

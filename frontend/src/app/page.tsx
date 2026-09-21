@@ -56,8 +56,6 @@ interface BeginnerGuideCardItem {
   image: string;
   alt: string;
   href: string;
-  accent: string;
-  badgeLabel: string;
   description: string;
 }
 
@@ -68,10 +66,8 @@ const BEGINNER_GUIDE_CARDS: BeginnerGuideCardItem[] = [
     image: "/images/learn/understand-forecast.jpg",
     alt: "Trader inspecting stock forecast projections on transparent display",
     href: "/learn-stocks#how-to-read",
-    accent: "text-brand-400 bg-brand-500/15 border-brand-500/30",
-    badgeLabel: "Rule 1",
     description:
-      "ForecastPH predicts the estimated next trading-day closing price based on numerical historical market data. Predictions are statistical estimates and are not guaranteed.",
+      "PSE Pulse predicts the estimated next trading-day closing price based on numerical historical market data. Predictions are statistical estimates and are not guaranteed.",
   },
   {
     step: 2,
@@ -79,8 +75,6 @@ const BEGINNER_GUIDE_CARDS: BeginnerGuideCardItem[] = [
     image: "/images/learn/check-historical-accuracy.jpg",
     alt: "Analyst inspecting stock market line chart and historical prediction accuracy",
     href: "/learn-stocks#forecast-accuracy",
-    accent: "text-amber-400 bg-amber-500/15 border-amber-500/30",
-    badgeLabel: "Rule 2",
     description:
       "Always review the Backtest, Forecast Error, RMSE, MAE, MASE, and supplementary holdout R² to understand historical evaluation performance before interpreting a forecast.",
   },
@@ -90,8 +84,6 @@ const BEGINNER_GUIDE_CARDS: BeginnerGuideCardItem[] = [
     image: "/images/learn/learn-before-you-trade.jpg",
     alt: "Traders reviewing market candlestick charts on laptop and tablet",
     href: "/learn-stocks#trading-101",
-    accent: "text-emerald-400 bg-emerald-500/15 border-emerald-500/30",
-    badgeLabel: "Rule 3",
     description:
       "Build a strong foundation in Philippine stock market fundamentals, risk management, and order types before making financial decisions.",
   },
@@ -284,7 +276,7 @@ export default async function HomePage() {
             Companies at a Glance
           </h2>
           <p className="mt-1 text-xs text-slate-400 sm:text-sm">
-            Quickly compare the latest close and next-day ForecastPH outlook across all tracked companies.
+            Quickly compare the latest close and next-day PSE Pulse outlook across all tracked companies.
           </p>
         </div>
 
@@ -495,7 +487,7 @@ export default async function HomePage() {
               key={card.title}
               href={card.href}
               className="group rounded-2xl overflow-hidden border border-slate-700/60 dark:border-dark-border bg-dark-bg/70 hover:border-brand-500/80 focus-visible:border-brand-500 hover:-translate-y-1 focus-visible:-translate-y-1 hover:shadow-xl hover:shadow-brand-500/10 focus-visible:shadow-xl transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg motion-reduce:transform-none flex flex-col"
-              aria-label={`${card.badgeLabel}: ${card.title} — ${card.description}`}
+              aria-label={`${card.title} — ${card.description}`}
             >
               {/* 16:9 Image Area with subtle zoom on hover/focus */}
               <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
@@ -505,11 +497,6 @@ export default async function HomePage() {
                   className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105 group-focus-visible:scale-105 motion-reduce:transform-none"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none" />
-                <span
-                  className={`absolute top-3 left-3 px-2.5 py-0.5 rounded-full border text-[11px] font-bold backdrop-blur-md shadow-sm ${card.accent}`}
-                >
-                  {card.badgeLabel}
-                </span>
               </div>
 
               {/* Text Content Below Image */}

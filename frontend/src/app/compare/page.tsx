@@ -91,7 +91,7 @@ function UnavailableState() {
     <div className="rounded-2xl border border-dark-border bg-dark-card p-6">
       <h1 className="text-2xl font-bold text-white">Models</h1>
       <p className="mt-2 text-sm text-slate-400">
-        Model-performance data is unavailable or incomplete. ForecastPH will display this
+        Model-performance data is unavailable or incomplete. PSE Pulse will display this
         dashboard after the next successful fresh training run.
       </p>
     </div>

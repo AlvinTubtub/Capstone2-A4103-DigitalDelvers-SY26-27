@@ -105,7 +105,7 @@ export default function PredictionChart({
         <div className="max-w-md space-y-2">
           <p className="text-sm font-medium text-slate-200">Waiting for the first realized production forecast</p>
           <p className="text-xs leading-relaxed text-slate-400">
-            ForecastPH will add a point here after a forecast is issued and the corresponding trading
+            PSE Pulse will add a point here after a forecast is issued and the corresponding trading
             session&apos;s closing price becomes available. Historical research backtests are kept separate.
           </p>
         </div>

@@ -201,7 +201,7 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
     term: "Close",
     category: "market",
     shortDef: "Final official transaction price of the session.",
-    detailedDef: "The official closing price established during the 12:45–12:50 PM pre-close run-off. This is the target value ForecastPH models predict.",
+    detailedDef: "The official closing price established during the 12:45–12:50 PM pre-close run-off. This is the target value PSE Pulse models predict.",
   },
   {
     term: "Volume",

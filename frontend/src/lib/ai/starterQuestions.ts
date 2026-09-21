@@ -32,7 +32,7 @@ export function getStarterQuestions(
     "/": {
       label: "Context: Market Overview",
       description: "Ask about the current dashboard and how to interpret next-session estimates.",
-      questions: ["What does ForecastPH predict today?", "Which companies have the largest expected changes?", "How should I read the next-day forecast?", "How accurate are these forecasts?", "What does ForecastPH use to make predictions?"],
+      questions: ["What does PSE Pulse predict today?", "Which companies have the largest expected changes?", "How should I read the next-day forecast?", "How accurate are these forecasts?", "What does PSE Pulse use to make predictions?"],
     },
     "/companies": {
       label: "Context: Companies Directory",
@@ -56,12 +56,18 @@ export function getStarterQuestions(
     "/learn-stocks": {
       label: "Context: Learn Stocks",
       description: "Ask for beginner-friendly explanations of PSE and forecasting concepts.",
-      questions: ["What is a stock?", "What are PSE trading hours?", "What does closing price mean?", "What is a forecast?", "How should beginners use ForecastPH?"],
+      questions: ["What is a stock?", "What are PSE trading hours?", "What does closing price mean?", "What is a forecast?", "How should beginners use PSE Pulse?"],
     },
     "/about": {
-      label: "Context: About ForecastPH",
-      description: "Ask about ForecastPH's objective, architecture, methods, and limitations.",
-      questions: ["How does ForecastPH work?", "What models does ForecastPH use?", "What are the project limitations?", "What data does ForecastPH use?", "Is ForecastPH financial advice?"],
+      label: "Context: About PSE Pulse",
+      description: "Ask about research questions, methodology, model performance, scope, and architecture.",
+      questions: [
+        "What research questions does PSE Pulse investigate?",
+        "How does PSE Pulse work?",
+        "Which model performs best across the companies?",
+        "What is included and excluded from the research scope?",
+        "How is PSE Pulse implemented technically?",
+      ],
     },
   };
   pages["/learn"] = pages["/learn-stocks"];

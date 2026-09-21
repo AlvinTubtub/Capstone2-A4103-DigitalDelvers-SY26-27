@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #f8fafc;
-  --color-card: #ffffff;
-  --color-border: #e2e8f0;
-  --color-glass-bg: rgba(255, 255, 255, 0.85);
-  --color-glass-border: rgba(226, 232, 240, 0.8);
+  --color-bg: #EEF2F7;
+  --color-card: #F8FAFC;
+  --color-border: #CBD5E1;
+  --color-glass-bg: rgba(241, 245, 249, 0.90);
+  --color-glass-border: rgba(203, 213, 225, 0.85);
   color-scheme: light;
   --chart-actual-line: #0f172a;
   --chart-actual-dot-fill: #ffffff;
   --chart-actual-dot-stroke: #0f172a;
-  --chart-axis-text: #64748b;
-  --chart-grid: #e2e8f0;
+  --chart-axis-text: #475569;
+  --chart-grid: #CBD5E1;
   --chart-hover: rgba(15, 23, 42, 0.04);
 }
 
@@ -118,6 +118,9 @@ body {
 html:not(.dark) .text-white {
   color: #0f172a;
 }
+html:not(.dark) .text-slate-100 {
+  color: #0f172a;
+}
 html:not(.dark) .text-slate-200 {
   color: #1e293b;
 }
@@ -125,7 +128,7 @@ html:not(.dark) .text-slate-300 {
   color: #334155;
 }
 html:not(.dark) .text-slate-400 {
-  color: #64748b;
+  color: #475569;
 }
 html:not(.dark) .text-slate-500 {
   color: #64748b;
@@ -212,23 +215,59 @@ html:not(.dark) .text-brand-300 {
 html:not(.dark) .text-brand-300\/80 {
   color: #2563eb;
 }
+html:not(.dark) .text-brand-400 {
+  color: #2563eb;
+}
 
+/* Secondary / nested surfaces in light mode */
+html:not(.dark) .bg-dark-bg\/95,
+html:not(.dark) .bg-dark-bg\/90,
 html:not(.dark) .bg-dark-bg\/80,
+html:not(.dark) .bg-dark-bg\/70,
 html:not(.dark) .bg-dark-bg\/60,
-html:not(.dark) .bg-dark-bg\/40 {
+html:not(.dark) .bg-dark-bg\/50,
+html:not(.dark) .bg-dark-bg\/40,
+html:not(.dark) .bg-dark-card .bg-dark-bg {
   background-color: #f1f5f9;
 }
+
+/* Soft visible borders in light mode */
+html:not(.dark) .border-dark-border\/80,
+html:not(.dark) .border-dark-border\/70,
 html:not(.dark) .border-dark-border\/60,
 html:not(.dark) .border-dark-border\/50,
-html:not(.dark) .border-dark-border\/40 {
-  border-color: #e2e8f0;
+html:not(.dark) .border-dark-border\/40,
+html:not(.dark) .border-dark-border\/30,
+html:not(.dark) .border-dark-border\/25,
+html:not(.dark) .border-dark-border\/20,
+html:not(.dark) .divide-dark-border\/60 > :not([hidden]) ~ :not([hidden]),
+html:not(.dark) .divide-dark-border > :not([hidden]) ~ :not([hidden]) {
+  border-color: #cbd5e1;
+}
+
+/* Light mode input & search styling */
+html:not(.dark) input[type="text"],
+html:not(.dark) input[type="search"],
+html:not(.dark) input[type="date"] {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: #64748b;
+}
+
+html:not(.dark) input[type="date"]::-webkit-datetime-edit-text {
+  color: #64748b;
 }
 
 /* Light mode Recharts styling */
 html:not(.dark) .recharts-default-tooltip {
-  background-color: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06) !important;
   border-radius: 8px !important;
 }
 html:not(.dark) .recharts-tooltip-label {
@@ -238,11 +277,11 @@ html:not(.dark) .recharts-tooltip-item {
   color: #334155 !important;
 }
 html:not(.dark) .recharts-cartesian-grid line {
-  stroke: #e2e8f0 !important;
+  stroke: #cbd5e1 !important;
 }
 html:not(.dark) .recharts-text,
 html:not(.dark) .recharts-label {
-  fill: #64748b !important;
+  fill: #475569 !important;
 }
 html:not(.dark) .recharts-legend-item-text {
   color: #334155 !important;

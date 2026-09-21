@@ -77,7 +77,7 @@ export function WatchlistProvider({
       if (!clean) return { success: false };
 
       if (!allowedSymbols.has(clean)) {
-        const message = "This company is no longer available in ForecastPH.";
+        const message = "This company is no longer available in PSE Pulse.";
         setToastMessage(message);
         return { success: false, message };
       }

@@ -66,21 +66,6 @@ const ITEMS: NavItem[] = [
     ),
   },
   {
-    href: "/compare",
-    label: "Models",
-    renderIcon: (active) => (
-      <svg
-        className={`w-5 h-5 ${active ? "stroke-brand-400 stroke-2" : "stroke-current stroke-1.5"}`}
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M18 20V10M12 20V4M6 20v-6" />
-      </svg>
-    ),
-  },
-  {
     href: "/learn-stocks",
     label: "Learn Stocks",
     renderIcon: (active) => (

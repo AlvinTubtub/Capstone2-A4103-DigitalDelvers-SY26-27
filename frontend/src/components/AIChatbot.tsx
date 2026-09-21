@@ -263,7 +263,7 @@ export default function AIChatbot() {
               </div>
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-white truncate">
-                  ForecastPH Ask AI
+                  PSE Pulse Ask AI
                 </h3>
                 <p className="text-[10px] text-slate-400 truncate">
                   Educational AI &middot; {pageContextLabel}
@@ -414,7 +414,7 @@ export default function AIChatbot() {
                 maxLength={1000}
                 rows={1}
                 disabled={isLoading}
-                aria-label="Ask ForecastPH AI a question"
+                aria-label="Ask PSE Pulse AI a question"
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={isLoading ? "Waiting for response..." : "Ask a question about PSE forecasts..."}
@@ -439,7 +439,7 @@ export default function AIChatbot() {
               <span>{input.length}/1000</span>
             </div>
             <p className="text-[10px] leading-relaxed text-slate-500 px-1">
-              ForecastPH AI explains model outputs for educational purposes and does not provide investment advice.
+              PSE Pulse AI explains model outputs for educational purposes and does not provide investment advice.
             </p>
           </div>
         </div>
