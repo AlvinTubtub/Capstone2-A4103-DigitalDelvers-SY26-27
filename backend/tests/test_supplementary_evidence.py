@@ -9,10 +9,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from config.model_config import ModelId, RegressionFeatureConfig
+from config.model_config import ArimaConfig, ModelId, RegressionFeatureConfig
 from scripts import run_supplementary_evidence as cli
 from src.artifacts.io import validated_json_text
 from src.evaluation.statistical_tests import LossType, MODEL_PAIRS
+from src.evaluation.arima_diagnostic_reconstruction import arima_config_as_dict
 from src.evaluation.supplementary_archive import EVIDENCE_PATHS
 from src.evaluation.supplementary_archive import SupplementaryEvidenceArchive
 from src.evaluation.supplementary_evidence import (
@@ -185,8 +186,167 @@ def valid_payloads() -> dict[str, dict[str, object]]:
     }
 
 
+def valid_v2_arima_status() -> dict[str, object]:
+    order = [1, 1, 0]
+    model_df = 1
+    nobs = 4
+    burn_in = 1
+    residual_count = nobs - burn_in
+    companies = []
+    for symbol in SYMBOLS:
+        companies.append(
+            {
+                "symbol": symbol,
+                "enhanced_standardized_residual_diagnostics_available": True,
+                "diagnostic_mode": "frozen_parameter_state_space_reconstruction",
+                "selected_order": order,
+                "selected_trend": "n",
+                "frozen_arima_config": arima_config_as_dict(ArimaConfig()),
+                "fit_provenance": {
+                    "diagnostic_mode": "frozen_parameter_state_space_reconstruction",
+                    "source_formal_run_id": "formal-test",
+                    "selected_configuration_source": "frozen_formal_evidence",
+                    "data_source": "formal_archive_frozen_raw",
+                    "fit_scope": "frozen_development_period_only",
+                    "development_start": "2026-01-01",
+                    "development_end": "2026-01-04",
+                    "development_observation_count": nobs,
+                    "first_holdout_target_date": "2026-01-05",
+                    "selected_order": order,
+                    "selected_trend": "n",
+                    "parameter_source": "frozen_formal_development_fit_metadata",
+                    "expected_parameter_names": ["ar.L1", "sigma2"],
+                    "frozen_parameter_names": ["sigma2", "ar.L1"],
+                    "parameter_count": 2,
+                    "optimization_performed": False,
+                    "refit_performed": False,
+                    "grid_search_performed": False,
+                    "candidate_scoring_performed": False,
+                    "model_selection_performed": False,
+                    "holdout_used_for_fit": False,
+                    "holdout_forecasts_regenerated": False,
+                    "formal_metrics_recomputed": False,
+                    "production_artifact_created": False,
+                },
+                "fit_metadata": {
+                    "order": order,
+                    "trend": "n",
+                    "nobs": nobs,
+                    "convergence_status": "confirmed_converged",
+                    "fit_attempts": [],
+                    "parameters": {"ar.L1": 0.5, "sigma2": 1.0},
+                    "state_space_reconstruction": True,
+                    "optimization_performed": False,
+                    "aic": 1.0,
+                    "bic": 2.0,
+                    "hqic": 1.5,
+                    "log_likelihood": -1.0,
+                },
+                "fitted_model_diagnostics": {
+                    "available": True,
+                    "order": order,
+                    "model_df": model_df,
+                    "ar_roots": [{"real": 2.0, "imaginary": 0.0}],
+                    "ar_root_moduli": [2.0],
+                    "stability_flag": True,
+                    "ma_roots": [],
+                    "ma_root_moduli": [],
+                    "invertibility_flag": True,
+                    "unavailable_reason": None,
+                    "fitted_residuals": {
+                        "available": True,
+                        "observations": residual_count,
+                        "source": "state_space_standardized_forecast_error",
+                        "standardized_residuals": [0.1, -0.1, 0.2],
+                        "burn_in_removed": burn_in,
+                        "burn_in_rule": "synthetic",
+                        "burn_in_sources": [],
+                        "residual_count": residual_count,
+                        "model_df": model_df,
+                        "diagnostic_lag": 2,
+                        "standardization_status": "available",
+                        "acf_available": True,
+                        "acf": [
+                            {"lag": 0, "value": 1.0},
+                            {"lag": 1, "value": 0.0},
+                        ],
+                        "acf_unavailable_reason": None,
+                        "unavailable_reason": None,
+                        "ljung_box": {
+                            "available": True,
+                            "observations": residual_count,
+                            "lag": 2,
+                            "model_df": model_df,
+                            "statistic": 1.0,
+                            "p_value": 0.5,
+                            "unavailable_reason": None,
+                        },
+                    },
+                },
+                "original_frozen_holdout_forecast_error_diagnostics": {
+                    "source": "complete_aligned_holdout_forecast_errors",
+                    "observations": 2,
+                    "ljung_box": {"available": True},
+                },
+            }
+        )
+    return {
+        "schema_id": "forecastph.supplementary-arima-diagnostic-status",
+        "schema_version": 2,
+        "company_order": list(SYMBOLS),
+        "diagnostic_mode": "frozen_parameter_state_space_reconstruction",
+        "companies": companies,
+        "grid_search_performed": False,
+        "candidate_scoring_performed": False,
+        "model_selection_performed": False,
+        "holdout_forecasts_regenerated": False,
+        "formal_metrics_recomputed": False,
+        "production_artifact_created": False,
+    }
+
+
 def test_complete_semantics_and_arima_limitation_pass() -> None:
     validate_supplementary_payloads(valid_payloads())
+
+
+def test_schema_v2_frozen_parameter_arima_evidence_validates() -> None:
+    payloads = valid_payloads()
+    payloads["methodology/arima_diagnostic_status.json"] = (
+        valid_v2_arima_status()
+    )
+
+    validate_supplementary_payloads(payloads)
+    json.dumps(payloads, allow_nan=False)
+
+
+@pytest.mark.parametrize(
+    ("corruption", "value"),
+    (
+        ("selected_order", [0, 1, 0]),
+        ("development_end", "2026-01-05"),
+        ("model_df", 99),
+        ("residual_source", "ordinary_residuals"),
+    ),
+)
+def test_schema_v2_arima_semantic_tampering_fails_closed(
+    corruption: str,
+    value: object,
+) -> None:
+    payloads = valid_payloads()
+    status = valid_v2_arima_status()
+    item = status["companies"][0]
+    if corruption == "selected_order":
+        item["selected_order"] = value
+    elif corruption == "development_end":
+        item["fit_provenance"]["development_end"] = value
+    elif corruption == "model_df":
+        item["fitted_model_diagnostics"]["model_df"] = value
+    else:
+        item["fitted_model_diagnostics"]["fitted_residuals"]["source"] = value
+    payloads["methodology/arima_diagnostic_status.json"] = status
+
+    with pytest.raises(SupplementaryEvidenceError):
+        validate_supplementary_payloads(payloads)
 
 
 def test_sorted_json_round_trip_preserves_lir_feature_contract_semantics() -> None:
@@ -270,6 +430,69 @@ def test_actual_close_mismatch_with_formal_source_is_rejected(tmp_path: Path) ->
     validate_supplementary_payloads(payloads, source_archive=fake)
     payloads["historical/formal_holdout_index.json"]["companies"][0]["rows"][0]["actual_close"] = 999.0
     with pytest.raises(SupplementaryEvidenceError, match="actual Close"):
+        validate_supplementary_payloads(payloads, source_archive=fake)
+
+
+def test_frozen_arima_parameter_change_from_formal_source_is_rejected(
+    tmp_path: Path,
+) -> None:
+    payloads = valid_payloads()
+    payloads["methodology/arima_diagnostic_status.json"] = (
+        valid_v2_arima_status()
+    )
+    for company in payloads["historical/formal_holdout_index.json"]["companies"]:
+        company_path = tmp_path / "companies" / company["symbol"]
+        company_path.mkdir(parents=True)
+        source = {
+            "canonical_holdout_records": [
+                dict(row, company=company["symbol"]) for row in company["rows"]
+            ],
+            "development_target_dates": [
+                "2026-01-02",
+                "2026-01-03",
+                "2026-01-04",
+            ],
+            "holdout_target_dates": list(DATES),
+            "model_grids_and_seeds": {"arima": arima_config_as_dict(ArimaConfig())},
+            "selected_configurations": {
+                "arima": {
+                    "order": [1, 1, 0],
+                    "trend": "n",
+                    "development_fit": {
+                        "parameters": {"ar.L1": 0.5, "sigma2": 1.0}
+                    },
+                }
+            },
+            "arima_diagnostics": {
+                "holdout_forecast_errors": {
+                    "source": "complete_aligned_holdout_forecast_errors",
+                    "observations": 2,
+                    "ljung_box": {"available": True},
+                }
+            },
+        }
+        (company_path / "evidence.json").write_text(
+            json.dumps(source), encoding="utf-8"
+        )
+    (tmp_path / "integrity_manifest.json").write_text(
+        json.dumps({"aggregate_sha256": "a" * 64}), encoding="utf-8"
+    )
+    fake = SimpleNamespace(
+        run_id="formal-test",
+        path=tmp_path,
+        state=FormalRunState.FINALIZED,
+        verify_integrity=lambda: True,
+    )
+    validate_supplementary_payloads(payloads, source_archive=fake)
+
+    first_path = tmp_path / "companies" / SYMBOLS[0] / "evidence.json"
+    changed = json.loads(first_path.read_text(encoding="utf-8"))
+    changed["selected_configurations"]["arima"]["development_fit"][
+        "parameters"
+    ]["sigma2"] = 2.0
+    first_path.write_text(json.dumps(changed), encoding="utf-8")
+
+    with pytest.raises(SupplementaryEvidenceError, match="frozen source"):
         validate_supplementary_payloads(payloads, source_archive=fake)
 
 

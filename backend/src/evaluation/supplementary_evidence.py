@@ -14,6 +14,15 @@ from config.companies import COMPANIES
 from config.ledger_config import DEFAULT_FORECAST_LEDGER_PATH
 from config.model_config import ModelId, RegressionFeatureConfig
 from config.settings import manila_now
+from src.evaluation.arima_diagnostic_reconstruction import (
+    ARIMA_DIAGNOSTIC_STATUS_SCHEMA_ID,
+    ARIMA_DIAGNOSTIC_STATUS_SCHEMA_VERSION,
+    DIAGNOSTIC_ONLY_REFIT_MODE,
+    FROZEN_PARAMETER_DIAGNOSTIC_MODE,
+    arima_config_as_dict,
+    reconstruct_arima_diagnostic_status_payload,
+    reconstruct_frozen_arima_config,
+)
 from src.evaluation.change_diagnostics import archived_change_diagnostics
 from src.evaluation.metrics import EvaluationMetrics, compute_mase_denominator
 from src.evaluation.model_selection import select_company_models
@@ -44,6 +53,11 @@ from src.formal.schema import FormalRunState
 from src.formal.validation import DEFAULT_FORMAL_RUNS_ROOT
 from src.ledger.store import ForecastLedger
 from src.monitoring.drift import monitor_company_drift
+from src.models.arima import (
+    ArimaSpecification,
+    ConvergenceStatus,
+    candidate_specifications,
+)
 
 
 MASE_AUDIT_TOLERANCE = 1e-12
@@ -276,7 +290,6 @@ def build_supplementary_evidence_plan(
     mase_audits: list[dict[str, object]] = []
     reporting: list[dict[str, object]] = []
     lir_companies: list[dict[str, object]] = []
-    arima_companies: list[dict[str, object]] = []
     feature_contract_payload: dict[str, object] | None = None
     frozen_feature_config: dict[str, object] | None = None
 
@@ -400,22 +413,6 @@ def build_supplementary_evidence_plan(
                 },
             }
         )
-        selected_arima = company["selected_configurations"]["arima"]
-        arima_companies.append(
-            {
-                "symbol": symbol,
-                "selected_order": selected_arima["order"],
-                "selected_trend": selected_arima["trend"],
-                "original_frozen_arima_diagnostic_evidence_present": bool(company.get("arima_diagnostics")),
-                "enhanced_standardized_residual_diagnostics_available": False,
-                "unavailable_reason": ARIMA_UNAVAILABLE_REASON,
-                "current_methodology_source": "src.models.arima selected-fit state-space standardized forecast errors after burn-in",
-                "current_methodology_version": 1,
-                "retraining_performed": False,
-                "refit_performed": False,
-            }
-        )
-
     if common_dates is None or feature_contract_payload is None or frozen_feature_config is None:
         raise SupplementaryEvidenceError("Formal archive contains no company evidence")
     comparison = compare_methods_across_companies(metrics_by_company)
@@ -495,14 +492,14 @@ def build_supplementary_evidence_plan(
             "companies": lir_companies,
             "retraining_performed": False,
         },
-        "methodology/arima_diagnostic_status.json": {
-            "schema_id": "forecastph.supplementary-arima-diagnostic-status",
-            "schema_version": 1,
-            "company_order": list(symbols),
-            "companies": arima_companies,
-            "retraining_performed": False,
-            "refit_performed": False,
-        },
+        "methodology/arima_diagnostic_status.json": (
+            reconstruct_arima_diagnostic_status_payload(
+                source_formal_run_id=formal_run_id,
+                company_order=symbols,
+                evidence_by_symbol=companies,
+                frozen_raw_directory=archive.path / "frozen_raw",
+            )
+        ),
         "prospective/prospective_validation_snapshot.json": prospective_payload,
     }
     validate_supplementary_payloads(payloads, source_archive=archive)
@@ -512,6 +509,269 @@ def build_supplementary_evidence_plan(
 def _require_company_order(payload: Mapping[str, object], expected: Sequence[str], label: str) -> None:
     if payload.get("company_order") != list(expected):
         raise SupplementaryEvidenceError(f"{label} company order is inconsistent")
+
+
+def _validate_legacy_arima_status(
+    payload: Mapping[str, object],
+    expected_symbols: Sequence[str],
+) -> None:
+    companies = payload.get("companies")
+    if not isinstance(companies, list) or [
+        item.get("symbol") for item in companies
+    ] != list(expected_symbols):
+        raise SupplementaryEvidenceError(
+            "Legacy ARIMA diagnostic company universe is invalid"
+        )
+    for item in companies:
+        if (
+            item.get("enhanced_standardized_residual_diagnostics_available")
+            is not False
+            or item.get("unavailable_reason") != ARIMA_UNAVAILABLE_REASON
+            or item.get("refit_performed") is not False
+        ):
+            raise SupplementaryEvidenceError(
+                "Legacy frozen ARIMA limitation is not reported truthfully"
+            )
+
+
+def _validate_v2_arima_company(item: Mapping[str, object]) -> None:
+    try:
+        order = tuple(int(value) for value in item["selected_order"])
+        trend = str(item["selected_trend"])
+        frozen_payload = item["frozen_arima_config"]
+        provenance = item["fit_provenance"]
+        metadata = item["fit_metadata"]
+        diagnostics = item["fitted_model_diagnostics"]
+        residuals = diagnostics["fitted_residuals"]
+        ljung_box = residuals["ljung_box"]
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA diagnostic evidence is malformed"
+        ) from exc
+    if len(order) != 3 or not isinstance(frozen_payload, dict):
+        raise SupplementaryEvidenceError("Schema-v2 selected ARIMA order is invalid")
+    try:
+        frozen_config = reconstruct_frozen_arima_config(frozen_payload)
+    except RuntimeError as exc:
+        raise SupplementaryEvidenceError(str(exc)) from exc
+    specification = ArimaSpecification(order=order, trend=trend)
+    if specification not in candidate_specifications(frozen_config):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 selected ARIMA specification is outside the frozen grid"
+        )
+    diagnostic_mode = item.get("diagnostic_mode")
+    allowed_modes = {
+        FROZEN_PARAMETER_DIAGNOSTIC_MODE,
+        DIAGNOSTIC_ONLY_REFIT_MODE,
+    }
+    if (
+        item.get("enhanced_standardized_residual_diagnostics_available") is not True
+        or diagnostic_mode not in allowed_modes
+        or not isinstance(provenance, dict)
+        or not isinstance(metadata, dict)
+        or not isinstance(diagnostics, dict)
+        or not isinstance(residuals, dict)
+        or not isinstance(ljung_box, dict)
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 fitted ARIMA diagnostics are unavailable or malformed"
+        )
+    required_false = (
+        "grid_search_performed",
+        "candidate_scoring_performed",
+        "model_selection_performed",
+        "holdout_used_for_fit",
+        "holdout_forecasts_regenerated",
+        "formal_metrics_recomputed",
+        "production_artifact_created",
+    )
+    if (
+        provenance.get("diagnostic_mode") != diagnostic_mode
+        or provenance.get("selected_configuration_source")
+        != "frozen_formal_evidence"
+        or provenance.get("data_source") != "formal_archive_frozen_raw"
+        or provenance.get("fit_scope") != "frozen_development_period_only"
+        or provenance.get("selected_order") != list(order)
+        or provenance.get("selected_trend") != trend
+        or any(provenance.get(name) is not False for name in required_false)
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA diagnostic-only provenance is invalid"
+        )
+    expected_names = provenance.get("expected_parameter_names")
+    frozen_names = provenance.get("frozen_parameter_names")
+    parameters = metadata.get("parameters")
+    if (
+        not isinstance(expected_names, list)
+        or not expected_names
+        or len(expected_names) != len(set(expected_names))
+        or not all(isinstance(name, str) and name for name in expected_names)
+        or not isinstance(frozen_names, list)
+        or not isinstance(parameters, dict)
+        or provenance.get("parameter_count") != len(expected_names)
+        or set(parameters) != set(expected_names)
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA parameter-name provenance is invalid"
+        )
+    if diagnostic_mode == FROZEN_PARAMETER_DIAGNOSTIC_MODE:
+        if (
+            set(frozen_names) != set(expected_names)
+            or len(frozen_names) != len(expected_names)
+            or provenance.get("parameter_source")
+            != "frozen_formal_development_fit_metadata"
+            or provenance.get("optimization_performed") is not False
+            or provenance.get("refit_performed") is not False
+            or metadata.get("state_space_reconstruction") is not True
+            or metadata.get("optimization_performed") is not False
+        ):
+            raise SupplementaryEvidenceError(
+                "Schema-v2 frozen-parameter reconstruction provenance is invalid"
+            )
+    elif (
+        frozen_names
+        or provenance.get("parameter_source") is not None
+        or provenance.get("optimization_performed") is not True
+        or provenance.get("refit_performed") is not True
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 diagnostic-only refit fallback provenance is invalid"
+        )
+    try:
+        development_start = date.fromisoformat(str(provenance["development_start"]))
+        development_end = date.fromisoformat(str(provenance["development_end"]))
+        first_holdout = date.fromisoformat(
+            str(provenance["first_holdout_target_date"])
+        )
+        observation_count = int(provenance["development_observation_count"])
+        nobs = int(metadata["nobs"])
+        burn_in = int(residuals["burn_in_removed"])
+        residual_count = int(residuals["residual_count"])
+        standardized_residuals = residuals["standardized_residuals"]
+        model_df = order[0] + order[2]
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA dates or observation counts are invalid"
+        ) from exc
+    if (
+        development_start > development_end
+        or first_holdout <= development_end
+        or observation_count < 3
+        or nobs != observation_count
+        or metadata.get("order") != list(order)
+        or metadata.get("trend") != trend
+        or (
+            frozen_config.require_confirmed_convergence
+            and metadata.get("convergence_status")
+            != ConvergenceStatus.CONFIRMED_CONVERGED.value
+        )
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA fit boundary, specification, or convergence is invalid"
+        )
+    if (
+        diagnostics.get("available") is not True
+        or diagnostics.get("order") != list(order)
+        or diagnostics.get("model_df") != model_df
+        or diagnostics.get("unavailable_reason") is not None
+        or residuals.get("available") is not True
+        or residuals.get("source")
+        != "state_space_standardized_forecast_error"
+        or residuals.get("model_df") != model_df
+        or residuals.get("acf_available") is not True
+        or residuals.get("unavailable_reason") is not None
+        or not isinstance(standardized_residuals, list)
+        or residual_count != len(standardized_residuals)
+        or residuals.get("observations") != residual_count
+        or residual_count != nobs - burn_in
+        or burn_in < 0
+        or ljung_box.get("available") is not True
+        or ljung_box.get("model_df") != model_df
+        or ljung_box.get("observations") != residual_count
+        or ljung_box.get("lag") != residuals.get("diagnostic_lag")
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 standardized fitted-residual diagnostics are inconsistent"
+        )
+    acf_values = residuals.get("acf")
+    if (
+        not isinstance(acf_values, list)
+        or not acf_values
+        or [entry.get("lag") for entry in acf_values]
+        != list(range(len(acf_values)))
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 fitted residual ACF is incomplete"
+        )
+    for roots_name, moduli_name, flag_name in (
+        ("ar_roots", "ar_root_moduli", "stability_flag"),
+        ("ma_roots", "ma_root_moduli", "invertibility_flag"),
+    ):
+        roots = diagnostics.get(roots_name)
+        moduli = diagnostics.get(moduli_name)
+        if (
+            not isinstance(roots, list)
+            or not isinstance(moduli, list)
+            or len(roots) != len(moduli)
+            or not isinstance(diagnostics.get(flag_name), bool)
+        ):
+            raise SupplementaryEvidenceError(
+                "Schema-v2 ARIMA root diagnostics are incomplete"
+            )
+    holdout = item.get("original_frozen_holdout_forecast_error_diagnostics")
+    if (
+        not isinstance(holdout, dict)
+        or holdout.get("source") != "complete_aligned_holdout_forecast_errors"
+    ):
+        raise SupplementaryEvidenceError(
+            "Original frozen holdout-error diagnostics are not preserved separately"
+        )
+
+
+def _validate_arima_status_payload(
+    payload: Mapping[str, object],
+    expected_symbols: Sequence[str],
+) -> None:
+    schema_id = payload.get("schema_id", ARIMA_DIAGNOSTIC_STATUS_SCHEMA_ID)
+    schema_version = payload.get("schema_version", 1)
+    if schema_id != ARIMA_DIAGNOSTIC_STATUS_SCHEMA_ID:
+        raise SupplementaryEvidenceError("Unknown ARIMA diagnostic-status schema")
+    if schema_version == 1:
+        _validate_legacy_arima_status(payload, expected_symbols)
+        return
+    if schema_version != ARIMA_DIAGNOSTIC_STATUS_SCHEMA_VERSION:
+        raise SupplementaryEvidenceError(
+            "Unsupported ARIMA diagnostic-status schema version"
+        )
+    companies = payload.get("companies")
+    if not isinstance(companies, list) or [
+        item.get("symbol") for item in companies
+    ] != list(expected_symbols):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA diagnostic company universe is invalid"
+        )
+    required_false = (
+        "grid_search_performed",
+        "candidate_scoring_performed",
+        "model_selection_performed",
+        "holdout_forecasts_regenerated",
+        "formal_metrics_recomputed",
+        "production_artifact_created",
+    )
+    allowed_package_modes = {
+        FROZEN_PARAMETER_DIAGNOSTIC_MODE,
+        DIAGNOSTIC_ONLY_REFIT_MODE,
+        "frozen_parameter_reconstruction_with_diagnostic_only_refit_fallback",
+    }
+    if (
+        payload.get("diagnostic_mode") not in allowed_package_modes
+        or any(payload.get(name) is not False for name in required_false)
+    ):
+        raise SupplementaryEvidenceError(
+            "Schema-v2 ARIMA package-level diagnostic provenance is invalid"
+        )
+    for item in companies:
+        _validate_v2_arima_company(item)
 
 
 def validate_supplementary_payloads(
@@ -652,9 +912,7 @@ def validate_supplementary_payloads(
                 raise SupplementaryEvidenceError("Formal LIR scaler keys do not match selected features")
 
     arima = payloads["methodology/arima_diagnostic_status.json"]
-    for item in arima.get("companies", []):
-        if item.get("enhanced_standardized_residual_diagnostics_available") is not False or item.get("unavailable_reason") != ARIMA_UNAVAILABLE_REASON or item.get("refit_performed") is not False:
-            raise SupplementaryEvidenceError("Frozen ARIMA limitation is not reported truthfully")
+    _validate_arima_status_payload(arima, expected)
     prospective = payloads["source/prospective_source.json"]
     if prospective.get("evidence_source") != "forecast_ledger_only":
         raise SupplementaryEvidenceError("Prospective evidence is not ledger-only")
@@ -673,6 +931,55 @@ def validate_supplementary_payloads(
             ]
             if company["rows"] != expected_actual:
                 raise SupplementaryEvidenceError("Holdout actual Close disagrees with formal source")
+        if arima.get("schema_version") == ARIMA_DIAGNOSTIC_STATUS_SCHEMA_VERSION:
+            arima_by_symbol = {
+                str(item["symbol"]): item for item in arima["companies"]
+            }
+            for symbol in expected:
+                source = _load_json(
+                    source_archive.path
+                    / "companies"
+                    / symbol
+                    / "evidence.json"
+                )
+                item = arima_by_symbol[symbol]
+                frozen_selected = source["selected_configurations"]["arima"]
+                frozen_development_fit = frozen_selected.get("development_fit", {})
+                frozen_parameters = frozen_development_fit.get("parameters")
+                frozen_config = source["model_grids_and_seeds"]["arima"]
+                development_dates = source["development_target_dates"]
+                holdout_dates = source["holdout_target_dates"]
+                if (
+                    item["selected_order"] != frozen_selected["order"]
+                    or item["selected_trend"] != frozen_selected["trend"]
+                    or item["frozen_arima_config"] != frozen_config
+                    or item["fit_provenance"]["development_end"]
+                    != development_dates[-1]
+                    or item["fit_provenance"]["development_observation_count"]
+                    != len(development_dates) + 1
+                    or item["fit_provenance"]["first_holdout_target_date"]
+                    != holdout_dates[0]
+                    or (
+                        frozen_parameters is not None
+                        and (
+                            item["diagnostic_mode"]
+                            != FROZEN_PARAMETER_DIAGNOSTIC_MODE
+                            or item["fit_metadata"]["parameters"]
+                            != frozen_parameters
+                            or set(item["fit_provenance"]["expected_parameter_names"])
+                            != set(frozen_parameters)
+                            or set(item["fit_provenance"]["frozen_parameter_names"])
+                            != set(frozen_parameters)
+                        )
+                    )
+                    or item[
+                        "original_frozen_holdout_forecast_error_diagnostics"
+                    ]
+                    != source["arima_diagnostics"]["holdout_forecast_errors"]
+                ):
+                    raise SupplementaryEvidenceError(
+                        f"Schema-v2 ARIMA evidence disagrees with frozen source for {symbol}"
+                    )
 
 
 def _reject_non_finite(value: object, path: str) -> None:

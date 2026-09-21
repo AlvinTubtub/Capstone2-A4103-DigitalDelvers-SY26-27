@@ -91,9 +91,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             formal_runs_root=arguments.formal_runs_root,
             ledger_path=arguments.ledger_path,
         )
-        unavailable = len(
-            plan.payloads["methodology/arima_diagnostic_status.json"]["companies"]
+        arima_companies = plan.payloads[
+            "methodology/arima_diagnostic_status.json"
+        ]["companies"]
+        available = sum(
+            item.get("enhanced_standardized_residual_diagnostics_available")
+            is True
+            for item in arima_companies
         )
+        unavailable = len(arima_companies) - available
         if arguments.check_only:
             result = {
                 "action": "check_only",
@@ -103,6 +109,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "formal_integrity_aggregate_sha256": plan.formal_aggregate_sha256,
                 "ledger_sha256": plan.ledger_sha256,
                 "planned_files": list(plan.planned_files),
+                "enhanced_arima_diagnostics_available_company_count": available,
                 "enhanced_arima_diagnostics_unavailable_company_count": unavailable,
                 "status": "PASS",
             }
