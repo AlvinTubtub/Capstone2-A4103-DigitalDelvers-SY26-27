@@ -3,165 +3,165 @@
     "symbol": "ALI",
     "name": "Ayala Land, Inc.",
     "sector": "Property",
-    "latestClose": 15.0,
-    "predictedClose": 14.983048094940662,
-    "pctChange": -0.11301270039558867,
+    "latestClose": 15.18,
+    "predictedClose": 15.163048094940661,
+    "pctChange": -0.11167262884939594,
     "direction": "bearish",
     "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "APX",
     "name": "Apex Mining Co., Inc.",
     "sector": "Mining and Oil",
-    "latestClose": 19.0,
-    "predictedClose": 19.036256575553903,
-    "pctChange": 0.19082408186264763,
+    "latestClose": 18.66,
+    "predictedClose": 18.671182976814002,
+    "pctChange": 0.05993020800644123,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "BPI",
     "name": "Bank of the Philippine Islands",
     "sector": "Financials",
-    "latestClose": 100.1,
-    "predictedClose": 100.2529597857706,
-    "pctChange": 0.1528069787918133,
+    "latestClose": 99.8,
+    "predictedClose": 99.92242590079007,
+    "pctChange": 0.12267124327663025,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "GLO",
     "name": "Globe Telecom, Inc.",
     "sector": "Services",
-    "latestClose": 1599.0,
-    "predictedClose": 1598.1619921096049,
-    "pctChange": -0.05240824830488725,
+    "latestClose": 1590.0,
+    "predictedClose": 1589.330906143246,
+    "pctChange": -0.042081374638615644,
     "direction": "bearish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 905.0,
-    "predictedClose": 931.3389112780843,
-    "pctChange": 2.910376936804896,
+    "latestClose": 898.0,
+    "predictedClose": 925.6178883026884,
+    "pctChange": 3.0754886751323336,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "JFC",
     "name": "Jollibee Foods Corporation",
     "sector": "Industrial",
-    "latestClose": 146.0,
-    "predictedClose": 146.0,
+    "latestClose": 144.0,
+    "predictedClose": 144.0,
     "pctChange": 0.0,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "MBT",
     "name": "Metropolitan Bank & Trust Company",
     "sector": "Financials",
-    "latestClose": 60.55,
-    "predictedClose": 60.7669388185096,
-    "pctChange": 0.35828045996631536,
-    "direction": "bullish",
+    "latestClose": 61.6,
+    "predictedClose": 61.59217421874919,
+    "pctChange": -0.012704190342221528,
+    "direction": "bearish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "MEG",
     "name": "Megaworld Corporation",
     "sector": "Property",
-    "latestClose": 2.07,
-    "predictedClose": 2.068844472204872,
-    "pctChange": -0.05582259879844647,
+    "latestClose": 2.11,
+    "predictedClose": 2.108844472204872,
+    "pctChange": -0.054764350479992514,
     "direction": "bearish",
     "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "MER",
     "name": "Manila Electric Company",
     "sector": "Industrial",
-    "latestClose": 480.0,
-    "predictedClose": 479.41457651318643,
-    "pctChange": -0.12196322641949327,
-    "direction": "bearish",
+    "latestClose": 473.0,
+    "predictedClose": 473.3533097445664,
+    "pctChange": 0.07469550625082207,
+    "direction": "bullish",
     "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "NIKL",
     "name": "Nickel Asia Corporation",
     "sector": "Mining and Oil",
-    "latestClose": 4.28,
-    "predictedClose": 4.280901357896646,
-    "pctChange": 0.021059763940314755,
+    "latestClose": 4.14,
+    "predictedClose": 4.144970909990868,
+    "pctChange": 0.12007028963450671,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "PGOLD",
     "name": "Puregold Price Club, Inc.",
     "sector": "Services",
-    "latestClose": 41.0,
-    "predictedClose": 40.941607548277474,
-    "pctChange": -0.14242061395737954,
-    "direction": "bearish",
+    "latestClose": 39.85,
+    "predictedClose": 39.93393914935113,
+    "pctChange": 0.21063776499656572,
+    "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "SCC",
     "name": "Semirara Mining and Power Corporation",
     "sector": "Mining and Oil",
-    "latestClose": 17.96,
-    "predictedClose": 17.96,
+    "latestClose": 16.7,
+    "predictedClose": 16.7,
     "pctChange": 0.0,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "SECB",
     "name": "Security Bank Corporation",
     "sector": "Financials",
-    "latestClose": 61.8,
-    "predictedClose": 61.8,
+    "latestClose": 62.0,
+    "predictedClose": 62.0,
     "pctChange": 0.0,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "SHLPH",
     "name": "Shell Pilipinas Corporation",
     "sector": "Industrial",
-    "latestClose": 8.15,
-    "predictedClose": 8.15,
+    "latestClose": 8.29,
+    "predictedClose": 8.29,
     "pctChange": 0.0,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
     "latestClose": 16.5,
-    "predictedClose": 16.64881987534205,
-    "pctChange": 0.9019386384366612,
+    "predictedClose": 16.576996348728734,
+    "pctChange": 0.46664453774990405,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   }
 ]

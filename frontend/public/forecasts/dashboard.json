@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-18T17:32:36.326485+08:00",
-  "forecastDate": "2026-09-21",
-  "lastRunAt": "2026-09-18T17:32:36.326485+08:00",
+  "generatedAt": "2026-09-21T17:32:41.746782+08:00",
+  "forecastDate": "2026-09-22",
+  "lastRunAt": "2026-09-21T17:32:41.746782+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 6,
-    "losers": 5,
+    "gainers": 7,
+    "losers": 4,
     "unchanged": 4
   },
   "topGainer": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 905.0,
-    "predictedClose": 931.3389112780843,
-    "pctChange": 2.910376936804896,
+    "latestClose": 898.0,
+    "predictedClose": 925.6178883026884,
+    "pctChange": 3.0754886751323336,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-09-21"
+    "forecastDate": "2026-09-22"
   },
   "topLoser": {
-    "symbol": "PGOLD",
-    "name": "Puregold Price Club, Inc.",
-    "sector": "Services",
-    "latestClose": 41.0,
-    "predictedClose": 40.941607548277474,
-    "pctChange": -0.14242061395737954,
+    "symbol": "ALI",
+    "name": "Ayala Land, Inc.",
+    "sector": "Property",
+    "latestClose": 15.18,
+    "predictedClose": 15.163048094940661,
+    "pctChange": -0.11167262884939594,
     "direction": "bearish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-09-21"
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-09-22"
   }
 }
