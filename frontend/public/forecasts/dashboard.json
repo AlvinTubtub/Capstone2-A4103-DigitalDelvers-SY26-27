@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-21T17:32:41.746782+08:00",
-  "forecastDate": "2026-09-22",
-  "lastRunAt": "2026-09-21T17:32:41.746782+08:00",
+  "generatedAt": "2026-09-22T16:02:50.273607+08:00",
+  "forecastDate": "2026-09-23",
+  "lastRunAt": "2026-09-22T16:02:50.273607+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 7,
-    "losers": 4,
+    "gainers": 6,
+    "losers": 5,
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "ICT",
-    "name": "International Container Terminal Services, Inc.",
-    "sector": "Services",
-    "latestClose": 898.0,
-    "predictedClose": 925.6178883026884,
-    "pctChange": 3.0754886751323336,
+    "symbol": "SMPH",
+    "name": "SM Prime Holdings, Inc.",
+    "sector": "Property",
+    "latestClose": 16.1,
+    "predictedClose": 16.20680283983865,
+    "pctChange": 0.6633716760164611,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-09-22"
+    "forecastDate": "2026-09-23"
   },
   "topLoser": {
-    "symbol": "ALI",
-    "name": "Ayala Land, Inc.",
-    "sector": "Property",
-    "latestClose": 15.18,
-    "predictedClose": 15.163048094940661,
-    "pctChange": -0.11167262884939594,
+    "symbol": "MBT",
+    "name": "Metropolitan Bank & Trust Company",
+    "sector": "Financials",
+    "latestClose": 62.1,
+    "predictedClose": 61.957476865073815,
+    "pctChange": -0.22950585334329532,
     "direction": "bearish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-09-22"
+    "bestModel": "ARIMA",
+    "forecastDate": "2026-09-23"
   }
 }

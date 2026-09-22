@@ -2,11 +2,11 @@
   "symbol": "PGOLD",
   "name": "Puregold Price Club, Inc.",
   "sector": "Services",
-  "previousClose": 39.85,
-  "predictedClose": 39.93393914935113,
-  "pesoChange": 0.08393914935113145,
-  "pctChange": 0.21063776499656572,
-  "direction": "bullish",
+  "previousClose": 39.9,
+  "predictedClose": 39.89635047176734,
+  "pesoChange": -0.0036495282326569622,
+  "pctChange": -0.009146687299892136,
+  "direction": "bearish",
   "model": "ARIMA",
   "metrics": {
     "lag_reg": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 39.85106183635228,
-    "arima": 39.93393914935113,
-    "lstm": 39.918348506031606
+    "lag": 39.90106183635228,
+    "arima": 39.89635047176734,
+    "lstm": 39.936587785082025
   },
   "ohlcv": [
     {
@@ -13167,6 +13167,14 @@
       "low": 39.7,
       "close": 39.85,
       "volume": 3846600.0
+    },
+    {
+      "date": "2026-09-22",
+      "open": 39.9,
+      "high": 40.15,
+      "low": 39.85,
+      "close": 39.9,
+      "volume": 3704600.0
     }
   ],
   "backtestDates": [
@@ -13549,7 +13557,8 @@
     "2026-09-16",
     "2026-09-17",
     "2026-09-18",
-    "2026-09-21"
+    "2026-09-21",
+    "2026-09-22"
   ],
   "productionBacktestActual": [
     39.85,
@@ -13557,7 +13566,8 @@
     39.8,
     40.2,
     41.0,
-    39.85
+    39.85,
+    39.9
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13566,7 +13576,8 @@
       40.00106183635228,
       39.801061836352275,
       40.20106183635228,
-      41.00106183635228
+      41.00106183635228,
+      39.85106183635228
     ],
     "ARIMA": [
       40.0,
@@ -13574,7 +13585,8 @@
       39.98905141530203,
       39.814598112930625,
       40.17080377413874,
-      40.941607548277474
+      40.941607548277474,
+      39.93393914935113
     ],
     "LSTM": [
       40.03058535464923,
@@ -13582,7 +13594,8 @@
       40.018152084674846,
       39.831452552938735,
       40.20354782100992,
-      40.97129687625729
+      40.97129687625729,
+      39.918348506031606
     ],
     "Naive baseline": [
       40.0,
@@ -13590,7 +13603,8 @@
       40.0,
       39.8,
       40.2,
-      41.0
+      41.0,
+      39.85
     ]
   },
   "productionBacktestProvenance": [
@@ -13983,11 +13997,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "PGOLD",
+      "originDate": "2026-09-21",
+      "targetDate": "2026-09-22",
+      "actualClose": 39.9,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-ffe2c8e53e620107ef7cbd27b5cd8b74645a6ed27b6a6932c04d673b781fc6d9",
+          "method": "lag_reg",
+          "prediction": 39.85106183635228,
+          "error": -0.04893816364771908,
+          "modelVersion": "backend-from-scratch-v1:f1074a8f199f69c6dab9f48e6532992172d7e3faa2b6ab2c6869ddf666d44b62",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-21T17:32:41.295834+08:00",
+          "observedAt": "2026-09-22T16:02:46.454459+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-d8cf171dfed0596abbad4b27e4916657c0163edc7eb364354db1aae6119ecaec",
+          "method": "arima",
+          "prediction": 39.93393914935113,
+          "error": 0.03393914935113429,
+          "modelVersion": "backend-from-scratch-v1:ab1bb5a3ea4102c3ae2557ede179c03635d6c07c0c0486c6c55896efa82307a4",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-21T17:32:41.295834+08:00",
+          "observedAt": "2026-09-22T16:02:46.454459+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-d9c23ae0d006190e8882231bdc8614ce5ae8b531cd18f436955834a2f13ecd3a",
+          "method": "lstm",
+          "prediction": 39.918348506031606,
+          "error": 0.018348506031607315,
+          "modelVersion": "backend-from-scratch-v1:69c7631800a35b9775b756f37b937c2d7385c9759e1e864db8d1cb3eabdcf878",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-21T17:32:41.295834+08:00",
+          "observedAt": "2026-09-22T16:02:46.454459+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-8a103b856f8490fe2a76fb8e0e339aa305371094c095ec7e56f9a4dfa0b60280",
+          "method": "naive",
+          "prediction": 39.85,
+          "error": -0.04999999999999716,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-21T17:32:41.295834+08:00",
+          "observedAt": "2026-09-22T16:02:46.454459+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-09-22",
-  "dataAsOf": "2026-09-21",
-  "inferenceAt": "2026-09-21T17:32:41.295834+08:00",
+  "forecastDate": "2026-09-23",
+  "dataAsOf": "2026-09-22",
+  "inferenceAt": "2026-09-22T16:02:49.935412+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
