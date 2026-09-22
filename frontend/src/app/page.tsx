@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CompanyLogo from "@/components/CompanyLogo";
+import BrandLogo from "@/components/BrandLogo";
 import ChangeBadge from "@/components/ChangeBadge";
 import { getCompanies, getDashboard } from "@/lib/data";
 import { formatDate, formatDateTimePht, formatPct, formatPeso } from "@/lib/format";
@@ -120,9 +121,12 @@ export default async function HomePage() {
 
         {/* Hero Content: Centered Horizontally & Vertically */}
         <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 text-center flex flex-col items-center justify-center">
-          <span className="inline-flex items-center px-3.5 py-1 text-xs font-semibold !text-blue-300 bg-slate-950/80 border border-brand-400/50 rounded-full mb-4 backdrop-blur-md shadow-md">
-            Educational Dashboard
-          </span>
+          <div className="inline-flex items-center gap-2.5 sm:gap-3 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 bg-slate-950/80 border border-brand-400/50 rounded-full mb-6 sm:mb-8 backdrop-blur-md shadow-lg">
+            <BrandLogo variant="mark" size="md" />
+            <span className="text-base sm:text-lg lg:text-xl font-bold tracking-tight !text-white">
+              PSE Pulse
+            </span>
+          </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold !text-white mb-4 tracking-tight leading-tight max-w-3xl drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]">
             Cross-Sector Next-Day Stock Price Forecasting

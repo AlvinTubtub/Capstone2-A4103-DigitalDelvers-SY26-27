@@ -183,8 +183,8 @@ export default function PredictionChart({
           Showing {visibleData.length} of {data.length} trading sessions &middot; Hover points to inspect prices
         </span>
         {formalBoundaryDate && (
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-teal-400/40 bg-teal-400/10 px-2 py-1 font-semibold text-teal-100">
-            <span className="h-3 border-l-2 border-dashed border-teal-300" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-teal-600/40 bg-teal-50 px-2 py-1 font-semibold text-teal-700 dark:border-teal-400/40 dark:bg-teal-400/10 dark:text-teal-100">
+            <span className="h-3 border-l-2 border-dashed border-teal-600 dark:border-teal-300" aria-hidden="true" />
             Formal evaluation ends {formatShortDate(formalBoundaryDate)}
           </span>
         )}

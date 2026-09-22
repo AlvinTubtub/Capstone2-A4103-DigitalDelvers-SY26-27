@@ -1,5 +1,6 @@
 import AboutInPageNav from "@/components/about/AboutInPageNav";
 import AboutModelsSection from "@/components/about/AboutModelsSection";
+import BrandLogo from "@/components/BrandLogo";
 import { getCompanies, getDashboard } from "@/lib/data";
 import { formatDate, formatDateTimePht } from "@/lib/format";
 
@@ -22,16 +23,26 @@ export default async function AboutPage() {
           ABOUT HERO / RESEARCH OVERVIEW
       ================================================================ */}
       <section className="space-y-6 pt-2">
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-500/15 text-brand-400 border border-brand-500/30">
+        <div className="text-center max-w-3xl mx-auto">
+          {/* Eyebrow */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-500/15 text-brand-400 border border-brand-500/30 mb-4 sm:mb-5">
             RESEARCH & METHODOLOGY
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            About PSE Pulse
-          </h1>
-          <p className="text-base sm:text-lg font-semibold text-slate-200 tracking-tight max-w-2xl mx-auto">
+
+          {/* Clean Centered Title Row */}
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-5">
+            <BrandLogo variant="mark" size="lg" />
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              About PSE Pulse
+            </h1>
+          </div>
+
+          {/* Formal Research Title */}
+          <p className="text-base sm:text-lg font-semibold text-slate-200 tracking-tight max-w-2xl mx-auto mb-3 sm:mb-4">
             Cross-Sector Next-Day Stock Price Forecasting of Selected PSE-Listed Companies
           </p>
+
+          {/* Supporting Description */}
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
             An educational and research forecasting platform designed to evaluate
             next-session closing prices across liquid Philippine equities.

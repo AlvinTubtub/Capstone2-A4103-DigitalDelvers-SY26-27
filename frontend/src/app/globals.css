@@ -219,6 +219,67 @@ html:not(.dark) .text-brand-400 {
   color: #2563eb;
 }
 
+/* ================================================================
+   Light-mode Semantic Green / Emerald Text Contrast Overrides
+================================================================ */
+html:not(.dark) .text-emerald-300,
+html:not(.dark) .text-emerald-400,
+html:not(.dark) .text-green-300,
+html:not(.dark) .text-green-400 {
+  color: #047857;
+}
+
+html:not(.dark) .text-emerald-500,
+html:not(.dark) .text-green-500 {
+  color: #065f46;
+}
+
+html:not(.dark) .hover\:text-emerald-300:hover,
+html:not(.dark) .hover\:text-emerald-400:hover,
+html:not(.dark) .group:hover .group-hover\:text-emerald-300,
+html:not(.dark) .group:hover .group-hover\:text-emerald-400 {
+  color: #047857;
+}
+
+/* ================================================================
+   Light-mode Semantic Amber / Yellow Text Contrast Overrides
+================================================================ */
+html:not(.dark) .text-amber-100,
+html:not(.dark) .text-amber-200,
+html:not(.dark) .text-amber-200\/90 {
+  color: #92400e;
+}
+
+html:not(.dark) .text-amber-300,
+html:not(.dark) .text-amber-300\/80,
+html:not(.dark) .text-amber-400 {
+  color: #b45309;
+}
+
+html:not(.dark) .text-amber-500 {
+  color: #92400e;
+}
+
+html:not(.dark) .text-yellow-300,
+html:not(.dark) .text-yellow-400 {
+  color: #a16207;
+}
+
+html:not(.dark) .text-yellow-500 {
+  color: #854d0e;
+}
+
+html:not(.dark) .hover\:text-amber-300:hover,
+html:not(.dark) .hover\:text-amber-400:hover,
+html:not(.dark) .group:hover .group-hover\:text-amber-300,
+html:not(.dark) .group:hover .group-hover\:text-amber-400 {
+  color: #b45309;
+}
+
+html:not(.dark) .fill-amber-400 {
+  fill: #b45309;
+}
+
 /* Secondary / nested surfaces in light mode */
 html:not(.dark) .bg-dark-bg\/95,
 html:not(.dark) .bg-dark-bg\/90,
@@ -229,6 +290,29 @@ html:not(.dark) .bg-dark-bg\/50,
 html:not(.dark) .bg-dark-bg\/40,
 html:not(.dark) .bg-dark-card .bg-dark-bg {
   background-color: #f1f5f9;
+}
+
+/* ================================================================
+   Light-mode Semantic Badge Background Overrides
+================================================================ */
+html:not(.dark) .bg-emerald-500\/15,
+html:not(.dark) .bg-emerald-500\/10,
+html:not(.dark) .bg-emerald-400\/10,
+html:not(.dark) .bg-green-500\/15,
+html:not(.dark) .bg-green-500\/10 {
+  background-color: rgba(16, 185, 129, 0.10);
+}
+
+html:not(.dark) .bg-amber-500\/15,
+html:not(.dark) .bg-amber-500\/10,
+html:not(.dark) .bg-amber-400\/10,
+html:not(.dark) .bg-yellow-500\/15,
+html:not(.dark) .bg-yellow-500\/10 {
+  background-color: rgba(245, 158, 11, 0.10);
+}
+
+html:not(.dark) .bg-amber-950\/20 {
+  background-color: rgba(245, 158, 11, 0.10);
 }
 
 /* Soft visible borders in light mode */
@@ -243,6 +327,22 @@ html:not(.dark) .border-dark-border\/20,
 html:not(.dark) .divide-dark-border\/60 > :not([hidden]) ~ :not([hidden]),
 html:not(.dark) .divide-dark-border > :not([hidden]) ~ :not([hidden]) {
   border-color: #cbd5e1;
+}
+
+/* ================================================================
+   Light-mode Semantic Border Overrides
+================================================================ */
+html:not(.dark) .border-emerald-500\/30,
+html:not(.dark) .border-emerald-400\/30,
+html:not(.dark) .border-green-500\/30 {
+  border-color: rgba(4, 120, 87, 0.35);
+}
+
+html:not(.dark) .border-amber-500\/30,
+html:not(.dark) .border-amber-400\/30,
+html:not(.dark) .border-amber-500\/40,
+html:not(.dark) .border-yellow-500\/30 {
+  border-color: rgba(180, 83, 9, 0.35);
 }
 
 /* Light mode input & search styling */

@@ -383,7 +383,7 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                   : "⚠ Did not beat Naive held-out RMSE"}
               </span>
               {reporting && (
-                <span className="text-xs px-2.5 py-1 rounded-full font-semibold border border-slate-600 bg-slate-800/70 text-slate-200">
+                <span className="text-xs px-2.5 py-1 rounded-full font-semibold border border-slate-400 bg-slate-200 text-slate-800 dark:border-slate-600 dark:bg-slate-800/70 dark:text-slate-200">
                   Best evaluated: {reporting.bestEvaluatedMethod}
                 </span>
               )}
