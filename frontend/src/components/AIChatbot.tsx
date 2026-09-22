@@ -229,7 +229,7 @@ export default function AIChatbot() {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          aria-label="Open PSE Forecast AI Assistant"
+          aria-label="Open PSE Pulse Ask AI"
           className="group relative flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-500 hover:to-blue-500 text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-brand-500/25 transition-all duration-200 cursor-pointer active:scale-95 border border-brand-400/30 outline-none focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg"
         >
           {/* Sparkle Icon */}
@@ -250,7 +250,7 @@ export default function AIChatbot() {
         <div
           role="dialog"
           aria-modal="false"
-          aria-label="PSE Forecast Assistant Chat"
+          aria-label="PSE Pulse Ask AI chat"
           className="w-[calc(100vw-2rem)] sm:w-[420px] max-h-[85vh] sm:h-[580px] bg-dark-card border border-dark-border rounded-2xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl transition-all duration-200 animate-in fade-in slide-in-from-bottom-5"
         >
           {/* Header */}

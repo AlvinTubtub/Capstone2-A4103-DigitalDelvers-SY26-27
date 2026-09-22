@@ -1,6 +1,8 @@
-# ForecastPH frontend
+# PSE Pulse frontend
 
-This is the Next.js 14 App Router website for ForecastPH. It reads generated operational JSON from `public/forecasts/`; model training and inference run in the repository's backend automation, not in Vercel or the browser.
+This is the Next.js 14 App Router website for PSE Pulse. It reads generated operational JSON from `public/forecasts/`; model training and inference run in the repository's backend automation, not in Vercel or the browser.
+
+Legacy package and browser-storage identifiers containing `forecastph` remain unchanged for compatibility.
 
 ## Local development
 

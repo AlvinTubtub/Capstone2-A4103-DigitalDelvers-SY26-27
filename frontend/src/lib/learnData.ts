@@ -1,5 +1,5 @@
 /**
- * Centralized educational data for ForecastPH Learn Stocks.
+ * Centralized educational data for PSE Pulse Learn Stocks.
  * Stores PSE reference data, broker directory entries, terms, and video metadata.
  */
 
@@ -239,7 +239,7 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
     shortDef: "Spreading capital across multiple companies and sectors.",
     detailedDef: "A risk management strategy that mixes different investments within a portfolio to reduce the impact of any single asset's decline.",
   },
-  // ForecastPH terms
+  // PSE Pulse terms
   {
     term: "Forecasted Close",
     category: "forecastph",

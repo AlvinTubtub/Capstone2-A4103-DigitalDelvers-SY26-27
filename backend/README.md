@@ -1,6 +1,8 @@
-# ForecastPH Backend
+# PSE Pulse Backend
 
-This directory contains the authoritative ForecastPH data, training, evaluation, production-refit, inference, ingestion, and frontend-export implementation.
+This directory contains the authoritative PSE Pulse data, training, evaluation, production-refit, inference, ingestion, and frontend-export implementation.
+
+The public brand does not replace compatibility-sensitive internal identifiers. Existing `forecastph.*` schema IDs, `forecastph-v1-*` forecast IDs, artifact names, formal and supplementary run IDs, module paths, and Python packages remain unchanged.
 
 ## Directory layout
 

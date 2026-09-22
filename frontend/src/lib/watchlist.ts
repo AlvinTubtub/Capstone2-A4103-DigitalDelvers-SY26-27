@@ -1,5 +1,5 @@
 /**
- * Pure client-side storage utilities for ForecastPH Watchlist.
+ * Pure client-side storage utilities for the PSE Pulse Watchlist.
  * Stored in browser localStorage using ticker symbols only.
  */
 

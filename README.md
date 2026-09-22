@@ -1,8 +1,10 @@
-# ForecastPH
+# PSE Pulse
 
-ForecastPH is an educational forecasting platform for selected companies listed on the Philippine Stock Exchange (PSE). It validates official end-of-day OHLCV data, evaluates three forecasting model families against a Naive benchmark, refits production models, and publishes next-session forecasts to a Next.js website.
+PSE Pulse is an educational forecasting platform for selected companies listed on the Philippine Stock Exchange (PSE). It validates official end-of-day OHLCV data, evaluates three forecasting model families against a Naive benchmark, refits production models, and publishes next-session forecasts to a Next.js website.
 
 Forecasts are statistical estimates for education and research. They are not investment advice or trading signals.
+
+PSE Pulse is the current public-facing brand. Legacy internal identifiers containing `forecastph` are retained for compatibility and provenance.
 
 ## Companies and sectors
 
@@ -18,7 +20,7 @@ The configured universe is defined once in `backend/config/companies.py`.
 
 ## Forecasting models
 
-ForecastPH evaluates:
+PSE Pulse evaluates:
 
 - **Lag-Informed Regression (LIR):** LASSO regression over causal lag, return, volume, range, and technical-indicator features.
 - **ARIMA:** a univariate Close-series model selected from a bounded, configuration-driven order grid.
