@@ -1,9 +1,12 @@
 """Single authoritative univariate PyTorch LSTM for next-day Close deltas."""
 
+from __future__ import annotations
+
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date
 import math
+from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
@@ -11,6 +14,9 @@ from torch import Tensor, nn
 
 from src.features.targets import NextDayForecastPair
 from src.models.base import reconstruct_close
+
+if TYPE_CHECKING:
+    from src.training.train_lstm import LstmTrainingHistory
 
 
 @dataclass(frozen=True, slots=True, order=True)
@@ -199,6 +205,7 @@ class FittedLstmModel:
     epoch_count: int
     seed: int
     training_size: int
+    training_history: LstmTrainingHistory | None = None
 
     def predict_delta(
         self,

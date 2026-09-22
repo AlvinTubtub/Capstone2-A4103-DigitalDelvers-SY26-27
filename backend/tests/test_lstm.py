@@ -2,6 +2,7 @@
 
 from dataclasses import replace
 from datetime import date, timedelta
+import gzip
 import json
 import math
 
@@ -24,6 +25,7 @@ from src.training import train_lstm as train_lstm_module
 from src.training.cross_validation import expanding_window_folds
 from src.training.train_lstm import (
     LSTM_EVALUATION_SCHEMA_ID,
+    LSTM_TRAINING_HISTORY_SCHEMA_ID,
     candidate_specifications,
     fit_fixed_epochs,
     persist_lstm_artifacts,
@@ -345,6 +347,8 @@ def test_model_and_scaler_state_are_persisted_under_artifacts(
         tmp_path / "artifacts" / "evaluations" / "lstm"
     )
     assert paths.model_state.parent == paths.metadata.parent
+    assert paths.training_history is not None
+    assert paths.training_history.parent == paths.metadata.parent
     assert metadata["schema_id"] == LSTM_EVALUATION_SCHEMA_ID
     assert metadata["schema_version"] == 1
     assert metadata["model_state_file"] == "ALI-test.pt"
@@ -352,6 +356,10 @@ def test_model_and_scaler_state_are_persisted_under_artifacts(
     assert checkpoint["scaler"] == result.fitted.scaler.state_dict()
     assert checkpoint["model_state_dict"]
     assert checkpoint["schema_id"] == LSTM_EVALUATION_SCHEMA_ID
+    with gzip.open(paths.training_history, "rt", encoding="utf-8") as source:
+        history_payload = json.load(source)
+    assert history_payload["schema_id"] == LSTM_TRAINING_HISTORY_SCHEMA_ID
+    assert history_payload["schema_version"] == 1
     assert len(metadata["tuning"]["candidates"]) == len(tuning.candidates)
     for persisted, in_memory in zip(
         metadata["tuning"]["candidates"], tuning.candidates
