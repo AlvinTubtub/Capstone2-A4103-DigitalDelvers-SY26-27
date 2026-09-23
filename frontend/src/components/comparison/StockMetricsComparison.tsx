@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import CompanyLogo from "@/components/CompanyLogo";
 import {
@@ -49,45 +50,169 @@ const ADVANCED_METRIC_TOOLTIPS: Record<string, MetricTooltipInfo> = {
   },
 };
 
+interface ActiveTooltipState {
+  key: string;
+  triggerId: string;
+  rect: DOMRect;
+  coords: { top: number; left: number };
+}
+
+function computeTooltipPosition(
+  btnRect: DOMRect,
+  tooltipWidth: number,
+  tooltipHeight: number
+): { top: number; left: number } {
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1024;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 768;
+  const padding = 10;
+  const gap = 6;
+
+  const spaceOnRight = vw - (btnRect.right + gap) >= tooltipWidth + padding;
+  const spaceBelow = vh - (btnRect.bottom + gap) >= tooltipHeight + padding;
+
+  let left: number;
+  let top: number;
+
+  if (spaceOnRight) {
+    // Desktop preference: place to the right of the button, vertically centered
+    left = btnRect.right + gap;
+    top = btnRect.top + btnRect.height / 2 - tooltipHeight / 2;
+  } else {
+    // Insufficient room on the right (e.g. mobile or near viewport edge): place below or above
+    left = btnRect.left;
+    if (spaceBelow) {
+      top = btnRect.bottom + gap;
+    } else {
+      top = btnRect.top - tooltipHeight - gap;
+    }
+  }
+
+  // Viewport bounds collision clamping
+  if (left + tooltipWidth > vw - padding) {
+    left = vw - padding - tooltipWidth;
+  }
+  if (left < padding) {
+    left = padding;
+  }
+
+  if (top + tooltipHeight > vh - padding) {
+    top = vh - padding - tooltipHeight;
+  }
+  if (top < padding) {
+    top = padding;
+  }
+
+  return { top, left };
+}
+
 export default function StockMetricsComparison({
   companies,
   title = "Side-by-Side Stock Metrics",
   subtitle = "Compare current forecast values and evaluation information for the selected companies.",
 }: StockMetricsComparisonProps) {
   const [mode, setMode] = useState<"summary" | "advanced">("summary");
-  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [activeTooltip, setActiveTooltip] = useState<ActiveTooltipState | null>(null);
+  const [mounted, setMounted] = useState<boolean>(false);
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const rowsData: CompanyMetricsRowItem[] = companies.map(getCompanyMetricsRowData);
 
-  const toggleTooltip = (key: string) => {
-    setActiveTooltip((prev) => (prev === key ? null : key));
+  const toggleTooltip = (key: string, triggerId: string, buttonEl: HTMLButtonElement) => {
+    if (activeTooltip?.triggerId === triggerId) {
+      setActiveTooltip(null);
+    } else {
+      const rect = buttonEl.getBoundingClientRect();
+      const coords = computeTooltipPosition(rect, 240, 90);
+      setActiveTooltip({ key, triggerId, rect, coords });
+    }
   };
 
-  const renderMetricLabelWithTooltip = (key: string, defaultLabel: string) => {
+  // Refine coordinates after DOM measurement
+  useLayoutEffect(() => {
+    if (!activeTooltip || !tooltipRef.current) return;
+    const el = tooltipRef.current;
+    const rect = el.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const refined = computeTooltipPosition(activeTooltip.rect, rect.width, rect.height);
+      if (
+        Math.abs(refined.top - activeTooltip.coords.top) > 1 ||
+        Math.abs(refined.left - activeTooltip.coords.left) > 1
+      ) {
+        setActiveTooltip((prev) => (prev ? { ...prev, coords: refined } : null));
+      }
+    }
+  }, [activeTooltip?.key, activeTooltip?.triggerId]);
+
+  // Handle outside clicks, Escape key, scroll, and viewport resize
+  useEffect(() => {
+    if (!activeTooltip) return;
+
+    const handleDismiss = () => {
+      setActiveTooltip(null);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveTooltip(null);
+      }
+    };
+
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node | null;
+      if (!target) return;
+      if (tooltipRef.current && tooltipRef.current.contains(target)) return;
+      const triggerEl = document.getElementById(activeTooltip.triggerId);
+      if (triggerEl && triggerEl.contains(target)) return;
+      setActiveTooltip(null);
+    };
+
+    window.addEventListener("scroll", handleDismiss, true);
+    window.addEventListener("resize", handleDismiss);
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      window.removeEventListener("scroll", handleDismiss, true);
+      window.removeEventListener("resize", handleDismiss);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [activeTooltip]);
+
+  const renderMetricLabelWithTooltip = (
+    key: string,
+    defaultLabel: string,
+    scope: string = "desktop"
+  ) => {
     const tip = ADVANCED_METRIC_TOOLTIPS[key];
     if (!tip) return <span>{defaultLabel}</span>;
 
-    const isOpen = activeTooltip === key;
+    const buttonId = `metric-help-${scope}-${key}`;
+    const isOpen = activeTooltip?.triggerId === buttonId;
+    const tooltipId = "advanced-metric-floating-tooltip";
 
     return (
-      <div className="relative inline-flex items-center gap-1.5 group">
+      <div className="inline-flex items-center gap-1.5">
         <span>{defaultLabel}</span>
         <button
           type="button"
-          onClick={() => toggleTooltip(key)}
+          id={buttonId}
+          onClick={(e) => toggleTooltip(key, buttonId, e.currentTarget)}
           aria-label={`About ${defaultLabel}`}
-          className="inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] text-slate-400 hover:text-white bg-dark-bg border border-dark-border/60 hover:border-brand-500 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-400 cursor-pointer"
+          aria-expanded={isOpen}
+          aria-describedby={isOpen ? tooltipId : undefined}
+          className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-400 cursor-pointer ${
+            isOpen
+              ? "text-brand-500 bg-brand-500/15 border border-brand-500"
+              : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 dark:bg-dark-bg border border-slate-300 dark:border-dark-border/60 hover:border-brand-500 dark:hover:border-brand-500"
+          }`}
         >
           ⓘ
         </button>
-        {isOpen && (
-          <div
-            role="tooltip"
-            className="absolute left-0 top-6 z-30 w-56 p-2 text-xs font-normal text-slate-200 bg-dark-card border border-dark-border rounded-lg shadow-xl"
-          >
-            <p className="leading-snug">{tip.explanation}</p>
-          </div>
-        )}
       </div>
     );
   };
@@ -301,7 +426,7 @@ export default function StockMetricsComparison({
                     scope="row"
                     className="py-2.5 px-3 font-medium text-slate-400 sticky left-0 bg-dark-card z-10"
                   >
-                    {renderMetricLabelWithTooltip("rmse", "RMSE (₱)")}
+                    {renderMetricLabelWithTooltip("rmse", "RMSE (₱)", "desktop")}
                   </th>
                   {rowsData.map((c) => (
                     <td key={c.symbol} className="py-2.5 px-4 font-mono text-slate-200">
@@ -315,7 +440,7 @@ export default function StockMetricsComparison({
                     scope="row"
                     className="py-2.5 px-3 font-medium text-slate-400 sticky left-0 bg-dark-card z-10"
                   >
-                    {renderMetricLabelWithTooltip("mae", "MAE (₱)")}
+                    {renderMetricLabelWithTooltip("mae", "MAE (₱)", "desktop")}
                   </th>
                   {rowsData.map((c) => (
                     <td key={c.symbol} className="py-2.5 px-4 font-mono text-slate-200">
@@ -329,7 +454,7 @@ export default function StockMetricsComparison({
                     scope="row"
                     className="py-2.5 px-3 font-medium text-slate-400 sticky left-0 bg-dark-card z-10"
                   >
-                    {renderMetricLabelWithTooltip("mase", "MASE")}
+                    {renderMetricLabelWithTooltip("mase", "MASE", "desktop")}
                   </th>
                   {rowsData.map((c) => (
                     <td key={c.symbol} className="py-2.5 px-4 font-mono text-slate-200">
@@ -343,7 +468,7 @@ export default function StockMetricsComparison({
                     scope="row"
                     className="py-2.5 px-3 font-medium text-slate-400 sticky left-0 bg-dark-card z-10"
                   >
-                    {renderMetricLabelWithTooltip("r2", "R²")}
+                    {renderMetricLabelWithTooltip("r2", "R²", "desktop")}
                   </th>
                   {rowsData.map((c) => (
                     <td key={c.symbol} className="py-2.5 px-4 font-mono text-slate-200">
@@ -357,7 +482,7 @@ export default function StockMetricsComparison({
                     scope="row"
                     className="py-2.5 px-3 font-medium text-slate-400 sticky left-0 bg-dark-card z-10"
                   >
-                    {renderMetricLabelWithTooltip("beatsNaive", "Beats Naive?")}
+                    {renderMetricLabelWithTooltip("beatsNaive", "Beats Naive?", "desktop")}
                   </th>
                   {rowsData.map((c) => (
                     <td key={c.symbol} className="py-2.5 px-4">
@@ -480,27 +605,27 @@ export default function StockMetricsComparison({
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400">RMSE (₱)</span>
+                    {renderMetricLabelWithTooltip("rmse", "RMSE (₱)", `mobile-${c.symbol}`)}
                     <span className="font-mono text-slate-200">{formatNum(c.rmse, 4)}</span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400">MAE (₱)</span>
+                    {renderMetricLabelWithTooltip("mae", "MAE (₱)", `mobile-${c.symbol}`)}
                     <span className="font-mono text-slate-200">{formatNum(c.mae, 4)}</span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400">MASE</span>
+                    {renderMetricLabelWithTooltip("mase", "MASE", `mobile-${c.symbol}`)}
                     <span className="font-mono text-slate-200">{formatNum(c.mase, 4)}</span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400">R²</span>
+                    {renderMetricLabelWithTooltip("r2", "R²", `mobile-${c.symbol}`)}
                     <span className="font-mono text-slate-200">{formatNum(c.r2, 4)}</span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Beats Naive?</span>
+                    {renderMetricLabelWithTooltip("beatsNaive", "Beats Naive?", `mobile-${c.symbol}`)}
                     <span>
                       {c.beatsNaive ? (
                         <span className="text-emerald-400 font-semibold">✓ Yes</span>
@@ -520,6 +645,34 @@ export default function StockMetricsComparison({
           );
         })}
       </div>
+
+      {/* =========================================================================
+          3. VIEWPORT-LEVEL FLOATING TOOLTIP PORTAL (Escapes Overflow/Stacking Contexts)
+      ========================================================================= */}
+      {mounted && activeTooltip && ADVANCED_METRIC_TOOLTIPS[activeTooltip.key] && (
+        createPortal(
+          <div
+            ref={tooltipRef}
+            id="advanced-metric-floating-tooltip"
+            role="tooltip"
+            aria-live="polite"
+            style={{
+              position: "fixed",
+              top: `${activeTooltip.coords.top}px`,
+              left: `${activeTooltip.coords.left}px`,
+            }}
+            className="z-[100] w-[240px] max-w-[calc(100vw-20px)] rounded-xl border p-3 text-xs leading-relaxed shadow-2xl animate-[fadeIn_0.15s_ease-out] bg-white text-slate-800 border-slate-200 shadow-slate-900/10 dark:bg-slate-900 dark:text-slate-200 dark:border-slate-700 dark:shadow-black/60"
+          >
+            <div className="font-bold text-slate-900 dark:text-white mb-1">
+              {ADVANCED_METRIC_TOOLTIPS[activeTooltip.key].label}
+            </div>
+            <p className="text-slate-600 dark:text-slate-300">
+              {ADVANCED_METRIC_TOOLTIPS[activeTooltip.key].explanation}
+            </p>
+          </div>,
+          document.body
+        )
+      )}
     </div>
   );
 }
