@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-22T16:02:50.273607+08:00",
-  "forecastDate": "2026-09-23",
-  "lastRunAt": "2026-09-22T16:02:50.273607+08:00",
+  "generatedAt": "2026-09-23T16:21:45.167714+08:00",
+  "forecastDate": "2026-09-24",
+  "lastRunAt": "2026-09-23T16:21:45.167714+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -33,25 +33,25 @@
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "SMPH",
-    "name": "SM Prime Holdings, Inc.",
-    "sector": "Property",
-    "latestClose": 16.1,
-    "predictedClose": 16.20680283983865,
-    "pctChange": 0.6633716760164611,
+    "symbol": "MER",
+    "name": "Manila Electric Company",
+    "sector": "Industrial",
+    "latestClose": 463.0,
+    "predictedClose": 464.8746705723162,
+    "pctChange": 0.40489645190414186,
     "direction": "bullish",
-    "bestModel": "LSTM",
-    "forecastDate": "2026-09-23"
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-09-24"
   },
   "topLoser": {
-    "symbol": "MBT",
-    "name": "Metropolitan Bank & Trust Company",
-    "sector": "Financials",
-    "latestClose": 62.1,
-    "predictedClose": 61.957476865073815,
-    "pctChange": -0.22950585334329532,
+    "symbol": "ALI",
+    "name": "Ayala Land, Inc.",
+    "sector": "Property",
+    "latestClose": 15.06,
+    "predictedClose": 15.043048094940662,
+    "pctChange": -0.11256245059321582,
     "direction": "bearish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-09-23"
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-09-24"
   }
 }

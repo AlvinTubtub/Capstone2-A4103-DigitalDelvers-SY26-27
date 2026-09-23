@@ -2,10 +2,10 @@
   "symbol": "ALI",
   "name": "Ayala Land, Inc.",
   "sector": "Property",
-  "previousClose": 15.12,
-  "predictedClose": 15.103048094940661,
+  "previousClose": 15.06,
+  "predictedClose": 15.043048094940662,
   "pesoChange": -0.0169519050593383,
-  "pctChange": -0.11211577420197291,
+  "pctChange": -0.11256245059321582,
   "direction": "bearish",
   "model": "Lag-Informed Regression",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 15.103048094940661,
-    "arima": 15.12,
-    "lstm": 15.094029408470163
+    "lag": 15.043048094940662,
+    "arima": 15.06,
+    "lstm": 15.033170177443514
   },
   "ohlcv": [
     {
@@ -13175,6 +13175,14 @@
       "low": 15.12,
       "close": 15.12,
       "volume": 5859600.0
+    },
+    {
+      "date": "2026-09-23",
+      "open": 15.12,
+      "high": 15.3,
+      "low": 14.94,
+      "close": 15.06,
+      "volume": 6226200.0
     }
   ],
   "backtestDates": [
@@ -13558,7 +13566,8 @@
     "2026-09-17",
     "2026-09-18",
     "2026-09-21",
-    "2026-09-22"
+    "2026-09-22",
+    "2026-09-23"
   ],
   "productionBacktestActual": [
     15.12,
@@ -13567,7 +13576,8 @@
     15.2,
     15.0,
     15.18,
-    15.12
+    15.12,
+    15.06
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13577,7 +13587,8 @@
       15.163048094940661,
       15.183048094940661,
       14.983048094940662,
-      15.163048094940661
+      15.163048094940661,
+      15.103048094940661
     ],
     "ARIMA": [
       15.06,
@@ -13586,7 +13597,8 @@
       15.18,
       15.2,
       15.0,
-      15.18
+      15.18,
+      15.12
     ],
     "LSTM": [
       15.03558803560066,
@@ -13595,7 +13607,8 @@
       15.153793017351996,
       15.168883283270455,
       14.973480747669699,
-      15.15112444639433
+      15.15112444639433,
+      15.094029408470163
     ],
     "Naive baseline": [
       15.06,
@@ -13604,7 +13617,8 @@
       15.18,
       15.2,
       15.0,
-      15.18
+      15.18,
+      15.12
     ]
   },
   "productionBacktestProvenance": [
@@ -14062,11 +14076,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "ALI",
+      "originDate": "2026-09-22",
+      "targetDate": "2026-09-23",
+      "actualClose": 15.06,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-b7f210067d42cbd386dd14a3441ef7342890d71f7c26858f99a953f98b3ceef3",
+          "method": "lag_reg",
+          "prediction": 15.103048094940661,
+          "error": 0.04304809494066042,
+          "modelVersion": "backend-from-scratch-v1:7f166778a9d1c9e79770877987c1fbdce3a5e66ee729667e29876892740fa573",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-22T16:02:49.087576+08:00",
+          "observedAt": "2026-09-23T16:21:39.866470+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-e722c3978ed7214f9baf1ee1df30ca28b3bc78259e6ea0b50dcfaee97ca84672",
+          "method": "arima",
+          "prediction": 15.12,
+          "error": 0.05999999999999872,
+          "modelVersion": "backend-from-scratch-v1:4b2a5b973c42b7daf7aeec5a2b501932fa956def491c3a2eeb0346210b1ac7f8",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-22T16:02:49.087576+08:00",
+          "observedAt": "2026-09-23T16:21:39.866470+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-f3c7a1399beca6a81ed257dd5d577dd00029170a95edfd2d1d6a437e8b84019b",
+          "method": "lstm",
+          "prediction": 15.094029408470163,
+          "error": 0.03402940847016289,
+          "modelVersion": "backend-from-scratch-v1:230271500550676f8fbcaeb86c47b6b4258e8931e7ba0e6524f8184f42ef0fe5",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-22T16:02:49.087576+08:00",
+          "observedAt": "2026-09-23T16:21:39.866470+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-8ad464d5b6d1504d1989471e2e60fbe300bae4f63a0c5b8c944210f3e2b83f21",
+          "method": "naive",
+          "prediction": 15.12,
+          "error": 0.05999999999999872,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-22T16:02:49.087576+08:00",
+          "observedAt": "2026-09-23T16:21:39.866470+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-09-23",
-  "dataAsOf": "2026-09-22",
-  "inferenceAt": "2026-09-22T16:02:49.087576+08:00",
+  "forecastDate": "2026-09-24",
+  "dataAsOf": "2026-09-23",
+  "inferenceAt": "2026-09-23T16:21:43.397360+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
