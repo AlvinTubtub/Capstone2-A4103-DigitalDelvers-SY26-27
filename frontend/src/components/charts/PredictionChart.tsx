@@ -62,6 +62,7 @@ export interface PredictionChartProps {
   selectedModel?: string;
   sources?: ForecastEvidenceSource[];
   formalBoundaryDate?: string;
+  beginnerMode?: boolean;
 }
 
 export default function PredictionChart({
@@ -71,6 +72,7 @@ export default function PredictionChart({
   selectedModel,
   sources,
   formalBoundaryDate,
+  beginnerMode = false,
 }: PredictionChartProps) {
   const data = useMemo(() => actual.map((value, i) => {
     const rawDate = dates?.[i] || `Day ${i + 1}`;
@@ -97,7 +99,9 @@ export default function PredictionChart({
     [data, gestures.viewport.endIndex, gestures.viewport.startIndex],
   );
 
-  const seriesNames = ["Actual", ...Object.keys(byModel)];
+  const seriesNames = beginnerMode
+    ? ["Actual", ...Object.keys(byModel)]
+    : ["Actual", ...Object.keys(byModel)];
 
   if (data.length === 0) {
     return (
@@ -132,6 +136,37 @@ export default function PredictionChart({
           {sourceLabel}
         </p>
         {payload.map((entry: any) => {
+          if (beginnerMode) {
+            const isActual = entry.dataKey === "Actual";
+            const label = isActual ? "Actual Close" : "Predicted Close";
+            const color = isActual ? "#22c55e" : "#3b82f6";
+
+            return (
+              <div key={entry.dataKey} className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
+                    style={{ backgroundColor: color }}
+                  />
+                  <span
+                    className={`font-medium ${
+                      isActual ? "text-green-400 font-semibold" : "text-brand-400 font-semibold"
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </div>
+                <span className="font-mono text-white font-semibold">
+                  ₱
+                  {Number(entry.value).toLocaleString("en-PH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+            );
+          }
+
           const isActual = entry.dataKey === "Actual";
           const isSelected = selectedModel && entry.dataKey === selectedModel;
           const isNaive =
@@ -239,6 +274,14 @@ export default function PredictionChart({
             <Legend
               wrapperStyle={{ fontSize: 12, paddingTop: 10 }}
               formatter={(value) => {
+                if (beginnerMode) {
+                  const isActual = value === "Actual";
+                  return (
+                    <span className={isActual ? "text-slate-300 font-medium" : "font-bold text-white"}>
+                      {isActual ? "Actual Close" : "Predicted Close"}
+                    </span>
+                  );
+                }
                 const isSelected = selectedModel && value === selectedModel;
                 const isNaive = value === "Naive baseline" || value === "Naive Baseline";
                 const displayLabel = isNaive ? "Naive Baseline" : value;
@@ -252,6 +295,23 @@ export default function PredictionChart({
             />
 
             {seriesNames.map((name) => {
+              if (beginnerMode) {
+                const isActual = name === "Actual";
+                return (
+                  <Line
+                    key={name}
+                    type="monotone"
+                    dataKey={name}
+                    name={isActual ? "Actual Close" : "Predicted Close"}
+                    stroke={isActual ? "#22c55e" : "#3b82f6"}
+                    strokeWidth={isActual ? 2.5 : 2}
+                    strokeDasharray={isActual ? undefined : "4 4"}
+                    dot={visibleData.length === 1 ? { r: 4 } : false}
+                    activeDot={{ r: 4 }}
+                  />
+                );
+              }
+
               const isActual = name === "Actual";
               const isSelected = selectedModel && name === selectedModel;
               const isNaive = name === "Naive baseline" || name === "Naive Baseline";

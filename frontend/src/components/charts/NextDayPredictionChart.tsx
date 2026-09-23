@@ -27,6 +27,8 @@ export interface NextDayPredictionChartProps {
   forecastDate?: string;
   dataAsOf?: string | null;
   hideModelBreakdown?: boolean;
+  selectedPrincipalModelId?: "lag_reg" | "arima" | "lstm";
+  selectedPrincipalModel?: string;
 }
 
 function formatShortDate(dateStr: string): string {
@@ -51,8 +53,22 @@ export default function NextDayPredictionChart({
   forecastDate,
   dataAsOf,
   hideModelBreakdown = false,
+  selectedPrincipalModelId,
+  selectedPrincipalModel,
 }: NextDayPredictionChartProps) {
   const [windowSize, setWindowSize] = useState<number>(25);
+
+  const selectedNextVal = useMemo(() => {
+    if (selectedPrincipalModelId === "lag_reg") return nextClose.lag;
+    if (selectedPrincipalModelId === "arima") return nextClose.arima;
+    if (selectedPrincipalModelId === "lstm") return nextClose.lstm;
+
+    if (selectedPrincipalModel === "Lag-Informed Regression") return nextClose.lag;
+    if (selectedPrincipalModel === "ARIMA") return nextClose.arima;
+    if (selectedPrincipalModel === "LSTM") return nextClose.lstm;
+
+    return nextClose.arima ?? nextClose.lag ?? nextClose.lstm;
+  }, [selectedPrincipalModelId, selectedPrincipalModel, nextClose]);
 
   const fullChartData = useMemo(() => {
     if (!ohlcv || ohlcv.length === 0) return [];
@@ -69,10 +85,11 @@ export default function NextDayPredictionChart({
         actualClose: pt.close,
         isForecastPoint: false,
         isLatestActual,
-        // Start dashed prediction branches from the latest actual close point
-        arimaNext: isLatestActual ? pt.close : null,
-        lagNext: isLatestActual ? pt.close : null,
-        lstmNext: isLatestActual ? pt.close : null,
+        // Start dashed prediction branch from the latest actual close point
+        predictedClose: hideModelBreakdown && isLatestActual ? pt.close : null,
+        arimaNext: !hideModelBreakdown && isLatestActual ? pt.close : null,
+        lagNext: !hideModelBreakdown && isLatestActual ? pt.close : null,
+        lstmNext: !hideModelBreakdown && isLatestActual ? pt.close : null,
       };
     });
 
@@ -87,13 +104,14 @@ export default function NextDayPredictionChart({
       actualClose: null as any,
       isForecastPoint: true,
       isLatestActual: false,
-      arimaNext: nextClose.arima ?? null as any,
-      lagNext: nextClose.lag ?? null as any,
-      lstmNext: nextClose.lstm ?? null as any,
+      predictedClose: hideModelBreakdown ? (selectedNextVal ?? null) : null,
+      arimaNext: !hideModelBreakdown ? (nextClose.arima ?? (null as any)) : (null as any),
+      lagNext: !hideModelBreakdown ? (nextClose.lag ?? (null as any)) : (null as any),
+      lstmNext: !hideModelBreakdown ? (nextClose.lstm ?? (null as any)) : (null as any),
     });
 
     return items;
-  }, [ohlcv, windowSize, forecastDate, nextClose]);
+  }, [ohlcv, windowSize, forecastDate, nextClose, hideModelBreakdown, selectedNextVal]);
 
   const gestures = useChartInteractions({
     totalPoints: fullChartData.length,
@@ -108,11 +126,15 @@ export default function NextDayPredictionChart({
   // Compute dynamic Y-axis domain
   const yDomain = useMemo(() => {
     const values: number[] = [];
-    chartData.forEach((d) => {
+    chartData.forEach((d: any) => {
       if (typeof d.actualClose === "number") values.push(d.actualClose);
-      if (typeof d.arimaNext === "number") values.push(d.arimaNext);
-      if (typeof d.lagNext === "number") values.push(d.lagNext);
-      if (typeof d.lstmNext === "number") values.push(d.lstmNext);
+      if (hideModelBreakdown) {
+        if (typeof d.predictedClose === "number") values.push(d.predictedClose);
+      } else {
+        if (typeof d.arimaNext === "number") values.push(d.arimaNext);
+        if (typeof d.lagNext === "number") values.push(d.lagNext);
+        if (typeof d.lstmNext === "number") values.push(d.lstmNext);
+      }
     });
 
     if (values.length === 0) return ["auto", "auto"];
@@ -125,7 +147,7 @@ export default function NextDayPredictionChart({
       Math.max(0, Math.floor((minVal - padding) * 10) / 10),
       Math.ceil((maxVal + padding) * 10) / 10,
     ];
-  }, [chartData]);
+  }, [chartData, hideModelBreakdown]);
 
   const renderTooltip = ({ active, payload }: any) => {
     if (!active || !payload || !payload.length) return null;
@@ -133,6 +155,34 @@ export default function NextDayPredictionChart({
     if (!point) return null;
 
     if (point.isForecastPoint) {
+      if (hideModelBreakdown) {
+        return (
+          <div className="bg-dark-card border border-dark-border rounded-xl p-3.5 shadow-xl text-xs space-y-2 min-w-[220px]">
+            <div className="font-semibold text-white border-b border-dark-border pb-1.5 mb-1.5 flex items-center justify-between">
+              <span>{point.fullDate}</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-400 font-normal">
+                Forecast
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-slate-300 pb-1">
+                <span className="text-slate-400">Latest Actual Close:</span>
+                <span className="font-mono font-medium text-white">{formatPeso(previousClose)}</span>
+              </div>
+              <div className="border-t border-dark-border/60 pt-1.5 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-brand-500" />
+                  <span className="text-slate-300">Predicted Close:</span>
+                </div>
+                <span className="font-mono font-semibold text-brand-400">
+                  {selectedNextVal !== undefined ? formatPeso(selectedNextVal) : "--"}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="bg-dark-card border border-dark-border rounded-xl p-3.5 shadow-xl text-xs space-y-2 min-w-[240px]">
           <div className="font-semibold text-white border-b border-dark-border pb-1.5 mb-1.5 flex items-center justify-between">
@@ -195,7 +245,9 @@ export default function NextDayPredictionChart({
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-slate-400 dark:bg-white" />
             <span className="text-slate-300">
-              {point.isLatestActual ? "Latest Actual Close:" : "Actual Close:"}
+              {point.isLatestActual
+                ? (hideModelBreakdown ? "Actual Close:" : "Latest Actual Close:")
+                : "Actual Close:"}
             </span>
           </div>
           <span className="font-mono font-semibold text-white">
@@ -247,32 +299,51 @@ export default function NextDayPredictionChart({
     <div className="w-full space-y-4 select-none">
       {/* 1. Header Legend & Range Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-dark-border/60">
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
-          <div className="flex items-center gap-1.5">
-            <span className="w-3.5 h-0.5 bg-slate-900 dark:bg-white inline-block rounded-full"></span>
-            <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white inline-block -ml-2.5"></span>
-            <span className="font-medium text-slate-800 dark:text-slate-200">
-              Actual close (latest)
-            </span>
+        {hideModelBreakdown ? (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-0.5 bg-slate-900 dark:bg-white inline-block rounded-full"></span>
+              <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white inline-block -ml-2.5"></span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">
+                Actual Close
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-0 border-t-2 border-dashed border-brand-500 inline-block"></span>
+              <span className="w-2 h-2 rounded-full bg-brand-500 inline-block -ml-2.5"></span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">
+                Predicted Close
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3.5 h-0 border-t-2 border-dashed border-[#a855f7] inline-block"></span>
-            <span className="w-2 h-2 rounded-full bg-[#a855f7] inline-block -ml-2.5"></span>
-            <span className="font-medium text-slate-800 dark:text-slate-200">ARIMA (next day)</span>
+        ) : (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-0.5 bg-slate-900 dark:bg-white inline-block rounded-full"></span>
+              <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white inline-block -ml-2.5"></span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">
+                Actual close (latest)
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-0 border-t-2 border-dashed border-[#a855f7] inline-block"></span>
+              <span className="w-2 h-2 rounded-full bg-[#a855f7] inline-block -ml-2.5"></span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">ARIMA (next day)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-0 border-t-2 border-dashed border-[#38bdf8] inline-block"></span>
+              <span className="w-2 h-2 rounded-full bg-[#38bdf8] inline-block -ml-2.5"></span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">
+                Lag-Informed Regression (next day)
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-0 border-t-2 border-dashed border-[#f97316] inline-block"></span>
+              <span className="w-2 h-2 rounded-full bg-[#f97316] inline-block -ml-2.5"></span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">LSTM (next day)</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3.5 h-0 border-t-2 border-dashed border-[#38bdf8] inline-block"></span>
-            <span className="w-2 h-2 rounded-full bg-[#38bdf8] inline-block -ml-2.5"></span>
-            <span className="font-medium text-slate-800 dark:text-slate-200">
-              Lag-Informed Regression (next day)
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3.5 h-0 border-t-2 border-dashed border-[#f97316] inline-block"></span>
-            <span className="w-2 h-2 rounded-full bg-[#f97316] inline-block -ml-2.5"></span>
-            <span className="font-medium text-slate-800 dark:text-slate-200">LSTM (next day)</span>
-          </div>
-        </div>
+        )}
 
         {/* Range Buttons */}
         <div className="flex items-center gap-1 self-end sm:self-auto bg-dark-bg border border-dark-border rounded-lg p-0.5 text-xs">
@@ -337,7 +408,7 @@ export default function NextDayPredictionChart({
             <Line
               type="linear"
               dataKey="actualClose"
-              name="Actual close (latest)"
+              name={hideModelBreakdown ? "Actual Close" : "Actual close (latest)"}
               stroke="var(--chart-actual-line)"
               strokeWidth={2.5}
               dot={renderActualDot}
@@ -345,44 +416,62 @@ export default function NextDayPredictionChart({
               connectNulls={false}
             />
 
-            {/* Dashed Branch for ARIMA Next Day */}
-            <Line
-              type="linear"
-              dataKey="arimaNext"
-              name="ARIMA (next day)"
-              stroke="#a855f7"
-              strokeWidth={2}
-              strokeDasharray="4 4"
-              dot={renderPredictionDot("#a855f7")}
-              activeDot={{ r: 5 }}
-              connectNulls={false}
-            />
+            {hideModelBreakdown ? (
+              /* Single Dashed Branch for Selected Model Prediction in Beginner Mode */
+              <Line
+                type="linear"
+                dataKey="predictedClose"
+                name="Predicted Close"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                strokeDasharray="4 4"
+                dot={renderPredictionDot("#3b82f6")}
+                activeDot={{ r: 5 }}
+                connectNulls={false}
+              />
+            ) : (
+              /* 3 Model Branches in Advanced Mode */
+              <>
+                {/* Dashed Branch for ARIMA Next Day */}
+                <Line
+                  type="linear"
+                  dataKey="arimaNext"
+                  name="ARIMA (next day)"
+                  stroke="#a855f7"
+                  strokeWidth={2}
+                  strokeDasharray="4 4"
+                  dot={renderPredictionDot("#a855f7")}
+                  activeDot={{ r: 5 }}
+                  connectNulls={false}
+                />
 
-            {/* Dashed Branch for Lag-Informed Regression Next Day */}
-            <Line
-              type="linear"
-              dataKey="lagNext"
-              name="Lag-Informed Regression (next day)"
-              stroke="#38bdf8"
-              strokeWidth={2}
-              strokeDasharray="4 4"
-              dot={renderPredictionDot("#38bdf8")}
-              activeDot={{ r: 5 }}
-              connectNulls={false}
-            />
+                {/* Dashed Branch for Lag-Informed Regression Next Day */}
+                <Line
+                  type="linear"
+                  dataKey="lagNext"
+                  name="Lag-Informed Regression (next day)"
+                  stroke="#38bdf8"
+                  strokeWidth={2}
+                  strokeDasharray="4 4"
+                  dot={renderPredictionDot("#38bdf8")}
+                  activeDot={{ r: 5 }}
+                  connectNulls={false}
+                />
 
-            {/* Dashed Branch for LSTM Next Day */}
-            <Line
-              type="linear"
-              dataKey="lstmNext"
-              name="LSTM (next day)"
-              stroke="#f97316"
-              strokeWidth={2}
-              strokeDasharray="4 4"
-              dot={renderPredictionDot("#f97316")}
-              activeDot={{ r: 5 }}
-              connectNulls={false}
-            />
+                {/* Dashed Branch for LSTM Next Day */}
+                <Line
+                  type="linear"
+                  dataKey="lstmNext"
+                  name="LSTM (next day)"
+                  stroke="#f97316"
+                  strokeWidth={2}
+                  strokeDasharray="4 4"
+                  dot={renderPredictionDot("#f97316")}
+                  activeDot={{ r: 5 }}
+                  connectNulls={false}
+                />
+              </>
+            )}
           </LineChart>
         </ResponsiveContainer>
       </div>

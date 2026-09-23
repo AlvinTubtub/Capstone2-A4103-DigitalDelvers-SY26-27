@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import HistoryChart from "@/components/charts/HistoryChart";
 import NextDayPredictionChart from "@/components/charts/NextDayPredictionChart";
 import PredictionChart from "@/components/charts/PredictionChart";
@@ -127,14 +127,32 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
       ? productionProvenance.map((point) => point.source)
       : []),
   ];
-  const chartByModel = Object.fromEntries(
-    Object.entries(company.backtestByModel).map(([model, values]) => [
-      model,
-      hasRealizedProductionHistory && productionByModel[model]
-        ? [...values, ...productionByModel[model]]
-        : values,
-    ])
+  const selectedPrincipalLabel =
+    reporting?.bestPrincipalModel ?? company.bestPrincipalModel ?? company.model;
+  const selectedPrincipalId = (Object.entries(modelLabels).find(
+    ([_, l]) => l === selectedPrincipalLabel
+  )?.[0] ?? selectedModelKey) as "lag_reg" | "arima" | "lstm";
+
+  const chartByModel = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(company.backtestByModel).map(([model, values]) => [
+          model,
+          hasRealizedProductionHistory && productionByModel[model]
+            ? [...values, ...productionByModel[model]]
+            : values,
+        ])
+      ),
+    [company.backtestByModel, hasRealizedProductionHistory, productionByModel]
   );
+
+  const displayedByModel = useMemo(() => {
+    if (viewMode === "beginner") {
+      const modelSeries = chartByModel[selectedPrincipalLabel];
+      return modelSeries ? { [selectedPrincipalLabel]: modelSeries } : {};
+    }
+    return chartByModel;
+  }, [viewMode, selectedPrincipalLabel, chartByModel]);
 
   return (
     <div className="space-y-8">
@@ -435,7 +453,7 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
         </section>
       )}
 
-      {reporting?.allPrincipalsWorseThanNaive && (
+      {viewMode === "advanced" && reporting?.allPrincipalsWorseThanNaive && (
         <section role="status" className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
           <strong>Naive benchmark warning:</strong> all three principal models had higher
           RMSE than Naive during this evaluation period. {reporting.bestPrincipalModel} is
@@ -456,7 +474,9 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           <h2 className="text-lg font-semibold text-white">Next-Day Prediction</h2>
         </div>
         <p className="text-sm text-slate-400 mb-4">
-          Latest actual close with model predictions for the next trading session.
+          {viewMode === "beginner"
+            ? "Latest actual close with the predicted close for the next trading session."
+            : "Latest actual close with model predictions for the next trading session."}
         </p>
         <NextDayPredictionChart
           ohlcv={company.ohlcv}
@@ -465,6 +485,8 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           forecastDate={company.forecastDate}
           dataAsOf={company.dataAsOf}
           hideModelBreakdown={viewMode === "beginner"}
+          selectedPrincipalModelId={selectedPrincipalId}
+          selectedPrincipalModel={selectedPrincipalLabel}
         />
       </section>
 
@@ -472,7 +494,9 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
       <section className="bg-dark-card border border-dark-border rounded-xl p-6">
         <div className="flex flex-wrap items-center gap-2 mb-1">
           <h2 className="text-lg font-semibold text-white">
-            Predicted vs. Actual — Formal Evaluation + Post-Formal Monitoring
+            {viewMode === "beginner"
+              ? "Predicted vs. Actual"
+              : "Predicted vs. Actual — Formal Evaluation + Post-Formal Monitoring"}
           </h2>
           <span className="rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
             Chronological evaluation
@@ -484,7 +508,9 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           )}
         </div>
         <p className="text-sm text-slate-400 mb-4">
-          {company.evaluationMetadata ? (
+          {viewMode === "beginner" ? (
+            "Historical actual closing prices compared with the corresponding predictions."
+          ) : company.evaluationMetadata ? (
             <>
               Displays the latest {company.evaluationMetadata.displayedSessionCount} sessions from
               the frozen {company.evaluationMetadata.fullSessionCount}-session formal evaluation
@@ -500,18 +526,23 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
               evaluation sessions. Full evaluation count and range will appear after the next
               fresh export; they are not inferred from the display window.
             </>
-          )}{" "}
-          {" "}{company.evaluationMetadata?.displayedSessionCount ?? auditedDates.length} formal
-          evaluation sessions + {verifiedProductionDates.length} post-formal
-          {verifiedProductionDates.length === 1 ? " session" : " sessions"} are displayed.
+          )}
+          {viewMode === "advanced" && (
+            <>
+              {" "}{company.evaluationMetadata?.displayedSessionCount ?? auditedDates.length} formal
+              evaluation sessions + {verifiedProductionDates.length} post-formal
+              {verifiedProductionDates.length === 1 ? " session" : " sessions"} are displayed.
+            </>
+          )}
         </p>
         <PredictionChart
           dates={chartDates}
           actual={chartActual}
-          byModel={chartByModel}
-          selectedModel={company.model}
+          byModel={displayedByModel}
+          selectedModel={selectedPrincipalLabel}
           sources={chartSources}
           formalBoundaryDate={company.evaluationMetadata?.fullEndDate}
+          beginnerMode={viewMode === "beginner"}
         />
       </section>
 
