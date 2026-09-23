@@ -193,6 +193,38 @@ DATA_QUALITY_COLUMNS: Final[tuple[str, ...]] = (
     "formal_git_sha", "rule_version",
 )
 
+DATA_QUALITY_RULE_COLUMNS: Final[tuple[str, ...]] = (
+    "rule_name",
+    "rule_category",
+    "measurement",
+    "pass_condition",
+    "review_condition",
+    "fail_condition",
+    "threshold_value",
+    "threshold_unit",
+    "effect_on_dataset_quality",
+    "rule_version",
+    "notes",
+    "formal_run_id",
+    "formal_cutoff",
+    "formal_git_sha",
+)
+
+PRINCIPAL_WIN_SUMMARY_COLUMNS: Final[tuple[str, ...]] = (
+    "model",
+    "win_count",
+    "total_companies",
+    "win_share",
+    "strict_majority_threshold",
+    "strict_majority_achieved",
+    "overall_majority_model",
+    "selection_metric",
+    "interpretation",
+    "formal_run_id",
+    "formal_cutoff",
+    "formal_git_sha",
+)
+
 MANIFEST_COLUMNS: Final[tuple[str, ...]] = (
     "filename",
     "purpose",
@@ -217,8 +249,10 @@ SUBSTANTIVE_FILE_ORDER: Final[tuple[str, ...]] = (
     "within_company_dm.csv",
     "across_company_tests.csv",
     "principal_winners.csv",
+    "principal_win_summary.csv",
     "sector_peer_summary.csv",
     "data_quality.csv",
+    "data_quality_rules.csv",
 )
 
 SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
@@ -228,8 +262,10 @@ SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
     "within_company_dm.csv": WITHIN_COMPANY_DM_COLUMNS,
     "across_company_tests.csv": ACROSS_COMPANY_COLUMNS,
     "principal_winners.csv": PRINCIPAL_WINNER_COLUMNS,
+    "principal_win_summary.csv": PRINCIPAL_WIN_SUMMARY_COLUMNS,
     "sector_peer_summary.csv": SECTOR_PEER_COLUMNS,
     "data_quality.csv": DATA_QUALITY_COLUMNS,
+    "data_quality_rules.csv": DATA_QUALITY_RULE_COLUMNS,
 }
 
 SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
@@ -239,8 +275,10 @@ SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
     "within_company_dm.csv": 180,
     "across_company_tests.csv": 7,
     "principal_winners.csv": 15,
+    "principal_win_summary.csv": 3,
     "sector_peer_summary.csv": 15,
     "data_quality.csv": 15,
+    "data_quality_rules.csv": 6,
 }
 
 SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
@@ -250,8 +288,10 @@ SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
     "within_company_dm.csv": "all-pairs within-company paired DM evidence",
     "across_company_tests.csv": "across-company MASE statistical evidence",
     "principal_winners.csv": "descriptive per-company principal-model winners",
+    "principal_win_summary.csv": "descriptive aggregate principal-model win counts",
     "sector_peer_summary.csv": "descriptive within-sector company-peer summaries",
     "data_quality.csv": "frozen formal-dataset quality screening evidence",
+    "data_quality_rules.csv": "predeclared frozen data-quality screening rules",
 }
 
 SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
@@ -261,8 +301,10 @@ SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
     "within_company_dm.csv": "formal+supplementary",
     "across_company_tests.csv": "formal+supplementary",
     "principal_winners.csv": "formal+supplementary",
+    "principal_win_summary.csv": "formal-derived-summary",
     "sector_peer_summary.csv": "formal",
     "data_quality.csv": "formal+data-quality-screening",
+    "data_quality_rules.csv": "predeclared-data-quality-rules",
 }
 
 SUPPLEMENTARY_DEPENDENT_FILES: Final[frozenset[str]] = frozenset(
@@ -1507,6 +1549,180 @@ def _csv_boolean(value: str, label: str) -> bool:
     return value == "true"
 
 
+def build_data_quality_rule_rows() -> tuple[dict[str, object], ...]:
+    """Return the six predeclared rules without inspecting company outcomes."""
+
+    common = {
+        "rule_version": RULE_VERSION,
+        "formal_run_id": FORMAL_RUN_ID,
+        "formal_cutoff": FORMAL_CUTOFF,
+        "formal_git_sha": FORMAL_GIT_SHA,
+    }
+    return (
+        {
+            "rule_name": "basic_ohlcv_validity",
+            "rule_category": "hard",
+            "measurement": (
+                "required columns, canonical dates, finite numeric OHLCV, positive "
+                "prices, non-negative volume, valid OHLC relationships, unique "
+                "chronological dates"
+            ),
+            "pass_condition": "all structural checks pass",
+            "review_condition": "",
+            "fail_condition": "any structural validity check fails",
+            "threshold_value": "",
+            "threshold_unit": "",
+            "effect_on_dataset_quality": "FAIL if rule fails",
+            "notes": "dataset_quality_status depends on this hard rule",
+            **common,
+        },
+        {
+            "rule_name": "trading_session_continuity",
+            "rule_category": "hard",
+            "measurement": "observed dates compared with configured PSE trading calendar",
+            "pass_condition": (
+                "missing sessions = 0; unexpected sessions = 0; duplicate sessions = 0"
+            ),
+            "review_condition": "",
+            "fail_condition": (
+                "any missing, unexpected, or duplicate trading session exists"
+            ),
+            "threshold_value": "0",
+            "threshold_unit": "session violations",
+            "effect_on_dataset_quality": "FAIL if rule fails",
+            "notes": "dataset_quality_status depends on this hard rule",
+            **common,
+        },
+        {
+            "rule_name": "zero_volume",
+            "rule_category": "screening",
+            "measurement": "count of formal sessions where Volume == 0",
+            "pass_condition": "zero-volume count = 0",
+            "review_condition": "zero-volume count > 0",
+            "fail_condition": "",
+            "threshold_value": "0",
+            "threshold_unit": "sessions",
+            "effect_on_dataset_quality": (
+                "review only; does not cause dataset-quality FAIL"
+            ),
+            "notes": "",
+            **common,
+        },
+        {
+            "rule_name": "stale_price",
+            "rule_category": "screening",
+            "measurement": (
+                "maximum consecutive sessions with identical full Open, High, Low, "
+                "and Close"
+            ),
+            "pass_condition": "maximum identical-OHLC run < 5 sessions",
+            "review_condition": "maximum identical-OHLC run >= 5 sessions",
+            "fail_condition": "",
+            "threshold_value": "5",
+            "threshold_unit": "consecutive sessions",
+            "effect_on_dataset_quality": (
+                "review only; does not cause dataset-quality FAIL"
+            ),
+            "notes": (
+                "threshold counts sessions, not transitions; Volume is excluded from "
+                "equality; unchanged Close alone is insufficient"
+            ),
+            **common,
+        },
+        {
+            "rule_name": "ohlcv_activity_proxy",
+            "rule_category": "screening",
+            "measurement": "active-session rate where active session means Volume > 0",
+            "pass_condition": "active-session rate >= 0.95",
+            "review_condition": "active-session rate < 0.95",
+            "fail_condition": "",
+            "threshold_value": "0.95",
+            "threshold_unit": "proportion of sessions",
+            "effect_on_dataset_quality": (
+                "review only; does not cause dataset-quality FAIL"
+            ),
+            "notes": (
+                "OHLCV-based activity/liquidity proxy; not a comprehensive "
+                "market-liquidity measure"
+            ),
+            **common,
+        },
+        {
+            "rule_name": "material_discontinuity",
+            "rule_category": "screening",
+            "measurement": "absolute simple close-to-close return",
+            "pass_condition": "all absolute returns < 0.30",
+            "review_condition": "any absolute return >= 0.30",
+            "fail_condition": "",
+            "threshold_value": "0.30",
+            "threshold_unit": "absolute simple return",
+            "effect_on_dataset_quality": (
+                "review only; does not cause dataset-quality FAIL"
+            ),
+            "notes": (
+                "A review flag is not an assertion of bad data or a corporate action."
+            ),
+            **common,
+        },
+    )
+
+
+def build_principal_win_summary_rows(
+    principal_winner_rows: Sequence[Mapping[str, str]],
+) -> tuple[dict[str, object], ...]:
+    """Aggregate stored company winners without reading predictions or RMSE."""
+
+    if len(principal_winner_rows) != len(COMPANIES):
+        raise ResearchResultExportError(
+            "Principal win summary requires exactly 15 company winner rows"
+        )
+    symbols = [row.get("symbol") for row in principal_winner_rows]
+    if len(set(symbols)) != len(COMPANIES):
+        raise ResearchResultExportError(
+            "Principal win summary source contains duplicate companies"
+        )
+    counts = {method: 0 for method in PRINCIPAL_METHODS}
+    for row in principal_winner_rows:
+        method = row.get("best_principal_model")
+        if method not in counts:
+            raise ResearchResultExportError(
+                f"Principal win summary source has invalid winner: {method!r}"
+            )
+        counts[method] += 1
+    if sum(counts.values()) != len(COMPANIES):
+        raise ResearchResultExportError("Principal win counts do not sum to 15")
+
+    threshold = len(COMPANIES) // 2 + 1
+    majority_models = [
+        method for method in PRINCIPAL_METHODS if counts[method] >= threshold
+    ]
+    if len(majority_models) > 1:
+        raise ResearchResultExportError(
+            "More than one principal model reaches the strict-majority threshold"
+        )
+    majority_model = majority_models[0] if majority_models else ""
+    interpretation = (
+        "descriptive company-level win count; not a statistical significance test"
+    )
+    return tuple(
+        {
+            "model": method,
+            "win_count": counts[method],
+            "total_companies": len(COMPANIES),
+            "win_share": counts[method] / len(COMPANIES),
+            "strict_majority_threshold": threshold,
+            "strict_majority_achieved": _bool_text(counts[method] >= threshold),
+            "overall_majority_model": majority_model,
+            "selection_metric": "rmse",
+            "interpretation": interpretation,
+            "formal_run_id": FORMAL_RUN_ID,
+            "formal_cutoff": FORMAL_CUTOFF,
+            "formal_git_sha": FORMAL_GIT_SHA,
+        }
+        for method in PRINCIPAL_METHODS
+    )
+
+
 def _parse_substantive_csv(filename: str, payload: bytes) -> ParsedSubstantiveCsv:
     try:
         text = payload.decode("utf-8")
@@ -1543,7 +1759,11 @@ def _parse_substantive_csv(filename: str, payload: bytes) -> ParsedSubstantiveCs
     )
 
 
-def _load_substantive_csvs(output_dir: Path) -> tuple[ParsedSubstantiveCsv, ...]:
+def _load_substantive_csvs(
+    output_dir: Path,
+    *,
+    staged_payloads: Mapping[str, bytes] | None = None,
+) -> tuple[ParsedSubstantiveCsv, ...]:
     directory = Path(output_dir)
     if not directory.is_dir():
         raise ResearchResultExportError(
@@ -1555,19 +1775,28 @@ def _load_substantive_csvs(output_dir: Path) -> tuple[ParsedSubstantiveCsv, ...]
         raise ResearchResultExportError(
             f"Research-result directory contains unexpected files: {sorted(unexpected)}"
         )
+    staged = dict(staged_payloads or {})
+    unexpected_staged = set(staged) - set(SUBSTANTIVE_FILE_ORDER)
+    if unexpected_staged:
+        raise ResearchResultExportError(
+            f"Unexpected staged substantive CSVs: {sorted(unexpected_staged)}"
+        )
     parsed: list[ParsedSubstantiveCsv] = []
     for filename in SUBSTANTIVE_FILE_ORDER:
-        path = directory / filename
-        if not path.is_file():
-            raise ResearchResultExportError(
-                f"Required substantive CSV is missing: {filename}"
-            )
-        try:
-            payload = path.read_bytes()
-        except OSError as exc:
-            raise ResearchResultExportError(
-                f"Cannot read substantive CSV: {filename}"
-            ) from exc
+        if filename in staged:
+            payload = staged[filename]
+        else:
+            path = directory / filename
+            if not path.is_file():
+                raise ResearchResultExportError(
+                    f"Required substantive CSV is missing: {filename}"
+                )
+            try:
+                payload = path.read_bytes()
+            except OSError as exc:
+                raise ResearchResultExportError(
+                    f"Cannot read substantive CSV: {filename}"
+                ) from exc
         parsed.append(_parse_substantive_csv(filename, payload))
     return tuple(parsed)
 
@@ -2043,12 +2272,107 @@ def _validate_data_quality(parsed: ParsedSubstantiveCsv) -> None:
             )
 
 
+def _validate_data_quality_rules(parsed: ParsedSubstantiveCsv) -> None:
+    expected_payload = _csv_bytes(
+        DATA_QUALITY_RULE_COLUMNS,
+        build_data_quality_rule_rows(),
+    )
+    expected = _parse_substantive_csv("data_quality_rules.csv", expected_payload)
+    if parsed.rows != expected.rows:
+        raise ResearchResultExportError(
+            "data_quality_rules.csv conflicts with the locked data-quality-v1 rules"
+        )
+    categories = [row["rule_category"] for row in parsed.rows]
+    if categories.count("hard") != 2 or categories.count("screening") != 4:
+        raise ResearchResultExportError(
+            "data_quality_rules.csv must contain two hard and four screening rules"
+        )
+    for row in parsed.rows:
+        if row["rule_category"] == "hard":
+            if row["fail_condition"] == "" or "FAIL" not in row[
+                "effect_on_dataset_quality"
+            ]:
+                raise ResearchResultExportError(
+                    f"Hard data-quality rule cannot fail: {row['rule_name']}"
+                )
+        elif (
+            row["fail_condition"] != ""
+            or row["effect_on_dataset_quality"]
+            != "review only; does not cause dataset-quality FAIL"
+        ):
+            raise ResearchResultExportError(
+                f"Screening rule incorrectly changes dataset quality: {row['rule_name']}"
+            )
+
+
+def _validate_principal_win_summary(
+    parsed: ParsedSubstantiveCsv,
+    winners: Mapping[str, Mapping[str, str]],
+) -> None:
+    expected_rows = build_principal_win_summary_rows(tuple(winners.values()))
+    expected = _parse_substantive_csv(
+        "principal_win_summary.csv",
+        _csv_bytes(PRINCIPAL_WIN_SUMMARY_COLUMNS, expected_rows),
+    )
+    if parsed.rows != expected.rows:
+        raise ResearchResultExportError(
+            "principal_win_summary.csv conflicts with principal_winners.csv"
+        )
+    if tuple(row["model"] for row in parsed.rows) != PRINCIPAL_METHODS:
+        raise ResearchResultExportError(
+            "principal_win_summary.csv model order conflicts"
+        )
+    counts = [_csv_integer(row["win_count"], "principal win count") for row in parsed.rows]
+    if sum(counts) != len(COMPANIES):
+        raise ResearchResultExportError("Principal win summary counts do not sum to 15")
+    majority_values = {row["overall_majority_model"] for row in parsed.rows}
+    if len(majority_values) != 1:
+        raise ResearchResultExportError(
+            "Principal win summary majority model is inconsistent"
+        )
+    if any(
+        phrase in row["interpretation"].lower()
+        for row in parsed.rows
+        for phrase in ("dominant", "statistically superior", "significantly better")
+    ):
+        raise ResearchResultExportError(
+            "Principal win summary interpretation makes an inferential claim"
+        )
+
+
+def _build_research_closure_payloads(output_dir: Path) -> dict[str, bytes]:
+    winner_path = Path(output_dir) / "principal_winners.csv"
+    if not winner_path.is_file():
+        raise ResearchResultExportError(
+            "Required substantive CSV is missing: principal_winners.csv"
+        )
+    winner_file = _parse_substantive_csv(
+        "principal_winners.csv",
+        winner_path.read_bytes(),
+    )
+    return {
+        "principal_win_summary.csv": _csv_bytes(
+            PRINCIPAL_WIN_SUMMARY_COLUMNS,
+            build_principal_win_summary_rows(winner_file.rows),
+        ),
+        "data_quality_rules.csv": _csv_bytes(
+            DATA_QUALITY_RULE_COLUMNS,
+            build_data_quality_rule_rows(),
+        ),
+    }
+
+
 def validate_research_result_package(
     output_dir: Path = DEFAULT_OUTPUT_DIR,
+    *,
+    staged_payloads: Mapping[str, bytes] | None = None,
 ) -> PackageValidation:
-    """Validate the eight frozen CSVs without recomputing any research result."""
+    """Validate ten frozen or derived CSVs without recomputing research results."""
 
-    parsed_files = _load_substantive_csvs(output_dir)
+    parsed_files = _load_substantive_csvs(
+        output_dir,
+        staged_payloads=staged_payloads,
+    )
     files = {parsed.filename: parsed for parsed in parsed_files}
     _validate_company_rows(files)
     _validate_formal_identity(files)
@@ -2062,6 +2386,10 @@ def validate_research_result_package(
     winners, principal_counts, evaluated_counts = _validate_winners(
         files["principal_winners.csv"], metrics
     )
+    _validate_principal_win_summary(
+        files["principal_win_summary.csv"],
+        winners,
+    )
     _validate_sector_peers(
         files["sector_peer_summary.csv"],
         metrics,
@@ -2069,6 +2397,7 @@ def validate_research_result_package(
         benchmark,
     )
     _validate_data_quality(files["data_quality.csv"])
+    _validate_data_quality_rules(files["data_quality_rules.csv"])
 
     # The aggregate deliberately excludes results_manifest.csv to avoid
     # recursive self-reference. Each line is UTF-8 filename<TAB>sha256<LF>.
@@ -2093,7 +2422,9 @@ def validate_research_result_package(
                 else ""
             ),
             "rule_version": (
-                RULE_VERSION if parsed.filename == "data_quality.csv" else ""
+                RULE_VERSION
+                if parsed.filename in {"data_quality.csv", "data_quality_rules.csv"}
+                else ""
             ),
             "source_scope": SUBSTANTIVE_FILE_SOURCE_SCOPES[parsed.filename],
             "validation_status": "PASS",
@@ -2110,62 +2441,121 @@ def validate_research_result_package(
     )
 
 
-def publish_results_manifest(
+def publish_research_closure(
     validation: PackageValidation,
     *,
+    closure_payloads: Mapping[str, bytes],
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     replace: Callable[[Path, Path], None] = os.replace,
-) -> Path:
-    """Atomically publish the fully validated, deterministic manifest."""
+) -> tuple[Path, ...]:
+    """Publish both closure CSVs and the manifest with rollback protection."""
 
-    destination = Path(output_dir) / "results_manifest.csv"
-    payload = _csv_bytes(MANIFEST_COLUMNS, validation.manifest_rows)
-    parsed = list(csv.reader(io.StringIO(payload.decode("utf-8")), strict=True))
+    destination = Path(output_dir)
+    required_closure = {
+        "data_quality_rules.csv",
+        "principal_win_summary.csv",
+    }
+    if set(closure_payloads) != required_closure:
+        raise ResearchResultExportError("Research closure payload set is incomplete")
+    manifest_payload = _csv_bytes(MANIFEST_COLUMNS, validation.manifest_rows)
+    parsed = list(
+        csv.reader(io.StringIO(manifest_payload.decode("utf-8")), strict=True)
+    )
     if (
         tuple(parsed[0]) != MANIFEST_COLUMNS
         or len(parsed[1:]) != len(SUBSTANTIVE_FILE_ORDER)
         or tuple(row[0] for row in parsed[1:]) != SUBSTANTIVE_FILE_ORDER
     ):
         raise ResearchResultExportError("Constructed results manifest is invalid")
-    file_descriptor, temporary_name = tempfile.mkstemp(
-        prefix=".results-manifest-",
-        suffix=".csv",
-        dir=destination.parent,
+
+    files_by_name = {item.filename: item for item in validation.files}
+    for filename, payload in closure_payloads.items():
+        if (
+            filename not in files_by_name
+            or files_by_name[filename].sha256
+            != hashlib.sha256(payload).hexdigest()
+        ):
+            raise ResearchResultExportError(
+                f"Validated closure payload conflicts for {filename}"
+            )
+
+    publication_order = (
+        "data_quality_rules.csv",
+        "principal_win_summary.csv",
+        "results_manifest.csv",
     )
-    temporary = Path(temporary_name)
+    payloads = {
+        **closure_payloads,
+        "results_manifest.csv": manifest_payload,
+    }
+    staging = Path(
+        tempfile.mkdtemp(prefix=".research-closure-staging-", dir=destination)
+    )
+    backup = Path(
+        tempfile.mkdtemp(prefix=".research-closure-backup-", dir=destination)
+    )
+    backed_up: list[str] = []
+    published: list[str] = []
     try:
-        with os.fdopen(file_descriptor, "wb") as target:
-            target.write(payload)
-            target.flush()
-            os.fsync(target.fileno())
-        replace(temporary, destination)
+        for filename in publication_order:
+            target = staging / filename
+            target.write_bytes(payloads[filename])
+        for filename in publication_order:
+            target = destination / filename
+            if target.exists():
+                replace(target, backup / filename)
+                backed_up.append(filename)
+        for filename in publication_order:
+            replace(staging / filename, destination / filename)
+            published.append(filename)
     except Exception as exc:
-        temporary.unlink(missing_ok=True)
+        for filename in published:
+            (destination / filename).unlink(missing_ok=True)
+        for filename in reversed(backed_up):
+            archived = backup / filename
+            if archived.exists():
+                os.replace(archived, destination / filename)
         if isinstance(exc, ResearchResultExportError):
             raise
-        raise ResearchResultExportError("Atomic manifest publication failed") from exc
-    return destination
+        raise ResearchResultExportError(
+            "Atomic research-closure publication failed"
+        ) from exc
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
+        shutil.rmtree(backup, ignore_errors=True)
+    return tuple(destination / filename for filename in publication_order)
 
 
 def export_results_manifest(
     *,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
 ) -> tuple[Path, PackageValidation]:
-    """Validate existing results and publish only their package manifest."""
+    """Build, validate, and publish the deterministic evidence closure."""
 
-    LOGGER.info("Validating eight frozen research-result CSVs")
-    validation = validate_research_result_package(output_dir)
-    path = publish_results_manifest(validation, output_dir=output_dir)
+    LOGGER.info("Building two deterministic research-evidence closure CSVs")
+    closure_payloads = _build_research_closure_payloads(output_dir)
+    LOGGER.info("Validating ten substantive research-result CSVs")
+    validation = validate_research_result_package(
+        output_dir,
+        staged_payloads=closure_payloads,
+    )
+    paths = publish_research_closure(
+        validation,
+        closure_payloads=closure_payloads,
+        output_dir=output_dir,
+    )
+    manifest_path = paths[-1]
     LOGGER.info(
-        "Published deterministic research-result manifest rows=%d package_sha256=%s "
+        "Published research closure files=%d manifest_rows=%d package_sha256=%s "
         "principal_winners=%s evaluated_winners=%s output=%s",
+        len(paths),
         len(validation.manifest_rows),
         validation.package_content_sha256,
         dict(validation.principal_winner_counts),
         dict(validation.best_evaluated_method_counts),
-        path,
+        output_dir,
     )
-    return path, validation
+    return manifest_path, validation
 
 
 def publish_research_rows(
@@ -2190,8 +2580,10 @@ def publish_research_rows(
             "within_company_dm.csv",
             "across_company_tests.csv",
             "principal_winners.csv",
+            "principal_win_summary.csv",
             "sector_peer_summary.csv",
             "data_quality.csv",
+            "data_quality_rules.csv",
             "results_manifest.csv",
         }
         if unexpected:

@@ -16,6 +16,7 @@ from scripts.export_research_results import (
     BENCHMARK_DM_COLUMNS,
     CONFIGURATION_COLUMNS,
     DATA_QUALITY_COLUMNS,
+    DATA_QUALITY_RULE_COLUMNS,
     FORMAL_AGGREGATE_SHA256,
     FORMAL_CUTOFF,
     FORMAL_GIT_SHA,
@@ -29,6 +30,7 @@ from scripts.export_research_results import (
     METHODS,
     METRIC_COLUMNS,
     PRINCIPAL_METHODS,
+    PRINCIPAL_WIN_SUMMARY_COLUMNS,
     PRINCIPAL_WINNER_COLUMNS,
     ResearchEvidence,
     ResearchResultExportError,
@@ -38,11 +40,13 @@ from scripts.export_research_results import (
     SUBSTANTIVE_FILE_SCHEMAS,
     SUPPLEMENTARY_PACKAGE_ID,
     WITHIN_COMPANY_DM_COLUMNS,
+    build_data_quality_rule_rows,
     build_frozen_data_quality_rows,
+    build_principal_win_summary_rows,
     build_research_rows,
     export_results_manifest,
     load_authoritative_evidence,
-    publish_results_manifest,
+    publish_research_closure,
     publish_research_rows,
     validate_research_result_package,
 )
@@ -856,10 +860,16 @@ AUTHORITATIVE_SUBSTANTIVE_HASHES = {
 def _copy_substantive_package(tmp_path: Path) -> Path:
     destination = tmp_path / "research-result"
     destination.mkdir()
-    for filename in SUBSTANTIVE_FILE_ORDER:
+    for filename in AUTHORITATIVE_SUBSTANTIVE_HASHES:
         (destination / filename).write_bytes(
             (AUTHORITATIVE_RESULT_DIR / filename).read_bytes()
         )
+    return destination
+
+
+def _copy_complete_package(tmp_path: Path) -> Path:
+    destination = _copy_substantive_package(tmp_path)
+    export_results_manifest(output_dir=destination)
     return destination
 
 
@@ -886,8 +896,83 @@ def test_authoritative_substantive_csv_hashes_are_frozen() -> None:
         filename: hashlib.sha256(
             (AUTHORITATIVE_RESULT_DIR / filename).read_bytes()
         ).hexdigest()
-        for filename in SUBSTANTIVE_FILE_ORDER
+        for filename in AUTHORITATIVE_SUBSTANTIVE_HASHES
     } == AUTHORITATIVE_SUBSTANTIVE_HASHES
+
+
+def test_data_quality_rule_rows_match_the_locked_contract() -> None:
+    rows = build_data_quality_rule_rows()
+    indexed = {row["rule_name"]: row for row in rows}
+
+    assert len(rows) == 6
+    assert tuple(indexed) == (
+        "basic_ohlcv_validity",
+        "trading_session_continuity",
+        "zero_volume",
+        "stale_price",
+        "ohlcv_activity_proxy",
+        "material_discontinuity",
+    )
+    assert sum(row["rule_category"] == "hard" for row in rows) == 2
+    assert sum(row["rule_category"] == "screening" for row in rows) == 4
+    assert {row["rule_version"] for row in rows} == {"data-quality-v1"}
+    assert indexed["zero_volume"]["threshold_value"] == "0"
+    assert indexed["stale_price"]["threshold_value"] == "5"
+    assert indexed["stale_price"]["threshold_unit"] == "consecutive sessions"
+    assert indexed["ohlcv_activity_proxy"]["threshold_value"] == "0.95"
+    assert indexed["material_discontinuity"]["threshold_value"] == "0.30"
+    assert all(
+        row["fail_condition"] and row["effect_on_dataset_quality"] == "FAIL if rule fails"
+        for row in rows
+        if row["rule_category"] == "hard"
+    )
+    assert all(
+        row["fail_condition"] == ""
+        and row["effect_on_dataset_quality"]
+        == "review only; does not cause dataset-quality FAIL"
+        for row in rows
+        if row["rule_category"] == "screening"
+    )
+
+
+def test_principal_win_summary_is_derived_and_majority_is_deterministic() -> None:
+    with (
+        AUTHORITATIVE_RESULT_DIR / "principal_winners.csv"
+    ).open("r", encoding="utf-8", newline="") as source:
+        authoritative = list(csv.DictReader(source))
+    rows = build_principal_win_summary_rows(authoritative)
+
+    assert tuple(row["model"] for row in rows) == PRINCIPAL_METHODS
+    assert [row["win_count"] for row in rows] == [4, 7, 4]
+    assert sum(int(row["win_count"]) for row in rows) == 15
+    assert all(row["total_companies"] == 15 for row in rows)
+    assert [row["win_share"] for row in rows] == [4 / 15, 7 / 15, 4 / 15]
+    assert all(row["strict_majority_threshold"] == 8 for row in rows)
+    assert all(row["strict_majority_achieved"] == "false" for row in rows)
+    assert all(row["overall_majority_model"] == "" for row in rows)
+    assert all(row["selection_metric"] == "rmse" for row in rows)
+    assert all(
+        row["interpretation"]
+        == "descriptive company-level win count; not a statistical significance test"
+        for row in rows
+    )
+
+    synthetic = [
+        {
+            "symbol": company.symbol,
+            "best_principal_model": (
+                "lag_reg" if index < 8 else "arima" if index < 12 else "lstm"
+            ),
+        }
+        for index, company in enumerate(COMPANIES)
+    ]
+    majority = build_principal_win_summary_rows(synthetic)
+    assert [row["strict_majority_achieved"] for row in majority] == [
+        "true",
+        "false",
+        "false",
+    ]
+    assert {row["overall_majority_model"] for row in majority} == {"lag_reg"}
 
 
 def test_manifest_contract_cross_file_validation_and_determinism(
@@ -906,9 +991,9 @@ def test_manifest_contract_cross_file_validation_and_determinism(
         reader = csv.DictReader(source)
         manifest = list(reader)
         assert tuple(reader.fieldnames or ()) == MANIFEST_COLUMNS
-    assert len(manifest) == 8
+    assert len(manifest) == 10
     assert tuple(row["filename"] for row in manifest) == SUBSTANTIVE_FILE_ORDER
-    assert len({row["filename"] for row in manifest}) == 8
+    assert len({row["filename"] for row in manifest}) == 10
 
     package_source = b""
     for row in manifest:
@@ -934,7 +1019,9 @@ def test_manifest_contract_cross_file_validation_and_determinism(
         else:
             assert row["supplementary_package_id"] == ""
         assert row["rule_version"] == (
-            "data-quality-v1" if filename == "data_quality.csv" else ""
+            "data-quality-v1"
+            if filename in {"data_quality.csv", "data_quality_rules.csv"}
+            else ""
         )
 
     expected_package_hash = hashlib.sha256(package_source).hexdigest()
@@ -958,7 +1045,7 @@ def test_manifest_contract_cross_file_validation_and_determinism(
 def test_package_content_hash_changes_when_valid_substantive_bytes_change(
     tmp_path: Path,
 ) -> None:
-    output = _copy_substantive_package(tmp_path)
+    output = _copy_complete_package(tmp_path)
     original = validate_research_result_package(output).package_content_sha256
     path = output / "selected_configurations.csv"
     with path.open("r", encoding="utf-8", newline="") as source:
@@ -976,8 +1063,23 @@ def test_package_content_hash_changes_when_valid_substantive_bytes_change(
 
 
 def test_missing_substantive_csv_fails_closed(tmp_path: Path) -> None:
-    output = _copy_substantive_package(tmp_path)
+    output = _copy_complete_package(tmp_path)
     (output / "holdout_metrics.csv").unlink()
+
+    with pytest.raises(ResearchResultExportError, match="missing"):
+        validate_research_result_package(output)
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ("data_quality_rules.csv", "principal_win_summary.csv"),
+)
+def test_missing_research_closure_csv_fails_closed(
+    tmp_path: Path,
+    filename: str,
+) -> None:
+    output = _copy_complete_package(tmp_path)
+    (output / filename).unlink()
 
     with pytest.raises(ResearchResultExportError, match="missing"):
         validate_research_result_package(output)
@@ -1043,6 +1145,20 @@ def test_missing_substantive_csv_fails_closed(tmp_path: Path) -> None:
             "frozen contract",
         ),
         (
+            "data_quality_rules.csv",
+            3,
+            "threshold_value",
+            "4",
+            "locked data-quality-v1 rules",
+        ),
+        (
+            "principal_win_summary.csv",
+            0,
+            "win_count",
+            "5",
+            "conflicts with principal_winners",
+        ),
+        (
             "holdout_metrics.csv",
             0,
             "formal_run_id",
@@ -1059,7 +1175,7 @@ def test_cross_file_corruption_fails_closed(
     value: str,
     message: str,
 ) -> None:
-    output = _copy_substantive_package(tmp_path)
+    output = _copy_complete_package(tmp_path)
     _rewrite_csv_cell(
         output / filename,
         row_index=row_index,
@@ -1072,32 +1188,45 @@ def test_cross_file_corruption_fails_closed(
 
 
 def test_malformed_csv_fails_closed(tmp_path: Path) -> None:
-    output = _copy_substantive_package(tmp_path)
+    output = _copy_complete_package(tmp_path)
     (output / "holdout_metrics.csv").write_bytes(b'"unterminated')
 
     with pytest.raises(ResearchResultExportError, match="malformed CSV"):
         validate_research_result_package(output)
 
 
-def test_failed_manifest_replace_preserves_previous_manifest(tmp_path: Path) -> None:
-    output = _copy_substantive_package(tmp_path)
+def test_failed_closure_publication_restores_all_previous_files(tmp_path: Path) -> None:
+    output = _copy_complete_package(tmp_path)
     validation = validate_research_result_package(output)
-    manifest = output / "results_manifest.csv"
-    previous = b"previous manifest\n"
-    manifest.write_bytes(previous)
+    closure_names = (
+        "data_quality_rules.csv",
+        "principal_win_summary.csv",
+        "results_manifest.csv",
+    )
+    previous = {name: (output / name).read_bytes() for name in closure_names}
+    closure_payloads = {
+        name: previous[name]
+        for name in ("data_quality_rules.csv", "principal_win_summary.csv")
+    }
+    calls = 0
 
     def fail_replace(source: Path, destination: Path) -> None:
-        raise OSError("synthetic replacement failure")
+        nonlocal calls
+        calls += 1
+        if calls == 5:
+            raise OSError("synthetic replacement failure")
+        os.replace(source, destination)
 
     with pytest.raises(ResearchResultExportError, match="publication failed"):
-        publish_results_manifest(
+        publish_research_closure(
             validation,
+            closure_payloads=closure_payloads,
             output_dir=output,
             replace=fail_replace,
         )
 
-    assert manifest.read_bytes() == previous
-    assert not tuple(output.glob(".results-manifest-*.csv"))
+    assert {name: (output / name).read_bytes() for name in closure_names} == previous
+    assert not tuple(output.glob(".research-closure-*"))
 
 
 def test_manifest_validation_does_not_execute_research_or_model_paths(
@@ -1115,4 +1244,4 @@ def test_manifest_validation_does_not_execute_research_or_model_paths(
 
     path, validation = export_results_manifest(output_dir=output)
     assert path.is_file()
-    assert len(validation.manifest_rows) == 8
+    assert len(validation.manifest_rows) == 10

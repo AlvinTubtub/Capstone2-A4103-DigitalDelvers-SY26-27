@@ -1,0 +1,4 @@
+model,win_count,total_companies,win_share,strict_majority_threshold,strict_majority_achieved,overall_majority_model,selection_metric,interpretation,formal_run_id,formal_cutoff,formal_git_sha
+lag_reg,4,15,0.26666666666666666,8,false,,rmse,descriptive company-level win count; not a statistical significance test,FORECASTPH_FORMAL_20260911_01,2026-09-11,8359270bffcd43dd41830a01bb2f4e2d4c527b56
+arima,7,15,0.4666666666666667,8,false,,rmse,descriptive company-level win count; not a statistical significance test,FORECASTPH_FORMAL_20260911_01,2026-09-11,8359270bffcd43dd41830a01bb2f4e2d4c527b56
+lstm,4,15,0.26666666666666666,8,false,,rmse,descriptive company-level win count; not a statistical significance test,FORECASTPH_FORMAL_20260911_01,2026-09-11,8359270bffcd43dd41830a01bb2f4e2d4c527b56
