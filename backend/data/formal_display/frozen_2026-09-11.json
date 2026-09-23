@@ -11116,8 +11116,8 @@
         ],
         "alpha": 0.05,
         "friedman": {
-          "statistic": 2.041666666666675,
-          "raw_p_value": 0.563803824821747,
+          "statistic": 1.7412587412587377,
+          "raw_p_value": 0.6278003229833597,
           "reject": false
         },
         "posthoc_performed": false,
