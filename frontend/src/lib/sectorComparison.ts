@@ -6,6 +6,8 @@ export const SECTOR_COMPANY_COLORS = [
   { solid: "#3b82f6", name: "Blue" },    // Blue
   { solid: "#f59e0b", name: "Amber" },   // Amber
   { solid: "#8b5cf6", name: "Purple" },  // Purple
+  { solid: "#10b981", name: "Emerald" }, // Emerald
+  { solid: "#f43f5e", name: "Rose" },    // Rose
 ];
 
 export interface ReconciledHistory {

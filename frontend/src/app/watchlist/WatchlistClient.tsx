@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import CompanyLogo from "@/components/CompanyLogo";
 import ChangeBadge from "@/components/ChangeBadge";
+import StockComparisonChart from "@/components/comparison/StockComparisonChart";
+import StockMetricsComparison from "@/components/comparison/StockMetricsComparison";
 import { useWatchlist } from "@/context/WatchlistContext";
-import { formatDate, formatNum, formatPeso, formatPct } from "@/lib/format";
+import { formatDate, formatPeso } from "@/lib/format";
 import { resolveCompanyModelReporting } from "@/lib/modelReporting";
-import type { CompanySummary, MetricsData } from "@/lib/types";
+import type { CompanyDetail, CompanySummary, MetricsData } from "@/lib/types";
 
 type ComparisonRow = CompanySummary & {
   pesoChange: number;
@@ -38,29 +39,88 @@ export default function WatchlistClient({
   }, [watchlist, allCompanies]);
 
   const comparisonRows = useMemo(
-    () => watchedCompanies.map((company) => {
-      const companyMetrics = metrics?.perCompany[company.symbol];
-      const reporting = companyMetrics
-        ? resolveCompanyModelReporting(companyMetrics)
-        : null;
-      const modelKey = Object.entries(companyMetrics?.metrics ?? {}).find(
-        ([key]) => ({ lag_reg: "Lag-Informed Regression", arima: "ARIMA", lstm: "LSTM", naive: "Naive baseline" }[key] === (reporting?.bestPrincipalModel ?? company.bestModel))
-      )?.[0];
-      const selectedMetrics = modelKey ? companyMetrics?.metrics[modelKey] : undefined;
+    () =>
+      watchedCompanies.map((company) => {
+        const companyMetrics = metrics?.perCompany[company.symbol];
+        const reporting = companyMetrics
+          ? resolveCompanyModelReporting(companyMetrics)
+          : null;
+        const modelKey = Object.entries(companyMetrics?.metrics ?? {}).find(
+          ([key]) =>
+            ({
+              lag_reg: "Lag-Informed Regression",
+              arima: "ARIMA",
+              lstm: "LSTM",
+              naive: "Naive baseline",
+            }[key] === (reporting?.bestPrincipalModel ?? company.bestModel))
+        )?.[0];
+        const selectedMetrics = modelKey ? companyMetrics?.metrics[modelKey] : undefined;
 
-      return {
-        ...company,
-        pesoChange: company.predictedClose - company.latestClose,
-        rmse: selectedMetrics?.rmse,
-        mase: selectedMetrics?.mase,
-        bestPrincipalModel: reporting?.bestPrincipalModel ?? company.bestModel,
-        bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "--",
-        bestPrincipalBeatsNaive: reporting?.bestPrincipalBeatsNaive ?? false,
-        allPrincipalsWorseThanNaive: reporting?.allPrincipalsWorseThanNaive ?? false,
-      };
-    }),
+        return {
+          ...company,
+          pesoChange: company.predictedClose - company.latestClose,
+          rmse: selectedMetrics?.rmse,
+          mase: selectedMetrics?.mase,
+          bestPrincipalModel: reporting?.bestPrincipalModel ?? company.bestModel,
+          bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "--",
+          bestPrincipalBeatsNaive: reporting?.bestPrincipalBeatsNaive ?? false,
+          allPrincipalsWorseThanNaive: reporting?.allPrincipalsWorseThanNaive ?? false,
+        };
+      }),
     [metrics, watchedCompanies]
   );
+
+  // Lazy-load detailed CompanyDetail data only for watched companies
+  const [details, setDetails] = useState<CompanyDetail[]>([]);
+  const [loadingDetails, setLoadingDetails] = useState<boolean>(false);
+  const [detailsError, setDetailsError] = useState<string | null>(null);
+
+  const watchedSymbolsKey = useMemo(
+    () => watchedCompanies.map((c) => c.symbol.toUpperCase()).join(","),
+    [watchedCompanies]
+  );
+
+  useEffect(() => {
+    if (watchedCompanies.length === 0) {
+      setDetails([]);
+      setLoadingDetails(false);
+      setDetailsError(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    setLoadingDetails(true);
+    setDetailsError(null);
+
+    const symbols = watchedCompanies.map((c) => c.symbol.toUpperCase());
+
+    Promise.all(
+      symbols.map(async (sym) => {
+        const res = await fetch(`/forecasts/company/${sym}.json`, {
+          signal: controller.signal,
+          headers: { Accept: "application/json" },
+        });
+        if (!res.ok) {
+          throw new Error(`Failed to load ${sym}`);
+        }
+        return (await res.json()) as CompanyDetail;
+      })
+    )
+      .then((results) => {
+        setDetails(results);
+        setLoadingDetails(false);
+        setDetailsError(null);
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        setDetailsError("Watchlist comparison is temporarily unavailable.");
+        setLoadingDetails(false);
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, [watchedSymbolsKey, watchedCompanies]);
 
   return (
     <div className="space-y-8 animate-[fadeIn_0.3s_ease-out]">
@@ -70,7 +130,7 @@ export default function WatchlistClient({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-full">
-                ★ Client-Side Watchlist
+                ★ Saved on this device
               </span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
@@ -121,12 +181,16 @@ export default function WatchlistClient({
       ) : (
         <>
           {comparisonRows.some((company) => company.allPrincipalsWorseThanNaive) && (
-            <section role="status" className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+            <section
+              role="status"
+              className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100"
+            >
               <strong>Naive benchmark warning:</strong> for one or more watched companies,
               all three principal models had higher RMSE than Naive during the evaluation
               period. See the comparison table for each best evaluated method.
             </section>
           )}
+
           {/* Contextual Help & Privacy Note */}
           <div className="p-4 bg-dark-bg/70 border border-dark-border/70 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
             <p>
@@ -144,165 +208,123 @@ export default function WatchlistClient({
             </div>
           </div>
 
+          {/* Watched Company Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {watchedCompanies.map((company) => (
-            <div
-              key={company.symbol}
-              className="bg-dark-card border border-dark-border rounded-xl p-5 hover:border-brand-500/40 transition-all shadow-sm flex flex-col justify-between space-y-4"
-            >
-              <div className="space-y-3">
-                {/* Header Row */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <CompanyLogo symbol={company.symbol} name={company.name} size="md" />
-                    <div className="min-w-0">
-                      <Link
-                        href={`/companies/${company.symbol}`}
-                        className="font-bold text-white text-lg hover:text-brand-400 transition-colors leading-tight block"
-                      >
-                        {company.symbol}
-                      </Link>
-                      <p className="text-xs text-slate-400 truncate max-w-[12rem]">
-                        {company.name}
+            {watchedCompanies.map((company) => (
+              <div
+                key={company.symbol}
+                className="bg-dark-card border border-dark-border rounded-xl p-5 hover:border-brand-500/40 transition-all shadow-sm flex flex-col justify-between space-y-4"
+              >
+                <div className="space-y-3">
+                  {/* Header Row */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <CompanyLogo symbol={company.symbol} name={company.name} size="md" />
+                      <div className="min-w-0">
+                        <Link
+                          href={`/companies/${company.symbol}`}
+                          className="font-bold text-white text-lg hover:text-brand-400 transition-colors leading-tight block"
+                        >
+                          {company.symbol}
+                        </Link>
+                        <p className="text-xs text-slate-400 truncate max-w-[12rem]">
+                          {company.name}
+                        </p>
+                      </div>
+                    </div>
+                    <ChangeBadge pctChange={company.pctChange} />
+                  </div>
+
+                  {/* Details Grid */}
+                  <div className="pt-3 border-t border-dark-border/60 grid grid-cols-2 gap-2 text-left">
+                    <div>
+                      <p className="text-[11px] text-slate-400">Forecasted Close</p>
+                      <p className="text-base font-semibold text-white">
+                        {formatPeso(company.predictedClose)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] text-slate-400">Best Principal Model</p>
+                      <p className="text-xs font-medium text-brand-400 truncate">
+                        {company.bestModel}
                       </p>
                     </div>
                   </div>
-                  <ChangeBadge pctChange={company.pctChange} />
-                </div>
 
-                {/* Details Grid */}
-                <div className="pt-3 border-t border-dark-border/60 grid grid-cols-2 gap-2 text-left">
-                  <div>
-                    <p className="text-[11px] text-slate-400">Forecasted Close</p>
-                    <p className="text-base font-semibold text-white">
-                      {formatPeso(company.predictedClose)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] text-slate-400">Best Principal Model</p>
-                    <p className="text-xs font-medium text-brand-400 truncate">
-                      {company.bestModel}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Metadata Row */}
-                <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
-                  {company.forecastDate ? (
-                    <span className="text-[11px] text-slate-400">
-                      Forecast for {formatDate(company.forecastDate)}
+                  {/* Metadata Row */}
+                  <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
+                    {company.forecastDate ? (
+                      <span className="text-[11px] text-slate-400">
+                        Forecast for {formatDate(company.forecastDate)}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-dark-bg border border-dark-border text-slate-400">
+                      {company.sector}
                     </span>
-                  ) : (
-                    <span />
-                  )}
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-dark-bg border border-dark-border text-slate-400">
-                    {company.sector}
-                  </span>
+                  </div>
+                </div>
+
+                {/* Action Footer */}
+                <div className="pt-3 border-t border-dark-border/50 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/companies/${company.symbol}`}
+                    className="text-xs font-medium text-brand-400 hover:text-brand-300 transition-colors"
+                  >
+                    View Details →
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => removeFromWatchlist(company.symbol)}
+                    className="text-xs text-slate-400 hover:text-red-400 px-2.5 py-1 rounded border border-transparent hover:border-red-500/30 hover:bg-red-500/10 transition-colors cursor-pointer"
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-
-              {/* Action Footer */}
-              <div className="pt-3 border-t border-dark-border/50 flex items-center justify-between gap-2">
-                <Link
-                  href={`/companies/${company.symbol}`}
-                  className="text-xs font-medium text-brand-400 hover:text-brand-300 transition-colors"
-                >
-                  View Details →
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => removeFromWatchlist(company.symbol)}
-                  className="text-xs text-slate-400 hover:text-red-400 px-2.5 py-1 rounded border border-transparent hover:border-red-500/30 hover:bg-red-500/10 transition-colors cursor-pointer"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
           </div>
 
-          <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6 shadow-sm">
-            <div className="flex flex-wrap items-start justify-between gap-2 mb-5 pb-4 border-b border-dark-border/70">
-              <div>
-                <h2 className="text-base font-bold text-white">Expected Change (%) Comparison</h2>
-                <p className="text-xs text-slate-400 mt-1">Next-session forecast movement across your watched companies.</p>
-              </div>
-              <span className="text-[11px] text-slate-300">Forecast horizon: next session</span>
+          {/* 3. Comparison Section (Lazy-Loaded Detailed History & Metrics) */}
+          {loadingDetails ? (
+            <div className="rounded-2xl border border-dark-border bg-dark-card/60 p-6 flex flex-col items-center justify-center min-h-[220px] text-center space-y-3">
+              <div className="w-8 h-8 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
+              <p className="text-sm font-medium text-slate-300">
+                Loading watchlist comparison...
+              </p>
+              <p className="text-xs text-slate-500">
+                Retrieving historical series and evaluation metrics for{" "}
+                {watchedCompanies.map((c) => c.symbol).join(", ")}
+              </p>
             </div>
-            <div className="h-64 sm:h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={comparisonRows} margin={{ top: 10, right: 8, left: -12, bottom: 0 }}>
-                  <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="symbol" tick={{ fill: "#f1f5f9", fontSize: 12, fontWeight: 600 }} axisLine={{ stroke: "#64748b" }} tickLine={false} />
-                  <YAxis tick={{ fill: "#cbd5e1", fontSize: 11 }} tickFormatter={(value) => `${value}%`} axisLine={{ stroke: "#64748b" }} tickLine={false} />
-                  <Tooltip
-                    cursor={{ fill: "rgba(148, 163, 184, 0.08)" }}
-                    contentStyle={{ background: "#0f172a", border: "1px solid #64748b", borderRadius: 10, color: "#f8fafc", fontSize: 12 }}
-                    labelStyle={{ color: "#f8fafc", fontWeight: 700 }}
-                    itemStyle={{ color: "#e2e8f0" }}
-                    formatter={(value: number) => [formatPct(value), "Expected Change"]}
-                  />
-                  <Bar dataKey="pctChange" radius={[5, 5, 0, 0]} maxBarSize={70}>
-                    {comparisonRows.map((company) => (
-                      <Cell key={company.symbol} fill={company.pctChange >= 0 ? "#22c55e" : "#f87171"} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+          ) : detailsError ? (
+            <div className="rounded-xl border border-dark-border bg-dark-card p-5 text-center space-y-2">
+              <p className="text-sm font-semibold text-slate-300">{detailsError}</p>
+              <p className="text-xs text-slate-500">
+                Your watched company cards above remain fully accessible.
+              </p>
             </div>
-          </section>
+          ) : details.length > 0 ? (
+            <>
+              {/* Actual vs Selected Model Chart */}
+              <StockComparisonChart
+                companies={details}
+                title="Actual vs Selected Model"
+                subtitle="Historical actual closing prices versus each watched company's selected principal-model predictions."
+                emptyMessage="No aligned historical sessions available across your watched companies."
+              />
 
-          <section className="bg-dark-card border border-dark-border rounded-2xl p-5 sm:p-6 shadow-sm">
-            <div className="mb-5 pb-4 border-b border-dark-border/70">
-              <h2 className="text-base font-bold text-white">Side-by-Side Stock Metrics</h2>
-              <p className="text-xs text-slate-400 mt-1">Compare current forecast values and selected-model evaluation metrics.</p>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-sm">
-                <thead>
-                  <tr className="border-b border-dark-border/70 text-left">
-                    <th className="px-3 py-3 text-[11px] uppercase tracking-wide text-slate-400 font-semibold">Metric</th>
-                    {comparisonRows.map((company) => (
-                      <th key={company.symbol} className="px-3 py-3 min-w-[155px]">
-                        <Link href={`/companies/${company.symbol}`} className="text-brand-400 hover:text-brand-300 font-bold">{company.symbol} →</Link>
-                        <p className="mt-1 text-[11px] font-normal text-slate-400 truncate max-w-[170px]">{company.name}</p>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-dark-border/70">
-                  <MetricRow label="Sector" companies={comparisonRows} render={(company) => <span className="inline-block rounded border border-dark-border bg-dark-bg px-2 py-0.5 text-[11px] text-slate-300">{company.sector}</span>} />
-                  <MetricRow label="Previous Close" companies={comparisonRows} render={(company) => formatPeso(company.latestClose)} />
-                  <MetricRow label="Forecasted Close" companies={comparisonRows} render={(company) => <span className="font-semibold text-white">{formatPeso(company.predictedClose)}</span>} />
-                  <MetricRow label="Expected Change" companies={comparisonRows} render={(company) => <span className={company.pctChange >= 0 ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>{formatPeso(company.pesoChange)} ({formatPct(company.pctChange)})</span>} />
-                  <MetricRow label="Best Principal Model" companies={comparisonRows} render={(company) => company.bestPrincipalModel} />
-                  <MetricRow label="Best Evaluated Method" companies={comparisonRows} render={(company) => company.bestEvaluatedMethod} />
-                  <MetricRow label="Test RMSE (₱)" companies={comparisonRows} render={(company) => company.rmse === undefined ? "--" : formatNum(company.rmse)} />
-                  <MetricRow label="MASE (Development-Scaled)" companies={comparisonRows} render={(company) => company.mase === undefined ? "--" : formatNum(company.mase)} />
-                  <MetricRow label="Beats Naive on Held-Out RMSE?" companies={comparisonRows} render={(company) => company.rmse === undefined ? "--" : company.bestPrincipalBeatsNaive ? <span className="text-green-400">✓ Yes</span> : <span className="text-amber-400">△ No</span>} />
-                </tbody>
-              </table>
-            </div>
-          </section>
+              {/* Side-by-Side Stock Metrics (Summary / Advanced) */}
+              <StockMetricsComparison
+                companies={details}
+                title="Side-by-Side Stock Metrics"
+                subtitle="Compare current forecast values and evaluation information for your watched companies."
+              />
+            </>
+          ) : null}
         </>
       )}
     </div>
-  );
-}
-
-function MetricRow({
-  label,
-  companies,
-  render,
-}: {
-  label: string;
-  companies: ComparisonRow[];
-  render: (company: ComparisonRow) => React.ReactNode;
-}) {
-  return (
-    <tr>
-      <th scope="row" className="px-3 py-3 text-left text-xs font-medium text-slate-400">{label}</th>
-      {companies.map((company) => <td key={company.symbol} className="px-3 py-3 text-xs text-slate-200">{render(company)}</td>)}
-    </tr>
   );
 }
