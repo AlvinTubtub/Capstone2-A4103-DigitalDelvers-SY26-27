@@ -6,6 +6,7 @@ import argparse
 from collections.abc import Callable, Mapping, Sequence
 import csv
 from dataclasses import dataclass
+from datetime import date, timedelta
 import io
 import json
 import logging
@@ -22,8 +23,15 @@ if __package__ in {None, ""}:
 
 from config.companies import COMPANIES, Company
 from config.settings import BACKEND_ROOT, SETTINGS
+from src.data.calendar import PSETradingCalendar
+from src.data.quality_screening import (
+    DataQualityScreeningError,
+    RULE_VERSION,
+    screen_ohlcv_rows,
+)
 from src.evaluation.supplementary_archive import SupplementaryEvidenceArchive
 from src.formal.archive import FormalRunArchive
+from src.formal.provenance import load_corporate_action_registry, sha256_file
 from src.logging_config import configure_structured_logging
 
 
@@ -39,6 +47,9 @@ SUPPLEMENTARY_PACKAGE_ID: Final[str] = "FORECASTPH_SUPPLEMENTARY_20260921_03"
 HOLDOUT_START: Final[str] = "2025-09-10"
 HOLDOUT_END: Final[str] = "2026-09-11"
 HOLDOUT_OBSERVATIONS: Final[int] = 246
+FORMAL_START: Final[str] = "2020-01-02"
+FORMAL_ROWS_PER_COMPANY: Final[int] = 1_635
+FORMAL_TOTAL_ROWS: Final[int] = 24_525
 METHODS: Final[tuple[str, ...]] = ("lag_reg", "arima", "lstm", "naive")
 PRINCIPAL_METHODS: Final[tuple[str, ...]] = METHODS[:3]
 LOSS_TYPES: Final[tuple[str, ...]] = ("squared_error", "absolute_error")
@@ -163,6 +174,24 @@ SECTOR_PEER_COLUMNS: Final[tuple[str, ...]] = (
     "formal_git_sha",
 )
 
+DATA_QUALITY_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "start_date", "end_date", "row_count",
+    "required_columns_status", "numeric_validity_status", "positive_price_status",
+    "ohlc_relationship_status", "negative_volume_count", "duplicate_date_count",
+    "basic_validity_status", "expected_session_count", "observed_session_count",
+    "missing_session_count", "unexpected_session_count", "continuity_status",
+    "zero_volume_count", "zero_volume_rate", "zero_volume_status",
+    "unchanged_close_count", "identical_ohlc_transition_count",
+    "max_identical_ohlc_run", "max_identical_ohlc_run_start",
+    "max_identical_ohlc_run_end", "stale_price_status", "active_session_count",
+    "active_session_rate", "median_volume", "median_close_value_proxy",
+    "liquidity_status", "material_discontinuity_count", "max_absolute_return",
+    "max_absolute_return_date", "material_discontinuity_dates",
+    "material_discontinuity_status", "dataset_quality_status",
+    "screening_review_required", "formal_run_id", "formal_cutoff",
+    "formal_git_sha", "rule_version",
+)
+
 
 class ResearchResultExportError(RuntimeError):
     """Raised before publication when frozen evidence is missing or inconsistent."""
@@ -260,6 +289,180 @@ def load_authoritative_evidence(
             supplementary.path / "historical" / "paired_mase_evidence.json"
         ),
     )
+
+
+def _expected_formal_sessions(calendar: PSETradingCalendar) -> tuple[date, ...]:
+    start = date.fromisoformat(FORMAL_START)
+    cutoff = date.fromisoformat(FORMAL_CUTOFF)
+    sessions: list[date] = []
+    candidate = start
+    while candidate <= cutoff:
+        if calendar.is_trading_day(candidate):
+            sessions.append(candidate)
+        candidate += timedelta(days=1)
+    return tuple(sessions)
+
+
+def build_frozen_data_quality_rows(
+    *,
+    formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+    companies: Sequence[Company] = COMPANIES,
+    calendar: PSETradingCalendar | None = None,
+) -> tuple[dict[str, object], ...]:
+    """Screen only integrity-verified frozen raw files from the formal archive."""
+
+    canonical_companies = tuple(companies)
+    symbols = tuple(company.symbol for company in canonical_companies)
+    if len(canonical_companies) != 15 or len(set(symbols)) != 15:
+        raise ResearchResultExportError(
+            "Data-quality export requires exactly 15 configured companies"
+        )
+
+    formal = FormalRunArchive(
+        FORMAL_RUN_ID,
+        root=formal_runs_root,
+        expected_symbols=symbols,
+    )
+    if not formal.verify_integrity():
+        raise ResearchResultExportError(
+            "Formal-run integrity validation failed for data-quality export"
+        )
+    manifest = _load_json(formal.path / "integrity_manifest.json")
+    if manifest.get("aggregate_sha256") != FORMAL_AGGREGATE_SHA256:
+        raise ResearchResultExportError("Formal aggregate SHA-256 conflicts")
+    run = _load_json(formal.path / "run.json")
+    git_state = _mapping(run.get("git_state"), "formal Git state")
+    if (
+        run.get("run_id") != FORMAL_RUN_ID
+        or run.get("cutoff_date") != FORMAL_CUTOFF
+        or tuple(run.get("expected_symbols", ())) != symbols
+        or git_state.get("commit") != FORMAL_GIT_SHA
+        or git_state.get("dirty") is not False
+    ):
+        raise ResearchResultExportError("Formal data-quality identity conflicts")
+
+    provenance = _load_json(formal.path / "provenance" / "raw_files.json")
+    provenance_rows = _list(provenance.get("raw_files"), "formal raw provenance")
+    provenance_by_symbol: dict[str, Mapping[str, Any]] = {}
+    for item in provenance_rows:
+        record = _mapping(item, "formal raw provenance record")
+        symbol = record.get("symbol")
+        if not isinstance(symbol, str) or symbol in provenance_by_symbol:
+            raise ResearchResultExportError("Formal raw provenance symbols conflict")
+        provenance_by_symbol[symbol] = record
+    if tuple(provenance_by_symbol) != symbols:
+        raise ResearchResultExportError("Formal raw provenance company order conflicts")
+
+    completeness = _load_json(
+        formal.path / "provenance" / "session_completeness.json"
+    )
+    completeness_rows = _list(
+        completeness.get("companies"), "formal session completeness"
+    )
+    completeness_by_symbol = {
+        item.get("symbol"): _mapping(item, "formal session record")
+        for item in completeness_rows
+        if isinstance(item, Mapping)
+    }
+    if set(completeness_by_symbol) != set(symbols) or len(completeness_rows) != 15:
+        raise ResearchResultExportError("Formal session evidence is incomplete")
+
+    try:
+        load_corporate_action_registry(
+            formal.path / "provenance" / "corporate_actions.json"
+        )
+    except Exception as exc:
+        raise ResearchResultExportError(
+            "Formal corporate-action registry is invalid"
+        ) from exc
+
+    expected_sessions = _expected_formal_sessions(calendar or PSETradingCalendar())
+    if len(expected_sessions) != FORMAL_ROWS_PER_COMPANY:
+        raise ResearchResultExportError(
+            "Configured PSE calendar conflicts with the frozen formal session count"
+        )
+
+    output: list[dict[str, object]] = []
+    total_rows = 0
+    for company in canonical_companies:
+        symbol = company.symbol
+        snapshot = formal.path / "frozen_raw" / company.raw_filename
+        source = provenance_by_symbol[symbol]
+        if (
+            source.get("sha256") != sha256_file(snapshot)
+            or source.get("first_date") != FORMAL_START
+            or source.get("last_date") != FORMAL_CUTOFF
+            or source.get("row_count") != FORMAL_ROWS_PER_COMPANY
+        ):
+            raise ResearchResultExportError(
+                f"Frozen raw provenance conflicts for {symbol}"
+            )
+        with snapshot.open("r", encoding="utf-8", newline="") as csv_source:
+            reader = csv.DictReader(csv_source)
+            fieldnames = tuple(reader.fieldnames or ())
+            raw_rows = list(reader)
+        try:
+            screened = screen_ohlcv_rows(
+                fieldnames=fieldnames,
+                rows=raw_rows,
+                expected_sessions=expected_sessions,
+            )
+        except DataQualityScreeningError as exc:
+            raise ResearchResultExportError(
+                f"Frozen data-quality screening failed for {symbol}: {exc}"
+            ) from exc
+        if (
+            screened["start_date"] != FORMAL_START
+            or screened["end_date"] != FORMAL_CUTOFF
+            or screened["row_count"] != FORMAL_ROWS_PER_COMPANY
+        ):
+            raise ResearchResultExportError(
+                f"Frozen formal date range or row count conflicts for {symbol}"
+            )
+
+        archived = completeness_by_symbol[symbol]
+        expected_completeness = {
+            "start_date": screened["start_date"],
+            "cutoff_date": screened["end_date"],
+            "expected_session_count": screened["expected_session_count"],
+            "actual_session_count": screened["observed_session_count"],
+            "missing_dates": [],
+            "unexpected_dates": [],
+            "duplicate_dates": [],
+            "complete": screened["continuity_status"] == "PASS",
+        }
+        for key, expected in expected_completeness.items():
+            if archived.get(key) != expected:
+                raise ResearchResultExportError(
+                    f"Formal session evidence conflicts for {symbol}/{key}"
+                )
+
+        total_rows += int(screened["row_count"])
+        output.append(
+            {
+                "symbol": symbol,
+                "company_name": company.name,
+                "sector": company.sector,
+                **{
+                    key: (
+                        _bool_text(bool(value))
+                        if key == "screening_review_required"
+                        else value
+                    )
+                    for key, value in screened.items()
+                },
+                "formal_run_id": FORMAL_RUN_ID,
+                "formal_cutoff": FORMAL_CUTOFF,
+                "formal_git_sha": FORMAL_GIT_SHA,
+                "rule_version": RULE_VERSION,
+            }
+        )
+
+    if len(output) != 15 or total_rows != FORMAL_TOTAL_ROWS:
+        raise ResearchResultExportError(
+            "Frozen formal company or total row count conflicts"
+        )
+    return tuple(output)
 
 
 def _mapping(value: object, label: str) -> Mapping[str, Any]:
@@ -1183,6 +1386,7 @@ def _csv_bytes(columns: Sequence[str], rows: Sequence[Mapping[str, object]]) -> 
 def publish_research_rows(
     rows: ResearchRows,
     *,
+    data_quality_rows: Sequence[Mapping[str, object]],
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     replace: Callable[[Path, Path], None] = os.replace,
 ) -> tuple[Path, ...]:
@@ -1202,6 +1406,7 @@ def publish_research_rows(
             "across_company_tests.csv",
             "principal_winners.csv",
             "sector_peer_summary.csv",
+            "data_quality.csv",
         }
         if unexpected:
             raise ResearchResultExportError(
@@ -1228,6 +1433,9 @@ def publish_research_rows(
         "sector_peer_summary.csv": _csv_bytes(
             SECTOR_PEER_COLUMNS, rows.sector_peers
         ),
+        "data_quality.csv": _csv_bytes(
+            DATA_QUALITY_COLUMNS, data_quality_rows
+        ),
     }
     expected_counts = {
         "selected_configurations.csv": 15,
@@ -1237,6 +1445,7 @@ def publish_research_rows(
         "across_company_tests.csv": len(rows.across_company),
         "principal_winners.csv": 15,
         "sector_peer_summary.csv": 15,
+        "data_quality.csv": 15,
     }
     staging = Path(tempfile.mkdtemp(prefix=".research-result-staging-", dir=parent))
     backup: Path | None = None
@@ -1286,10 +1495,17 @@ def export_research_results(
     )
     LOGGER.info("Validating evidence and building all research-result datasets")
     rows = build_research_rows(evidence)
-    paths = publish_research_rows(rows, output_dir=output_dir)
+    data_quality_rows = build_frozen_data_quality_rows(
+        formal_runs_root=formal_runs_root
+    )
+    paths = publish_research_rows(
+        rows,
+        data_quality_rows=data_quality_rows,
+        output_dir=output_dir,
+    )
     LOGGER.info(
         "Published research-result CSVs configurations=%d metrics=%d dm=%d/%d "
-        "across=%d winners=%d sectors=%d output=%s",
+        "across=%d winners=%d sectors=%d data_quality=%d output=%s",
         len(rows.configurations),
         len(rows.metrics),
         len(rows.benchmark_dm),
@@ -1297,6 +1513,7 @@ def export_research_results(
         len(rows.across_company),
         len(rows.principal_winners),
         len(rows.sector_peers),
+        len(data_quality_rows),
         output_dir,
     )
     return paths

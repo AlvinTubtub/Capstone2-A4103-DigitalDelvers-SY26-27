@@ -10,10 +10,12 @@ from pathlib import Path
 import pytest
 
 from config.companies import COMPANIES
+from scripts import export_research_results as exporter
 from scripts.export_research_results import (
     ACROSS_COMPANY_COLUMNS,
     BENCHMARK_DM_COLUMNS,
     CONFIGURATION_COLUMNS,
+    DATA_QUALITY_COLUMNS,
     FORMAL_AGGREGATE_SHA256,
     FORMAL_CUTOFF,
     FORMAL_GIT_SHA,
@@ -32,6 +34,7 @@ from scripts.export_research_results import (
     SECTOR_PEER_COLUMNS,
     SUPPLEMENTARY_PACKAGE_ID,
     WITHIN_COMPANY_DM_COLUMNS,
+    build_frozen_data_quality_rows,
     build_research_rows,
     load_authoritative_evidence,
     publish_research_rows,
@@ -48,6 +51,22 @@ def _holdout_dates() -> list[str]:
     ]
     assert len(set(values)) == HOLDOUT_OBSERVATIONS
     return [value.isoformat() for value in values]
+
+
+def _synthetic_quality_rows() -> tuple[dict[str, object], ...]:
+    rows = []
+    for company in COMPANIES:
+        row: dict[str, object] = {column: "" for column in DATA_QUALITY_COLUMNS}
+        row.update(
+            {
+                "symbol": company.symbol,
+                "company_name": company.name,
+                "sector": company.sector,
+                "rule_version": "data-quality-v1",
+            }
+        )
+        rows.append(row)
+    return tuple(rows)
 
 
 def _synthetic_evidence() -> ResearchEvidence:
@@ -405,9 +424,17 @@ def test_publication_is_deterministic_and_has_exact_schemas(
     evidence: ResearchEvidence,
 ) -> None:
     rows = build_research_rows(evidence)
-    first = publish_research_rows(rows, output_dir=tmp_path / "research-result")
+    first = publish_research_rows(
+        rows,
+        data_quality_rows=_synthetic_quality_rows(),
+        output_dir=tmp_path / "research-result",
+    )
     first_bytes = tuple(path.read_bytes() for path in first)
-    second = publish_research_rows(rows, output_dir=tmp_path / "research-result")
+    second = publish_research_rows(
+        rows,
+        data_quality_rows=_synthetic_quality_rows(),
+        output_dir=tmp_path / "research-result",
+    )
 
     assert tuple(path.read_bytes() for path in second) == first_bytes
     with first[0].open(newline="", encoding="utf-8") as source:
@@ -424,6 +451,7 @@ def test_publication_is_deterministic_and_has_exact_schemas(
         (ACROSS_COMPANY_COLUMNS, 7),
         (PRINCIPAL_WINNER_COLUMNS, 15),
         (SECTOR_PEER_COLUMNS, 15),
+        (DATA_QUALITY_COLUMNS, 15),
     )
     for path, (columns, count) in zip(first[2:], expected_schemas):
         with path.open(newline="", encoding="utf-8") as source:
@@ -572,11 +600,15 @@ def test_conflicting_dm_and_across_company_sources_fail_closed(
 
 def test_phase_one_csv_bytes_remain_frozen(tmp_path: Path, evidence: ResearchEvidence) -> None:
     paths = publish_research_rows(
-        build_research_rows(evidence), output_dir=tmp_path / "research-result"
+        build_research_rows(evidence),
+        data_quality_rows=_synthetic_quality_rows(),
+        output_dir=tmp_path / "research-result",
     )
     synthetic_first = tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in paths[:2])
     second = publish_research_rows(
-        build_research_rows(evidence), output_dir=tmp_path / "research-result"
+        build_research_rows(evidence),
+        data_quality_rows=_synthetic_quality_rows(),
+        output_dir=tmp_path / "research-result",
     )
     assert tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in second[:2]) == synthetic_first
 
@@ -584,15 +616,81 @@ def test_phase_one_csv_bytes_remain_frozen(tmp_path: Path, evidence: ResearchEvi
 def test_authoritative_phase_one_outputs_remain_byte_identical(tmp_path: Path) -> None:
     paths = publish_research_rows(
         build_research_rows(load_authoritative_evidence()),
+        data_quality_rows=build_frozen_data_quality_rows(),
         output_dir=tmp_path / "research-result",
     )
 
-    assert hashlib.sha256(paths[0].read_bytes()).hexdigest() == (
-        "7c648357adaba1e5769d560435bad61a933d67ebb5ee8fc1ded5944416737a97"
+    expected = (
+        "7c648357adaba1e5769d560435bad61a933d67ebb5ee8fc1ded5944416737a97",
+        "836974efff91c52c0cdd1d492279b8fe11476fadff6dc575b6a22870eec3548a",
+        "a4d0bdef371bad9fe1d0f424da65a702e44b289e4798fa5e69ec94d2710900a3",
+        "e9c27f42de578bded049d9d33f7890acceb7cf7d1a9dc169a49f81bf4a639f96",
+        "131f69a47061aa75cd2ff467132d193d3aa02d9eaaa8501506d020e827a416b6",
+        "6bbb839974d84dd39780565f614f3fdcb4b2c311aeeee3f9897f68bd2b689aef",
+        "283cec1287dea54e9a4be8eaec043ee172b97219674e11f38bcc32890148002f",
     )
-    assert hashlib.sha256(paths[1].read_bytes()).hexdigest() == (
-        "836974efff91c52c0cdd1d492279b8fe11476fadff6dc575b6a22870eec3548a"
-    )
+    assert tuple(
+        hashlib.sha256(path.read_bytes()).hexdigest() for path in paths[:7]
+    ) == expected
+
+
+def test_authoritative_data_quality_rows_match_frozen_formal_contract() -> None:
+    first = build_frozen_data_quality_rows()
+    second = build_frozen_data_quality_rows()
+
+    assert first == second
+    assert len(first) == 15
+    assert [row["symbol"] for row in first] == [company.symbol for company in COMPANIES]
+    assert len({row["symbol"] for row in first}) == 15
+    assert {row["start_date"] for row in first} == {"2020-01-02"}
+    assert {row["end_date"] for row in first} == {FORMAL_CUTOFF}
+    assert {row["row_count"] for row in first} == {1_635}
+    assert sum(int(row["row_count"]) for row in first) == 24_525
+    assert {row["expected_session_count"] for row in first} == {1_635}
+    assert all(row["rule_version"] == "data-quality-v1" for row in first)
+
+
+def test_data_quality_formal_identity_mismatches_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(exporter, "FORMAL_CUTOFF", "2026-09-10")
+    with pytest.raises(ResearchResultExportError, match="identity conflicts"):
+        exporter.build_frozen_data_quality_rows()
+
+
+def test_data_quality_frozen_raw_hash_mismatch_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(exporter, "sha256_file", lambda path: "0" * 64)
+    with pytest.raises(ResearchResultExportError, match="provenance conflicts"):
+        exporter.build_frozen_data_quality_rows()
+
+
+def test_data_quality_company_and_row_count_mismatches_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with pytest.raises(ResearchResultExportError, match="15 configured"):
+        exporter.build_frozen_data_quality_rows(companies=COMPANIES[:-1])
+
+    monkeypatch.setattr(exporter, "FORMAL_ROWS_PER_COMPANY", 1_634)
+    with pytest.raises(ResearchResultExportError, match="session count"):
+        exporter.build_frozen_data_quality_rows()
+
+
+def test_data_quality_formal_provenance_row_count_mismatch_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    original_load = exporter._load_json
+
+    def changed_load(path: Path):
+        payload = deepcopy(original_load(path))
+        if path.name == "raw_files.json":
+            payload["raw_files"][0]["row_count"] = 1_634
+        return payload
+
+    monkeypatch.setattr(exporter, "_load_json", changed_load)
+    with pytest.raises(ResearchResultExportError, match="provenance conflicts"):
+        exporter.build_frozen_data_quality_rows()
 
 
 def test_missing_authoritative_source_fails_closed(tmp_path: Path) -> None:
@@ -675,17 +773,29 @@ def test_production_only_parameter_cannot_replace_missing_formal_selection(
         build_research_rows(changed)
 
 
-def test_failed_directory_swap_restores_both_previous_csvs(
+def test_failed_directory_swap_restores_all_previous_csvs(
     tmp_path: Path,
     evidence: ResearchEvidence,
 ) -> None:
     rows = build_research_rows(evidence)
     output = tmp_path / "research-result"
     output.mkdir()
-    config_path = output / "selected_configurations.csv"
-    metrics_path = output / "holdout_metrics.csv"
-    config_path.write_bytes(b"old-config\n")
-    metrics_path.write_bytes(b"old-metrics\n")
+    previous = {
+        name: f"old-{index}\n".encode()
+        for index, name in enumerate(
+            (
+                "selected_configurations.csv",
+                "holdout_metrics.csv",
+                "benchmark_vs_naive_dm.csv",
+                "within_company_dm.csv",
+                "across_company_tests.csv",
+                "principal_winners.csv",
+                "sector_peer_summary.csv",
+            )
+        )
+    }
+    for name, content in previous.items():
+        (output / name).write_bytes(content)
     calls = 0
 
     def fail_new_directory(source: Path, destination: Path) -> None:
@@ -696,7 +806,12 @@ def test_failed_directory_swap_restores_both_previous_csvs(
         os.replace(source, destination)
 
     with pytest.raises(ResearchResultExportError, match="publication failed"):
-        publish_research_rows(rows, output_dir=output, replace=fail_new_directory)
+        publish_research_rows(
+            rows,
+            data_quality_rows=_synthetic_quality_rows(),
+            output_dir=output,
+            replace=fail_new_directory,
+        )
 
-    assert config_path.read_bytes() == b"old-config\n"
-    assert metrics_path.read_bytes() == b"old-metrics\n"
+    assert {name: (output / name).read_bytes() for name in previous} == previous
+    assert not (output / "data_quality.csv").exists()
