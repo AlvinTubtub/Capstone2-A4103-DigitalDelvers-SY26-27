@@ -2,6 +2,8 @@
 
 This is the Next.js 14 App Router website for PSE Pulse. It reads generated operational JSON from `public/forecasts/`; model training and inference run in the repository's backend automation, not in Vercel or the browser.
 
+The current public website is [https://pse-pulse.vercel.app/](https://pse-pulse.vercel.app/).
+
 Legacy package and browser-storage identifiers containing `forecastph` remain unchanged for compatibility.
 
 ## Local development
@@ -15,14 +17,21 @@ Open `http://localhost:3000`.
 
 ## Routes
 
-- `/` — market overview
-- `/companies` — tracked company directory
+Primary navigation:
+
+- `/` — Home / market overview
+- `/companies` — Companies directory
+- `/watchlist` — My Watchlist, stored locally in the browser
+- `/learn-stocks` — Learn Stocks educational guide
+- `/about` — About, project architecture, and limitations
+
+Additional routes:
+
 - `/companies/<SYMBOL>` — company forecast, metrics, and charts
-- `/watchlist` — browser-local watchlist
-- `/compare` — current operational Models dashboard
-- `/learn-stocks` — educational stock and forecast guide
+- `/compare` — model comparison / Models dashboard
 - `/learn` — redirect to `/learn-stocks`
-- `/about` — project architecture and limitations
+
+The `/compare` route remains available but is not part of the primary desktop or mobile navigation.
 
 The AI assistant receives page-aware context built from the same operational forecast documents.
 

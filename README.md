@@ -2,13 +2,25 @@
 
 PSE Pulse is an educational forecasting platform for selected companies listed on the Philippine Stock Exchange (PSE). It validates official end-of-day OHLCV data, evaluates three forecasting model families against a Naive benchmark, refits production models, and publishes next-session forecasts to a Next.js website.
 
+- **Official website:** [https://pse-pulse.vercel.app/](https://pse-pulse.vercel.app/)
+- **Official repository:** [AlvinTubtub/Capstone2-A4103-DigitalDelvers-SY26-27](https://github.com/AlvinTubtub/Capstone2-A4103-DigitalDelvers-SY26-27)
+
 Forecasts are statistical estimates for education and research. They are not investment advice or trading signals.
 
 PSE Pulse is the current public-facing brand. Legacy internal identifiers containing `forecastph` are retained for compatibility and provenance.
 
+## Start here
+
+- [Documentation index](docs/README.md)
+- [Backend technical guide](backend/README.md)
+- [Frontend and routes guide](frontend/README.md)
+- [Frozen research-result evidence](backend/research-result/README.md)
+- [Historical research archive guide](docs/research-history/README.md)
+- [Data provenance and correction records](backend/data/corrections/)
+
 ## Companies and sectors
 
-The configured universe is defined once in `backend/config/companies.py`.
+The configured universe contains 15 companies across five sectors, with three companies per sector. It is defined once in `backend/config/companies.py`.
 
 | Sector | Companies |
 | --- | --- |
@@ -50,6 +62,14 @@ The best principal model is the lowest-RMSE choice among LIR, ARIMA, and LSTM. T
 Cross-company reporting does not choose a winner from pooled or averaged peso RMSE/MAE. It uses median MASE, median within-company RMSE rank, win counts, and counts beating Naive. R² is supplementary and is never used for tuning, model selection, or deployment.
 
 Reporting-only statistical comparisons operate on the complete aligned holdout: six within-company Diebold-Mariano pairs under squared- and absolute-error loss use Newey-West variance, the Harvey-Leybourne-Newbold correction, and separate Holm families. Across-company comparison uses MASE with Friedman and conditionally Holm-corrected Wilcoxon tests. These results never tune, refit, promote, or forecast. The live site does not claim statistical significance without finalized formal-run evidence.
+
+## Production and formal research
+
+Production forecasting is an ongoing operational lifecycle: validated current raw data feed persisted-model inference and the frontend's current forecast documents. Formal research is a frozen, reproducible evaluation and does not control daily retraining or silently replace deployed models.
+
+The authoritative formal evidence is indexed in [`backend/research-result/`](backend/research-result/README.md). It records formal run `FORECASTPH_FORMAL_20260911_01`, cutoff `2026-09-11`, and 246 aligned holdout targets per company and method from `2025-09-10` through `2026-09-11`. Principal-model RMSE wins were LIR 4, ARIMA 7, and LSTM 4; none reached the strict-majority threshold of 8 of 15. Including Naive, evaluated-method wins were LIR 3, ARIMA 7, LSTM 4, and Naive 1.
+
+The across-company MASE Friedman result was `1.7412587412587377` with raw p-value `0.6278003229833597` at alpha `0.05`; the null was not rejected, so conditional Wilcoxon post-hoc tests were not performed. The frozen `data-quality-v1` screen reports 15 PASS and 0 FAIL. APX has one material-discontinuity REVIEW event; that review flag is neither a confirmed error nor a confirmed corporate action.
 
 ## Production architecture
 
@@ -100,20 +120,36 @@ GitHub Actions stores the complete production-model package as an artifact. Its 
 
 ```text
 .
-├── .github/workflows/       # Quarterly training and daily persisted inference
-├── backend/
-│   ├── config/              # Company, model, filesystem, and PSE-calendar configuration
-│   ├── data/raw/            # Canonical OHLCV histories
-│   ├── scripts/             # Validation, ingestion, training, inference, and reset CLIs
-│   ├── src/                 # Authoritative backend packages
-│   ├── tests/               # Backend and workflow tests
-│   └── artifacts/           # Generated and gitignored runtime files
+├── README.md                     # Main project landing page / start here
+├── .github/
+│   └── workflows/                # Quarterly training and daily persisted inference
+│
 ├── docs/
+│   ├── README.md                 # Documentation index
+│   ├── branding-migration.md
 │   ├── frontend-forecast-contract.md
-│   └── research-history/    # Archival material; never a production input
+│   └── research-history/
+│       └── README.md             # Historical/archive guidance
+│
+├── backend/
+│   ├── README.md                 # Backend technical guide
+│   ├── research-result/
+│   │   ├── README.md             # Frozen research-evidence index
+│   │   └── *.csv                 # Deterministic formal evidence
+│   ├── data/
+│   │   ├── raw/                  # Canonical OHLCV histories
+│   │   ├── corrections/          # Provenance/correction documentation
+│   │   └── formal_display/       # Frozen formal display snapshot
+│   ├── config/                   # Company, model, filesystem, and calendar configuration
+│   ├── scripts/                  # Validation, ingestion, training, inference, and reset CLIs
+│   ├── src/                      # Authoritative backend packages
+│   ├── tests/                    # Backend and workflow tests
+│   └── artifacts/                # Generated, gitignored runtime files
+│
 └── frontend/
-    ├── public/forecasts/    # Generated operational website data
-    └── src/                 # Next.js App Router application
+    ├── README.md                 # Frontend and routes guide
+    ├── public/forecasts/         # Committed operational website data
+    └── src/                      # Next.js App Router application
 ```
 
 ## Backend commands
@@ -135,7 +171,7 @@ python -m pytest -q
 
 The frontend is a Next.js 14 App Router application. It reads committed operational JSON from `frontend/public/forecasts/`; it does not run Python or model inference on Vercel.
 
-Current pages and features include Home, Companies, company detail charts, My Watchlist, Models, Learn Stocks, About, the AI assistant, out-of-sample backtests, forecast-error charts, and next-session forecasts.
+Primary navigation is **Home | Companies | My Watchlist | Learn Stocks | About**. Company detail pages are reached through the company directory and search. The additional `/compare` route provides the model comparison / Models dashboard but is not a primary navbar item. See the [frontend guide](frontend/README.md) for the complete route list.
 
 Run locally from `frontend/`:
 
