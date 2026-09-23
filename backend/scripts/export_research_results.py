@@ -7,6 +7,7 @@ from collections.abc import Callable, Mapping, Sequence
 import csv
 from dataclasses import dataclass
 from datetime import date, timedelta
+import hashlib
 import io
 import json
 import logging
@@ -190,6 +191,87 @@ DATA_QUALITY_COLUMNS: Final[tuple[str, ...]] = (
     "material_discontinuity_status", "dataset_quality_status",
     "screening_review_required", "formal_run_id", "formal_cutoff",
     "formal_git_sha", "rule_version",
+)
+
+MANIFEST_COLUMNS: Final[tuple[str, ...]] = (
+    "filename",
+    "purpose",
+    "row_count",
+    "column_count",
+    "sha256",
+    "formal_run_id",
+    "formal_cutoff",
+    "formal_git_sha",
+    "formal_archive_sha256",
+    "supplementary_package_id",
+    "rule_version",
+    "source_scope",
+    "validation_status",
+    "package_content_sha256",
+)
+
+SUBSTANTIVE_FILE_ORDER: Final[tuple[str, ...]] = (
+    "selected_configurations.csv",
+    "holdout_metrics.csv",
+    "benchmark_vs_naive_dm.csv",
+    "within_company_dm.csv",
+    "across_company_tests.csv",
+    "principal_winners.csv",
+    "sector_peer_summary.csv",
+    "data_quality.csv",
+)
+
+SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
+    "selected_configurations.csv": CONFIGURATION_COLUMNS,
+    "holdout_metrics.csv": METRIC_COLUMNS,
+    "benchmark_vs_naive_dm.csv": BENCHMARK_DM_COLUMNS,
+    "within_company_dm.csv": WITHIN_COMPANY_DM_COLUMNS,
+    "across_company_tests.csv": ACROSS_COMPANY_COLUMNS,
+    "principal_winners.csv": PRINCIPAL_WINNER_COLUMNS,
+    "sector_peer_summary.csv": SECTOR_PEER_COLUMNS,
+    "data_quality.csv": DATA_QUALITY_COLUMNS,
+}
+
+SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
+    "selected_configurations.csv": 15,
+    "holdout_metrics.csv": 60,
+    "benchmark_vs_naive_dm.csv": 90,
+    "within_company_dm.csv": 180,
+    "across_company_tests.csv": 7,
+    "principal_winners.csv": 15,
+    "sector_peer_summary.csv": 15,
+    "data_quality.csv": 15,
+}
+
+SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
+    "selected_configurations.csv": "development-selected model configurations",
+    "holdout_metrics.csv": "frozen common-holdout evaluation metrics",
+    "benchmark_vs_naive_dm.csv": "principal-model versus naive paired DM evidence",
+    "within_company_dm.csv": "all-pairs within-company paired DM evidence",
+    "across_company_tests.csv": "across-company MASE statistical evidence",
+    "principal_winners.csv": "descriptive per-company principal-model winners",
+    "sector_peer_summary.csv": "descriptive within-sector company-peer summaries",
+    "data_quality.csv": "frozen formal-dataset quality screening evidence",
+}
+
+SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
+    "selected_configurations.csv": "formal",
+    "holdout_metrics.csv": "formal+supplementary",
+    "benchmark_vs_naive_dm.csv": "formal",
+    "within_company_dm.csv": "formal+supplementary",
+    "across_company_tests.csv": "formal+supplementary",
+    "principal_winners.csv": "formal+supplementary",
+    "sector_peer_summary.csv": "formal",
+    "data_quality.csv": "formal+data-quality-screening",
+}
+
+SUPPLEMENTARY_DEPENDENT_FILES: Final[frozenset[str]] = frozenset(
+    {
+        "holdout_metrics.csv",
+        "within_company_dm.csv",
+        "across_company_tests.csv",
+        "principal_winners.csv",
+    }
 )
 
 
@@ -1383,6 +1465,709 @@ def _csv_bytes(columns: Sequence[str], rows: Sequence[Mapping[str, object]]) -> 
     return output.getvalue().encode("utf-8")
 
 
+@dataclass(frozen=True, slots=True)
+class ParsedSubstantiveCsv:
+    filename: str
+    payload: bytes
+    columns: tuple[str, ...]
+    rows: tuple[dict[str, str], ...]
+    sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class PackageValidation:
+    files: tuple[ParsedSubstantiveCsv, ...]
+    manifest_rows: tuple[dict[str, object], ...]
+    package_content_sha256: str
+    principal_winner_counts: Mapping[str, int]
+    best_evaluated_method_counts: Mapping[str, int]
+
+
+def _csv_integer(value: str, label: str) -> int:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError) as exc:
+        raise ResearchResultExportError(f"{label} must be an integer") from exc
+    return parsed
+
+
+def _csv_number(value: str, label: str) -> float:
+    try:
+        parsed = float(value)
+    except (TypeError, ValueError) as exc:
+        raise ResearchResultExportError(f"{label} must be numeric") from exc
+    if not math.isfinite(parsed):
+        raise ResearchResultExportError(f"{label} must be finite")
+    return parsed
+
+
+def _csv_boolean(value: str, label: str) -> bool:
+    if value not in {"true", "false"}:
+        raise ResearchResultExportError(f"{label} must be true or false")
+    return value == "true"
+
+
+def _parse_substantive_csv(filename: str, payload: bytes) -> ParsedSubstantiveCsv:
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ResearchResultExportError(f"{filename} is not valid UTF-8") from exc
+    if "\x00" in text:
+        raise ResearchResultExportError(f"{filename} contains a NUL byte")
+    try:
+        records = list(csv.reader(io.StringIO(text, newline=""), strict=True))
+    except csv.Error as exc:
+        raise ResearchResultExportError(f"{filename} is malformed CSV: {exc}") from exc
+    if not records:
+        raise ResearchResultExportError(f"{filename} is empty")
+    columns = tuple(records[0])
+    expected_columns = SUBSTANTIVE_FILE_SCHEMAS[filename]
+    if columns != expected_columns:
+        raise ResearchResultExportError(f"{filename} header does not match its schema")
+    if len(columns) != len(set(columns)):
+        raise ResearchResultExportError(f"{filename} contains duplicate columns")
+    if any(len(record) != len(columns) for record in records[1:]):
+        raise ResearchResultExportError(f"{filename} contains a malformed row width")
+    rows = tuple(dict(zip(columns, record)) for record in records[1:])
+    expected_rows = SUBSTANTIVE_FILE_ROW_COUNTS[filename]
+    if len(rows) != expected_rows:
+        raise ResearchResultExportError(
+            f"{filename} has {len(rows)} rows; expected {expected_rows}"
+        )
+    return ParsedSubstantiveCsv(
+        filename=filename,
+        payload=payload,
+        columns=columns,
+        rows=rows,
+        sha256=hashlib.sha256(payload).hexdigest(),
+    )
+
+
+def _load_substantive_csvs(output_dir: Path) -> tuple[ParsedSubstantiveCsv, ...]:
+    directory = Path(output_dir)
+    if not directory.is_dir():
+        raise ResearchResultExportError(
+            f"Research-result directory is missing: {directory}"
+        )
+    allowed = set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv"}
+    unexpected = {item.name for item in directory.iterdir()} - allowed
+    if unexpected:
+        raise ResearchResultExportError(
+            f"Research-result directory contains unexpected files: {sorted(unexpected)}"
+        )
+    parsed: list[ParsedSubstantiveCsv] = []
+    for filename in SUBSTANTIVE_FILE_ORDER:
+        path = directory / filename
+        if not path.is_file():
+            raise ResearchResultExportError(
+                f"Required substantive CSV is missing: {filename}"
+            )
+        try:
+            payload = path.read_bytes()
+        except OSError as exc:
+            raise ResearchResultExportError(
+                f"Cannot read substantive CSV: {filename}"
+            ) from exc
+        parsed.append(_parse_substantive_csv(filename, payload))
+    return tuple(parsed)
+
+
+def _validate_company_rows(
+    files: Mapping[str, ParsedSubstantiveCsv],
+) -> dict[str, Company]:
+    if len(COMPANIES) != 15:
+        raise ResearchResultExportError("Exactly 15 configured companies are required")
+    companies = {company.symbol: company for company in COMPANIES}
+    if len(companies) != 15:
+        raise ResearchResultExportError("Configured company symbols are not unique")
+    expected_symbols = set(companies)
+    for filename, parsed in files.items():
+        if "symbol" not in parsed.columns:
+            continue
+        symbols = {row["symbol"] for row in parsed.rows}
+        if symbols != expected_symbols:
+            raise ResearchResultExportError(
+                f"{filename} has missing or unexpected company symbols"
+            )
+        for row in parsed.rows:
+            company = companies[row["symbol"]]
+            if row.get("company_name") != company.name:
+                raise ResearchResultExportError(
+                    f"{filename} company name conflicts for {company.symbol}"
+                )
+            if row.get("sector") != company.sector:
+                raise ResearchResultExportError(
+                    f"{filename} sector conflicts for {company.symbol}"
+                )
+    return companies
+
+
+def _validate_formal_identity(files: Mapping[str, ParsedSubstantiveCsv]) -> None:
+    expected = {
+        "formal_run_id": FORMAL_RUN_ID,
+        "formal_cutoff": FORMAL_CUTOFF,
+        "formal_git_sha": FORMAL_GIT_SHA,
+    }
+    for filename, parsed in files.items():
+        for row_number, row in enumerate(parsed.rows, start=2):
+            for field, value in expected.items():
+                if row.get(field) != value:
+                    raise ResearchResultExportError(
+                        f"{filename} row {row_number} has conflicting {field}"
+                    )
+
+
+def _validate_selected_configurations(parsed: ParsedSubstantiveCsv) -> None:
+    if len({row["symbol"] for row in parsed.rows}) != 15:
+        raise ResearchResultExportError(
+            "selected_configurations.csv must contain one row per company"
+        )
+    for row in parsed.rows:
+        symbol = row["symbol"]
+        _csv_number(row["lir_selected_alpha"], f"{symbol} selected LIR alpha")
+        feature_count = _csv_integer(
+            row["lir_selected_feature_count"], f"{symbol} selected feature count"
+        )
+        features = [] if not row["lir_selected_features"] else row[
+            "lir_selected_features"
+        ].split("|")
+        if feature_count != len(features):
+            raise ResearchResultExportError(
+                f"selected_configurations.csv LIR feature count conflicts for {symbol}"
+            )
+        if row["lir_alpha_grid_boundary_status"] not in {
+            "lower",
+            "upper",
+            "interior",
+        }:
+            raise ResearchResultExportError(
+                f"selected_configurations.csv LIR boundary status conflicts for {symbol}"
+            )
+        for field in ("arima_p", "arima_d", "arima_q"):
+            _csv_integer(row[field], f"{symbol} {field}")
+        if row["arima_trend"] not in {"n", "c", "t"}:
+            raise ResearchResultExportError(
+                f"selected_configurations.csv ARIMA trend conflicts for {symbol}"
+            )
+        if row["arima_convergence_status"] != "confirmed_converged":
+            raise ResearchResultExportError(
+                f"selected_configurations.csv ARIMA convergence conflicts for {symbol}"
+            )
+        for field in (
+            "lstm_lookback",
+            "lstm_hidden_size",
+            "lstm_batch_size",
+            "lstm_selected_epoch_count",
+        ):
+            if _csv_integer(row[field], f"{symbol} {field}") <= 0:
+                raise ResearchResultExportError(f"{symbol} {field} must be positive")
+        _csv_number(row["lstm_learning_rate"], f"{symbol} LSTM learning rate")
+        if row["lstm_tuning_seeds"] != "11|29|47" or row["lstm_final_seed"] != "42":
+            raise ResearchResultExportError(
+                f"selected_configurations.csv LSTM seeds conflict for {symbol}"
+            )
+
+
+def _validate_holdout_metrics(
+    parsed: ParsedSubstantiveCsv,
+) -> dict[tuple[str, str], dict[str, str]]:
+    indexed: dict[tuple[str, str], dict[str, str]] = {}
+    for row in parsed.rows:
+        key = (row["symbol"], row["method"])
+        if key in indexed:
+            raise ResearchResultExportError(
+                f"holdout_metrics.csv contains duplicate row {key}"
+            )
+        indexed[key] = row
+        for field in ("rmse", "mae", "mase", "r2", "mase_denominator"):
+            _csv_number(row[field], f"{row['symbol']}/{row['method']} {field}")
+    for company in COMPANIES:
+        company_rows = {
+            method: indexed.get((company.symbol, method)) for method in METHODS
+        }
+        if any(row is None for row in company_rows.values()):
+            raise ResearchResultExportError(
+                f"holdout_metrics.csv methods are incomplete for {company.symbol}"
+            )
+        typed_rows = tuple(row for row in company_rows.values() if row is not None)
+        if {row["holdout_start"] for row in typed_rows} != {HOLDOUT_START}:
+            raise ResearchResultExportError(
+                f"holdout_metrics.csv start date conflicts for {company.symbol}"
+            )
+        if {row["holdout_end"] for row in typed_rows} != {HOLDOUT_END}:
+            raise ResearchResultExportError(
+                f"holdout_metrics.csv end date conflicts for {company.symbol}"
+            )
+        if {
+            _csv_integer(
+                row["observation_count"],
+                f"{company.symbol}/{row['method']} observation count",
+            )
+            for row in typed_rows
+        } != {HOLDOUT_OBSERVATIONS}:
+            raise ResearchResultExportError(
+                f"holdout_metrics.csv observation count conflicts for {company.symbol}"
+            )
+        if len({row["mase_denominator"] for row in typed_rows}) != 1:
+            raise ResearchResultExportError(
+                f"holdout_metrics.csv MASE denominator conflicts for {company.symbol}"
+            )
+    return indexed
+
+
+def _validate_dm_files(
+    benchmark: ParsedSubstantiveCsv,
+    within: ParsedSubstantiveCsv,
+) -> dict[tuple[str, str, str], dict[str, str]]:
+    within_index: dict[tuple[str, str, str, str], dict[str, str]] = {}
+    for row in within.rows:
+        key = (row["symbol"], row["model_1"], row["model_2"], row["loss_type"])
+        if key in within_index:
+            raise ResearchResultExportError(
+                f"within_company_dm.csv contains duplicate row {key}"
+            )
+        within_index[key] = row
+        if row["loss_type"] not in LOSS_TYPES:
+            raise ResearchResultExportError(
+                f"within_company_dm.csv has unexpected loss type for {row['symbol']}"
+            )
+        if _csv_integer(row["holm_family_size"], "DM Holm family size") != 6:
+            raise ResearchResultExportError("DM Holm family size must equal 6")
+    expected_within = {
+        (company.symbol, model_1, model_2, loss_type)
+        for company in COMPANIES
+        for loss_type in LOSS_TYPES
+        for model_1, model_2 in METHOD_PAIRS
+    }
+    if set(within_index) != expected_within:
+        raise ResearchResultExportError(
+            "within_company_dm.csv method pairs or loss families are incomplete"
+        )
+
+    benchmark_index: dict[tuple[str, str, str], dict[str, str]] = {}
+    comparable_fields = (
+        "sample_size",
+        "mean_loss_differential",
+        "dm_statistic",
+        "raw_p_value",
+        "holm_adjusted_p_value",
+        "reject",
+        "available",
+        "unavailable_reason",
+        "hac_lag",
+        "forecast_horizon",
+        "hln_correction_factor",
+    )
+    for row in benchmark.rows:
+        key = (row["symbol"], row["model"], row["loss_type"])
+        if key in benchmark_index or row["benchmark"] != "naive":
+            raise ResearchResultExportError(
+                f"benchmark_vs_naive_dm.csv contains duplicate or invalid row {key}"
+            )
+        benchmark_index[key] = row
+        within_row = within_index.get(
+            (row["symbol"], row["model"], "naive", row["loss_type"])
+        )
+        if within_row is None or any(
+            row[field] != within_row[field] for field in comparable_fields
+        ):
+            raise ResearchResultExportError(
+                "benchmark_vs_naive_dm.csv does not match within_company_dm.csv "
+                f"for {key}"
+            )
+    expected_benchmark = {
+        (company.symbol, method, loss_type)
+        for company in COMPANIES
+        for loss_type in LOSS_TYPES
+        for method in PRINCIPAL_METHODS
+    }
+    if set(benchmark_index) != expected_benchmark:
+        raise ResearchResultExportError(
+            "benchmark_vs_naive_dm.csv is not the complete principal-versus-naive subset"
+        )
+    return benchmark_index
+
+
+def _validate_across_company(parsed: ParsedSubstantiveCsv) -> None:
+    friedman = [row for row in parsed.rows if row["test_name"] == "friedman"]
+    wilcoxon = [row for row in parsed.rows if row["test_name"] == "wilcoxon"]
+    if len(friedman) != 1 or len(wilcoxon) != 6:
+        raise ResearchResultExportError(
+            "across_company_tests.csv must contain one Friedman and six Wilcoxon rows"
+        )
+    omnibus = friedman[0]
+    if (
+        omnibus["metric"] != "mase"
+        or _csv_integer(omnibus["company_count"], "Friedman company count") != 15
+        or omnibus["performed"] != "true"
+        or omnibus["reject"] != "false"
+    ):
+        raise ResearchResultExportError(
+            "across_company_tests.csv Friedman evidence conflicts"
+        )
+    pairs = {(row["model_1"], row["model_2"]) for row in wilcoxon}
+    if pairs != set(METHOD_PAIRS):
+        raise ResearchResultExportError(
+            "across_company_tests.csv Wilcoxon pairs conflict"
+        )
+    for row in wilcoxon:
+        if (
+            row["metric"] != "mase"
+            or _csv_integer(row["company_count"], "Wilcoxon company count") != 15
+            or row["performed"] != "false"
+            or any(
+                row[field]
+                for field in (
+                    "statistic",
+                    "raw_p_value",
+                    "holm_adjusted_p_value",
+                    "reject",
+                )
+            )
+        ):
+            raise ResearchResultExportError(
+                "across_company_tests.csv Wilcoxon gate conflicts"
+            )
+
+
+def _validate_winners(
+    parsed: ParsedSubstantiveCsv,
+    metrics: Mapping[tuple[str, str], Mapping[str, str]],
+) -> tuple[dict[str, dict[str, str]], dict[str, int], dict[str, int]]:
+    winners: dict[str, dict[str, str]] = {}
+    principal_counts = {method: 0 for method in PRINCIPAL_METHODS}
+    evaluated_counts = {method: 0 for method in METHODS}
+    for row in parsed.rows:
+        symbol = row["symbol"]
+        if symbol in winners:
+            raise ResearchResultExportError(
+                f"principal_winners.csv contains duplicate company {symbol}"
+            )
+        rmse = {
+            method: _csv_number(
+                metrics[(symbol, method)]["rmse"], f"{symbol}/{method} RMSE"
+            )
+            for method in METHODS
+        }
+        for method in METHODS:
+            if row[f"{method}_rmse"] != metrics[(symbol, method)]["rmse"]:
+                raise ResearchResultExportError(
+                    f"principal_winners.csv RMSE conflicts for {symbol}/{method}"
+                )
+        principal = min(
+            PRINCIPAL_METHODS,
+            key=lambda method: (rmse[method], PRINCIPAL_METHODS.index(method)),
+        )
+        evaluated = min(
+            METHODS, key=lambda method: (rmse[method], METHODS.index(method))
+        )
+        if (
+            row["best_principal_model"] != principal
+            or row["best_evaluated_method"] != evaluated
+            or row["best_principal_rmse"] != metrics[(symbol, principal)]["rmse"]
+            or row["best_evaluated_rmse"] != metrics[(symbol, evaluated)]["rmse"]
+            or row["winner_selection_metric"] != "rmse"
+            or not row["tie_policy"].startswith(TIE_POLICY_PREFIX)
+        ):
+            raise ResearchResultExportError(
+                f"principal_winners.csv winner conflicts for {symbol}"
+            )
+        expected_beats = rmse[principal] < rmse["naive"]
+        expected_all_worse = all(
+            rmse[method] > rmse["naive"] for method in PRINCIPAL_METHODS
+        )
+        if (
+            _csv_boolean(
+                row["best_principal_beats_naive"],
+                f"{symbol} principal-beats-naive",
+            )
+            is not expected_beats
+            or _csv_boolean(
+                row["all_principals_worse_than_naive"],
+                f"{symbol} all-principals-worse",
+            )
+            is not expected_all_worse
+        ):
+            raise ResearchResultExportError(
+                f"principal_winners.csv benchmark flags conflict for {symbol}"
+            )
+        expected_ranks = _principal_ranks(
+            {method: rmse[method] for method in PRINCIPAL_METHODS}
+        )
+        if any(
+            _csv_integer(row[f"{method}_rank"], f"{symbol}/{method} rank")
+            != expected_ranks[method]
+            for method in PRINCIPAL_METHODS
+        ):
+            raise ResearchResultExportError(
+                f"principal_winners.csv ranks conflict for {symbol}"
+            )
+        winners[symbol] = row
+        principal_counts[principal] += 1
+        evaluated_counts[evaluated] += 1
+    return winners, principal_counts, evaluated_counts
+
+
+def _benchmark_status(row: Mapping[str, str]) -> str:
+    available = _csv_boolean(row["available"], "DM availability")
+    reject = _csv_boolean(row["reject"], "DM rejection")
+    if not available:
+        return "unavailable"
+    if not reject:
+        return "not_significant"
+    difference = _csv_number(row["mean_loss_differential"], "DM mean loss difference")
+    if difference < 0:
+        return "significantly_better"
+    if difference > 0:
+        return "significantly_worse"
+    raise ResearchResultExportError("Rejected DM result has zero mean loss difference")
+
+
+def _validate_sector_peers(
+    parsed: ParsedSubstantiveCsv,
+    metrics: Mapping[tuple[str, str], Mapping[str, str]],
+    winners: Mapping[str, Mapping[str, str]],
+    benchmark: Mapping[tuple[str, str, str], Mapping[str, str]],
+) -> None:
+    if len({row["symbol"] for row in parsed.rows}) != 15:
+        raise ResearchResultExportError(
+            "sector_peer_summary.csv must contain one row per company"
+        )
+    sector_counts: dict[str, int] = {}
+    for row in parsed.rows:
+        symbol = row["symbol"]
+        sector_counts[row["sector"]] = sector_counts.get(row["sector"], 0) + 1
+        winner = winners[symbol]
+        for field in (
+            "best_principal_model",
+            "best_evaluated_method",
+            "best_principal_beats_naive",
+        ):
+            if row[field] != winner[field]:
+                raise ResearchResultExportError(
+                    f"sector_peer_summary.csv winner conflicts for {symbol}/{field}"
+                )
+        for method in METHODS:
+            if (
+                row[f"{method}_rmse"] != metrics[(symbol, method)]["rmse"]
+                or row[f"{method}_mase"] != metrics[(symbol, method)]["mase"]
+            ):
+                raise ResearchResultExportError(
+                    f"sector_peer_summary.csv metrics conflict for {symbol}/{method}"
+                )
+        for method in PRINCIPAL_METHODS:
+            if row[f"{method}_rmse_rank"] != winner[f"{method}_rank"]:
+                raise ResearchResultExportError(
+                    f"sector_peer_summary.csv rank conflicts for {symbol}/{method}"
+                )
+            for loss_type, suffix in (
+                ("squared_error", "squared"),
+                ("absolute_error", "absolute"),
+            ):
+                expected_status = _benchmark_status(
+                    benchmark[(symbol, method, loss_type)]
+                )
+                if row[f"{method}_vs_naive_{suffix}_status"] != expected_status:
+                    raise ResearchResultExportError(
+                        "sector_peer_summary.csv benchmark status conflicts for "
+                        f"{symbol}/{method}/{loss_type}"
+                    )
+    if len(sector_counts) != 5 or set(sector_counts.values()) != {3}:
+        raise ResearchResultExportError(
+            "sector_peer_summary.csv must contain five sectors with three companies each"
+        )
+
+
+def _validate_data_quality(parsed: ParsedSubstantiveCsv) -> None:
+    if len({row["symbol"] for row in parsed.rows}) != 15:
+        raise ResearchResultExportError(
+            "data_quality.csv must contain one row per company"
+        )
+    screening_fields = (
+        "zero_volume_status",
+        "stale_price_status",
+        "liquidity_status",
+        "material_discontinuity_status",
+    )
+    for row in parsed.rows:
+        symbol = row["symbol"]
+        if (
+            row["start_date"] != FORMAL_START
+            or row["end_date"] != FORMAL_CUTOFF
+            or _csv_integer(row["row_count"], f"{symbol} data-quality row count")
+            != FORMAL_ROWS_PER_COMPANY
+            or row["rule_version"] != RULE_VERSION
+        ):
+            raise ResearchResultExportError(
+                f"data_quality.csv frozen contract conflicts for {symbol}"
+            )
+        hard_pass = (
+            all(
+                row[field] == "PASS"
+                for field in (
+                    "required_columns_status",
+                    "numeric_validity_status",
+                    "positive_price_status",
+                    "ohlc_relationship_status",
+                    "basic_validity_status",
+                    "continuity_status",
+                )
+            )
+            and _csv_integer(row["negative_volume_count"], "negative volume count")
+            == 0
+            and _csv_integer(row["duplicate_date_count"], "duplicate date count")
+            == 0
+            and _csv_integer(row["expected_session_count"], "expected session count")
+            == FORMAL_ROWS_PER_COMPANY
+            and _csv_integer(row["observed_session_count"], "observed session count")
+            == FORMAL_ROWS_PER_COMPANY
+            and _csv_integer(row["missing_session_count"], "missing session count")
+            == 0
+            and _csv_integer(row["unexpected_session_count"], "unexpected session count")
+            == 0
+        )
+        if row["dataset_quality_status"] != ("PASS" if hard_pass else "FAIL"):
+            raise ResearchResultExportError(
+                f"data_quality.csv hard-check status conflicts for {symbol}"
+            )
+        review_required = any(row[field] == "REVIEW" for field in screening_fields)
+        if (
+            _csv_boolean(
+                row["screening_review_required"],
+                f"{symbol} screening review flag",
+            )
+            is not review_required
+        ):
+            raise ResearchResultExportError(
+                f"data_quality.csv screening review flag conflicts for {symbol}"
+            )
+
+
+def validate_research_result_package(
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+) -> PackageValidation:
+    """Validate the eight frozen CSVs without recomputing any research result."""
+
+    parsed_files = _load_substantive_csvs(output_dir)
+    files = {parsed.filename: parsed for parsed in parsed_files}
+    _validate_company_rows(files)
+    _validate_formal_identity(files)
+    _validate_selected_configurations(files["selected_configurations.csv"])
+    metrics = _validate_holdout_metrics(files["holdout_metrics.csv"])
+    benchmark = _validate_dm_files(
+        files["benchmark_vs_naive_dm.csv"],
+        files["within_company_dm.csv"],
+    )
+    _validate_across_company(files["across_company_tests.csv"])
+    winners, principal_counts, evaluated_counts = _validate_winners(
+        files["principal_winners.csv"], metrics
+    )
+    _validate_sector_peers(
+        files["sector_peer_summary.csv"],
+        metrics,
+        winners,
+        benchmark,
+    )
+    _validate_data_quality(files["data_quality.csv"])
+
+    # The aggregate deliberately excludes results_manifest.csv to avoid
+    # recursive self-reference. Each line is UTF-8 filename<TAB>sha256<LF>.
+    package_source = "".join(
+        f"{parsed.filename}\t{parsed.sha256}\n" for parsed in parsed_files
+    ).encode("utf-8")
+    package_hash = hashlib.sha256(package_source).hexdigest()
+    manifest_rows = tuple(
+        {
+            "filename": parsed.filename,
+            "purpose": SUBSTANTIVE_FILE_PURPOSES[parsed.filename],
+            "row_count": len(parsed.rows),
+            "column_count": len(parsed.columns),
+            "sha256": parsed.sha256,
+            "formal_run_id": FORMAL_RUN_ID,
+            "formal_cutoff": FORMAL_CUTOFF,
+            "formal_git_sha": FORMAL_GIT_SHA,
+            "formal_archive_sha256": FORMAL_AGGREGATE_SHA256,
+            "supplementary_package_id": (
+                SUPPLEMENTARY_PACKAGE_ID
+                if parsed.filename in SUPPLEMENTARY_DEPENDENT_FILES
+                else ""
+            ),
+            "rule_version": (
+                RULE_VERSION if parsed.filename == "data_quality.csv" else ""
+            ),
+            "source_scope": SUBSTANTIVE_FILE_SOURCE_SCOPES[parsed.filename],
+            "validation_status": "PASS",
+            "package_content_sha256": package_hash,
+        }
+        for parsed in parsed_files
+    )
+    return PackageValidation(
+        files=parsed_files,
+        manifest_rows=manifest_rows,
+        package_content_sha256=package_hash,
+        principal_winner_counts=principal_counts,
+        best_evaluated_method_counts=evaluated_counts,
+    )
+
+
+def publish_results_manifest(
+    validation: PackageValidation,
+    *,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+    replace: Callable[[Path, Path], None] = os.replace,
+) -> Path:
+    """Atomically publish the fully validated, deterministic manifest."""
+
+    destination = Path(output_dir) / "results_manifest.csv"
+    payload = _csv_bytes(MANIFEST_COLUMNS, validation.manifest_rows)
+    parsed = list(csv.reader(io.StringIO(payload.decode("utf-8")), strict=True))
+    if (
+        tuple(parsed[0]) != MANIFEST_COLUMNS
+        or len(parsed[1:]) != len(SUBSTANTIVE_FILE_ORDER)
+        or tuple(row[0] for row in parsed[1:]) != SUBSTANTIVE_FILE_ORDER
+    ):
+        raise ResearchResultExportError("Constructed results manifest is invalid")
+    file_descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".results-manifest-",
+        suffix=".csv",
+        dir=destination.parent,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(file_descriptor, "wb") as target:
+            target.write(payload)
+            target.flush()
+            os.fsync(target.fileno())
+        replace(temporary, destination)
+    except Exception as exc:
+        temporary.unlink(missing_ok=True)
+        if isinstance(exc, ResearchResultExportError):
+            raise
+        raise ResearchResultExportError("Atomic manifest publication failed") from exc
+    return destination
+
+
+def export_results_manifest(
+    *,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+) -> tuple[Path, PackageValidation]:
+    """Validate existing results and publish only their package manifest."""
+
+    LOGGER.info("Validating eight frozen research-result CSVs")
+    validation = validate_research_result_package(output_dir)
+    path = publish_results_manifest(validation, output_dir=output_dir)
+    LOGGER.info(
+        "Published deterministic research-result manifest rows=%d package_sha256=%s "
+        "principal_winners=%s evaluated_winners=%s output=%s",
+        len(validation.manifest_rows),
+        validation.package_content_sha256,
+        dict(validation.principal_winner_counts),
+        dict(validation.best_evaluated_method_counts),
+        path,
+    )
+    return path, validation
+
+
 def publish_research_rows(
     rows: ResearchRows,
     *,
@@ -1407,6 +2192,7 @@ def publish_research_rows(
             "principal_winners.csv",
             "sector_peer_summary.csv",
             "data_quality.csv",
+            "results_manifest.csv",
         }
         if unexpected:
             raise ResearchResultExportError(
@@ -1516,7 +2302,8 @@ def export_research_results(
         len(data_quality_rows),
         output_dir,
     )
-    return paths
+    manifest_path, _ = export_results_manifest(output_dir=output_dir)
+    return (*paths, manifest_path)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1528,6 +2315,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument(
+        "--manifest-only",
+        action="store_true",
+        help="Validate existing substantive CSVs and publish only results_manifest.csv",
+    )
     parser.add_argument("--verbose", action="store_true")
     return parser
 
@@ -1536,11 +2328,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     arguments = build_parser().parse_args(argv)
     configure_structured_logging(verbose=arguments.verbose)
     try:
-        export_research_results(
-            formal_runs_root=arguments.formal_runs_root,
-            supplementary_runs_root=arguments.supplementary_runs_root,
-            output_dir=arguments.output_dir,
-        )
+        if arguments.manifest_only:
+            export_results_manifest(output_dir=arguments.output_dir)
+        else:
+            export_research_results(
+                formal_runs_root=arguments.formal_runs_root,
+                supplementary_runs_root=arguments.supplementary_runs_root,
+                output_dir=arguments.output_dir,
+            )
     except ResearchResultExportError:
         LOGGER.exception("Research-result export failed closed")
         return 1

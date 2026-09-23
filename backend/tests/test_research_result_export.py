@@ -24,6 +24,7 @@ from scripts.export_research_results import (
     HOLDOUT_OBSERVATIONS,
     HOLDOUT_START,
     LOSS_TYPES,
+    MANIFEST_COLUMNS,
     METHOD_PAIRS,
     METHODS,
     METRIC_COLUMNS,
@@ -32,12 +33,18 @@ from scripts.export_research_results import (
     ResearchEvidence,
     ResearchResultExportError,
     SECTOR_PEER_COLUMNS,
+    SUBSTANTIVE_FILE_ORDER,
+    SUBSTANTIVE_FILE_ROW_COUNTS,
+    SUBSTANTIVE_FILE_SCHEMAS,
     SUPPLEMENTARY_PACKAGE_ID,
     WITHIN_COMPANY_DM_COLUMNS,
     build_frozen_data_quality_rows,
     build_research_rows,
+    export_results_manifest,
     load_authoritative_evidence,
+    publish_results_manifest,
     publish_research_rows,
+    validate_research_result_package,
 )
 
 
@@ -815,3 +822,297 @@ def test_failed_directory_swap_restores_all_previous_csvs(
 
     assert {name: (output / name).read_bytes() for name in previous} == previous
     assert not (output / "data_quality.csv").exists()
+
+
+AUTHORITATIVE_RESULT_DIR = Path(__file__).resolve().parents[1] / "research-result"
+AUTHORITATIVE_SUBSTANTIVE_HASHES = {
+    "selected_configurations.csv": (
+        "7c648357adaba1e5769d560435bad61a933d67ebb5ee8fc1ded5944416737a97"
+    ),
+    "holdout_metrics.csv": (
+        "836974efff91c52c0cdd1d492279b8fe11476fadff6dc575b6a22870eec3548a"
+    ),
+    "benchmark_vs_naive_dm.csv": (
+        "a4d0bdef371bad9fe1d0f424da65a702e44b289e4798fa5e69ec94d2710900a3"
+    ),
+    "within_company_dm.csv": (
+        "e9c27f42de578bded049d9d33f7890acceb7cf7d1a9dc169a49f81bf4a639f96"
+    ),
+    "across_company_tests.csv": (
+        "131f69a47061aa75cd2ff467132d193d3aa02d9eaaa8501506d020e827a416b6"
+    ),
+    "principal_winners.csv": (
+        "6bbb839974d84dd39780565f614f3fdcb4b2c311aeeee3f9897f68bd2b689aef"
+    ),
+    "sector_peer_summary.csv": (
+        "283cec1287dea54e9a4be8eaec043ee172b97219674e11f38bcc32890148002f"
+    ),
+    "data_quality.csv": (
+        "6ce753f5d3a65a62633570c2ca241d85ed13272bef73d64b6f39398da328bd8a"
+    ),
+}
+
+
+def _copy_substantive_package(tmp_path: Path) -> Path:
+    destination = tmp_path / "research-result"
+    destination.mkdir()
+    for filename in SUBSTANTIVE_FILE_ORDER:
+        (destination / filename).write_bytes(
+            (AUTHORITATIVE_RESULT_DIR / filename).read_bytes()
+        )
+    return destination
+
+
+def _rewrite_csv_cell(
+    path: Path,
+    *,
+    row_index: int,
+    column: str,
+    value: str,
+) -> None:
+    with path.open("r", encoding="utf-8", newline="") as source:
+        reader = csv.DictReader(source)
+        columns = tuple(reader.fieldnames or ())
+        rows = list(reader)
+    rows[row_index][column] = value
+    with path.open("w", encoding="utf-8", newline="") as target:
+        writer = csv.DictWriter(target, fieldnames=columns, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def test_authoritative_substantive_csv_hashes_are_frozen() -> None:
+    assert {
+        filename: hashlib.sha256(
+            (AUTHORITATIVE_RESULT_DIR / filename).read_bytes()
+        ).hexdigest()
+        for filename in SUBSTANTIVE_FILE_ORDER
+    } == AUTHORITATIVE_SUBSTANTIVE_HASHES
+
+
+def test_manifest_contract_cross_file_validation_and_determinism(
+    tmp_path: Path,
+) -> None:
+    output = _copy_substantive_package(tmp_path)
+    first_path, first_validation = export_results_manifest(output_dir=output)
+    first_bytes = first_path.read_bytes()
+    second_path, second_validation = export_results_manifest(output_dir=output)
+
+    assert second_path.read_bytes() == first_bytes
+    assert first_validation.package_content_sha256 == (
+        second_validation.package_content_sha256
+    )
+    with first_path.open("r", encoding="utf-8", newline="") as source:
+        reader = csv.DictReader(source)
+        manifest = list(reader)
+        assert tuple(reader.fieldnames or ()) == MANIFEST_COLUMNS
+    assert len(manifest) == 8
+    assert tuple(row["filename"] for row in manifest) == SUBSTANTIVE_FILE_ORDER
+    assert len({row["filename"] for row in manifest}) == 8
+
+    package_source = b""
+    for row in manifest:
+        filename = row["filename"]
+        payload = (output / filename).read_bytes()
+        digest = hashlib.sha256(payload).hexdigest()
+        package_source += f"{filename}\t{digest}\n".encode()
+        assert int(row["row_count"]) == SUBSTANTIVE_FILE_ROW_COUNTS[filename]
+        assert int(row["column_count"]) == len(SUBSTANTIVE_FILE_SCHEMAS[filename])
+        assert row["sha256"] == digest
+        assert row["formal_run_id"] == FORMAL_RUN_ID
+        assert row["formal_cutoff"] == FORMAL_CUTOFF
+        assert row["formal_git_sha"] == FORMAL_GIT_SHA
+        assert row["formal_archive_sha256"] == FORMAL_AGGREGATE_SHA256
+        assert row["validation_status"] == "PASS"
+        if filename in {
+            "holdout_metrics.csv",
+            "within_company_dm.csv",
+            "across_company_tests.csv",
+            "principal_winners.csv",
+        }:
+            assert row["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID
+        else:
+            assert row["supplementary_package_id"] == ""
+        assert row["rule_version"] == (
+            "data-quality-v1" if filename == "data_quality.csv" else ""
+        )
+
+    expected_package_hash = hashlib.sha256(package_source).hexdigest()
+    assert {
+        row["package_content_sha256"] for row in manifest
+    } == {expected_package_hash}
+    assert "results_manifest.csv" not in package_source.decode()
+    assert first_validation.principal_winner_counts == {
+        "lag_reg": 4,
+        "arima": 7,
+        "lstm": 4,
+    }
+    assert first_validation.best_evaluated_method_counts == {
+        "lag_reg": 3,
+        "arima": 7,
+        "lstm": 4,
+        "naive": 1,
+    }
+
+
+def test_package_content_hash_changes_when_valid_substantive_bytes_change(
+    tmp_path: Path,
+) -> None:
+    output = _copy_substantive_package(tmp_path)
+    original = validate_research_result_package(output).package_content_sha256
+    path = output / "selected_configurations.csv"
+    with path.open("r", encoding="utf-8", newline="") as source:
+        first = next(csv.DictReader(source))
+    changed_value = first["lstm_selection_mean_validation_rmse"] + "0"
+    _rewrite_csv_cell(
+        path,
+        row_index=0,
+        column="lstm_selection_mean_validation_rmse",
+        value=changed_value,
+    )
+
+    changed = validate_research_result_package(output).package_content_sha256
+    assert changed != original
+
+
+def test_missing_substantive_csv_fails_closed(tmp_path: Path) -> None:
+    output = _copy_substantive_package(tmp_path)
+    (output / "holdout_metrics.csv").unlink()
+
+    with pytest.raises(ResearchResultExportError, match="missing"):
+        validate_research_result_package(output)
+
+
+@pytest.mark.parametrize(
+    ("filename", "row_index", "column", "value", "message"),
+    [
+        (
+            "selected_configurations.csv",
+            0,
+            "symbol",
+            "APX",
+            "company symbols",
+        ),
+        (
+            "holdout_metrics.csv",
+            3,
+            "method",
+            "lag_reg",
+            "duplicate row",
+        ),
+        (
+            "benchmark_vs_naive_dm.csv",
+            0,
+            "raw_p_value",
+            "0.9",
+            "does not match",
+        ),
+        (
+            "within_company_dm.csv",
+            0,
+            "holm_family_size",
+            "5",
+            "Holm family size",
+        ),
+        (
+            "across_company_tests.csv",
+            1,
+            "performed",
+            "true",
+            "Wilcoxon gate",
+        ),
+        (
+            "principal_winners.csv",
+            0,
+            "best_principal_model",
+            "arima",
+            "winner conflicts",
+        ),
+        (
+            "sector_peer_summary.csv",
+            0,
+            "company_name",
+            "Wrong Company",
+            "company name",
+        ),
+        (
+            "data_quality.csv",
+            0,
+            "rule_version",
+            "wrong-rule",
+            "frozen contract",
+        ),
+        (
+            "holdout_metrics.csv",
+            0,
+            "formal_run_id",
+            "wrong-run",
+            "formal_run_id",
+        ),
+    ],
+)
+def test_cross_file_corruption_fails_closed(
+    tmp_path: Path,
+    filename: str,
+    row_index: int,
+    column: str,
+    value: str,
+    message: str,
+) -> None:
+    output = _copy_substantive_package(tmp_path)
+    _rewrite_csv_cell(
+        output / filename,
+        row_index=row_index,
+        column=column,
+        value=value,
+    )
+
+    with pytest.raises(ResearchResultExportError, match=message):
+        validate_research_result_package(output)
+
+
+def test_malformed_csv_fails_closed(tmp_path: Path) -> None:
+    output = _copy_substantive_package(tmp_path)
+    (output / "holdout_metrics.csv").write_bytes(b'"unterminated')
+
+    with pytest.raises(ResearchResultExportError, match="malformed CSV"):
+        validate_research_result_package(output)
+
+
+def test_failed_manifest_replace_preserves_previous_manifest(tmp_path: Path) -> None:
+    output = _copy_substantive_package(tmp_path)
+    validation = validate_research_result_package(output)
+    manifest = output / "results_manifest.csv"
+    previous = b"previous manifest\n"
+    manifest.write_bytes(previous)
+
+    def fail_replace(source: Path, destination: Path) -> None:
+        raise OSError("synthetic replacement failure")
+
+    with pytest.raises(ResearchResultExportError, match="publication failed"):
+        publish_results_manifest(
+            validation,
+            output_dir=output,
+            replace=fail_replace,
+        )
+
+    assert manifest.read_bytes() == previous
+    assert not tuple(output.glob(".results-manifest-*.csv"))
+
+
+def test_manifest_validation_does_not_execute_research_or_model_paths(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output = _copy_substantive_package(tmp_path)
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("research recomputation path was invoked")
+
+    monkeypatch.setattr(exporter, "load_authoritative_evidence", forbidden)
+    monkeypatch.setattr(exporter, "build_research_rows", forbidden)
+    monkeypatch.setattr(exporter, "build_frozen_data_quality_rows", forbidden)
+
+    path, validation = export_results_manifest(output_dir=output)
+    assert path.is_file()
+    assert len(validation.manifest_rows) == 8
