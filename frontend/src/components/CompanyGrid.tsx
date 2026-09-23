@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import CompanyCard from "./CompanyCard";
+import SectorComparison from "./companies/SectorComparison";
 import type { CompanySummary } from "@/lib/types";
 
 export default function CompanyGrid({ companies }: { companies: CompanySummary[] }) {
@@ -52,6 +53,10 @@ export default function CompanyGrid({ companies }: { companies: CompanySummary[]
           <CompanyCard key={c.symbol} company={c} />
         ))}
       </div>
+
+      {sector !== "All" && (
+        <SectorComparison sector={sector} companies={filtered} />
+      )}
     </div>
   );
 }
