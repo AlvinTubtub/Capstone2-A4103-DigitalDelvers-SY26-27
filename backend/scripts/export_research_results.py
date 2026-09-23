@@ -41,7 +41,19 @@ HOLDOUT_END: Final[str] = "2026-09-11"
 HOLDOUT_OBSERVATIONS: Final[int] = 246
 METHODS: Final[tuple[str, ...]] = ("lag_reg", "arima", "lstm", "naive")
 PRINCIPAL_METHODS: Final[tuple[str, ...]] = METHODS[:3]
+LOSS_TYPES: Final[tuple[str, ...]] = ("squared_error", "absolute_error")
+METHOD_PAIRS: Final[tuple[tuple[str, str], ...]] = (
+    ("lag_reg", "arima"),
+    ("lag_reg", "lstm"),
+    ("lag_reg", "naive"),
+    ("arima", "lstm"),
+    ("arima", "naive"),
+    ("lstm", "naive"),
+)
 SELECTION_CRITERION: Final[str] = "mean_validation_rmse"
+TIE_POLICY_PREFIX: Final[str] = (
+    "Exact RMSE ties are ordered deterministically as lag_reg, arima, lstm, naive."
+)
 
 DEFAULT_FORMAL_RUNS_ROOT = SETTINGS.artifacts_dir / "evaluations" / "formal-runs"
 DEFAULT_SUPPLEMENTARY_RUNS_ROOT = (
@@ -103,6 +115,54 @@ METRIC_COLUMNS: Final[tuple[str, ...]] = (
     "formal_git_sha",
 )
 
+BENCHMARK_DM_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "model", "benchmark", "loss_type",
+    "sample_size", "mean_loss_differential", "loss_difference_direction",
+    "dm_statistic", "raw_p_value", "holm_adjusted_p_value", "reject",
+    "available", "unavailable_reason", "hac_lag", "forecast_horizon",
+    "hln_correction_factor", "formal_run_id", "formal_cutoff", "formal_git_sha",
+    "evidence_source",
+)
+
+WITHIN_COMPANY_DM_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "model_1", "model_2", "loss_type",
+    "sample_size", "mean_loss_differential", "dm_statistic", "raw_p_value",
+    "holm_adjusted_p_value", "reject", "available", "unavailable_reason",
+    "hac_lag", "forecast_horizon", "hln_correction_factor", "holm_family_size",
+    "formal_run_id", "formal_cutoff", "formal_git_sha",
+    "supplementary_package_id", "evidence_source",
+)
+
+ACROSS_COMPANY_COLUMNS: Final[tuple[str, ...]] = (
+    "test_level", "test_name", "metric", "model_1", "model_2", "company_count",
+    "statistic", "raw_p_value", "holm_adjusted_p_value", "alpha", "reject",
+    "performed", "difference_direction", "median_difference", "mean_difference",
+    "std_difference", "skewness", "positive_count", "negative_count", "zero_count",
+    "sign_test_p_value", "formal_run_id", "formal_cutoff", "formal_git_sha",
+    "supplementary_package_id", "evidence_source",
+)
+
+PRINCIPAL_WINNER_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "lag_reg_rmse", "arima_rmse", "lstm_rmse",
+    "naive_rmse", "lag_reg_rank", "arima_rank", "lstm_rank",
+    "best_principal_model", "best_principal_rmse", "best_evaluated_method",
+    "best_evaluated_rmse", "best_principal_beats_naive",
+    "all_principals_worse_than_naive", "winner_selection_metric", "tie_policy",
+    "formal_run_id", "formal_cutoff", "formal_git_sha",
+)
+
+SECTOR_PEER_COLUMNS: Final[tuple[str, ...]] = (
+    "sector", "symbol", "company_name", "best_principal_model",
+    "best_evaluated_method", "best_principal_beats_naive", "lag_reg_rmse",
+    "arima_rmse", "lstm_rmse", "naive_rmse", "lag_reg_mase", "arima_mase",
+    "lstm_mase", "naive_mase", "lag_reg_rmse_rank", "arima_rmse_rank",
+    "lstm_rmse_rank", "lag_reg_vs_naive_squared_status",
+    "arima_vs_naive_squared_status", "lstm_vs_naive_squared_status",
+    "lag_reg_vs_naive_absolute_status", "arima_vs_naive_absolute_status",
+    "lstm_vs_naive_absolute_status", "formal_run_id", "formal_cutoff",
+    "formal_git_sha",
+)
+
 
 class ResearchResultExportError(RuntimeError):
     """Raised before publication when frozen evidence is missing or inconsistent."""
@@ -117,12 +177,20 @@ class ResearchEvidence:
     mase_audit: Mapping[str, Any]
     reporting_semantics: Mapping[str, Any]
     holdout_index: Mapping[str, Any]
+    formal_across_company: Mapping[str, Any]
+    supplementary_run: Mapping[str, Any]
+    paired_mase_evidence: Mapping[str, Any]
 
 
 @dataclass(frozen=True, slots=True)
 class ResearchRows:
     configurations: tuple[dict[str, object], ...]
     metrics: tuple[dict[str, object], ...]
+    benchmark_dm: tuple[dict[str, object], ...]
+    within_company_dm: tuple[dict[str, object], ...]
+    across_company: tuple[dict[str, object], ...]
+    principal_winners: tuple[dict[str, object], ...]
+    sector_peers: tuple[dict[str, object], ...]
 
 
 def _load_json(path: Path) -> Mapping[str, Any]:
@@ -183,6 +251,13 @@ def load_authoritative_evidence(
         ),
         holdout_index=_load_json(
             supplementary.path / "historical" / "formal_holdout_index.json"
+        ),
+        formal_across_company=_load_json(
+            formal.path / "statistics" / "across_company.json"
+        ),
+        supplementary_run=_load_json(supplementary.path / "run.json"),
+        paired_mase_evidence=_load_json(
+            supplementary.path / "historical" / "paired_mase_evidence.json"
         ),
     )
 
@@ -265,6 +340,11 @@ def _validate_provenance(evidence: ResearchEvidence, symbols: tuple[str, ...]) -
             )
     if tuple(source.get("source_company_order", ())) != symbols:
         raise ResearchResultExportError("Supplementary company order conflicts")
+    if (
+        evidence.supplementary_run.get("package_id") != SUPPLEMENTARY_PACKAGE_ID
+        or evidence.supplementary_run.get("source_formal_run_id") != FORMAL_RUN_ID
+    ):
+        raise ResearchResultExportError("Supplementary package identity conflicts")
 
 
 def _selected_lir_mean(tuning: Mapping[str, Any], alpha: float) -> float:
@@ -334,6 +414,349 @@ def _selection_summary(metrics: Mapping[str, Mapping[str, Any]]) -> dict[str, ob
     }
 
 
+def _principal_ranks(rmse: Mapping[str, float]) -> dict[str, int]:
+    ordered = sorted(
+        PRINCIPAL_METHODS,
+        key=lambda method: (rmse[method], PRINCIPAL_METHODS.index(method)),
+    )
+    return {method: rank for rank, method in enumerate(ordered, start=1)}
+
+
+def _dm_export_values(
+    result: Mapping[str, Any], label: str
+) -> tuple[dict[str, object], float]:
+    available = result.get("available")
+    reject = result.get("reject")
+    if not isinstance(available, bool) or not isinstance(reject, bool):
+        raise ResearchResultExportError(f"{label} availability/rejection is invalid")
+    sample_size = _positive_integer(result.get("sample_size"), f"{label} sample size")
+    if sample_size != HOLDOUT_OBSERVATIONS:
+        raise ResearchResultExportError(f"{label} sample size conflicts")
+    mean_difference = _finite_number(
+        result.get("mean_loss_differential"), f"{label} mean loss differential"
+    )
+    hac_lag = _positive_integer(result.get("hac_lag"), f"{label} HAC lag")
+    horizon = _positive_integer(
+        result.get("forecast_horizon"), f"{label} forecast horizon"
+    )
+    if horizon != 1:
+        raise ResearchResultExportError(f"{label} forecast horizon conflicts")
+    hln = _finite_number(
+        result.get("hln_correction_factor"), f"{label} HLN correction"
+    )
+    reason = result.get("unavailable_reason")
+    if available:
+        if reason is not None:
+            raise ResearchResultExportError(f"{label} has an unexpected unavailable reason")
+        statistic = _finite_number(result.get("dm_statistic"), f"{label} statistic")
+        raw_p = _finite_number(result.get("raw_p_value"), f"{label} raw p-value")
+        adjusted_p = _finite_number(
+            result.get("holm_adjusted_p_value"), f"{label} adjusted p-value"
+        )
+        if not (0.0 <= raw_p <= 1.0 and 0.0 <= adjusted_p <= 1.0):
+            raise ResearchResultExportError(f"{label} p-value is outside [0, 1]")
+    else:
+        if result.get("dm_statistic") is not None or reject:
+            raise ResearchResultExportError(f"{label} unavailable result is inconsistent")
+        if not isinstance(reason, str) or not reason:
+            raise ResearchResultExportError(f"{label} unavailable reason is missing")
+        statistic = raw_p = adjusted_p = ""
+    return (
+        {
+            "sample_size": sample_size,
+            "mean_loss_differential": mean_difference,
+            "dm_statistic": statistic,
+            "raw_p_value": raw_p,
+            "holm_adjusted_p_value": adjusted_p,
+            "reject": _bool_text(reject),
+            "available": _bool_text(available),
+            "unavailable_reason": "" if reason is None else reason,
+            "hac_lag": hac_lag,
+            "forecast_horizon": horizon,
+            "hln_correction_factor": hln,
+        },
+        mean_difference,
+    )
+
+
+def _company_dm_rows(
+    *,
+    company: Company,
+    formal: Mapping[str, Any],
+    semantics: Mapping[str, Any],
+) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[tuple[str, str], str]]:
+    statistical_tests = _mapping(formal.get("statistical_tests"), "statistical tests")
+    formal_dm = _mapping(
+        statistical_tests.get("diebold_mariano"), "formal DM evidence"
+    )
+    supplementary_dm = _mapping(
+        semantics.get("archived_dm_evidence"), "supplementary DM evidence"
+    )
+    if formal_dm != supplementary_dm:
+        raise ResearchResultExportError(
+            f"Formal and supplementary DM evidence conflict for {company.symbol}"
+        )
+    if (
+        formal_dm.get("company") != company.symbol
+        or formal_dm.get("scope") != "complete_aligned_evaluation"
+        or formal_dm.get("p_value_sidedness") != "two_sided"
+        or formal_dm.get("hln_small_sample_correction") is not True
+    ):
+        raise ResearchResultExportError(f"DM provenance conflicts for {company.symbol}")
+    families = _mapping(formal_dm.get("holm_families"), "DM Holm families")
+    if set(families) != set(LOSS_TYPES):
+        raise ResearchResultExportError(f"DM loss families conflict for {company.symbol}")
+
+    within_rows: list[dict[str, object]] = []
+    benchmark_rows: list[dict[str, object]] = []
+    statuses: dict[tuple[str, str], str] = {}
+    expected_pairs = set(METHOD_PAIRS)
+    for loss_type in LOSS_TYPES:
+        results = _list(families.get(loss_type), f"{company.symbol}/{loss_type} DM family")
+        indexed: dict[tuple[str, str], Mapping[str, Any]] = {}
+        for item in results:
+            result = _mapping(item, "DM result")
+            pair = (result.get("model_1"), result.get("model_2"))
+            if pair in indexed or pair not in expected_pairs:
+                raise ResearchResultExportError(
+                    f"DM method pairs conflict for {company.symbol}/{loss_type}"
+                )
+            if tuple(result.get("model_pair", ())) != pair:
+                raise ResearchResultExportError(
+                    f"DM pair direction conflicts for {company.symbol}/{loss_type}"
+                )
+            if result.get("loss_type") != loss_type:
+                raise ResearchResultExportError(
+                    f"DM loss label conflicts for {company.symbol}/{pair}"
+                )
+            indexed[pair] = result
+        if set(indexed) != expected_pairs:
+            raise ResearchResultExportError(
+                f"DM family is incomplete for {company.symbol}/{loss_type}"
+            )
+
+        for model_1, model_2 in METHOD_PAIRS:
+            result = indexed[(model_1, model_2)]
+            values, mean_difference = _dm_export_values(
+                result, f"{company.symbol}/{loss_type}/{model_1}/{model_2}"
+            )
+            within_rows.append(
+                {
+                    "symbol": company.symbol,
+                    "company_name": company.name,
+                    "sector": company.sector,
+                    "model_1": model_1,
+                    "model_2": model_2,
+                    "loss_type": loss_type,
+                    **values,
+                    "holm_family_size": 6,
+                    "formal_run_id": FORMAL_RUN_ID,
+                    "formal_cutoff": FORMAL_CUTOFF,
+                    "formal_git_sha": FORMAL_GIT_SHA,
+                    "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID,
+                    "evidence_source": (
+                        "formal_company_evidence_verified_against_linked_supplementary"
+                    ),
+                }
+            )
+            if model_2 == "naive":
+                benchmark_rows.append(
+                    {
+                        "symbol": company.symbol,
+                        "company_name": company.name,
+                        "sector": company.sector,
+                        "model": model_1,
+                        "benchmark": model_2,
+                        "loss_type": loss_type,
+                        "sample_size": values["sample_size"],
+                        "mean_loss_differential": mean_difference,
+                        "loss_difference_direction": (
+                            "model_minus_benchmark_negative_means_model_lower_loss"
+                        ),
+                        **{
+                            key: values[key]
+                            for key in (
+                                "dm_statistic", "raw_p_value", "holm_adjusted_p_value",
+                                "reject", "available", "unavailable_reason", "hac_lag",
+                                "forecast_horizon", "hln_correction_factor",
+                            )
+                        },
+                        "formal_run_id": FORMAL_RUN_ID,
+                        "formal_cutoff": FORMAL_CUTOFF,
+                        "formal_git_sha": FORMAL_GIT_SHA,
+                        "evidence_source": "finalized_formal_company_dm_evidence",
+                    }
+                )
+                if values["available"] == "false":
+                    status = "unavailable"
+                elif values["reject"] == "false":
+                    status = "not_significant"
+                elif mean_difference < 0:
+                    status = "significantly_better"
+                elif mean_difference > 0:
+                    status = "significantly_worse"
+                else:
+                    raise ResearchResultExportError(
+                        f"Rejected zero-difference DM result for {company.symbol}/{model_1}"
+                    )
+                statuses[(model_1, loss_type)] = status
+    return within_rows, benchmark_rows, statuses
+
+
+def _build_across_company_rows(
+    evidence: ResearchEvidence, symbols: tuple[str, ...]
+) -> list[dict[str, object]]:
+    formal = evidence.formal_across_company
+    supplementary = evidence.paired_mase_evidence
+    if (
+        supplementary.get("source_formal_run_id") != FORMAL_RUN_ID
+        or supplementary.get("source_formal_integrity_aggregate_sha256")
+        != FORMAL_AGGREGATE_SHA256
+        or supplementary.get("company_count") != len(symbols)
+        or supplementary.get("metric") != "mase"
+        or supplementary.get("wilcoxon_gate")
+        != "performed_only_when_friedman_rejects"
+        or supplementary.get("wilcoxon_holm_family_size") != 6
+    ):
+        raise ResearchResultExportError("Across-company supplementary provenance conflicts")
+    for key in ("alpha", "company_count", "metric", "friedman"):
+        if formal.get(key) != supplementary.get(key):
+            raise ResearchResultExportError(
+                f"Formal and supplementary across-company evidence conflict for {key}"
+            )
+    if tuple(formal.get("models", ())) != METHODS:
+        raise ResearchResultExportError("Across-company method order conflicts")
+
+    alpha = _finite_number(formal.get("alpha"), "across-company alpha")
+    friedman = _mapping(formal.get("friedman"), "Friedman evidence")
+    reject = friedman.get("reject")
+    if not isinstance(reject, bool):
+        raise ResearchResultExportError("Friedman reject flag is invalid")
+    rows: list[dict[str, object]] = [
+        {
+            "test_level": "across_company",
+            "test_name": "friedman",
+            "metric": "mase",
+            "model_1": "",
+            "model_2": "",
+            "company_count": len(symbols),
+            "statistic": _finite_number(friedman.get("statistic"), "Friedman statistic"),
+            "raw_p_value": _finite_number(
+                friedman.get("raw_p_value"), "Friedman p-value"
+            ),
+            "holm_adjusted_p_value": "",
+            "alpha": alpha,
+            "reject": _bool_text(reject),
+            "performed": "true",
+            "difference_direction": "",
+            "median_difference": "",
+            "mean_difference": "",
+            "std_difference": "",
+            "skewness": "",
+            "positive_count": "",
+            "negative_count": "",
+            "zero_count": "",
+            "sign_test_p_value": "",
+            "formal_run_id": FORMAL_RUN_ID,
+            "formal_cutoff": FORMAL_CUTOFF,
+            "formal_git_sha": FORMAL_GIT_SHA,
+            "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID,
+            "evidence_source": "finalized_formal_across_company_evidence",
+        }
+    ]
+
+    pairs = _list(supplementary.get("pairs"), "paired MASE evidence")
+    indexed: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for item in pairs:
+        pair = _mapping(item, "paired MASE result")
+        key = (pair.get("model_1"), pair.get("model_2"))
+        if key in indexed or key not in set(METHOD_PAIRS):
+            raise ResearchResultExportError("Paired MASE method pairs conflict")
+        indexed[key] = pair
+    if set(indexed) != set(METHOD_PAIRS):
+        raise ResearchResultExportError("Paired MASE evidence is incomplete")
+
+    formal_posthoc = _list(formal.get("pairwise_wilcoxon"), "formal Wilcoxon evidence")
+    if formal.get("posthoc_performed") is not reject:
+        raise ResearchResultExportError("Friedman/Wilcoxon gate conflicts")
+    if (not reject and formal_posthoc) or (reject and len(formal_posthoc) != 6):
+        raise ResearchResultExportError("Formal Wilcoxon results conflict with the gate")
+
+    for model_1, model_2 in METHOD_PAIRS:
+        pair = indexed[(model_1, model_2)]
+        if (
+            tuple(pair.get("company_order", ())) != symbols
+            or pair.get("observation_count") != len(symbols)
+            or pair.get("difference_direction") != "model_1_mase_minus_model_2_mase"
+        ):
+            raise ResearchResultExportError(
+                f"Paired MASE alignment conflicts for {model_1}/{model_2}"
+            )
+        wilcoxon = _mapping(pair.get("wilcoxon"), "Wilcoxon status")
+        performed = wilcoxon.get("performed")
+        if performed is not reject:
+            raise ResearchResultExportError("Stored Wilcoxon gate conflicts")
+        if not performed and any(
+            wilcoxon.get(key) is not None
+            for key in ("statistic", "raw_p_value", "holm_adjusted_p_value", "reject")
+        ):
+            raise ResearchResultExportError("Unperformed Wilcoxon has invented results")
+        if performed:
+            statistic: object = _finite_number(
+                wilcoxon.get("statistic"), "Wilcoxon statistic"
+            )
+            raw_p: object = _finite_number(wilcoxon.get("raw_p_value"), "Wilcoxon p-value")
+            adjusted_p: object = _finite_number(
+                wilcoxon.get("holm_adjusted_p_value"), "Wilcoxon adjusted p-value"
+            )
+            wilcoxon_reject = wilcoxon.get("reject")
+            if not isinstance(wilcoxon_reject, bool):
+                raise ResearchResultExportError("Wilcoxon reject flag is invalid")
+            reject_text: object = _bool_text(wilcoxon_reject)
+        else:
+            statistic = raw_p = adjusted_p = reject_text = ""
+        sign_test = _mapping(pair.get("sign_test"), "sign test evidence")
+        rows.append(
+            {
+                "test_level": "across_company",
+                "test_name": "wilcoxon",
+                "metric": "mase",
+                "model_1": model_1,
+                "model_2": model_2,
+                "company_count": len(symbols),
+                "statistic": statistic,
+                "raw_p_value": raw_p,
+                "holm_adjusted_p_value": adjusted_p,
+                "alpha": alpha,
+                "reject": reject_text,
+                "performed": _bool_text(performed),
+                "difference_direction": pair.get("difference_direction"),
+                "median_difference": _finite_number(
+                    pair.get("median_difference"), "median paired difference"
+                ),
+                "mean_difference": _finite_number(
+                    pair.get("mean_difference"), "mean paired difference"
+                ),
+                "std_difference": _finite_number(
+                    pair.get("standard_deviation"), "paired difference standard deviation"
+                ),
+                "skewness": _finite_number(pair.get("skewness"), "paired difference skewness"),
+                "positive_count": pair.get("positive_count"),
+                "negative_count": pair.get("negative_count"),
+                "zero_count": pair.get("zero_count"),
+                "sign_test_p_value": _finite_number(
+                    sign_test.get("raw_p_value"), "sign-test p-value"
+                ),
+                "formal_run_id": FORMAL_RUN_ID,
+                "formal_cutoff": FORMAL_CUTOFF,
+                "formal_git_sha": FORMAL_GIT_SHA,
+                "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID,
+                "evidence_source": "verified_supplementary_paired_mase_evidence",
+            }
+        )
+    return rows
+
+
 def build_research_rows(
     evidence: ResearchEvidence,
     *,
@@ -393,6 +816,10 @@ def build_research_rows(
 
     configuration_rows: list[dict[str, object]] = []
     metric_rows: list[dict[str, object]] = []
+    benchmark_rows: list[dict[str, object]] = []
+    within_rows: list[dict[str, object]] = []
+    winner_rows: list[dict[str, object]] = []
+    sector_rows: list[dict[str, object]] = []
     for company in canonical_companies:
         symbol = company.symbol
         formal = evidence.company_evidence[symbol]
@@ -557,6 +984,96 @@ def build_research_rows(
         if set(audit_methods) != set(METHODS):
             raise ResearchResultExportError(f"MASE audit methods conflict for {symbol}")
 
+        company_within, company_benchmark, dm_statuses = _company_dm_rows(
+            company=company,
+            formal=formal,
+            semantics=semantics_by_symbol[symbol],
+        )
+        within_rows.extend(company_within)
+        benchmark_rows.extend(company_benchmark)
+
+        rmse = {
+            method: _finite_number(typed_metrics[method].get("rmse"), f"{symbol}/{method} RMSE")
+            for method in METHODS
+        }
+        mase = {
+            method: _finite_number(typed_metrics[method].get("mase"), f"{symbol}/{method} MASE")
+            for method in METHODS
+        }
+        ranks = _principal_ranks(rmse)
+        best_principal = str(selection["best_principal_model"])
+        best_evaluated = str(selection["best_evaluated_method"])
+        tie_policy = semantics.get("tie_policy")
+        if not isinstance(tie_policy, str) or not tie_policy.startswith(TIE_POLICY_PREFIX):
+            raise ResearchResultExportError(f"Tie policy conflicts for {symbol}")
+        expected_semantics = {
+            "symbol": symbol,
+            "selection_metric": "rmse",
+            "best_principal_rmse": rmse[best_principal],
+            "best_evaluated_rmse": rmse[best_evaluated],
+            "naive_rmse": rmse["naive"],
+        }
+        for key, expected in expected_semantics.items():
+            if semantics.get(key) != expected:
+                raise ResearchResultExportError(
+                    f"Holdout reporting semantics conflict for {symbol}/{key}"
+                )
+
+        winner_rows.append(
+            {
+                "symbol": symbol,
+                "company_name": company.name,
+                "sector": company.sector,
+                **{f"{method}_rmse": rmse[method] for method in METHODS},
+                **{f"{method}_rank": ranks[method] for method in PRINCIPAL_METHODS},
+                "best_principal_model": best_principal,
+                "best_principal_rmse": rmse[best_principal],
+                "best_evaluated_method": best_evaluated,
+                "best_evaluated_rmse": rmse[best_evaluated],
+                "best_principal_beats_naive": _bool_text(
+                    bool(selection["best_principal_beats_naive"])
+                ),
+                "all_principals_worse_than_naive": _bool_text(
+                    bool(selection["all_principals_worse_than_naive"])
+                ),
+                "winner_selection_metric": "rmse",
+                "tie_policy": tie_policy,
+                "formal_run_id": FORMAL_RUN_ID,
+                "formal_cutoff": FORMAL_CUTOFF,
+                "formal_git_sha": FORMAL_GIT_SHA,
+            }
+        )
+        sector_rows.append(
+            {
+                "sector": company.sector,
+                "symbol": symbol,
+                "company_name": company.name,
+                "best_principal_model": best_principal,
+                "best_evaluated_method": best_evaluated,
+                "best_principal_beats_naive": _bool_text(
+                    bool(selection["best_principal_beats_naive"])
+                ),
+                **{f"{method}_rmse": rmse[method] for method in METHODS},
+                **{f"{method}_mase": mase[method] for method in METHODS},
+                **{f"{method}_rmse_rank": ranks[method] for method in PRINCIPAL_METHODS},
+                **{
+                    f"{method}_vs_naive_squared_status": dm_statuses[
+                        (method, "squared_error")
+                    ]
+                    for method in PRINCIPAL_METHODS
+                },
+                **{
+                    f"{method}_vs_naive_absolute_status": dm_statuses[
+                        (method, "absolute_error")
+                    ]
+                    for method in PRINCIPAL_METHODS
+                },
+                "formal_run_id": FORMAL_RUN_ID,
+                "formal_cutoff": FORMAL_CUTOFF,
+                "formal_git_sha": FORMAL_GIT_SHA,
+            }
+        )
+
         for method in METHODS:
             metrics = typed_metrics[method]
             observations = _positive_integer(
@@ -614,11 +1131,35 @@ def build_research_rows(
                 }
             )
 
-    if len(configuration_rows) != 15 or len(metric_rows) != 60:
+    across_rows = _build_across_company_rows(evidence, symbols)
+    if (
+        len(configuration_rows) != 15
+        or len(metric_rows) != 60
+        or len(benchmark_rows) != 90
+        or len(within_rows) != 180
+        or len(winner_rows) != 15
+        or len(sector_rows) != 15
+    ):
         raise ResearchResultExportError("Research-result row counts are incomplete")
     if len({(row["symbol"], row["method"]) for row in metric_rows}) != 60:
         raise ResearchResultExportError("Research-result metrics contain duplicates")
-    return ResearchRows(tuple(configuration_rows), tuple(metric_rows))
+    if len({company.sector for company in canonical_companies}) != 5:
+        raise ResearchResultExportError("Exactly five configured sectors are required")
+    sector_counts = {
+        sector: sum(company.sector == sector for company in canonical_companies)
+        for sector in {company.sector for company in canonical_companies}
+    }
+    if set(sector_counts.values()) != {3}:
+        raise ResearchResultExportError("Each configured sector must contain three companies")
+    return ResearchRows(
+        tuple(configuration_rows),
+        tuple(metric_rows),
+        tuple(benchmark_rows),
+        tuple(within_rows),
+        tuple(across_rows),
+        tuple(winner_rows),
+        tuple(sector_rows),
+    )
 
 
 def _csv_bytes(columns: Sequence[str], rows: Sequence[Mapping[str, object]]) -> bytes:
@@ -644,8 +1185,8 @@ def publish_research_rows(
     *,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     replace: Callable[[Path, Path], None] = os.replace,
-) -> tuple[Path, Path]:
-    """Publish both validated CSVs as one rollback-protected directory swap."""
+) -> tuple[Path, ...]:
+    """Publish all validated CSVs as one rollback-protected directory swap."""
 
     destination = Path(output_dir)
     parent = destination.parent
@@ -653,9 +1194,15 @@ def publish_research_rows(
     if destination.exists():
         if not destination.is_dir():
             raise ResearchResultExportError("Research-result output path is not a directory")
-        unexpected = {
-            item.name for item in destination.iterdir()
-        } - {"selected_configurations.csv", "holdout_metrics.csv"}
+        unexpected = {item.name for item in destination.iterdir()} - {
+            "selected_configurations.csv",
+            "holdout_metrics.csv",
+            "benchmark_vs_naive_dm.csv",
+            "within_company_dm.csv",
+            "across_company_tests.csv",
+            "principal_winners.csv",
+            "sector_peer_summary.csv",
+        }
         if unexpected:
             raise ResearchResultExportError(
                 f"Research-result directory contains unexpected files: {sorted(unexpected)}"
@@ -666,6 +1213,30 @@ def publish_research_rows(
             CONFIGURATION_COLUMNS, rows.configurations
         ),
         "holdout_metrics.csv": _csv_bytes(METRIC_COLUMNS, rows.metrics),
+        "benchmark_vs_naive_dm.csv": _csv_bytes(
+            BENCHMARK_DM_COLUMNS, rows.benchmark_dm
+        ),
+        "within_company_dm.csv": _csv_bytes(
+            WITHIN_COMPANY_DM_COLUMNS, rows.within_company_dm
+        ),
+        "across_company_tests.csv": _csv_bytes(
+            ACROSS_COMPANY_COLUMNS, rows.across_company
+        ),
+        "principal_winners.csv": _csv_bytes(
+            PRINCIPAL_WINNER_COLUMNS, rows.principal_winners
+        ),
+        "sector_peer_summary.csv": _csv_bytes(
+            SECTOR_PEER_COLUMNS, rows.sector_peers
+        ),
+    }
+    expected_counts = {
+        "selected_configurations.csv": 15,
+        "holdout_metrics.csv": 60,
+        "benchmark_vs_naive_dm.csv": 90,
+        "within_company_dm.csv": 180,
+        "across_company_tests.csv": len(rows.across_company),
+        "principal_winners.csv": 15,
+        "sector_peer_summary.csv": 15,
     }
     staging = Path(tempfile.mkdtemp(prefix=".research-result-staging-", dir=parent))
     backup: Path | None = None
@@ -675,7 +1246,7 @@ def publish_research_rows(
             target.write_bytes(payload)
             with target.open("r", encoding="utf-8", newline="") as source:
                 parsed = list(csv.DictReader(source))
-            expected_rows = 15 if name == "selected_configurations.csv" else 60
+            expected_rows = expected_counts[name]
             if len(parsed) != expected_rows:
                 raise ResearchResultExportError(f"Staged {name} failed row validation")
         if destination.exists():
@@ -697,10 +1268,7 @@ def publish_research_rows(
         if isinstance(exc, ResearchResultExportError):
             raise
         raise ResearchResultExportError("Atomic research-result publication failed") from exc
-    return (
-        destination / "selected_configurations.csv",
-        destination / "holdout_metrics.csv",
-    )
+    return tuple(destination / name for name in payloads)
 
 
 def export_research_results(
@@ -708,7 +1276,7 @@ def export_research_results(
     formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
     supplementary_runs_root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
-) -> tuple[Path, Path]:
+) -> tuple[Path, ...]:
     """Perform a read-only evidence transform followed by all-or-neither publication."""
 
     LOGGER.info("Loading frozen formal and linked supplementary evidence")
@@ -716,13 +1284,19 @@ def export_research_results(
         formal_runs_root=formal_runs_root,
         supplementary_runs_root=supplementary_runs_root,
     )
-    LOGGER.info("Validating evidence and building both research-result datasets")
+    LOGGER.info("Validating evidence and building all research-result datasets")
     rows = build_research_rows(evidence)
     paths = publish_research_rows(rows, output_dir=output_dir)
     LOGGER.info(
-        "Published research-result CSVs configurations=%d metrics=%d output=%s",
+        "Published research-result CSVs configurations=%d metrics=%d dm=%d/%d "
+        "across=%d winners=%d sectors=%d output=%s",
         len(rows.configurations),
         len(rows.metrics),
+        len(rows.benchmark_dm),
+        len(rows.within_company_dm),
+        len(rows.across_company),
+        len(rows.principal_winners),
+        len(rows.sector_peers),
         output_dir,
     )
     return paths

@@ -3,6 +3,7 @@
 from copy import deepcopy
 import csv
 from datetime import date, timedelta
+import hashlib
 import os
 from pathlib import Path
 
@@ -10,6 +11,8 @@ import pytest
 
 from config.companies import COMPANIES
 from scripts.export_research_results import (
+    ACROSS_COMPANY_COLUMNS,
+    BENCHMARK_DM_COLUMNS,
     CONFIGURATION_COLUMNS,
     FORMAL_AGGREGATE_SHA256,
     FORMAL_CUTOFF,
@@ -18,10 +21,17 @@ from scripts.export_research_results import (
     HOLDOUT_END,
     HOLDOUT_OBSERVATIONS,
     HOLDOUT_START,
+    LOSS_TYPES,
+    METHOD_PAIRS,
     METHODS,
     METRIC_COLUMNS,
+    PRINCIPAL_METHODS,
+    PRINCIPAL_WINNER_COLUMNS,
     ResearchEvidence,
     ResearchResultExportError,
+    SECTOR_PEER_COLUMNS,
+    SUPPLEMENTARY_PACKAGE_ID,
+    WITHIN_COMPANY_DM_COLUMNS,
     build_research_rows,
     load_authoritative_evidence,
     publish_research_rows,
@@ -67,6 +77,45 @@ def _synthetic_evidence() -> ResearchEvidence:
             }
             for index, target_date in enumerate(dates)
         ]
+        dm_families = {}
+        for loss_index, loss_type in enumerate(LOSS_TYPES, start=1):
+            family = []
+            for pair_index, (model_1, model_2) in enumerate(METHOD_PAIRS, start=1):
+                unavailable = (model_1, model_2) == ("arima", "naive")
+                family.append(
+                    {
+                        "available": not unavailable,
+                        "dm_statistic": None if unavailable else -float(pair_index),
+                        "forecast_horizon": 1,
+                        "hac_lag": 4,
+                        "hln_correction_factor": 0.997,
+                        "holm_adjusted_p_value": 1.0 if unavailable else 0.02,
+                        "long_run_variance": 0.0 if unavailable else 0.5,
+                        "loss_type": loss_type,
+                        "mean_loss_differential": -0.01 * pair_index * loss_index,
+                        "model_1": model_1,
+                        "model_2": model_2,
+                        "model_pair": [model_1, model_2],
+                        "raw_p_value": 1.0 if unavailable else 0.01,
+                        "reject": False if unavailable else True,
+                        "sample_size": 246,
+                        "unavailable_reason": (
+                            "zero or degenerate HAC long-run variance"
+                            if unavailable
+                            else None
+                        ),
+                    }
+                )
+            dm_families[loss_type] = family
+        dm_evidence = {
+            "alpha": 0.05,
+            "company": symbol,
+            "hac_lag_policy": "stored policy",
+            "hln_small_sample_correction": True,
+            "holm_families": dm_families,
+            "p_value_sidedness": "two_sided",
+            "scope": "complete_aligned_evaluation",
+        }
         company_evidence[symbol] = {
             "symbol": symbol,
             "holdout_target_dates": dates,
@@ -150,6 +199,7 @@ def _synthetic_evidence() -> ResearchEvidence:
                 },
             },
             "metrics": deepcopy(metrics),
+            "statistical_tests": {"diebold_mariano": dm_evidence},
         }
         audits.append(
             {
@@ -171,12 +221,22 @@ def _synthetic_evidence() -> ResearchEvidence:
             {
                 "symbol": symbol,
                 "descriptive_holdout": {
+                    "symbol": symbol,
                     "best_principal_model": "lag_reg",
+                    "best_principal_rmse": 1.0,
                     "best_evaluated_method": "lag_reg",
+                    "best_evaluated_rmse": 1.0,
                     "best_principal_beats_naive": True,
                     "all_principals_worse_than_naive": False,
+                    "naive_rmse": 4.0,
+                    "selection_metric": "rmse",
+                    "tie_policy": (
+                        "Exact RMSE ties are ordered deterministically as lag_reg, "
+                        "arima, lstm, naive."
+                    ),
                 },
                 "metrics": deepcopy(metrics),
+                "archived_dm_evidence": deepcopy(dm_evidence),
             }
         )
         indexed_holdouts.append(
@@ -188,6 +248,38 @@ def _synthetic_evidence() -> ResearchEvidence:
                 ],
             }
         )
+    paired_mase = []
+    for pair_index, (model_1, model_2) in enumerate(METHOD_PAIRS, start=1):
+        paired_mase.append(
+            {
+                "company_order": symbols,
+                "difference_direction": "model_1_mase_minus_model_2_mase",
+                "mean_difference": -0.01 * pair_index,
+                "median_difference": -0.005 * pair_index,
+                "model_1": model_1,
+                "model_2": model_2,
+                "negative_count": 10,
+                "observation_count": 15,
+                "positive_count": 5,
+                "skewness": 0.1,
+                "standard_deviation": 0.2,
+                "wilcoxon": {
+                    "performed": False,
+                    "statistic": None,
+                    "raw_p_value": None,
+                    "holm_adjusted_p_value": None,
+                    "reject": None,
+                    "reason": "friedman_not_significant",
+                },
+                "zero_count": 0,
+                "sign_test": {"raw_p_value": 0.3},
+            }
+        )
+    friedman = {
+        "statistic": 1.5,
+        "raw_p_value": 0.6,
+        "reject": False,
+    }
     return ResearchEvidence(
         formal_run={
             "run_id": FORMAL_RUN_ID,
@@ -228,6 +320,31 @@ def _synthetic_evidence() -> ResearchEvidence:
             "company_order": symbols,
             "common_target_dates": dates,
             "companies": indexed_holdouts,
+        },
+        formal_across_company={
+            "alpha": 0.05,
+            "company_count": 15,
+            "friedman": friedman,
+            "metric": "mase",
+            "models": list(METHODS),
+            "pairwise_wilcoxon": [],
+            "posthoc_correction": None,
+            "posthoc_performed": False,
+        },
+        supplementary_run={
+            "package_id": SUPPLEMENTARY_PACKAGE_ID,
+            "source_formal_run_id": FORMAL_RUN_ID,
+        },
+        paired_mase_evidence={
+            "alpha": 0.05,
+            "company_count": 15,
+            "friedman": deepcopy(friedman),
+            "metric": "mase",
+            "pairs": paired_mase,
+            "source_formal_integrity_aggregate_sha256": FORMAL_AGGREGATE_SHA256,
+            "source_formal_run_id": FORMAL_RUN_ID,
+            "wilcoxon_gate": "performed_only_when_friedman_rejects",
+            "wilcoxon_holm_family_size": 6,
         },
     )
 
@@ -301,6 +418,181 @@ def test_publication_is_deterministic_and_has_exact_schemas(
         metric_reader = csv.DictReader(source)
         assert tuple(metric_reader.fieldnames or ()) == METRIC_COLUMNS
         assert len(list(metric_reader)) == 60
+    expected_schemas = (
+        (BENCHMARK_DM_COLUMNS, 90),
+        (WITHIN_COMPANY_DM_COLUMNS, 180),
+        (ACROSS_COMPANY_COLUMNS, 7),
+        (PRINCIPAL_WINNER_COLUMNS, 15),
+        (SECTOR_PEER_COLUMNS, 15),
+    )
+    for path, (columns, count) in zip(first[2:], expected_schemas):
+        with path.open(newline="", encoding="utf-8") as source:
+            reader = csv.DictReader(source)
+            assert tuple(reader.fieldnames or ()) == columns
+            assert len(list(reader)) == count
+    assert all(path.parent == tmp_path / "research-result" for path in first)
+
+
+def test_dm_exports_have_complete_pairs_losses_and_alignment(
+    evidence: ResearchEvidence,
+) -> None:
+    rows = build_research_rows(evidence)
+
+    assert len(rows.benchmark_dm) == 90
+    assert len(rows.within_company_dm) == 180
+    assert {row["symbol"] for row in rows.within_company_dm} == {
+        company.symbol for company in COMPANIES
+    }
+    for symbol in {company.symbol for company in COMPANIES}:
+        company_rows = [row for row in rows.within_company_dm if row["symbol"] == symbol]
+        assert len(company_rows) == 12
+        for loss_type in LOSS_TYPES:
+            loss_rows = [row for row in company_rows if row["loss_type"] == loss_type]
+            assert {(row["model_1"], row["model_2"]) for row in loss_rows} == set(
+                METHOD_PAIRS
+            )
+            assert all(row["holm_family_size"] == 6 for row in loss_rows)
+            assert all(row["sample_size"] == HOLDOUT_OBSERVATIONS for row in loss_rows)
+        for loss_type in LOSS_TYPES:
+            benchmark_rows = [
+                row
+                for row in rows.benchmark_dm
+                if row["symbol"] == symbol and row["loss_type"] == loss_type
+            ]
+            assert {(row["model"], row["benchmark"]) for row in benchmark_rows} == {
+                (method, "naive") for method in PRINCIPAL_METHODS
+            }
+
+
+def test_unavailable_dm_does_not_synthesize_test_statistics_or_p_values(
+    evidence: ResearchEvidence,
+) -> None:
+    rows = build_research_rows(evidence)
+    unavailable = [row for row in rows.within_company_dm if row["available"] == "false"]
+
+    assert len(unavailable) == 30
+    assert all(row["dm_statistic"] == "" for row in unavailable)
+    assert all(row["raw_p_value"] == "" for row in unavailable)
+    assert all(row["holm_adjusted_p_value"] == "" for row in unavailable)
+    assert all(row["unavailable_reason"] for row in unavailable)
+
+
+def test_across_company_export_preserves_friedman_gate_without_posthoc_invention(
+    evidence: ResearchEvidence,
+) -> None:
+    rows = build_research_rows(evidence)
+    friedman = [row for row in rows.across_company if row["test_name"] == "friedman"]
+    wilcoxon = [row for row in rows.across_company if row["test_name"] == "wilcoxon"]
+
+    assert len(friedman) == 1
+    assert friedman[0]["metric"] == "mase"
+    assert friedman[0]["company_count"] == 15
+    assert friedman[0]["performed"] == "true"
+    assert friedman[0]["reject"] == "false"
+    assert len(wilcoxon) == 6
+    assert all(row["performed"] == "false" for row in wilcoxon)
+    assert all(row["statistic"] == "" for row in wilcoxon)
+    assert all(row["raw_p_value"] == "" for row in wilcoxon)
+    assert all(row["holm_adjusted_p_value"] == "" for row in wilcoxon)
+    assert all(row["median_difference"] != "" for row in wilcoxon)
+
+
+def test_principal_winners_and_sector_peer_contract(evidence: ResearchEvidence) -> None:
+    rows = build_research_rows(evidence)
+
+    assert len(rows.principal_winners) == 15
+    assert all(row["best_principal_model"] in PRINCIPAL_METHODS for row in rows.principal_winners)
+    assert all(row["best_evaluated_method"] in METHODS for row in rows.principal_winners)
+    assert all(row["winner_selection_metric"] == "rmse" for row in rows.principal_winners)
+    assert len(rows.sector_peers) == 15
+    sectors = {row["sector"] for row in rows.sector_peers}
+    assert len(sectors) == 5
+    assert {sum(row["sector"] == sector for row in rows.sector_peers) for sector in sectors} == {3}
+    status_columns = [
+        column for column in SECTOR_PEER_COLUMNS if column.endswith("_status")
+    ]
+    valid_statuses = {
+        "significantly_better",
+        "significantly_worse",
+        "not_significant",
+        "unavailable",
+    }
+    assert all(
+        row[column] in valid_statuses
+        for row in rows.sector_peers
+        for column in status_columns
+    )
+    assert not any("sector_winner" in row for row in rows.sector_peers)
+
+
+def test_best_evaluated_method_can_be_naive_and_ties_are_deterministic(
+    evidence: ResearchEvidence,
+) -> None:
+    changed = deepcopy(evidence)
+    formal_metrics = changed.company_evidence["ALI"]["metrics"]
+    supplementary = changed.reporting_semantics["companies"][0]
+    formal_metrics["arima"]["rmse"] = 1.0
+    formal_metrics["naive"]["rmse"] = 0.5
+    supplementary["metrics"] = deepcopy(formal_metrics)
+    descriptive = supplementary["descriptive_holdout"]
+    descriptive.update(
+        {
+            "best_principal_model": "lag_reg",
+            "best_principal_rmse": 1.0,
+            "best_evaluated_method": "naive",
+            "best_evaluated_rmse": 0.5,
+            "best_principal_beats_naive": False,
+            "all_principals_worse_than_naive": True,
+            "naive_rmse": 0.5,
+        }
+    )
+
+    row = build_research_rows(changed).principal_winners[0]
+    assert row["best_principal_model"] == "lag_reg"
+    assert row["lag_reg_rank"] == 1
+    assert row["arima_rank"] == 2
+    assert row["best_evaluated_method"] == "naive"
+
+
+def test_conflicting_dm_and_across_company_sources_fail_closed(
+    evidence: ResearchEvidence,
+) -> None:
+    changed_dm = deepcopy(evidence)
+    changed_dm.reporting_semantics["companies"][0]["archived_dm_evidence"][
+        "holm_families"
+    ]["squared_error"][0]["raw_p_value"] = 0.9
+    with pytest.raises(ResearchResultExportError, match="DM evidence conflict"):
+        build_research_rows(changed_dm)
+
+    changed_across = deepcopy(evidence)
+    changed_across.paired_mase_evidence["friedman"]["raw_p_value"] = 0.9
+    with pytest.raises(ResearchResultExportError, match="across-company evidence conflict"):
+        build_research_rows(changed_across)
+
+
+def test_phase_one_csv_bytes_remain_frozen(tmp_path: Path, evidence: ResearchEvidence) -> None:
+    paths = publish_research_rows(
+        build_research_rows(evidence), output_dir=tmp_path / "research-result"
+    )
+    synthetic_first = tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in paths[:2])
+    second = publish_research_rows(
+        build_research_rows(evidence), output_dir=tmp_path / "research-result"
+    )
+    assert tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in second[:2]) == synthetic_first
+
+
+def test_authoritative_phase_one_outputs_remain_byte_identical(tmp_path: Path) -> None:
+    paths = publish_research_rows(
+        build_research_rows(load_authoritative_evidence()),
+        output_dir=tmp_path / "research-result",
+    )
+
+    assert hashlib.sha256(paths[0].read_bytes()).hexdigest() == (
+        "7c648357adaba1e5769d560435bad61a933d67ebb5ee8fc1ded5944416737a97"
+    )
+    assert hashlib.sha256(paths[1].read_bytes()).hexdigest() == (
+        "836974efff91c52c0cdd1d492279b8fe11476fadff6dc575b6a22870eec3548a"
+    )
 
 
 def test_missing_authoritative_source_fails_closed(tmp_path: Path) -> None:
