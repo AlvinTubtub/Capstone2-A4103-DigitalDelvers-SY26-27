@@ -242,6 +242,22 @@ MANIFEST_COLUMNS: Final[tuple[str, ...]] = (
     "package_content_sha256",
 )
 
+HOLDOUT_PREDICTION_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "origin_date", "target_date",
+    "actual_close", "lag_reg_prediction", "arima_prediction",
+    "lstm_prediction", "naive_prediction", "formal_run_id", "formal_cutoff",
+    "formal_git_sha",
+)
+
+FORMAL_SCOPE_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "raw_start", "raw_end",
+    "raw_row_count", "forecast_pair_count", "development_start",
+    "development_end", "development_pair_count", "holdout_start",
+    "holdout_end", "holdout_pair_count", "cv_split_count",
+    "forecast_horizon", "shuffle_used", "formal_run_id", "formal_cutoff",
+    "formal_git_sha",
+)
+
 SUBSTANTIVE_FILE_ORDER: Final[tuple[str, ...]] = (
     "selected_configurations.csv",
     "holdout_metrics.csv",
@@ -253,6 +269,8 @@ SUBSTANTIVE_FILE_ORDER: Final[tuple[str, ...]] = (
     "sector_peer_summary.csv",
     "data_quality.csv",
     "data_quality_rules.csv",
+    "holdout_predictions.csv",
+    "formal_scope.csv",
 )
 
 SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
@@ -266,6 +284,8 @@ SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
     "sector_peer_summary.csv": SECTOR_PEER_COLUMNS,
     "data_quality.csv": DATA_QUALITY_COLUMNS,
     "data_quality_rules.csv": DATA_QUALITY_RULE_COLUMNS,
+    "holdout_predictions.csv": HOLDOUT_PREDICTION_COLUMNS,
+    "formal_scope.csv": FORMAL_SCOPE_COLUMNS,
 }
 
 SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
@@ -279,6 +299,8 @@ SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
     "sector_peer_summary.csv": 15,
     "data_quality.csv": 15,
     "data_quality_rules.csv": 6,
+    "holdout_predictions.csv": 15 * HOLDOUT_OBSERVATIONS,
+    "formal_scope.csv": 15,
 }
 
 SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
@@ -292,6 +314,8 @@ SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
     "sector_peer_summary.csv": "descriptive within-sector company-peer summaries",
     "data_quality.csv": "frozen formal-dataset quality screening evidence",
     "data_quality_rules.csv": "predeclared frozen data-quality screening rules",
+    "holdout_predictions.csv": "canonical frozen common-holdout actual and forecast ledger",
+    "formal_scope.csv": "per-company executed formal data split and validation scope",
 }
 
 SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
@@ -305,6 +329,8 @@ SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
     "sector_peer_summary.csv": "formal",
     "data_quality.csv": "formal+data-quality-screening",
     "data_quality_rules.csv": "predeclared-data-quality-rules",
+    "holdout_predictions.csv": "formal",
+    "formal_scope.csv": "formal",
 }
 
 SUPPLEMENTARY_DEPENDENT_FILES: Final[frozenset[str]] = frozenset(
@@ -344,6 +370,18 @@ class ResearchRows:
     across_company: tuple[dict[str, object], ...]
     principal_winners: tuple[dict[str, object], ...]
     sector_peers: tuple[dict[str, object], ...]
+
+
+@dataclass(frozen=True, slots=True)
+class FrozenFormalScope:
+    """Verified archive inputs for the two reviewer-facing formal CSVs."""
+
+    run: Mapping[str, Any]
+    model_config: Mapping[str, Any]
+    raw_provenance: Mapping[str, Any]
+    session_completeness: Mapping[str, Any]
+    company_evidence: Mapping[str, Mapping[str, Any]]
+    raw_dates: Mapping[str, tuple[str, ...]]
 
 
 def _load_json(path: Path) -> Mapping[str, Any]:
@@ -413,6 +451,278 @@ def load_authoritative_evidence(
             supplementary.path / "historical" / "paired_mase_evidence.json"
         ),
     )
+
+
+def load_frozen_formal_scope(
+    *, formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+) -> FrozenFormalScope:
+    """Read chronology and scope exclusively from the verified formal archive."""
+
+    formal = FormalRunArchive(FORMAL_RUN_ID, root=formal_runs_root)
+    if not formal.verify_integrity():
+        raise ResearchResultExportError("Formal-run integrity validation failed for scope")
+    manifest = _load_json(formal.path / "integrity_manifest.json")
+    if manifest.get("aggregate_sha256") != FORMAL_AGGREGATE_SHA256:
+        raise ResearchResultExportError("Formal-run aggregate SHA-256 conflicts for scope")
+    raw_dates: dict[str, tuple[str, ...]] = {}
+    company_evidence: dict[str, Mapping[str, Any]] = {}
+    for company in COMPANIES:
+        symbol = company.symbol
+        raw_path = formal.path / "frozen_raw" / f"{symbol}.csv"
+        try:
+            with raw_path.open(encoding="utf-8", newline="") as handle:
+                reader = csv.DictReader(handle)
+                if reader.fieldnames is None or "Date" not in reader.fieldnames:
+                    raise ResearchResultExportError(f"Frozen raw Date column missing for {symbol}")
+                dates = tuple(row["Date"] for row in reader)
+        except (OSError, csv.Error, KeyError) as exc:
+            raise ResearchResultExportError(f"Cannot read frozen raw dates for {symbol}") from exc
+        raw_dates[symbol] = dates
+        company_evidence[symbol] = _load_json(
+            formal.path / "companies" / symbol / "evidence.json"
+        )
+    LOGGER.info("Loaded verified formal scope companies=%d", len(company_evidence))
+    return FrozenFormalScope(
+        run=_load_json(formal.path / "run.json"),
+        model_config=_load_json(formal.path / "configuration" / "model_config.json"),
+        raw_provenance=_load_json(formal.path / "provenance" / "raw_files.json"),
+        session_completeness=_load_json(
+            formal.path / "provenance" / "session_completeness.json"
+        ),
+        company_evidence=company_evidence,
+        raw_dates=raw_dates,
+    )
+
+
+def _strict_iso_date(value: object, label: str) -> str:
+    if not isinstance(value, str):
+        raise ResearchResultExportError(f"{label} must be an ISO date")
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError as exc:
+        raise ResearchResultExportError(f"{label} must be an ISO date") from exc
+    if parsed.isoformat() != value:
+        raise ResearchResultExportError(f"{label} must be a canonical ISO date")
+    return value
+
+
+def build_frozen_formal_rows(
+    source: FrozenFormalScope,
+    *, companies: Sequence[Company] = COMPANIES,
+) -> tuple[tuple[dict[str, object], ...], tuple[dict[str, object], ...]]:
+    """Expose stored predictions and executed scope without statistical computation."""
+
+    canonical = tuple(companies)
+    symbols = tuple(company.symbol for company in canonical)
+    if len(symbols) != 15 or len(set(symbols)) != 15:
+        raise ResearchResultExportError("Formal scope requires 15 unique configured companies")
+    run = source.run
+    git_state = _mapping(run.get("git_state"), "formal Git state")
+    if (
+        run.get("run_id") != FORMAL_RUN_ID
+        or run.get("cutoff_date") != FORMAL_CUTOFF
+        or git_state.get("commit") != FORMAL_GIT_SHA
+        or git_state.get("dirty") is not False
+        or set(run.get("expected_symbols", ())) != set(symbols)
+    ):
+        raise ResearchResultExportError("Frozen formal run identity conflicts")
+    if set(source.company_evidence) != set(symbols) or set(source.raw_dates) != set(symbols):
+        raise ResearchResultExportError("Frozen formal company universe is incomplete")
+    provenance = _list(source.raw_provenance.get("raw_files"), "frozen raw provenance")
+    sessions = _list(source.session_completeness.get("companies"), "frozen sessions")
+    if len(provenance) != 15 or len(sessions) != 15:
+        raise ResearchResultExportError("Frozen raw provenance/session count conflicts")
+    provenance_by_symbol = {
+        _mapping(item, "frozen raw provenance row").get("symbol"): item
+        for item in provenance
+    }
+    sessions_by_symbol = {
+        _mapping(item, "frozen session row").get("symbol"): item
+        for item in sessions
+    }
+    if set(provenance_by_symbol) != set(symbols) or set(sessions_by_symbol) != set(symbols):
+        raise ResearchResultExportError("Frozen provenance/session symbols conflict")
+    config = _mapping(source.model_config.get("model_config"), "formal model config")
+    split_counts = {
+        _positive_integer(_mapping(config.get(key), key).get("cv_splits"), f"{key} CV splits")
+        for key in ("lag_regression", "arima", "lstm")
+    }
+    if split_counts != {5}:
+        raise ResearchResultExportError("Executed formal CV split counts conflict")
+    cv_count = split_counts.pop()
+    seeds = tuple(_list(_mapping(config.get("lstm"), "LSTM config").get("tuning_seeds"), "LSTM seeds"))
+    if not seeds or len(set(seeds)) != len(seeds):
+        raise ResearchResultExportError("Executed LSTM tuning seeds are invalid")
+
+    predictions: list[dict[str, object]] = []
+    scopes: list[dict[str, object]] = []
+    common_holdout: tuple[str, ...] | None = None
+    common_development: tuple[str, ...] | None = None
+    for company in canonical:
+        symbol = company.symbol
+        raw_dates = tuple(
+            _strict_iso_date(value, f"{symbol} frozen raw Date")
+            for value in source.raw_dates[symbol]
+        )
+        if (
+            len(raw_dates) != FORMAL_ROWS_PER_COMPANY
+            or not raw_dates
+            or raw_dates[0] != FORMAL_START
+            or raw_dates[-1] != FORMAL_CUTOFF
+            or raw_dates != tuple(sorted(set(raw_dates)))
+        ):
+            raise ResearchResultExportError(f"Frozen raw chronology conflicts for {symbol}")
+        provenance_row = _mapping(provenance_by_symbol[symbol], f"{symbol} provenance")
+        session_row = _mapping(sessions_by_symbol[symbol], f"{symbol} sessions")
+        if (
+            provenance_row.get("first_date") != raw_dates[0]
+            or provenance_row.get("last_date") != raw_dates[-1]
+            or provenance_row.get("row_count") != len(raw_dates)
+            or session_row.get("start_date") != raw_dates[0]
+            or session_row.get("cutoff_date") != raw_dates[-1]
+            or session_row.get("expected_session_count") != len(raw_dates)
+            or session_row.get("actual_session_count") != len(raw_dates)
+            or session_row.get("complete") is not True
+            or any(session_row.get(key) != [] for key in ("missing_dates", "duplicate_dates", "unexpected_dates"))
+        ):
+            raise ResearchResultExportError(f"Frozen raw provenance conflicts for {symbol}")
+
+        evidence = _mapping(source.company_evidence[symbol], f"{symbol} evidence")
+        if evidence.get("symbol") != symbol:
+            raise ResearchResultExportError(f"Frozen company identity conflicts for {symbol}")
+        development = tuple(
+            _strict_iso_date(value, f"{symbol} development target")
+            for value in _list(evidence.get("development_target_dates"), "development dates")
+        )
+        holdout = tuple(
+            _strict_iso_date(value, f"{symbol} holdout target")
+            for value in _list(evidence.get("holdout_target_dates"), "holdout dates")
+        )
+        if (
+            not development
+            or len(holdout) != HOLDOUT_OBSERVATIONS
+            or holdout[0] != HOLDOUT_START
+            or holdout[-1] != HOLDOUT_END
+            or development[-1] >= holdout[0]
+            or development + holdout != raw_dates[1:]
+        ):
+            raise ResearchResultExportError(f"Formal target-date scope conflicts for {symbol}")
+        if common_holdout is None:
+            common_holdout, common_development = holdout, development
+        elif holdout != common_holdout or development != common_development:
+            raise ResearchResultExportError(f"Formal target dates differ for {symbol}")
+
+        manifests = _mapping(evidence.get("cv_fold_target_date_manifests"), f"{symbol} CV")
+        if set(manifests) != set(PRINCIPAL_METHODS):
+            raise ResearchResultExportError(f"Formal CV families conflict for {symbol}")
+        for method in PRINCIPAL_METHODS:
+            folds = _list(manifests[method], f"{symbol}/{method} CV folds")
+            expected = cv_count * (len(seeds) if method == "lstm" else 1)
+            if len(folds) != expected:
+                raise ResearchResultExportError(f"Formal CV fold count conflicts for {symbol}/{method}")
+            fold_ids: list[int] = []
+            for fold in folds:
+                entry = _mapping(fold, f"{symbol}/{method} CV fold")
+                fold_id = entry.get("fold_index")
+                if type(fold_id) is not int:
+                    raise ResearchResultExportError(f"Formal CV fold index invalid for {symbol}/{method}")
+                fold_ids.append(fold_id)
+                train_key = "outer_training_target_dates" if method == "lstm" else "training_target_dates"
+                train = tuple(_list(entry.get(train_key), f"{symbol}/{method} CV train"))
+                validation = tuple(_list(entry.get("validation_target_dates"), f"{symbol}/{method} CV validation"))
+                if (
+                    not train or not validation
+                    or train != tuple(sorted(set(train)))
+                    or validation != tuple(sorted(set(validation)))
+                    or train[-1] >= validation[0]
+                    or not set(validation).issubset(development)
+                ):
+                    raise ResearchResultExportError(f"Nonchronological formal CV for {symbol}/{method}")
+                if method == "lstm":
+                    stopping = tuple(_list(entry.get("stopping_target_dates"), "LSTM stopping dates"))
+                    if not stopping or not set(stopping).issubset(train):
+                        raise ResearchResultExportError(f"Formal LSTM stopping dates conflict for {symbol}")
+                    if entry.get("seed") not in seeds:
+                        raise ResearchResultExportError(f"Formal LSTM CV seed conflicts for {symbol}")
+            if set(fold_ids) != set(range(cv_count)):
+                raise ResearchResultExportError(f"Formal CV fold indices conflict for {symbol}/{method}")
+            if method == "lstm" and {
+                (fold["fold_index"], fold["seed"]) for fold in folds
+            } != {(index, seed) for index in range(cv_count) for seed in seeds}:
+                raise ResearchResultExportError(f"Formal LSTM fold/seed coverage conflicts for {symbol}")
+
+        dm = _mapping(_mapping(evidence.get("statistical_tests"), "formal tests").get("diebold_mariano"), "formal DM")
+        families = _mapping(dm.get("holm_families"), "formal DM families")
+        horizons = {
+            _positive_integer(_mapping(item, "formal DM pair").get("forecast_horizon"), "forecast horizon")
+            for loss in LOSS_TYPES
+            for item in _list(families.get(loss), f"{loss} DM family")
+        }
+        if horizons != {1}:
+            raise ResearchResultExportError(f"Formal forecast horizon conflicts for {symbol}")
+
+        records = _list(evidence.get("canonical_holdout_records"), f"{symbol} records")
+        if len(records) != len(holdout):
+            raise ResearchResultExportError(f"Canonical holdout row count conflicts for {symbol}")
+        position = {value: index for index, value in enumerate(raw_dates)}
+        for target, item in zip(holdout, records, strict=True):
+            record = _mapping(item, f"{symbol} canonical record")
+            if record.get("company") != symbol or record.get("target_date") != target:
+                raise ResearchResultExportError(f"Canonical holdout alignment conflicts for {symbol}")
+            index = position.get(target)
+            if index is None or index == 0:
+                raise ResearchResultExportError(f"Target has no frozen origin for {symbol}")
+            origin = raw_dates[index - 1]
+            if record.get("origin_date", origin) != origin:
+                raise ResearchResultExportError(f"Stored origin conflicts with frozen session for {symbol}")
+            predictions.append({
+                "symbol": symbol,
+                "company_name": company.name,
+                "sector": company.sector,
+                "origin_date": origin,
+                "target_date": target,
+                "actual_close": _finite_number(record.get("actual_close"), f"{symbol} actual Close"),
+                "lag_reg_prediction": _finite_number(record.get("lir_prediction"), f"{symbol} LIR prediction"),
+                "arima_prediction": _finite_number(record.get("arima_prediction"), f"{symbol} ARIMA prediction"),
+                "lstm_prediction": _finite_number(record.get("lstm_prediction"), f"{symbol} LSTM prediction"),
+                "naive_prediction": _finite_number(record.get("naive_prediction"), f"{symbol} Naive prediction"),
+                "formal_run_id": FORMAL_RUN_ID,
+                "formal_cutoff": FORMAL_CUTOFF,
+                "formal_git_sha": FORMAL_GIT_SHA,
+            })
+        scopes.append({
+            "symbol": symbol,
+            "company_name": company.name,
+            "sector": company.sector,
+            "raw_start": raw_dates[0],
+            "raw_end": raw_dates[-1],
+            "raw_row_count": len(raw_dates),
+            "forecast_pair_count": len(development) + len(holdout),
+            "development_start": development[0],
+            "development_end": development[-1],
+            "development_pair_count": len(development),
+            "holdout_start": holdout[0],
+            "holdout_end": holdout[-1],
+            "holdout_pair_count": len(holdout),
+            "cv_split_count": cv_count,
+            "forecast_horizon": 1,
+            "shuffle_used": _bool_text(False),
+            "formal_run_id": FORMAL_RUN_ID,
+            "formal_cutoff": FORMAL_CUTOFF,
+            "formal_git_sha": FORMAL_GIT_SHA,
+        })
+    if len(predictions) != 15 * HOLDOUT_OBSERVATIONS or len(scopes) != 15:
+        raise ResearchResultExportError("Frozen formal row counts are incomplete")
+    LOGGER.info("Built frozen formal rows holdout=%d scope=%d", len(predictions), len(scopes))
+    return tuple(predictions), tuple(scopes)
+
+
+def build_holdout_prediction_rows(source: FrozenFormalScope) -> tuple[dict[str, object], ...]:
+    return build_frozen_formal_rows(source)[0]
+
+
+def build_formal_scope_rows(source: FrozenFormalScope) -> tuple[dict[str, object], ...]:
+    return build_frozen_formal_rows(source)[1]
 
 
 def _expected_formal_sessions(calendar: PSETradingCalendar) -> tuple[date, ...]:
@@ -1769,7 +2079,7 @@ def _load_substantive_csvs(
         raise ResearchResultExportError(
             f"Research-result directory is missing: {directory}"
         )
-    allowed = set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv"}
+    allowed = set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv", "README.md"}
     unexpected = {item.name for item in directory.iterdir()} - allowed
     if unexpected:
         raise ResearchResultExportError(
@@ -1942,6 +2252,75 @@ def _validate_holdout_metrics(
                 f"holdout_metrics.csv MASE denominator conflicts for {company.symbol}"
             )
     return indexed
+
+
+def _validate_frozen_formal_csvs(
+    predictions: ParsedSubstantiveCsv,
+    scope: ParsedSubstantiveCsv,
+) -> None:
+    """Check frozen ledger/scope structure without recalculating research results."""
+
+    symbols = tuple(company.symbol for company in COMPANIES)
+    if tuple(row["symbol"] for row in scope.rows) != symbols:
+        raise ResearchResultExportError("formal_scope.csv company order conflicts")
+    if tuple(row["symbol"] for row in predictions.rows) != tuple(
+        symbol for symbol in symbols for _ in range(HOLDOUT_OBSERVATIONS)
+    ):
+        raise ResearchResultExportError("holdout_predictions.csv company order conflicts")
+    common_dates: tuple[str, ...] | None = None
+    seen: set[tuple[str, str]] = set()
+    for index, company in enumerate(COMPANIES):
+        symbol = company.symbol
+        row = scope.rows[index]
+        if (
+            row["raw_start"] != FORMAL_START
+            or row["raw_end"] != FORMAL_CUTOFF
+            or _csv_integer(row["raw_row_count"], "frozen raw row count") != FORMAL_ROWS_PER_COMPANY
+            or row["holdout_start"] != HOLDOUT_START
+            or row["holdout_end"] != HOLDOUT_END
+            or _csv_integer(row["holdout_pair_count"], "holdout pair count") != HOLDOUT_OBSERVATIONS
+            or _csv_integer(row["cv_split_count"], "CV split count") != 5
+            or _csv_integer(row["forecast_horizon"], "forecast horizon") != 1
+            or _csv_boolean(row["shuffle_used"], "shuffle policy")
+        ):
+            raise ResearchResultExportError(f"formal_scope.csv conflicts for {symbol}")
+        development_count = _csv_integer(row["development_pair_count"], "development pair count")
+        forecast_count = _csv_integer(row["forecast_pair_count"], "forecast pair count")
+        if (
+            development_count <= 0
+            or forecast_count != development_count + HOLDOUT_OBSERVATIONS
+            or forecast_count != FORMAL_ROWS_PER_COMPANY - 1
+            or not (FORMAL_START < _strict_iso_date(row["development_start"], "development start")
+                    <= _strict_iso_date(row["development_end"], "development end")
+                    < HOLDOUT_START)
+        ):
+            raise ResearchResultExportError(f"formal_scope.csv pair scope conflicts for {symbol}")
+        company_rows = predictions.rows[
+            index * HOLDOUT_OBSERVATIONS : (index + 1) * HOLDOUT_OBSERVATIONS
+        ]
+        target_dates = tuple(item["target_date"] for item in company_rows)
+        if (
+            target_dates != tuple(sorted(set(target_dates)))
+            or target_dates[0] != row["holdout_start"]
+            or target_dates[-1] != row["holdout_end"]
+            or (common_dates is not None and target_dates != common_dates)
+        ):
+            raise ResearchResultExportError(f"holdout_predictions.csv dates conflict for {symbol}")
+        common_dates = target_dates
+        for item in company_rows:
+            key = (symbol, item["target_date"])
+            if key in seen:
+                raise ResearchResultExportError(f"Duplicate holdout prediction row: {key}")
+            seen.add(key)
+            origin = _strict_iso_date(item["origin_date"], "holdout origin")
+            target = _strict_iso_date(item["target_date"], "holdout target")
+            if origin >= target:
+                raise ResearchResultExportError(f"Holdout origin is not earlier for {key}")
+            for field in (
+                "actual_close", "lag_reg_prediction", "arima_prediction",
+                "lstm_prediction", "naive_prediction",
+            ):
+                _csv_number(item[field], f"{symbol}/{target} {field}")
 
 
 def _validate_dm_files(
@@ -2367,7 +2746,7 @@ def validate_research_result_package(
     *,
     staged_payloads: Mapping[str, bytes] | None = None,
 ) -> PackageValidation:
-    """Validate ten frozen or derived CSVs without recomputing research results."""
+    """Validate the frozen CSV package without recomputing research results."""
 
     parsed_files = _load_substantive_csvs(
         output_dir,
@@ -2398,6 +2777,9 @@ def validate_research_result_package(
     )
     _validate_data_quality(files["data_quality.csv"])
     _validate_data_quality_rules(files["data_quality_rules.csv"])
+    _validate_frozen_formal_csvs(
+        files["holdout_predictions.csv"], files["formal_scope.csv"]
+    )
 
     # The aggregate deliberately excludes results_manifest.csv to avoid
     # recursive self-reference. Each line is UTF-8 filename<TAB>sha256<LF>.
@@ -2534,7 +2916,7 @@ def export_results_manifest(
 
     LOGGER.info("Building two deterministic research-evidence closure CSVs")
     closure_payloads = _build_research_closure_payloads(output_dir)
-    LOGGER.info("Validating ten substantive research-result CSVs")
+    LOGGER.info("Validating substantive research-result CSVs")
     validation = validate_research_result_package(
         output_dir,
         staged_payloads=closure_payloads,
@@ -2562,6 +2944,8 @@ def publish_research_rows(
     rows: ResearchRows,
     *,
     data_quality_rows: Sequence[Mapping[str, object]],
+    holdout_prediction_rows: Sequence[Mapping[str, object]],
+    formal_scope_rows: Sequence[Mapping[str, object]],
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     replace: Callable[[Path, Path], None] = os.replace,
 ) -> tuple[Path, ...]:
@@ -2573,19 +2957,9 @@ def publish_research_rows(
     if destination.exists():
         if not destination.is_dir():
             raise ResearchResultExportError("Research-result output path is not a directory")
-        unexpected = {item.name for item in destination.iterdir()} - {
-            "selected_configurations.csv",
-            "holdout_metrics.csv",
-            "benchmark_vs_naive_dm.csv",
-            "within_company_dm.csv",
-            "across_company_tests.csv",
-            "principal_winners.csv",
-            "principal_win_summary.csv",
-            "sector_peer_summary.csv",
-            "data_quality.csv",
-            "data_quality_rules.csv",
-            "results_manifest.csv",
-        }
+        unexpected = {item.name for item in destination.iterdir()} - (
+            set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv", "README.md"}
+        )
         if unexpected:
             raise ResearchResultExportError(
                 f"Research-result directory contains unexpected files: {sorted(unexpected)}"
@@ -2615,6 +2989,12 @@ def publish_research_rows(
             DATA_QUALITY_COLUMNS, data_quality_rows
         ),
     }
+    payloads["holdout_predictions.csv"] = _csv_bytes(
+        HOLDOUT_PREDICTION_COLUMNS, holdout_prediction_rows
+    )
+    payloads["formal_scope.csv"] = _csv_bytes(
+        FORMAL_SCOPE_COLUMNS, formal_scope_rows
+    )
     expected_counts = {
         "selected_configurations.csv": 15,
         "holdout_metrics.csv": 60,
@@ -2625,9 +3005,23 @@ def publish_research_rows(
         "sector_peer_summary.csv": 15,
         "data_quality.csv": 15,
     }
+    expected_counts["holdout_predictions.csv"] = 15 * HOLDOUT_OBSERVATIONS
+    expected_counts["formal_scope.csv"] = 15
+    new_files = {
+        name: _parse_substantive_csv(name, payloads[name])
+        for name in ("holdout_predictions.csv", "formal_scope.csv")
+    }
+    _validate_company_rows(new_files)
+    _validate_formal_identity(new_files)
+    _validate_frozen_formal_csvs(
+        new_files["holdout_predictions.csv"], new_files["formal_scope.csv"]
+    )
     staging = Path(tempfile.mkdtemp(prefix=".research-result-staging-", dir=parent))
     backup: Path | None = None
     try:
+        readme_path = destination / "README.md"
+        if readme_path.is_file():
+            shutil.copyfile(readme_path, staging / "README.md")
         for name, payload in payloads.items():
             target = staging / name
             target.write_bytes(payload)
@@ -2673,12 +3067,16 @@ def export_research_results(
     )
     LOGGER.info("Validating evidence and building all research-result datasets")
     rows = build_research_rows(evidence)
+    frozen_scope = load_frozen_formal_scope(formal_runs_root=formal_runs_root)
+    holdout_prediction_rows, formal_scope_rows = build_frozen_formal_rows(frozen_scope)
     data_quality_rows = build_frozen_data_quality_rows(
         formal_runs_root=formal_runs_root
     )
     paths = publish_research_rows(
         rows,
         data_quality_rows=data_quality_rows,
+        holdout_prediction_rows=holdout_prediction_rows,
+        formal_scope_rows=formal_scope_rows,
         output_dir=output_dir,
     )
     LOGGER.info(

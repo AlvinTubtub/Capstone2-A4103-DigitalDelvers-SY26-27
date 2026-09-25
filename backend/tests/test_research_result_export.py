@@ -3,7 +3,9 @@
 from copy import deepcopy
 import csv
 from datetime import date, timedelta
+from functools import cache
 import hashlib
+import math
 import os
 from pathlib import Path
 
@@ -21,6 +23,10 @@ from scripts.export_research_results import (
     FORMAL_CUTOFF,
     FORMAL_GIT_SHA,
     FORMAL_RUN_ID,
+    FORMAL_START,
+    FORMAL_SCOPE_COLUMNS,
+    FrozenFormalScope,
+    HOLDOUT_PREDICTION_COLUMNS,
     HOLDOUT_END,
     HOLDOUT_OBSERVATIONS,
     HOLDOUT_START,
@@ -42,10 +48,12 @@ from scripts.export_research_results import (
     WITHIN_COMPANY_DM_COLUMNS,
     build_data_quality_rule_rows,
     build_frozen_data_quality_rows,
+    build_frozen_formal_rows,
     build_principal_win_summary_rows,
     build_research_rows,
     export_results_manifest,
     load_authoritative_evidence,
+    load_frozen_formal_scope,
     publish_research_closure,
     publish_research_rows,
     validate_research_result_package,
@@ -435,15 +443,20 @@ def test_publication_is_deterministic_and_has_exact_schemas(
     evidence: ResearchEvidence,
 ) -> None:
     rows = build_research_rows(evidence)
+    predictions, scopes = _frozen_formal_rows()
     first = publish_research_rows(
         rows,
         data_quality_rows=_synthetic_quality_rows(),
+        holdout_prediction_rows=predictions,
+        formal_scope_rows=scopes,
         output_dir=tmp_path / "research-result",
     )
     first_bytes = tuple(path.read_bytes() for path in first)
     second = publish_research_rows(
         rows,
         data_quality_rows=_synthetic_quality_rows(),
+        holdout_prediction_rows=predictions,
+        formal_scope_rows=scopes,
         output_dir=tmp_path / "research-result",
     )
 
@@ -610,24 +623,32 @@ def test_conflicting_dm_and_across_company_sources_fail_closed(
 
 
 def test_phase_one_csv_bytes_remain_frozen(tmp_path: Path, evidence: ResearchEvidence) -> None:
+    predictions, scopes = _frozen_formal_rows()
     paths = publish_research_rows(
         build_research_rows(evidence),
         data_quality_rows=_synthetic_quality_rows(),
+        holdout_prediction_rows=predictions,
+        formal_scope_rows=scopes,
         output_dir=tmp_path / "research-result",
     )
     synthetic_first = tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in paths[:2])
     second = publish_research_rows(
         build_research_rows(evidence),
         data_quality_rows=_synthetic_quality_rows(),
+        holdout_prediction_rows=predictions,
+        formal_scope_rows=scopes,
         output_dir=tmp_path / "research-result",
     )
     assert tuple(hashlib.sha256(path.read_bytes()).hexdigest() for path in second[:2]) == synthetic_first
 
 
 def test_authoritative_phase_one_outputs_remain_byte_identical(tmp_path: Path) -> None:
+    predictions, scopes = _frozen_formal_rows()
     paths = publish_research_rows(
         build_research_rows(load_authoritative_evidence()),
         data_quality_rows=build_frozen_data_quality_rows(),
+        holdout_prediction_rows=predictions,
+        formal_scope_rows=scopes,
         output_dir=tmp_path / "research-result",
     )
 
@@ -789,6 +810,7 @@ def test_failed_directory_swap_restores_all_previous_csvs(
     evidence: ResearchEvidence,
 ) -> None:
     rows = build_research_rows(evidence)
+    predictions, scopes = _frozen_formal_rows()
     output = tmp_path / "research-result"
     output.mkdir()
     previous = {
@@ -820,6 +842,8 @@ def test_failed_directory_swap_restores_all_previous_csvs(
         publish_research_rows(
             rows,
             data_quality_rows=_synthetic_quality_rows(),
+            holdout_prediction_rows=predictions,
+            formal_scope_rows=scopes,
             output_dir=output,
             replace=fail_new_directory,
         )
@@ -829,6 +853,228 @@ def test_failed_directory_swap_restores_all_previous_csvs(
 
 
 AUTHORITATIVE_RESULT_DIR = Path(__file__).resolve().parents[1] / "research-result"
+
+
+@cache
+def _frozen_formal_rows() -> tuple[tuple[dict[str, object], ...], tuple[dict[str, object], ...]]:
+    return build_frozen_formal_rows(load_frozen_formal_scope())
+
+
+@cache
+def _frozen_formal_csv_bytes() -> dict[str, bytes]:
+    predictions, scope = _frozen_formal_rows()
+    return {
+        "holdout_predictions.csv": exporter._csv_bytes(HOLDOUT_PREDICTION_COLUMNS, predictions),
+        "formal_scope.csv": exporter._csv_bytes(FORMAL_SCOPE_COLUMNS, scope),
+    }
+
+
+@pytest.fixture(scope="module")
+def frozen_source() -> FrozenFormalScope:
+    return load_frozen_formal_scope()
+
+
+def test_frozen_holdout_rows_expose_stored_aligned_predictions(
+    frozen_source: FrozenFormalScope,
+) -> None:
+    rows, scopes = build_frozen_formal_rows(frozen_source)
+    assert len(rows) == 3690
+    assert len(scopes) == 15
+    assert tuple(row["symbol"] for row in scopes) == tuple(company.symbol for company in COMPANIES)
+    assert tuple(row["symbol"] for row in rows) == tuple(
+        company.symbol for company in COMPANIES for _ in range(HOLDOUT_OBSERVATIONS)
+    )
+    common_dates = tuple(row["target_date"] for row in rows[:HOLDOUT_OBSERVATIONS])
+    assert len(common_dates) == len(set(common_dates)) == HOLDOUT_OBSERVATIONS
+    assert common_dates == tuple(sorted(common_dates))
+    assert (common_dates[0], common_dates[-1]) == (HOLDOUT_START, HOLDOUT_END)
+    for index, company in enumerate(COMPANIES):
+        company_rows = rows[index * HOLDOUT_OBSERVATIONS : (index + 1) * HOLDOUT_OBSERVATIONS]
+        stored = frozen_source.company_evidence[company.symbol]["canonical_holdout_records"]
+        raw_dates = frozen_source.raw_dates[company.symbol]
+        assert tuple(row["target_date"] for row in company_rows) == common_dates
+        for row, record in zip(company_rows, stored, strict=True):
+            assert tuple(row) == HOLDOUT_PREDICTION_COLUMNS
+            assert (row["company_name"], row["sector"]) == (company.name, company.sector)
+            target_index = raw_dates.index(row["target_date"])
+            assert row["origin_date"] == raw_dates[target_index - 1]
+            assert row["origin_date"] < row["target_date"]
+            assert row["actual_close"] == record["actual_close"]
+            for column, stored_field in (
+                ("lag_reg_prediction", "lir_prediction"),
+                ("arima_prediction", "arima_prediction"),
+                ("lstm_prediction", "lstm_prediction"),
+                ("naive_prediction", "naive_prediction"),
+            ):
+                assert row[column] == record[stored_field]
+            assert all(math.isfinite(row[field]) for field in (
+                "actual_close", "lag_reg_prediction", "arima_prediction",
+                "lstm_prediction", "naive_prediction",
+            ))
+            assert (row["formal_run_id"], row["formal_cutoff"], row["formal_git_sha"]) == (
+                FORMAL_RUN_ID, FORMAL_CUTOFF, FORMAL_GIT_SHA
+            )
+
+
+def test_frozen_formal_scope_records_executed_split(
+    frozen_source: FrozenFormalScope,
+) -> None:
+    _, rows = build_frozen_formal_rows(frozen_source)
+    assert len(rows) == 15
+    for row, company in zip(rows, COMPANIES, strict=True):
+        evidence = frozen_source.company_evidence[company.symbol]
+        raw_dates = frozen_source.raw_dates[company.symbol]
+        assert tuple(row) == FORMAL_SCOPE_COLUMNS
+        assert (row["symbol"], row["company_name"], row["sector"]) == (
+            company.symbol, company.name, company.sector
+        )
+        assert (row["raw_start"], row["raw_end"], row["raw_row_count"]) == (
+            FORMAL_START, FORMAL_CUTOFF, len(raw_dates)
+        )
+        development = evidence["development_target_dates"]
+        holdout = evidence["holdout_target_dates"]
+        assert (row["development_start"], row["development_end"], row["development_pair_count"]) == (
+            development[0], development[-1], len(development)
+        )
+        assert (row["holdout_start"], row["holdout_end"], row["holdout_pair_count"]) == (
+            HOLDOUT_START, HOLDOUT_END, len(holdout)
+        )
+        assert row["forecast_pair_count"] == len(raw_dates) - 1 == len(development) + len(holdout)
+        assert (row["cv_split_count"], row["forecast_horizon"], row["shuffle_used"]) == (5, 1, "false")
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    (
+        ("missing_prediction", "LIR prediction"),
+        ("nonfinite_prediction", "finite"),
+        ("differing_dates", "target-date scope"),
+        ("duplicate_date", "target-date scope"),
+        ("wrong_identity", "identity"),
+        ("wrong_raw_count", "provenance"),
+        ("wrong_cv", "CV"),
+        ("wrong_horizon", "forecast horizon"),
+    ),
+)
+def test_frozen_formal_builder_fails_closed_on_corruption(
+    frozen_source: FrozenFormalScope, change: str, message: str,
+) -> None:
+    source = deepcopy(frozen_source)
+    symbol = COMPANIES[0].symbol
+    company = source.company_evidence[symbol]
+    if change == "missing_prediction":
+        del company["canonical_holdout_records"][0]["lir_prediction"]
+    elif change == "nonfinite_prediction":
+        company["canonical_holdout_records"][0]["arima_prediction"] = float("nan")
+    elif change == "differing_dates":
+        company["holdout_target_dates"][0] = "2025-09-09"
+    elif change == "duplicate_date":
+        company["holdout_target_dates"][1] = company["holdout_target_dates"][0]
+    elif change == "wrong_identity":
+        source.run["git_state"]["commit"] = "wrong"
+    elif change == "wrong_raw_count":
+        source.raw_provenance["raw_files"][0]["row_count"] -= 1
+    elif change == "wrong_cv":
+        source.model_config["model_config"]["arima"]["cv_splits"] = 4
+    elif change == "wrong_horizon":
+        company["statistical_tests"]["diebold_mariano"]["holm_families"]["squared_error"][0]["forecast_horizon"] = 2
+    with pytest.raises(ResearchResultExportError, match=message):
+        build_frozen_formal_rows(source)
+
+
+def test_new_frozen_csvs_are_in_deterministic_manifest(tmp_path: Path) -> None:
+    output = _copy_substantive_package(tmp_path)
+    first_path, first = export_results_manifest(output_dir=output)
+    first_bytes = first_path.read_bytes()
+    second_path, second = export_results_manifest(output_dir=output)
+    assert second_path.read_bytes() == first_bytes
+    assert first.package_content_sha256 == second.package_content_sha256
+    entries = {row["filename"]: row for row in first.manifest_rows}
+    assert tuple(entries) == SUBSTANTIVE_FILE_ORDER
+    for filename, count, columns in (
+        ("holdout_predictions.csv", 3690, HOLDOUT_PREDICTION_COLUMNS),
+        ("formal_scope.csv", 15, FORMAL_SCOPE_COLUMNS),
+    ):
+        entry = entries[filename]
+        assert entry["row_count"] == count
+        assert entry["column_count"] == len(columns)
+        assert entry["sha256"] == hashlib.sha256((output / filename).read_bytes()).hexdigest()
+        assert entry["source_scope"] == "formal"
+        assert entry["validation_status"] == "PASS"
+        assert entry["supplementary_package_id"] == ""
+        assert entry["package_content_sha256"] == first.package_content_sha256
+
+
+@pytest.mark.parametrize("filename", ("holdout_predictions.csv", "formal_scope.csv"))
+def test_missing_new_frozen_csv_fails_closed(tmp_path: Path, filename: str) -> None:
+    output = _copy_substantive_package(tmp_path)
+    (output / filename).unlink()
+    with pytest.raises(ResearchResultExportError, match="missing"):
+        validate_research_result_package(output)
+
+
+@pytest.mark.parametrize(
+    ("filename", "row_index", "column", "value", "message"),
+    (
+        ("holdout_predictions.csv", 0, "lag_reg_prediction", "", "numeric"),
+        ("holdout_predictions.csv", 0, "naive_prediction", "nan", "finite"),
+        ("holdout_predictions.csv", 1, "target_date", HOLDOUT_START, "dates conflict"),
+        ("holdout_predictions.csv", 0, "origin_date", HOLDOUT_END, "not earlier"),
+        ("formal_scope.csv", 0, "raw_row_count", "1634", "conflicts"),
+        ("formal_scope.csv", 0, "development_pair_count", "1387", "pair scope"),
+        ("formal_scope.csv", 0, "cv_split_count", "4", "conflicts"),
+        ("formal_scope.csv", 0, "shuffle_used", "true", "conflicts"),
+    ),
+)
+def test_new_csv_corruption_fails_package_validation(
+    tmp_path: Path, filename: str, row_index: int, column: str,
+    value: str, message: str,
+) -> None:
+    output = _copy_complete_package(tmp_path)
+    _rewrite_csv_cell(output / filename, row_index=row_index, column=column, value=value)
+    with pytest.raises(ResearchResultExportError, match=message):
+        validate_research_result_package(output)
+
+
+def test_publication_preserves_existing_research_index(
+    tmp_path: Path, evidence: ResearchEvidence,
+) -> None:
+    destination = tmp_path / "research-result"
+    destination.mkdir()
+    readme = b"# Existing research index\n"
+    (destination / "README.md").write_bytes(readme)
+    frozen = load_frozen_formal_scope()
+    predictions, scopes = build_frozen_formal_rows(frozen)
+    publish_research_rows(
+        build_research_rows(evidence),
+        data_quality_rows=_synthetic_quality_rows(),
+        holdout_prediction_rows=predictions,
+        formal_scope_rows=scopes,
+        output_dir=destination,
+    )
+    assert (destination / "README.md").read_bytes() == readme
+    assert (destination / "holdout_predictions.csv").is_file()
+    assert (destination / "formal_scope.csv").is_file()
+
+
+def test_invalid_new_rows_are_rejected_before_publication(
+    tmp_path: Path, evidence: ResearchEvidence,
+) -> None:
+    destination = tmp_path / "research-result"
+    predictions, scopes = _frozen_formal_rows()
+    malformed = [dict(row) for row in predictions]
+    malformed[0]["naive_prediction"] = float("nan")
+    with pytest.raises(ResearchResultExportError, match="finite"):
+        publish_research_rows(
+            build_research_rows(evidence),
+            data_quality_rows=_synthetic_quality_rows(),
+            holdout_prediction_rows=malformed,
+            formal_scope_rows=scopes,
+            output_dir=destination,
+        )
+    assert not destination.exists()
+
+
 AUTHORITATIVE_SUBSTANTIVE_HASHES = {
     "selected_configurations.csv": (
         "7c648357adaba1e5769d560435bad61a933d67ebb5ee8fc1ded5944416737a97"
@@ -864,6 +1110,8 @@ def _copy_substantive_package(tmp_path: Path) -> Path:
         (destination / filename).write_bytes(
             (AUTHORITATIVE_RESULT_DIR / filename).read_bytes()
         )
+    for filename, payload in _frozen_formal_csv_bytes().items():
+        (destination / filename).write_bytes(payload)
     return destination
 
 
@@ -991,9 +1239,9 @@ def test_manifest_contract_cross_file_validation_and_determinism(
         reader = csv.DictReader(source)
         manifest = list(reader)
         assert tuple(reader.fieldnames or ()) == MANIFEST_COLUMNS
-    assert len(manifest) == 10
+    assert len(manifest) == len(SUBSTANTIVE_FILE_ORDER)
     assert tuple(row["filename"] for row in manifest) == SUBSTANTIVE_FILE_ORDER
-    assert len({row["filename"] for row in manifest}) == 10
+    assert len({row["filename"] for row in manifest}) == len(SUBSTANTIVE_FILE_ORDER)
 
     package_source = b""
     for row in manifest:
@@ -1244,4 +1492,4 @@ def test_manifest_validation_does_not_execute_research_or_model_paths(
 
     path, validation = export_results_manifest(output_dir=output)
     assert path.is_file()
-    assert len(validation.manifest_rows) == 10
+    assert len(validation.manifest_rows) == len(SUBSTANTIVE_FILE_ORDER)

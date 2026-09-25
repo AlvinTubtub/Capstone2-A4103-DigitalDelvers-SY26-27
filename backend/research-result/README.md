@@ -52,6 +52,16 @@ Frozen formal-dataset screening results: 15 PASS and 0 FAIL. APX contains one ma
 
 Frozen `data-quality-v1` screening rules.
 
+### `holdout_predictions.csv`
+
+Canonical row-level frozen holdout ledger for all 15 companies. It exposes actual closes and the stored LIR, ARIMA, LSTM, and Naive one-step predictions on the common 246-session holdout. Origin dates come from the immediately preceding session in each company's frozen formal raw history.
+
+### `formal_scope.csv`
+
+Per-company executed formal scope: frozen raw coverage and row count, one-step forecast-pair count, development and holdout ranges, expanding-window CV split count, forecast horizon, and chronological no-shuffle policy.
+
+These two files expose existing finalized evidence. They do not represent a new experiment, retraining run, refit, or inference run.
+
 ### `results_manifest.csv`
 
 Deterministic file hashes, row counts, provenance fields, and package-integrity metadata.
