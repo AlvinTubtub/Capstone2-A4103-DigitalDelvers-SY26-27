@@ -19,6 +19,9 @@ from scripts.export_research_results import (
     CONFIGURATION_COLUMNS,
     DATA_QUALITY_COLUMNS,
     DATA_QUALITY_RULE_COLUMNS,
+    DATA_PROVENANCE_COLUMNS,
+    MODEL_DIAGNOSTIC_COLUMNS,
+    DIAGNOSTIC_TYPES,
     FORMAL_AGGREGATE_SHA256,
     FORMAL_CUTOFF,
     FORMAL_GIT_SHA,
@@ -49,11 +52,14 @@ from scripts.export_research_results import (
     build_data_quality_rule_rows,
     build_frozen_data_quality_rows,
     build_frozen_formal_rows,
+    build_data_provenance_rows,
+    build_model_diagnostic_rows,
     build_principal_win_summary_rows,
     build_research_rows,
     export_results_manifest,
     load_authoritative_evidence,
     load_frozen_formal_scope,
+    load_frozen_diagnostic_evidence,
     publish_research_closure,
     publish_research_rows,
     validate_research_result_package,
@@ -869,6 +875,26 @@ def _frozen_formal_csv_bytes() -> dict[str, bytes]:
     }
 
 
+@cache
+def _phase_6a2_rows() -> tuple[tuple[dict[str, object], ...], tuple[dict[str, object], ...]]:
+    return (build_data_provenance_rows(load_frozen_formal_scope()),
+            build_model_diagnostic_rows(_phase_6a2_source()))
+
+
+@cache
+def _phase_6a2_source() -> dict[str, object]:
+    return dict(load_frozen_diagnostic_evidence())
+
+
+@cache
+def _phase_6a2_csv_bytes() -> dict[str, bytes]:
+    provenance, diagnostics = _phase_6a2_rows()
+    return {
+        "data_provenance.csv": exporter._csv_bytes(DATA_PROVENANCE_COLUMNS, provenance),
+        "model_diagnostics.csv": exporter._csv_bytes(MODEL_DIAGNOSTIC_COLUMNS, diagnostics),
+    }
+
+
 @pytest.fixture(scope="module")
 def frozen_source() -> FrozenFormalScope:
     return load_frozen_formal_scope()
@@ -1075,6 +1101,154 @@ def test_invalid_new_rows_are_rejected_before_publication(
     assert not destination.exists()
 
 
+def test_frozen_provenance_exact_schema_and_source_evidence() -> None:
+    rows, _ = _phase_6a2_rows()
+    source = load_frozen_formal_scope()
+    by_symbol = {item["symbol"]: item for item in source.raw_provenance["raw_files"]}
+    assert len(rows) == 15
+    assert tuple(row["symbol"] for row in rows) == tuple(c.symbol for c in COMPANIES)
+    for company, row in zip(COMPANIES, rows, strict=True):
+        archived = by_symbol[company.symbol]
+        assert set(row) == set(DATA_PROVENANCE_COLUMNS)
+        assert row["company_name"] == company.name and row["sector"] == company.sector
+        assert row["source_name"] == archived["source_name"]
+        assert row["source_reference"] == archived["source_reference"]
+        assert row["retrieval_date"] == archived["retrieval_date"]
+        assert date.fromisoformat(row["retrieval_date"]).isoformat() == row["retrieval_date"]
+        assert row["raw_sha256"] == archived["sha256"]
+        assert row["start_date"] == FORMAL_START and row["end_date"] == FORMAL_CUTOFF
+        assert row["row_count"] == 1635
+        assert row["correction_count"] == len(archived["correction_history"])
+        assert row["session_completeness_status"] == "PASS"
+        assert (row["formal_run_id"], row["formal_cutoff"], row["formal_git_sha"]) == (
+            FORMAL_RUN_ID, FORMAL_CUTOFF, FORMAL_GIT_SHA)
+
+
+@pytest.mark.parametrize(("field", "value", "message"), (
+    ("sha256", "0" * 64, "SHA-256"),
+    ("source_name", "", "source metadata"),
+    ("source_reference", None, "source metadata"),
+    ("retrieval_date", None, "retrieval date"),
+    ("row_count", 1634, "scope"),
+))
+def test_frozen_provenance_fails_closed_on_corruption(
+    field: str, value: object, message: str,
+) -> None:
+    source = deepcopy(load_frozen_formal_scope())
+    source.raw_provenance["raw_files"][0][field] = value
+    with pytest.raises(ResearchResultExportError, match=message):
+        build_data_provenance_rows(source)
+
+
+def test_incomplete_frozen_session_fails_provenance_export() -> None:
+    source = deepcopy(load_frozen_formal_scope())
+    source.session_completeness["companies"][0]["missing_dates"] = ["2020-01-03"]
+    with pytest.raises(ResearchResultExportError, match="completeness"):
+        build_data_provenance_rows(source)
+
+
+def test_finalized_diagnostic_rows_keep_fitted_and_holdout_scopes_distinct() -> None:
+    _, rows = _phase_6a2_rows()
+    source = _phase_6a2_source()
+    entries = source["status"]["companies"]
+    assert len(rows) == 60
+    assert tuple((row["symbol"], row["diagnostic_scope"], row["diagnostic_name"])
+                 for row in rows) == tuple((company.symbol, scope, name)
+                                         for company in COMPANIES for scope, name in DIAGNOSTIC_TYPES)
+    assert len({(row["symbol"], row["diagnostic_scope"], row["diagnostic_name"])
+                for row in rows}) == 60
+    for index, company in enumerate(COMPANIES):
+        actual = rows[index * 4:index * 4 + 4]
+        fitted = entries[index]["fitted_model_diagnostics"]
+        holdout = source["formal_companies"][company.symbol]["arima_diagnostics"]["holdout_forecast_errors"]
+        assert all(set(row) == set(MODEL_DIAGNOSTIC_COLUMNS) for row in actual)
+        assert all(row["model"] == "arima" and row["available"] == "true" for row in actual)
+        assert all(row["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID for row in actual)
+        assert actual[0]["boolean_result"] == exporter._bool_text(fitted["stability_flag"])
+        assert actual[1]["boolean_result"] == exporter._bool_text(fitted["invertibility_flag"])
+        for row, stored in ((actual[2], fitted["fitted_residuals"]["ljung_box"]),
+                            (actual[3], holdout["ljung_box"])):
+            assert row["observations"] == stored["observations"]
+            assert row["lag"] == stored["lag"]
+            assert row["model_df"] == stored["model_df"]
+            assert row["statistic"] == stored["statistic"]
+            assert row["p_value"] == stored["p_value"]
+            assert math.isfinite(row["statistic"]) and 0 <= row["p_value"] <= 1
+            assert row["boolean_result"] == ""
+        assert actual[2]["evidence_source"] == "supplementary_arima_diagnostic_status"
+        assert actual[3]["evidence_source"] == "formal_arima_holdout_diagnostics"
+
+
+@pytest.mark.parametrize(("path", "value", "message"), (
+    (("fitted_model_diagnostics", "stability_flag"), None, "stability_flag missing"),
+    (("fitted_model_diagnostics", "fitted_residuals", "ljung_box", "p_value"), float("nan"), "finite"),
+    (("fitted_model_diagnostics", "fitted_residuals", "ljung_box", "statistic"), float("inf"), "finite"),
+    (("fitted_model_diagnostics", "fitted_residuals", "ljung_box", "p_value"), 2.0, "p-value"),
+))
+def test_malformed_finalized_diagnostic_fails_closed(
+    path: tuple[str, ...], value: object, message: str,
+) -> None:
+    source = deepcopy(_phase_6a2_source())
+    item = source["status"]["companies"][0]
+    for part in path[:-1]:
+        item = item[part]
+    item[path[-1]] = value
+    with pytest.raises(ResearchResultExportError, match=message):
+        build_model_diagnostic_rows(source)
+
+
+def test_missing_finalized_diagnostic_and_unavailability_reason_fail_closed() -> None:
+    source = deepcopy(_phase_6a2_source())
+    fitted = source["status"]["companies"][0]["fitted_model_diagnostics"]
+    fitted["fitted_residuals"].pop("ljung_box")
+    with pytest.raises(ResearchResultExportError, match="object"):
+        build_model_diagnostic_rows(source)
+    source = deepcopy(_phase_6a2_source())
+    lb = source["status"]["companies"][0]["fitted_model_diagnostics"]["fitted_residuals"]["ljung_box"]
+    lb["available"] = False
+    lb["unavailable_reason"] = None
+    with pytest.raises(ResearchResultExportError, match="unavailable reason"):
+        build_model_diagnostic_rows(source)
+
+
+def test_phase_6a2_manifest_and_package_validation(tmp_path: Path) -> None:
+    output = _copy_substantive_package(tmp_path)
+    path, validation = export_results_manifest(output_dir=output)
+    first = path.read_bytes()
+    assert export_results_manifest(output_dir=output)[0].read_bytes() == first
+    entries = {row["filename"]: row for row in validation.manifest_rows}
+    assert len(entries) == 14
+    for filename, count, schema, scope in (
+        ("data_provenance.csv", 15, DATA_PROVENANCE_COLUMNS, "formal"),
+        ("model_diagnostics.csv", 60, MODEL_DIAGNOSTIC_COLUMNS, "formal+supplementary"),
+    ):
+        row = entries[filename]
+        with (output / filename).open(encoding="utf-8", newline="") as handle:
+            assert tuple(csv.DictReader(handle).fieldnames or ()) == schema
+        assert row["row_count"] == count and row["column_count"] == len(schema)
+        assert row["source_scope"] == scope and row["validation_status"] == "PASS"
+        assert row["sha256"] == hashlib.sha256((output / filename).read_bytes()).hexdigest()
+        assert row["package_content_sha256"] == validation.package_content_sha256
+    assert entries["model_diagnostics.csv"]["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID
+
+
+@pytest.mark.parametrize(("filename", "column", "value", "message"), (
+    ("data_provenance.csv", "raw_sha256", "bad", "SHA-256"),
+    ("data_provenance.csv", "formal_run_id", "wrong", "formal_run_id"),
+    ("model_diagnostics.csv", "p_value", "nan", "finite"),
+    ("model_diagnostics.csv", "evidence_source", "", "provenance"),
+    ("model_diagnostics.csv", "supplementary_package_id", "wrong", "provenance"),
+))
+def test_phase_6a2_package_corruption_fails_closed(
+    tmp_path: Path, filename: str, column: str, value: str, message: str,
+) -> None:
+    output = _copy_complete_package(tmp_path)
+    row_index = 2 if filename == "model_diagnostics.csv" and column == "p_value" else 0
+    _rewrite_csv_cell(output / filename, row_index=row_index, column=column, value=value)
+    with pytest.raises(ResearchResultExportError, match=message):
+        validate_research_result_package(output)
+
+
 AUTHORITATIVE_SUBSTANTIVE_HASHES = {
     "selected_configurations.csv": (
         "7c648357adaba1e5769d560435bad61a933d67ebb5ee8fc1ded5944416737a97"
@@ -1111,6 +1285,8 @@ def _copy_substantive_package(tmp_path: Path) -> Path:
             (AUTHORITATIVE_RESULT_DIR / filename).read_bytes()
         )
     for filename, payload in _frozen_formal_csv_bytes().items():
+        (destination / filename).write_bytes(payload)
+    for filename, payload in _phase_6a2_csv_bytes().items():
         (destination / filename).write_bytes(payload)
     return destination
 
@@ -1262,6 +1438,7 @@ def test_manifest_contract_cross_file_validation_and_determinism(
             "within_company_dm.csv",
             "across_company_tests.csv",
             "principal_winners.csv",
+            "model_diagnostics.csv",
         }:
             assert row["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID
         else:

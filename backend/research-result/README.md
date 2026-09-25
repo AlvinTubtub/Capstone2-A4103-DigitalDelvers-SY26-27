@@ -62,6 +62,16 @@ Per-company executed formal scope: frozen raw coverage and row count, one-step f
 
 These two files expose existing finalized evidence. They do not represent a new experiment, retraining run, refit, or inference run.
 
+### `data_provenance.csv`
+
+Reviewer-facing frozen raw-data provenance for all 15 companies: preserved source identity and reference, retrieval-date metadata, frozen raw SHA-256, formal date range and row count, correction-history count, and finalized trading-session completeness. `source_reference` is the provider-level reference preserved in the formal archive, not a unique archived URL for every report. `retrieval_date` retains the archived batch-log provenance meaning; it is not automatically the cutoff or each row's download date.
+
+### `model_diagnostics.csv`
+
+Stored ARIMA diagnostic evidence: selected fitted-model stability and invertibility, fitted-residual Ljung-Box, and separate complete aligned out-of-sample holdout-error Ljung-Box. The file does not recompute diagnostics or create model-selection evidence. Fitted residuals and holdout forecast errors have different scopes; LIR/LSTM analogues are not fabricated for symmetry.
+
+Phase 6A.2 exposes existing finalized evidence, not a new experiment.
+
 ### `results_manifest.csv`
 
 Deterministic file hashes, row counts, provenance fields, and package-integrity metadata.

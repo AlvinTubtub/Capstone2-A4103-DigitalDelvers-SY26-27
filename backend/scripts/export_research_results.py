@@ -258,6 +258,28 @@ FORMAL_SCOPE_COLUMNS: Final[tuple[str, ...]] = (
     "formal_git_sha",
 )
 
+DATA_PROVENANCE_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "source_name", "source_reference",
+    "retrieval_date", "raw_sha256", "start_date", "end_date", "row_count",
+    "correction_count", "session_completeness_status", "formal_run_id",
+    "formal_cutoff", "formal_git_sha",
+)
+
+MODEL_DIAGNOSTIC_COLUMNS: Final[tuple[str, ...]] = (
+    "symbol", "company_name", "sector", "model", "diagnostic_scope",
+    "diagnostic_name", "available", "observations", "lag", "model_df",
+    "statistic", "p_value", "boolean_result", "unavailable_reason",
+    "evidence_source", "formal_run_id", "formal_cutoff", "formal_git_sha",
+    "supplementary_package_id",
+)
+
+DIAGNOSTIC_TYPES: Final[tuple[tuple[str, str], ...]] = (
+    ("selected_fitted_model", "stability_flag"),
+    ("selected_fitted_model", "invertibility_flag"),
+    ("fitted_residuals", "ljung_box"),
+    ("holdout_forecast_errors", "ljung_box"),
+)
+
 SUBSTANTIVE_FILE_ORDER: Final[tuple[str, ...]] = (
     "selected_configurations.csv",
     "holdout_metrics.csv",
@@ -271,6 +293,8 @@ SUBSTANTIVE_FILE_ORDER: Final[tuple[str, ...]] = (
     "data_quality_rules.csv",
     "holdout_predictions.csv",
     "formal_scope.csv",
+    "data_provenance.csv",
+    "model_diagnostics.csv",
 )
 
 SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
@@ -286,6 +310,8 @@ SUBSTANTIVE_FILE_SCHEMAS: Final[Mapping[str, tuple[str, ...]]] = {
     "data_quality_rules.csv": DATA_QUALITY_RULE_COLUMNS,
     "holdout_predictions.csv": HOLDOUT_PREDICTION_COLUMNS,
     "formal_scope.csv": FORMAL_SCOPE_COLUMNS,
+    "data_provenance.csv": DATA_PROVENANCE_COLUMNS,
+    "model_diagnostics.csv": MODEL_DIAGNOSTIC_COLUMNS,
 }
 
 SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
@@ -301,6 +327,8 @@ SUBSTANTIVE_FILE_ROW_COUNTS: Final[Mapping[str, int]] = {
     "data_quality_rules.csv": 6,
     "holdout_predictions.csv": 15 * HOLDOUT_OBSERVATIONS,
     "formal_scope.csv": 15,
+    "data_provenance.csv": 15,
+    "model_diagnostics.csv": 60,
 }
 
 SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
@@ -316,6 +344,8 @@ SUBSTANTIVE_FILE_PURPOSES: Final[Mapping[str, str]] = {
     "data_quality_rules.csv": "predeclared frozen data-quality screening rules",
     "holdout_predictions.csv": "canonical frozen common-holdout actual and forecast ledger",
     "formal_scope.csv": "per-company executed formal data split and validation scope",
+    "data_provenance.csv": "frozen formal raw-data provenance and completeness evidence",
+    "model_diagnostics.csv": "finalized model diagnostic evidence summary",
 }
 
 SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
@@ -331,6 +361,8 @@ SUBSTANTIVE_FILE_SOURCE_SCOPES: Final[Mapping[str, str]] = {
     "data_quality_rules.csv": "predeclared-data-quality-rules",
     "holdout_predictions.csv": "formal",
     "formal_scope.csv": "formal",
+    "data_provenance.csv": "formal",
+    "model_diagnostics.csv": "formal+supplementary",
 }
 
 SUPPLEMENTARY_DEPENDENT_FILES: Final[frozenset[str]] = frozenset(
@@ -339,6 +371,7 @@ SUPPLEMENTARY_DEPENDENT_FILES: Final[frozenset[str]] = frozenset(
         "within_company_dm.csv",
         "across_company_tests.csv",
         "principal_winners.csv",
+        "model_diagnostics.csv",
     }
 )
 
@@ -723,6 +756,179 @@ def build_holdout_prediction_rows(source: FrozenFormalScope) -> tuple[dict[str, 
 
 def build_formal_scope_rows(source: FrozenFormalScope) -> tuple[dict[str, object], ...]:
     return build_frozen_formal_rows(source)[1]
+
+
+def build_data_provenance_rows(
+    source: FrozenFormalScope,
+    *,
+    formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+) -> tuple[dict[str, object], ...]:
+    """Expose preserved provenance; independently hash each frozen CSV."""
+
+    formal = FormalRunArchive(FORMAL_RUN_ID, root=formal_runs_root)
+    if not formal.verify_integrity():
+        raise ResearchResultExportError("Formal-run integrity validation failed for provenance")
+    provenance = _list(source.raw_provenance.get("raw_files"), "frozen raw provenance")
+    sessions = _list(source.session_completeness.get("companies"), "frozen sessions")
+    symbols = tuple(company.symbol for company in COMPANIES)
+    if (len(provenance) != 15 or len(sessions) != 15
+            or {item.get("symbol") for item in provenance} != set(symbols)
+            or {item.get("symbol") for item in sessions} != set(symbols)):
+        raise ResearchResultExportError("Frozen provenance company universe conflicts")
+    by_symbol = {item["symbol"]: _mapping(item, "provenance row") for item in provenance}
+    sessions_by_symbol = {item["symbol"]: _mapping(item, "session row") for item in sessions}
+    rows: list[dict[str, object]] = []
+    for company in COMPANIES:
+        symbol = company.symbol
+        item = by_symbol[symbol]
+        session = sessions_by_symbol[symbol]
+        source_name = item.get("source_name")
+        source_reference = item.get("source_reference")
+        retrieval = _strict_iso_date(item.get("retrieval_date"), f"{symbol} retrieval date")
+        if not all(isinstance(value, str) and value.strip()
+                   for value in (source_name, source_reference)):
+            raise ResearchResultExportError(f"Missing frozen source metadata for {symbol}")
+        frozen_hash = sha256_file(formal.path / "frozen_raw" / f"{symbol}.csv")
+        if item.get("sha256") != frozen_hash:
+            raise ResearchResultExportError(f"Frozen raw SHA-256 conflicts for {symbol}")
+        start = _strict_iso_date(item.get("first_date"), f"{symbol} raw start")
+        end = _strict_iso_date(item.get("last_date"), f"{symbol} raw end")
+        count = _positive_integer(item.get("row_count"), f"{symbol} row count")
+        corrections = _list(item.get("correction_history"), f"{symbol} correction history")
+        if (start != FORMAL_START or end != FORMAL_CUTOFF
+                or count != FORMAL_ROWS_PER_COMPANY
+                or len(source.raw_dates[symbol]) != count
+                or source.raw_dates[symbol][0] != start
+                or source.raw_dates[symbol][-1] != end):
+            raise ResearchResultExportError(f"Frozen raw scope conflicts for {symbol}")
+        if (session.get("symbol") != symbol
+                or session.get("start_date") != start
+                or session.get("cutoff_date") != end
+                or session.get("expected_session_count") != count
+                or session.get("actual_session_count") != count
+                or session.get("complete") is not True
+                or any(session.get(key) != [] for key in
+                       ("missing_dates", "unexpected_dates", "duplicate_dates"))):
+            raise ResearchResultExportError(f"Frozen session completeness conflicts for {symbol}")
+        rows.append({
+            "symbol": symbol, "company_name": company.name, "sector": company.sector,
+            "source_name": source_name, "source_reference": source_reference,
+            "retrieval_date": retrieval, "raw_sha256": frozen_hash,
+            "start_date": start, "end_date": end, "row_count": count,
+            "correction_count": len(corrections), "session_completeness_status": "PASS",
+            "formal_run_id": FORMAL_RUN_ID, "formal_cutoff": FORMAL_CUTOFF,
+            "formal_git_sha": FORMAL_GIT_SHA,
+        })
+    return tuple(rows)
+
+
+def load_frozen_diagnostic_evidence(
+    *, formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+    supplementary_runs_root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+) -> Mapping[str, Any]:
+    """Read already-finalized diagnostics, never invoke reconstruction."""
+
+    evidence = load_authoritative_evidence(
+        formal_runs_root=formal_runs_root,
+        supplementary_runs_root=supplementary_runs_root,
+    )
+    source = evidence.supplementary_source
+    if (source.get("source_formal_run_id") != FORMAL_RUN_ID
+            or source.get("source_formal_integrity_aggregate_sha256") != FORMAL_AGGREGATE_SHA256
+            or source.get("source_git_commit") != FORMAL_GIT_SHA):
+        raise ResearchResultExportError("Supplementary diagnostic source linkage conflicts")
+    supplementary = SupplementaryEvidenceArchive(
+        SUPPLEMENTARY_PACKAGE_ID, root=supplementary_runs_root
+    )
+    return {
+        "status": _load_json(supplementary.path / "methodology" / "arima_diagnostic_status.json"),
+        "formal_companies": evidence.company_evidence,
+    }
+
+
+def _diagnostic_ljung_fields(value: object, label: str) -> dict[str, object]:
+    item = _mapping(value, label)
+    available = item.get("available")
+    if type(available) is not bool:
+        raise ResearchResultExportError(f"{label} availability must be boolean")
+    if not available:
+        reason = item.get("unavailable_reason")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ResearchResultExportError(f"{label} requires unavailable reason")
+        return {"available": "false", "observations": "", "lag": "",
+                "model_df": "", "statistic": "", "p_value": "",
+                "boolean_result": "", "unavailable_reason": reason}
+    observations = _positive_integer(item.get("observations"), f"{label} observations")
+    lag = _positive_integer(item.get("lag"), f"{label} lag")
+    model_df = item.get("model_df")
+    if type(model_df) is not int or model_df < 0:
+        raise ResearchResultExportError(f"{label} model degrees of freedom invalid")
+    statistic = _finite_number(item.get("statistic"), f"{label} statistic")
+    p_value = _finite_number(item.get("p_value"), f"{label} p-value")
+    if not 0 <= p_value <= 1 or item.get("unavailable_reason") not in (None, ""):
+        raise ResearchResultExportError(f"{label} p-value or availability conflicts")
+    return {"available": "true", "observations": observations, "lag": lag,
+            "model_df": model_df, "statistic": statistic, "p_value": p_value,
+            "boolean_result": "", "unavailable_reason": ""}
+
+
+def build_model_diagnostic_rows(source: Mapping[str, Any]) -> tuple[dict[str, object], ...]:
+    """Summarize stored supplementary fit and formal holdout diagnostics."""
+
+    status = _mapping(source.get("status"), "supplementary diagnostic status")
+    formal_companies = _mapping(source.get("formal_companies"), "formal diagnostics")
+    symbols = tuple(company.symbol for company in COMPANIES)
+    if (status.get("schema_id") != "forecastph.supplementary-arima-diagnostic-status"
+            or status.get("company_order") != list(symbols)):
+        raise ResearchResultExportError("Supplementary diagnostic identity conflicts")
+    companies = _list(status.get("companies"), "supplementary diagnostic companies")
+    if len(companies) != 15 or tuple(item.get("symbol") for item in companies) != symbols:
+        raise ResearchResultExportError("Supplementary diagnostic company order conflicts")
+    if set(formal_companies) != set(symbols):
+        raise ResearchResultExportError("Formal diagnostic company universe conflicts")
+    rows: list[dict[str, object]] = []
+    for company, entry in zip(COMPANIES, companies, strict=True):
+        symbol = company.symbol
+        fitted = _mapping(entry.get("fitted_model_diagnostics"), f"{symbol} fitted diagnostics")
+        formal = _mapping(formal_companies[symbol], f"{symbol} formal evidence")
+        if formal.get("symbol") != symbol:
+            raise ResearchResultExportError(f"Formal diagnostic symbol conflicts for {symbol}")
+        holdout = _mapping(_mapping(formal.get("arima_diagnostics"), "formal ARIMA diagnostics").get(
+            "holdout_forecast_errors"), f"{symbol} holdout errors")
+        original = _mapping(entry.get("original_frozen_holdout_forecast_error_diagnostics"),
+                            f"{symbol} linked holdout errors")
+        if original != holdout:
+            raise ResearchResultExportError(f"Supplementary/formal holdout evidence conflicts for {symbol}")
+        common = {"symbol": symbol, "company_name": company.name, "sector": company.sector,
+                  "model": "arima", "formal_run_id": FORMAL_RUN_ID,
+                  "formal_cutoff": FORMAL_CUTOFF, "formal_git_sha": FORMAL_GIT_SHA,
+                  "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID}
+        for flag in ("stability_flag", "invertibility_flag"):
+            available = fitted.get("available")
+            if type(available) is not bool:
+                raise ResearchResultExportError(f"{symbol} fitted availability invalid")
+            value = fitted.get(flag)
+            if available and type(value) is not bool:
+                raise ResearchResultExportError(f"{symbol} {flag} missing")
+            reason = fitted.get("unavailable_reason") if not available else ""
+            if not available and (not isinstance(reason, str) or not reason.strip()):
+                raise ResearchResultExportError(f"{symbol} fitted diagnostic reason missing")
+            rows.append({**common, "diagnostic_scope": "selected_fitted_model",
+                         "diagnostic_name": flag, "available": _bool_text(available),
+                         "observations": "", "lag": "", "model_df": "",
+                         "statistic": "", "p_value": "",
+                         "boolean_result": _bool_text(value) if available else "",
+                         "unavailable_reason": reason,
+                         "evidence_source": "supplementary_arima_diagnostic_status"})
+        fitted_residuals = _mapping(fitted.get("fitted_residuals"), f"{symbol} fitted residuals")
+        for scope, diagnostic, label in (
+            ("fitted_residuals", fitted_residuals, "supplementary_arima_diagnostic_status"),
+            ("holdout_forecast_errors", holdout, "formal_arima_holdout_diagnostics"),
+        ):
+            fields = _diagnostic_ljung_fields(diagnostic.get("ljung_box"), f"{symbol} {scope} Ljung-Box")
+            rows.append({**common, "diagnostic_scope": scope, "diagnostic_name": "ljung_box",
+                         **fields, "evidence_source": label})
+    return tuple(rows)
 
 
 def _expected_formal_sessions(calendar: PSETradingCalendar) -> tuple[date, ...]:
@@ -2323,6 +2529,66 @@ def _validate_frozen_formal_csvs(
                 _csv_number(item[field], f"{symbol}/{target} {field}")
 
 
+def _validate_data_provenance_csv(parsed: ParsedSubstantiveCsv) -> None:
+    symbols = tuple(company.symbol for company in COMPANIES)
+    if tuple(row["symbol"] for row in parsed.rows) != symbols:
+        raise ResearchResultExportError("data_provenance.csv company order conflicts")
+    for row in parsed.rows:
+        symbol = row["symbol"]
+        if not row["source_name"].strip() or not row["source_reference"].strip():
+            raise ResearchResultExportError(f"Missing source metadata for {symbol}")
+        _strict_iso_date(row["retrieval_date"], f"{symbol} retrieval date")
+        if len(row["raw_sha256"]) != 64 or any(c not in "0123456789abcdef" for c in row["raw_sha256"]):
+            raise ResearchResultExportError(f"Invalid frozen raw SHA-256 for {symbol}")
+        if (row["start_date"] != FORMAL_START or row["end_date"] != FORMAL_CUTOFF
+                or _csv_integer(row["row_count"], "raw row count") != FORMAL_ROWS_PER_COMPANY
+                or _csv_integer(row["correction_count"], "correction count") < 0
+                or row["session_completeness_status"] != "PASS"):
+            raise ResearchResultExportError(f"Frozen provenance scope conflicts for {symbol}")
+
+
+def _validate_model_diagnostics_csv(parsed: ParsedSubstantiveCsv) -> None:
+    expected = tuple((company.symbol, scope, name) for company in COMPANIES
+                     for scope, name in DIAGNOSTIC_TYPES)
+    actual = tuple((row["symbol"], row["diagnostic_scope"], row["diagnostic_name"])
+                   for row in parsed.rows)
+    if actual != expected or len(set(actual)) != 60:
+        raise ResearchResultExportError("model_diagnostics.csv diagnostic order conflicts")
+    for row in parsed.rows:
+        symbol, scope, name = row["symbol"], row["diagnostic_scope"], row["diagnostic_name"]
+        if (row["model"] != "arima"
+                or row["supplementary_package_id"] != SUPPLEMENTARY_PACKAGE_ID
+                or row["evidence_source"] != (
+                    "formal_arima_holdout_diagnostics" if scope == "holdout_forecast_errors"
+                    else "supplementary_arima_diagnostic_status")):
+            raise ResearchResultExportError(f"Diagnostic provenance conflicts for {symbol}/{scope}")
+        available = _csv_boolean(row["available"], "diagnostic availability")
+        if not available:
+            if not row["unavailable_reason"].strip() or any(row[field] for field in
+                ("observations", "lag", "model_df", "statistic", "p_value", "boolean_result")):
+                raise ResearchResultExportError(f"Unavailable diagnostic conflicts for {symbol}/{scope}")
+            continue
+        if row["unavailable_reason"]:
+            raise ResearchResultExportError(f"Available diagnostic has reason for {symbol}/{scope}")
+        if name in {"stability_flag", "invertibility_flag"}:
+            _csv_boolean(row["boolean_result"], f"{symbol} {name}")
+            if any(row[field] for field in ("observations", "lag", "model_df", "statistic", "p_value")):
+                raise ResearchResultExportError(f"Flag statistics conflict for {symbol}/{name}")
+        else:
+            if row["boolean_result"]:
+                raise ResearchResultExportError(f"Ljung-Box boolean result conflicts for {symbol}/{scope}")
+            if _csv_integer(row["observations"], "diagnostic observations") <= 0:
+                raise ResearchResultExportError("Diagnostic observations must be positive")
+            if _csv_integer(row["lag"], "diagnostic lag") <= 0:
+                raise ResearchResultExportError("Diagnostic lag must be positive")
+            if _csv_integer(row["model_df"], "diagnostic model_df") < 0:
+                raise ResearchResultExportError("Diagnostic model_df must be nonnegative")
+            _csv_number(row["statistic"], "Ljung-Box statistic")
+            p = _csv_number(row["p_value"], "Ljung-Box p-value")
+            if not 0 <= p <= 1:
+                raise ResearchResultExportError("Ljung-Box p-value outside [0, 1]")
+
+
 def _validate_dm_files(
     benchmark: ParsedSubstantiveCsv,
     within: ParsedSubstantiveCsv,
@@ -2780,6 +3046,8 @@ def validate_research_result_package(
     _validate_frozen_formal_csvs(
         files["holdout_predictions.csv"], files["formal_scope.csv"]
     )
+    _validate_data_provenance_csv(files["data_provenance.csv"])
+    _validate_model_diagnostics_csv(files["model_diagnostics.csv"])
 
     # The aggregate deliberately excludes results_manifest.csv to avoid
     # recursive self-reference. Each line is UTF-8 filename<TAB>sha256<LF>.
@@ -2946,10 +3214,17 @@ def publish_research_rows(
     data_quality_rows: Sequence[Mapping[str, object]],
     holdout_prediction_rows: Sequence[Mapping[str, object]],
     formal_scope_rows: Sequence[Mapping[str, object]],
+    data_provenance_rows: Sequence[Mapping[str, object]] | None = None,
+    model_diagnostic_rows: Sequence[Mapping[str, object]] | None = None,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     replace: Callable[[Path, Path], None] = os.replace,
 ) -> tuple[Path, ...]:
     """Publish all validated CSVs as one rollback-protected directory swap."""
+
+    if data_provenance_rows is None:
+        data_provenance_rows = build_data_provenance_rows(load_frozen_formal_scope())
+    if model_diagnostic_rows is None:
+        model_diagnostic_rows = build_model_diagnostic_rows(load_frozen_diagnostic_evidence())
 
     destination = Path(output_dir)
     parent = destination.parent
@@ -2995,6 +3270,12 @@ def publish_research_rows(
     payloads["formal_scope.csv"] = _csv_bytes(
         FORMAL_SCOPE_COLUMNS, formal_scope_rows
     )
+    payloads["data_provenance.csv"] = _csv_bytes(
+        DATA_PROVENANCE_COLUMNS, data_provenance_rows
+    )
+    payloads["model_diagnostics.csv"] = _csv_bytes(
+        MODEL_DIAGNOSTIC_COLUMNS, model_diagnostic_rows
+    )
     expected_counts = {
         "selected_configurations.csv": 15,
         "holdout_metrics.csv": 60,
@@ -3007,15 +3288,20 @@ def publish_research_rows(
     }
     expected_counts["holdout_predictions.csv"] = 15 * HOLDOUT_OBSERVATIONS
     expected_counts["formal_scope.csv"] = 15
+    expected_counts["data_provenance.csv"] = 15
+    expected_counts["model_diagnostics.csv"] = 60
     new_files = {
         name: _parse_substantive_csv(name, payloads[name])
-        for name in ("holdout_predictions.csv", "formal_scope.csv")
+        for name in ("holdout_predictions.csv", "formal_scope.csv",
+                     "data_provenance.csv", "model_diagnostics.csv")
     }
     _validate_company_rows(new_files)
     _validate_formal_identity(new_files)
     _validate_frozen_formal_csvs(
         new_files["holdout_predictions.csv"], new_files["formal_scope.csv"]
     )
+    _validate_data_provenance_csv(new_files["data_provenance.csv"])
+    _validate_model_diagnostics_csv(new_files["model_diagnostics.csv"])
     staging = Path(tempfile.mkdtemp(prefix=".research-result-staging-", dir=parent))
     backup: Path | None = None
     try:
@@ -3069,6 +3355,15 @@ def export_research_results(
     rows = build_research_rows(evidence)
     frozen_scope = load_frozen_formal_scope(formal_runs_root=formal_runs_root)
     holdout_prediction_rows, formal_scope_rows = build_frozen_formal_rows(frozen_scope)
+    data_provenance_rows = build_data_provenance_rows(
+        frozen_scope, formal_runs_root=formal_runs_root
+    )
+    model_diagnostic_rows = build_model_diagnostic_rows(
+        load_frozen_diagnostic_evidence(
+            formal_runs_root=formal_runs_root,
+            supplementary_runs_root=supplementary_runs_root,
+        )
+    )
     data_quality_rows = build_frozen_data_quality_rows(
         formal_runs_root=formal_runs_root
     )
@@ -3077,6 +3372,8 @@ def export_research_results(
         data_quality_rows=data_quality_rows,
         holdout_prediction_rows=holdout_prediction_rows,
         formal_scope_rows=formal_scope_rows,
+        data_provenance_rows=data_provenance_rows,
+        model_diagnostic_rows=model_diagnostic_rows,
         output_dir=output_dir,
     )
     LOGGER.info(
