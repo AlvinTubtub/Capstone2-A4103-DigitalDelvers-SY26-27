@@ -17,6 +17,8 @@ This index points team members, advisers, reviewers, and maintainers to the curr
 
 The [frozen research-result evidence index](../backend/research-result/README.md) explains the authoritative formal result tables under `backend/research-result/`. Those CSV files are deterministic, read-only submission evidence.
 
+The [research question-to-evidence map](research-question-evidence-map.md) and its [structured CSV](research-question-evidence-map.csv) map RQ1–RQ12 to current research and implementation evidence and identify pending stakeholder and system-evaluation evidence.
+
 ## Data provenance and corrections
 
 Data-source, recovery, verification, and correction records remain in [`backend/data/corrections/`](../backend/data/corrections/):
