@@ -76,6 +76,14 @@ Phase 6A.2 exposes existing finalized evidence, not a new experiment.
 
 Deterministic file hashes, row counts, provenance fields, and package-integrity metadata.
 
+## Corporate-Action and Material Price-Discontinuity Screening
+
+The supporting package at `corporate_action_screening/` screens the immutable frozen OHLCV files from `FORECASTPH_FORMAL_20260911_01` (cutoff `2026-09-11`), covering `2020-01-02` through `2026-09-11`: 15 companies, 1,635 observations each, and 24,525 observations total. Its threshold is an absolute close-to-close change or opening gap of at least 30%. The independently recomputed result is one statistical flag (APX, `2020-10-16`), six predetermined official-event dates, seven unique documented stock-dates, zero duplicate symbol-dates, and zero records removed or adjusted. No new statistical flag occurred from `2026-07-01` through `2026-09-11`.
+
+This is documentation and data-quality screening, not an OHLCV correction. A material-discontinuity `REVIEW` does not itself mean dataset failure, extraction error, stock split, corporate action, or record removal. The screening does not alter frozen raw OHLCV, finalized forecasts, or model results. The frozen formal CSVs do not contain issue names or traded value; the package explicitly marks source-name continuity and Value_PHP as unavailable rather than inferring them from configured display names or another dataset.
+
+The subpackage has its own `manifest.csv` because it includes Python, JSON, and log evidence in addition to CSVs. The manifest lists each required file and SHA-256 with the formal run/cutoff, without changing the root `results_manifest.csv` CSV-dataset semantics. The research-result validator verifies exact membership, hashes, script-copy identity, and screening totals.
+
 ## Safe validation and export
 
 Run the focused validation tests from `backend/` without changing this package:

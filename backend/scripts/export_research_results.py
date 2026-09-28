@@ -2285,12 +2285,20 @@ def _load_substantive_csvs(
         raise ResearchResultExportError(
             f"Research-result directory is missing: {directory}"
         )
-    allowed = set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv", "README.md"}
+    allowed = set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv", "README.md", "corporate_action_screening"}
     unexpected = {item.name for item in directory.iterdir()} - allowed
     if unexpected:
         raise ResearchResultExportError(
             f"Research-result directory contains unexpected files: {sorted(unexpected)}"
         )
+    supporting = directory / "corporate_action_screening"
+    if supporting.exists():
+        try:
+            from scripts.pse_corporate_action_screening_30pct import validate_screening_package
+
+            validate_screening_package(supporting)
+        except (OSError, ValueError, KeyError) as exc:
+            raise ResearchResultExportError("Invalid corporate-action screening subpackage") from exc
     staged = dict(staged_payloads or {})
     unexpected_staged = set(staged) - set(SUBSTANTIVE_FILE_ORDER)
     if unexpected_staged:
@@ -3233,7 +3241,7 @@ def publish_research_rows(
         if not destination.is_dir():
             raise ResearchResultExportError("Research-result output path is not a directory")
         unexpected = {item.name for item in destination.iterdir()} - (
-            set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv", "README.md"}
+            set(SUBSTANTIVE_FILE_ORDER) | {"results_manifest.csv", "README.md", "corporate_action_screening"}
         )
         if unexpected:
             raise ResearchResultExportError(
@@ -3308,6 +3316,12 @@ def publish_research_rows(
         readme_path = destination / "README.md"
         if readme_path.is_file():
             shutil.copyfile(readme_path, staging / "README.md")
+        supporting = destination / "corporate_action_screening"
+        if supporting.exists():
+            from scripts.pse_corporate_action_screening_30pct import validate_screening_package
+
+            validate_screening_package(supporting)
+            shutil.copytree(supporting, staging / supporting.name)
         for name, payload in payloads.items():
             target = staging / name
             target.write_bytes(payload)

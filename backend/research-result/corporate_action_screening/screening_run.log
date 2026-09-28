@@ -1,0 +1,15 @@
+formal_run=FORECASTPH_FORMAL_20260911_01
+formal_cutoff=2026-09-11
+symbols=ALI,APX,BPI,GLO,ICT,JFC,MBT,MEG,MER,NIKL,PGOLD,SCC,SECB,SHLPH,SMPH
+period=2020-01-02..2026-09-11
+threshold_pct=30
+input=frozen formal raw OHLCV
+rows_screened=24525
+duplicates=0
+statistical_flags=1
+known_events=6
+documented_stock_dates=7
+pending_reviews=0
+records_removed=0
+records_adjusted=0
+status=PASS
