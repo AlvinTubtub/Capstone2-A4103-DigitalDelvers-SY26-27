@@ -11,6 +11,7 @@ This index points team members, advisers, reviewers, and maintainers to the curr
 ## Current technical documentation
 
 - [Frontend forecast-data contract](frontend-forecast-contract.md)
+- [Production automation](production-automation.md) — Cron-job.org primary/fallback EOD scheduling, GitHub dispatch, persisted-model inference, and separate quarterly production training.
 - [PSE Pulse branding migration](branding-migration.md)
 
 ## Final research evidence

@@ -315,9 +315,10 @@ The exporter must:
 
 The exporter must not read existing frontend numeric values as model input. The website must never receive a partially written operational dataset.
 
-The daily publisher is triggered by the external `update-pse-data`
-`repository_dispatch` event or manual `workflow_dispatch`; it has no internal GitHub
-Actions cron. After a new EOD actual is validated, it resolves prior prospective
+The daily publisher is scheduled externally by Cron-job.org through the `update-pse-data`
+`repository_dispatch` event, or invoked manually through `workflow_dispatch`; the workflow has no internal GitHub Actions cron. Cron-job.org provides a Tuesday–Friday 4:00 PM PHT primary attempt and a Monday–Friday 5:30 PM fallback for delayed official EOD publication. The Tuesday–Friday overlap is intentional. After a new EOD actual changes validated raw data, the workflow resolves prior prospective
 outcomes, runs persisted-model inference, appends new forecasts including Naive,
 reports drift, and then validates and publishes this JSON tree. It does not train,
 tune, refit, or execute a formal statistical experiment.
+
+See [production automation](production-automation.md) for scheduling and no-new-data behavior; this contract defines the frontend data, not the external scheduler configuration.

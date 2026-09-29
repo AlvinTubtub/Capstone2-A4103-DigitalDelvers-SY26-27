@@ -232,6 +232,14 @@ GitHub Actions receives the external `update-pse-data` `repository_dispatch` eve
 or a manual `workflow_dispatch`. The EOD workflow contains no internal schedule and
 performs no training, tuning, refitting, or formal statistical experiment.
 
+## External EOD scheduling
+
+Cron-job.org is the external scheduling layer for `.github/workflows/update_pipeline.yml`. It sends the authenticated GitHub `repository_dispatch` event `update-pse-data`; operators can also use `workflow_dispatch` manually. The user-confirmed schedule is Tuesday–Friday at 4:00 PM Philippine Time (primary) and Monday–Friday at 5:30 PM (fallback). Tuesday–Friday therefore intentionally have two possible attempts; Monday has only the 5:30 PM attempt. The later attempt is a recovery opportunity when official PSE EOD quotes are published after 4:00 PM, not a second forecasting pipeline.
+
+The workflow restores and validates persisted production artifacts, runs official EOD ingestion and raw validation, then—only if canonical raw CSVs changed—resolves prior prospective outcomes, runs persisted-model inference, issues the next forecasts, reports drift, and validates frontend JSON before committing changed operational data. If ingestion finds no new published/validated observation, the raw-change guard skips those downstream stages and the final commit step is a no-op when nothing changed. The workflow does not train or refit models. Quarterly fresh training is a separate GitHub Actions schedule in `.github/workflows/train_models.yml`.
+
+See [PSE Pulse Production Automation](../docs/production-automation.md) for the full execution, fallback, and failure semantics. The Cron-job.org configuration itself is external to this repository.
+
 ## Tests
 
 Install dependencies and run the suite from `backend/`:

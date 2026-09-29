@@ -110,11 +110,13 @@ The daily workflow does **not** tune or refit models. It fails closed if a compl
 Two workflows implement production automation:
 
 - **PSE Fresh Model Training** (`.github/workflows/train_models.yml`) runs quarterly and supports manual `workflow_dispatch`.
-- **PSE EOD Update and Persisted Model Forecast** (`.github/workflows/update_pipeline.yml`) is started by the external `update-pse-data` `repository_dispatch` event or manual `workflow_dispatch`; it has no internal cron and performs ingestion and persisted-model inference without training.
+- **PSE EOD Update and Persisted Model Forecast** (`.github/workflows/update_pipeline.yml`) is started by Cron-job.org through the `update-pse-data` `repository_dispatch` event or manually through `workflow_dispatch`. Cron-job.org schedules a primary attempt Tuesday–Friday at 4:00 PM Philippine Time and a fallback Monday–Friday at 5:30 PM. The Tuesday–Friday overlap is intentional: official PSE EOD quotes may become available after 4:00 PM. Monday has only the 5:30 PM attempt. The workflow has no internal GitHub Actions cron and performs ingestion and persisted-model inference without training.
 
 Quarterly fresh training is scheduled at 8:00 AM Philippine Time on February 28, May 28, August 28, and November 28.
 
 GitHub Actions stores the complete production-model package as an artifact. Its manifest identifies and validates every expected model and evaluation file before daily inference begins.
+
+See [production automation](docs/production-automation.md) for the external EOD schedule, no-new-data behavior, and the separate quarterly training lifecycle.
 
 ## Repository layout
 
