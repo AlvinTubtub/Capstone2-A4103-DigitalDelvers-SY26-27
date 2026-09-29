@@ -1,0 +1,26 @@
+......F..                                                                [100%]
+=================================== FAILURES ===================================
+________________ test_deterministic_evidence_and_no_local_paths ________________
+
+    def test_deterministic_evidence_and_no_local_paths() -> None:
+>       first = screening._build_evidence(screening.FORMAL_ROOT)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_corporate_action_screening.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+formal_root = PosixPath('/mnt/data/ch4_test_evidence/repo/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/formal-runs')
+
+    def _build_evidence(formal_root: Path) -> dict[str, bytes]:
+        archive = FormalRunArchive(FORMAL_RUN_ID, root=formal_root)
+        if not archive.verify_integrity():
+>           raise ValueError("Formal archive integrity check failed")
+E           ValueError: Formal archive integrity check failed
+
+scripts/pse_corporate_action_screening_30pct.py:819: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_corporate_action_screening.py::test_deterministic_evidence_and_no_local_paths - ValueError: Formal archive integrity check failed
+1 failed, 8 passed in 1.41s
+real 4.02
+user 4.36
+sys 0.49
