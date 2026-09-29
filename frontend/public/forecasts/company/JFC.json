@@ -2,8 +2,8 @@
   "symbol": "JFC",
   "name": "Jollibee Foods Corporation",
   "sector": "Industrial",
-  "previousClose": 142.5,
-  "predictedClose": 142.5,
+  "previousClose": 140.1,
+  "predictedClose": 140.1,
   "pesoChange": 0.0,
   "pctChange": 0.0,
   "direction": "bullish",
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 142.47720174890694,
-    "arima": 142.5,
-    "lstm": 142.39057313941723
+    "lag": 140.07720174890693,
+    "arima": 140.1,
+    "lstm": 139.96185102239244
   },
   "ohlcv": [
     {
@@ -13207,6 +13207,14 @@
       "low": 142.0,
       "close": 142.5,
       "volume": 150810.0
+    },
+    {
+      "date": "2026-09-29",
+      "open": 142.5,
+      "high": 142.6,
+      "low": 140.1,
+      "close": 140.1,
+      "volume": 257850.0
     }
   ],
   "backtestDates": [
@@ -13594,7 +13602,8 @@
     "2026-09-23",
     "2026-09-24",
     "2026-09-25",
-    "2026-09-28"
+    "2026-09-28",
+    "2026-09-29"
   ],
   "productionBacktestActual": [
     147.9,
@@ -13607,7 +13616,8 @@
     143.9,
     140.5,
     145.0,
-    142.5
+    142.5,
+    140.1
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13621,7 +13631,8 @@
       143.97720174890694,
       143.87720174890694,
       140.47720174890694,
-      144.97720174890694
+      144.97720174890694,
+      142.47720174890694
     ],
     "ARIMA": [
       147.5,
@@ -13634,7 +13645,8 @@
       144.0,
       143.9,
       140.5,
-      145.0
+      145.0,
+      142.5
     ],
     "LSTM": [
       147.3562513744611,
@@ -13647,7 +13659,8 @@
       143.87956643055966,
       143.77992058031526,
       140.36265489238338,
-      144.90152131628565
+      144.90152131628565,
+      142.39057313941723
     ],
     "Naive baseline": [
       147.5,
@@ -13660,7 +13673,8 @@
       144.0,
       143.9,
       140.5,
-      145.0
+      145.0,
+      142.5
     ]
   },
   "productionBacktestProvenance": [
@@ -14378,11 +14392,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "JFC",
+      "originDate": "2026-09-28",
+      "targetDate": "2026-09-29",
+      "actualClose": 140.1,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-527c056dfe2d0e0059e8d7e1c54f09784f64c38e33ecb12d153bf5366f1c471a",
+          "method": "lag_reg",
+          "prediction": 142.47720174890694,
+          "error": 2.3772017489069412,
+          "modelVersion": "backend-from-scratch-v1:dcaaaa2007c782321eec7431af0092befe47d9d8fc21081c9ef2e79dd64cfe76",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.762691+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-de7d8414f4aac8968c0d1ae290210e59680da3ffbad76dd499c82141cdad52ca",
+          "method": "arima",
+          "prediction": 142.5,
+          "error": 2.4000000000000057,
+          "modelVersion": "backend-from-scratch-v1:2d8b64c392ba37c74286fead7bbf002110aa3b6fb6756ce2712d177b2e3273a5",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.762691+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-7913ae6efbbcfe68d83287117d9eca34f73479a102b2266ee6b0e68fbe2bfa59",
+          "method": "lstm",
+          "prediction": 142.39057313941723,
+          "error": 2.2905731394172335,
+          "modelVersion": "backend-from-scratch-v1:188d731f791b596fffecc250dc318d4eb16623eaba188c6cdd5b01cef99e4ceb",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.762691+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-c252f810dce5f54563204b2882d917b560257f0beaabcdac4b9571bd54dbd1a3",
+          "method": "naive",
+          "prediction": 142.5,
+          "error": 2.4000000000000057,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.762691+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-09-29",
-  "dataAsOf": "2026-09-28",
-  "inferenceAt": "2026-09-28T17:32:42.762691+08:00",
+  "forecastDate": "2026-09-30",
+  "dataAsOf": "2026-09-29",
+  "inferenceAt": "2026-09-29T16:02:54.328107+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

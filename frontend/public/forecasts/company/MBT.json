@@ -3,10 +3,10 @@
   "name": "Metropolitan Bank & Trust Company",
   "sector": "Financials",
   "previousClose": 62.0,
-  "predictedClose": 61.926302704906654,
-  "pesoChange": -0.07369729509334633,
-  "pctChange": -0.11886660498926828,
-  "direction": "bearish",
+  "predictedClose": 62.0,
+  "pesoChange": 0.0,
+  "pctChange": 0.0,
+  "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
     "lag_reg": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 61.94737830315866,
-    "arima": 61.926302704906654,
-    "lstm": 61.956487961305335
+    "lag": 61.919028904652556,
+    "arima": 62.0,
+    "lstm": 61.98345796071016
   },
   "ohlcv": [
     {
@@ -13207,6 +13207,14 @@
       "low": 61.55,
       "close": 62.0,
       "volume": 1570610.0
+    },
+    {
+      "date": "2026-09-29",
+      "open": 62.0,
+      "high": 62.05,
+      "low": 61.8,
+      "close": 62.0,
+      "volume": 1375520.0
     }
   ],
   "backtestDates": [
@@ -13594,7 +13602,8 @@
     "2026-09-23",
     "2026-09-24",
     "2026-09-25",
-    "2026-09-28"
+    "2026-09-28",
+    "2026-09-29"
   ],
   "productionBacktestActual": [
     63.3,
@@ -13606,6 +13615,7 @@
     62.1,
     61.0,
     61.0,
+    62.0,
     62.0,
     62.0
   ],
@@ -13621,7 +13631,8 @@
       62.11680540154094,
       61.12962443641214,
       61.066947194817025,
-      61.902276987353495
+      61.902276987353495,
+      61.94737830315866
     ],
     "ARIMA": [
       63.24233135573277,
@@ -13634,7 +13645,8 @@
       61.957476865073815,
       61.10646149762531,
       61.08106702460268,
-      61.869718049843655
+      61.869718049843655,
+      61.926302704906654
     ],
     "LSTM": [
       63.31950615953615,
@@ -13647,7 +13659,8 @@
       62.03799585044816,
       61.1178574195698,
       61.06637151296128,
-      61.898869853885856
+      61.898869853885856,
+      61.956487961305335
     ],
     "Naive baseline": [
       63.05,
@@ -13660,6 +13673,7 @@
       62.1,
       61.0,
       61.0,
+      62.0,
       62.0
     ]
   },
@@ -14378,11 +14392,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "MBT",
+      "originDate": "2026-09-28",
+      "targetDate": "2026-09-29",
+      "actualClose": 62.0,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-39c916dc76da83f8cad343a3027408d64b6d5420f17032dab58c007715d75237",
+          "method": "lag_reg",
+          "prediction": 61.94737830315866,
+          "error": -0.052621696841342214,
+          "modelVersion": "backend-from-scratch-v1:290b927646fd092b7b33d46a603cef943508db119d2e5bb83b57b6b566a1ad56",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.853197+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-6ed064b74820ae893155e2551ac77ca6283c4088ff17ab72a4ace6965a33f02b",
+          "method": "arima",
+          "prediction": 61.926302704906654,
+          "error": -0.07369729509334633,
+          "modelVersion": "backend-from-scratch-v1:ed90c348d417c83c19c86abffe1b6e41723f17419dfcee0407c3e346a3110a45",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.853197+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-7c43823e14c2846b6ffb6ac1ba55ebe0be1927b3fd1ffbc73e97c3941029688e",
+          "method": "lstm",
+          "prediction": 61.956487961305335,
+          "error": -0.04351203869466502,
+          "modelVersion": "backend-from-scratch-v1:1773297d27ec31cc5ed1d40e6a7586e51eb3d80477e141d39492f5196490ee07",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.853197+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-e8306a7d7ce9973241a09633a27fe83a7dae8c36a9c8ca98e276e01f7bdf4d71",
+          "method": "naive",
+          "prediction": 62.0,
+          "error": 0.0,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-09-28T17:32:42.853197+08:00",
+          "observedAt": "2026-09-29T16:02:50.954532+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-09-29",
-  "dataAsOf": "2026-09-28",
-  "inferenceAt": "2026-09-28T17:32:42.853197+08:00",
+  "forecastDate": "2026-09-30",
+  "dataAsOf": "2026-09-29",
+  "inferenceAt": "2026-09-29T16:02:54.426401+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
