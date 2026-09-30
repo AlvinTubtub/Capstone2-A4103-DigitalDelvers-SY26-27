@@ -1,0 +1,11 @@
+measure,positive_count,total_participants,positive_percent,threshold_result
+Overall use intention,7,8,87.5,PASS
+Would recommend to another beginner,7,8,87.5,PASS
+Best Principal Model vs Naive understanding,6,8,75.0,BELOW THRESHOLD
+Next-Day Price Forecast helpfulness,7,8,87.5,PASS
+Ask AI helpfulness,7,8,87.5,PASS
+Visual comfort / readability,7,8,87.5,PASS
+Source / freshness visibility,7,8,87.5,PASS
+Controls work as expected,7,8,87.5,PASS
+Perceived loading speed,6,8,75.0,BELOW THRESHOLD
+Responsive readability,6,8,75.0,BELOW THRESHOLD

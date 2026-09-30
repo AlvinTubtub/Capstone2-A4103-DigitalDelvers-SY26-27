@@ -1,0 +1,17 @@
+requirement_id,area,uat_evidence,assessment,interpretation
+FR-02,Historical OHLCV readability,Historical understanding: 7/8 positive; Historical Overview helpfulness: 6/8,UAT-supported,Supports usability of historical information; correctness remains supported by technical/output-integrity tests.
+FR-03,Next-session forecast presentation,Next-Day Forecasts: 7/8 Very/Extremely Helpful,UAT-supported,Strong stakeholder support for the main forecast output.
+FR-04,Actual-versus-predicted comparison,Chart clarity: 7/8 positive,UAT-supported,Meets the 7/8 perception threshold for clarity.
+FR-05,Company/sector browsing and peer context,Company selection: 7/8 positive; cross-company/model clarity: 7/8,Partial UAT support,Sector-peer context was not isolated as its own survey item.
+FR-06,Plain-language educational guidance,Ask AI: 7/8 positive; Learn Stocks: 6/8 positive,Mixed but positive,"Open-ended feedback requests tooltips, simpler jargon, and a first-time guide."
+FR-07,Source/freshness visibility,7/8 Agree/Strongly Agree,UAT-supported,Meets the 7/8 stakeholder threshold.
+FR-08,Uncertainty and responsible use,8/8 understood educational/non-advisory purpose; disclaimer helpfulness 5/8 strict positive,Comprehension supported,Understanding is strong; perceived helpfulness of disclaimer presentation is more mixed.
+FR-09,Navigation/search/filter controls,Company selection: 7/8 positive; controls: 7/8 positive,UAT-supported,Supports usability of navigation and controls.
+FR-10,Comparative model-performance evidence,Performance clarity: 7/8; identify best method: 7/8; principal-vs-Naive: 6/8,Mostly supported,Naive benchmark distinction is the clearest remaining interpretation issue.
+NFR-01,"Clear, summary-first navigation","Ease ratings are favorable, but task completion without assistance was not directly recorded in the form",Indirect evidence only,Do not claim the formal task-completion criterion from this questionnaire alone.
+NFR-02,"Readable charts, labels, language",Visual comfort/readability: 7/8 positive,Meets UAT rating threshold,Supports the 80% participant-readability requirement.
+NFR-03,Performance,Perceived speed: 6/8 positive,Supporting perception only,Formal criterion is 90% of measured loads within 5 seconds; use technical performance results separately.
+NFR-04,Responsive multi-device support,Perceived responsive readability: 6/8 positive,Supporting perception only,Formal criterion requires viewport/browser testing; mobile feedback deserves attention.
+NFR-05,Anonymous access / minimal data,Not directly evaluated by UAT question,Use technical/privacy evidence,"Should be concluded from implementation/privacy testing, not this form."
+NFR-06,Theme-aware visual comfort,7/8 Agree/Strongly Agree,Meets UAT rating threshold,One open-ended response requested light-mode improvement.
+Overall UAT,Understandable and useful educational platform,Would use: 7/8; would recommend: 7/8,PASS,Meets the predefined stakeholder acceptance threshold.

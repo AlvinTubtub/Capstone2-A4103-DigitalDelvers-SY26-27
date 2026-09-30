@@ -1,0 +1,7 @@
+uat_item,n,mean_score,median_score,positive_count,positive_percent,neutral_count,negative_count,threshold_status
+Company selection / navigation,8,4.5,5.0,7,87.5,0,1,Meets 7/8 threshold
+Historical price & volume understanding,8,4.625,5.0,7,87.5,1,0,Meets 7/8 threshold
+Actual vs predicted chart clarity,8,4.625,5.0,7,87.5,1,0,Meets 7/8 threshold
+Cross-company / model performance clarity,8,4.5,5.0,7,87.5,1,0,Meets 7/8 threshold
+Identify best forecasting method,8,4.25,4.5,7,87.5,0,1,Meets 7/8 threshold
+Best principal model vs Naive,8,4.25,4.5,6,75.0,2,0,Below 7/8 threshold
