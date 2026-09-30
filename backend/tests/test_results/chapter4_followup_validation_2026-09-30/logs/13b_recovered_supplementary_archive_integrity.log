@@ -1,0 +1,50 @@
+PSE Pulse validation command log
+Command: test ! -e /tmp/pse-pulse-supplementary-recovery-20260930; mkdir -p /tmp/pse-pulse-supplementary-recovery-20260930/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03; rsync -a --exclude='.DS_Store' /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/ /tmp/pse-pulse-supplementary-recovery-20260930/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/; python tests/test_results/chapter4_followup_validation_2026-09-30/verify_supplementary_archives.py /tmp/pse-pulse-supplementary-recovery-20260930/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03 /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/formal-runs
+Working directory: backend
+Start time: 2026-09-30 18:20:20 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+Candidate: /private/tmp/pse-pulse-supplementary-recovery-20260930/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03
+Exists: True
+Integrity manifest present: True
+Integrity result:
+{
+  "checks": {
+    "aggregate_sha256": true,
+    "exact_file_set": true,
+    "file_hashes": true,
+    "file_sizes": true,
+    "manifest_paths_unique_ordered": true,
+    "manifest_schema": true,
+    "run_schema": true,
+    "source_identity": true,
+    "state_finalized": true
+  },
+  "errors": [],
+  "valid": true
+}
+State: FINALIZED
+Run schema: forecastph.supplementary-evidence-package v1
+Package ID: FORECASTPH_SUPPLEMENTARY_20260921_03
+Source formal run ID: FORECASTPH_FORMAL_20260911_01
+Manifest aggregate SHA-256: 1b21738672024b5e73915d50ae424e4345841b353400f0f56e680be7844bd29d
+Source formal aggregate SHA-256: c6991b3b9fa79f0eccb1761f8c40f87a79996646e2ec0eafe5a769c538be05f9
+Semantic validation: PASS (11 evidence payloads)
+Formal source linkage:
+{
+  "checks": {
+    "formal_aggregate": true,
+    "formal_integrity": true,
+    "formal_manifest_hash": true,
+    "formal_state_finalized": true
+  },
+  "errors": [],
+  "valid": true
+}
+Expected historical identity: True
+Overall verified: True
+----- command result -----
+End time: 2026-09-30 18:20:22 +0800 PST
+Exit code: 0
+Elapsed seconds: 2
+Result: PASS

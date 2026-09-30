@@ -1,0 +1,18 @@
+PSE Pulse validation command log
+Command: python tests/test_results/chapter4_followup_validation_2026-09-30/verify_formal_archives.py /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01
+Working directory: backend
+Start time: 2026-09-30 17:29:04 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+---
+Candidate: /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01
+Exists: True
+State: FINALIZED
+Integrity verified: True
+---
+Authentic finalized candidates: 1
+----- command result -----
+End time: 2026-09-30 17:29:06 +0800 PST
+Exit code: 0
+Elapsed seconds: 2
+Result: PASS

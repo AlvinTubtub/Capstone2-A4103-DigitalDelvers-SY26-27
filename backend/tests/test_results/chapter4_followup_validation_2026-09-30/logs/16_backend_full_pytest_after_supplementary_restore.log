@@ -1,0 +1,29 @@
+PSE Pulse validation command log
+Command: python -m pytest -q
+Working directory: backend
+Start time: 2026-09-30 18:23:24 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 76%]
+........................................................................ [ 91%]
+.........................................                                [100%]
+=============================== warnings summary ===============================
+tests/test_production_inference.py::test_fresh_refit_persists_and_predicts_all_three_models
+  /private/tmp/pse-pulse-ch4-validation/lib/python3.12/site-packages/statsmodels/tsa/stattools/_stattools.py:149: SingularMatrixWarning: The design matrix is rank-deficient. The model parameters are not uniquely determined.
+    results[lag] = mod_instance.fit()
+
+tests/test_production_inference.py::test_fresh_refit_persists_and_predicts_all_three_models
+  /private/tmp/pse-pulse-ch4-validation/lib/python3.12/site-packages/statsmodels/tsa/stattools/_stattools.py:432: SingularMatrixWarning: The design matrix is rank-deficient. The model parameters are not uniquely determined.
+    resols = OLS(xdshort, add_trend(xdall[:, : usedlag + 1], regression)).fit()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+473 passed, 2 warnings in 55.96s
+----- command result -----
+End time: 2026-09-30 18:24:20 +0800 PST
+Exit code: 0
+Elapsed seconds: 56
+Result: PASS

@@ -1,0 +1,15 @@
+PSE Pulse validation command log
+Command: python tests/test_results/chapter4_followup_validation_2026-09-30/verify_formal_archives.py /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/post-formal-review/FORECASTPH_FORMAL_20260911_01 /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary/FORECASTPH_FORMAL_20260911_01 /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01
+Working directory: backend
+Start time: 2026-09-30 17:27:46 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+Traceback (most recent call last):
+  File "/Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/tests/test_results/chapter4_followup_validation_2026-09-30/verify_formal_archives.py", line 6, in <module>
+    from src.formal.archive import FormalRunArchive
+ModuleNotFoundError: No module named 'src'
+----- command result -----
+End time: 2026-09-30 17:27:46 +0800 PST
+Exit code: 1
+Elapsed seconds: 0
+Result: FAIL

@@ -1,0 +1,33 @@
+PSE Pulse validation command log
+Command: rg -n 'FORMAL_ROOT|FORMAL_RUN_ID|_build_evidence|test_deterministic_evidence_and_no_local_paths|verify_integrity' tests/test_corporate_action_screening.py scripts/pse_corporate_action_screening_30pct.py; if [ -d artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01 ]; then echo 'Expected archive exists: YES'; else echo 'Expected archive exists: NO'; fi
+Working directory: backend
+Start time: 2026-09-30 17:25:54 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+tests/test_corporate_action_screening.py:21:    assert metadata["formal_run_id"] == screening.FORMAL_RUN_ID
+tests/test_corporate_action_screening.py:106:def test_deterministic_evidence_and_no_local_paths() -> None:
+tests/test_corporate_action_screening.py:107:    first = screening._build_evidence(screening.FORMAL_ROOT)
+tests/test_corporate_action_screening.py:108:    second = screening._build_evidence(screening.FORMAL_ROOT)
+scripts/pse_corporate_action_screening_30pct.py:46:FORMAL_RUN_ID = "FORECASTPH_FORMAL_20260911_01"
+scripts/pse_corporate_action_screening_30pct.py:51:FORMAL_ROOT = BACKEND_ROOT / "artifacts/evaluations/formal-runs"
+scripts/pse_corporate_action_screening_30pct.py:286:    parser.add_argument("--formal-root", type=Path, default=FORMAL_ROOT)
+scripts/pse_corporate_action_screening_30pct.py:369:    archive = FormalRunArchive(FORMAL_RUN_ID, root=input_dir.parent.parent)
+scripts/pse_corporate_action_screening_30pct.py:370:    if input_dir != archive.path / "frozen_raw" or not archive.verify_integrity():
+scripts/pse_corporate_action_screening_30pct.py:816:def _build_evidence(formal_root: Path) -> dict[str, bytes]:
+scripts/pse_corporate_action_screening_30pct.py:817:    archive = FormalRunArchive(FORMAL_RUN_ID, root=formal_root)
+scripts/pse_corporate_action_screening_30pct.py:818:    if not archive.verify_integrity():
+scripts/pse_corporate_action_screening_30pct.py:821:    if run["run_id"] != FORMAL_RUN_ID or run["cutoff_date"] != FORMAL_CUTOFF:
+scripts/pse_corporate_action_screening_30pct.py:830:    logging.info("Validated formal archive %s: %d symbols, %d rows", FORMAL_RUN_ID, len(symbols), len(prepared))
+scripts/pse_corporate_action_screening_30pct.py:847:        "formal_run_id": FORMAL_RUN_ID,
+scripts/pse_corporate_action_screening_30pct.py:870:            "archive": f"backend/artifacts/evaluations/formal-runs/{FORMAL_RUN_ID}",
+scripts/pse_corporate_action_screening_30pct.py:880:        f"formal_run={FORMAL_RUN_ID}\nformal_cutoff={FORMAL_CUTOFF}\n"
+scripts/pse_corporate_action_screening_30pct.py:902:        writer.writerow((name, hashlib.sha256(payloads[name]).hexdigest(), FORMAL_RUN_ID, FORMAL_CUTOFF))
+scripts/pse_corporate_action_screening_30pct.py:915:    if metadata["formal_run_id"] != FORMAL_RUN_ID or metadata["formal_cutoff"] != FORMAL_CUTOFF or metadata["start_date"] != START_DATE:
+scripts/pse_corporate_action_screening_30pct.py:924:        if row["formal_run_id"] != FORMAL_RUN_ID or row["formal_cutoff"] != FORMAL_CUTOFF or row["sha256"] != hashlib.sha256((directory / row["filename"]).read_bytes()).hexdigest():
+scripts/pse_corporate_action_screening_30pct.py:947:        payloads = _build_evidence(args.formal_root)
+Expected archive exists: NO
+----- command result -----
+End time: 2026-09-30 17:25:54 +0800 PST
+Exit code: 0
+Elapsed seconds: 0
+Result: PASS

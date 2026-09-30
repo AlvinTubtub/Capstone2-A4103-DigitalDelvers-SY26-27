@@ -1,0 +1,140 @@
+PSE Pulse validation command log
+Command: for f in backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/09_full_suite_failure_analysis.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/09a_continuation_state.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/10_supplementary_dependency_trace.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/11_local_supplementary_archive_check.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/11_local_supplementary_archive_check_retry.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13_source_supplementary_archive_integrity.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13a_supplementary_archive_search.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13b_recovered_supplementary_archive_integrity.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13c_supplementary_archive_restore_copy.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/14_restored_supplementary_archive_integrity.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/15_research_result_export_after_restore.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/16_backend_full_pytest_after_supplementary_restore.log backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/17_research_integrity_postcheck.log; do rg -q '^Command: ' "" && rg -q '^Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0$' "" && rg -q '^Exit code: ' "" && rg -q '^Elapsed seconds: ' "" && rg -q '^Result: (PASS|FAIL)$' "" || printf 'INVALID LOG: %s\n' ""; done; file backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/15_research_result_export_after_restore.png backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/16_backend_full_pytest_after_supplementary_restore.png; sed -n '1,240p' backend/tests/test_results/chapter4_followup_validation_2026-09-30/FINAL_SUMMARY.txt; find backend/tests/test_results/chapter4_followup_validation_2026-09-30 -maxdepth 2 -type f | sort; git status --short
+Working directory: .
+Start time: 2026-09-30 18:28:52 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+rg: : IO error for operation on : No such file or directory (os error 2)
+INVALID LOG: 
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/15_research_result_export_after_restore.png:            PNG image data, 2940 x 1912, 8-bit/color RGBA, non-interlaced
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/16_backend_full_pytest_after_supplementary_restore.png: PNG image data, 2940 x 1912, 8-bit/color RGBA, non-interlaced
+PSE PULSE CHAPTER IV FOLLOW-UP VALIDATION
+
+Repository commit tested:
+57fed9821850dc4aeff946433d32793b963b3ed0
+
+FRONTEND
+npm ci: PASS — 5 seconds
+TypeScript: PASS — 2 seconds
+Next.js build: PASS — 15 seconds
+
+CORPORATE-ACTION SCREENING
+Initial: 8 passed, 1 failed
+Root cause: gitignored formal archive absent
+Formal archive verified: YES
+Final: 9 passed in 2.15 seconds
+
+FORMAL ARCHIVE
+Found: YES
+Integrity verified: YES
+
+SUPPLEMENTARY / RESEARCH RESULT EXPORT
+Initial full-suite failures: 49
+Archive:
+FORECASTPH_SUPPLEMENTARY_20260921_03
+Authentic archive found: YES
+Integrity verified: YES after excluding only unmanifested .DS_Store from the recovery copy
+Targeted research-result-export test:
+92 passed in 28.34 seconds
+
+FULL BACKEND
+Initial:
+424 passed, 49 failed, 2 warnings
+
+Final:
+473 passed, 2 warnings in 55.96 seconds
+
+CODE CHANGES
+Made: NO
+Commit: N/A
+
+FORMAL RESEARCH RESULTS MODIFIED:
+NO
+
+SUPPLEMENTARY RESEARCH RESULTS MODIFIED:
+NO
+
+Evidence directory:
+/Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/tests/test_results/chapter4_followup_validation_2026-09-30
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/.DS_Store
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/CORRECTIVE_ACTION.md
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/FINAL_SUMMARY.txt
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/backend_environment.txt
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/environment_before.txt
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/final_repository_state.txt
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/frontend_packages.txt
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/00_repository_state_after_pull.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/01_frontend_npm_ci.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/02_frontend_typescript.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/03_frontend_build.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/03a_backend_venv_create.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/03b_backend_pip_upgrade.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/03c_backend_requirements_install.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/04_corporate_action_before_fix.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/04a_formal_archive_dependency_investigation.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/04b_formal_archive_search.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/05_source_formal_archive_integrity.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/05_source_formal_archive_integrity_retry.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/05a_archive_restore_copy.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/06_restored_formal_archive_integrity.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/07_corporate_action_after_archive_restore.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08a_backend_full_failure_diagnosis.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/09_full_suite_failure_analysis.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/09a_continuation_state.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/10_research_integrity_and_repository_status.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/10_supplementary_dependency_trace.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/11_local_supplementary_archive_check.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/11_local_supplementary_archive_check_retry.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13_source_supplementary_archive_integrity.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13a_supplementary_archive_search.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13b_recovered_supplementary_archive_integrity.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/13c_supplementary_archive_restore_copy.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/14_restored_supplementary_archive_integrity.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/15_research_result_export_after_restore.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/16_backend_full_pytest_after_supplementary_restore.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/17_research_integrity_postcheck.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/18_final_continuation_evidence_verification.log
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/run_logged.sh
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/.DS_Store
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/01_frontend_npm_ci.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/02_frontend_typescript.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/03_frontend_build_1.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/03_frontend_build_2.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/04_corporate_action_before_fix.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/07_corporate_action_after_archive_restore.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/08_backend_full_pytest.txt
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/15_research_result_export_after_restore.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/screenshots/16_backend_full_pytest_after_supplementary_restore.png
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/verify_formal_archives.py
+backend/tests/test_results/chapter4_followup_validation_2026-09-30/verify_supplementary_archives.py
+?? backend/tests/test_results/chapter4_followup_validation_2026-09-30/
+----- command result -----
+End time: 2026-09-30 18:28:52 +0800 PST
+Exit code: 0
+Elapsed seconds: 0
+Result: PASS

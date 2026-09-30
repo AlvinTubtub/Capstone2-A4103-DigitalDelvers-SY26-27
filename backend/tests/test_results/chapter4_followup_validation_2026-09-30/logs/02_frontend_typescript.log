@@ -1,0 +1,11 @@
+PSE Pulse validation command log
+Command: npx tsc --noEmit
+Working directory: frontend
+Start time: 2026-09-30 17:17:13 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+----- command result -----
+End time: 2026-09-30 17:17:15 +0800 PST
+Exit code: 0
+Elapsed seconds: 2
+Result: PASS

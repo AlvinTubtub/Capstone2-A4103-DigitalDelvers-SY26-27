@@ -1,0 +1,20 @@
+node --version
+v24.16.0
+
+npm --version
+11.13.0
+
+npm list --depth=0
+forecastph-web@1.0.0 /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/frontend
+├── @google/genai@2.17.1
+├── @types/node@20.14.9
+├── @types/react-dom@18.3.0
+├── @types/react@18.3.3
+├── autoprefixer@10.4.19
+├── next@14.2.5
+├── postcss@8.4.39
+├── react-dom@18.3.1
+├── react@18.3.1
+├── recharts@2.12.7
+├── tailwindcss@3.4.4
+└── typescript@5.5.3

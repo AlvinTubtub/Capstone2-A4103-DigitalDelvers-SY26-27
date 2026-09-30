@@ -1,0 +1,63 @@
+PSE Pulse validation command log
+Command: candidate=/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03; printf '%s\n' 'Known parent directory:'; ls -la /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs; printf '%s\n' 'Candidate contents:'; find /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03 -maxdepth 4 -type f | sort; python tests/test_results/chapter4_followup_validation_2026-09-30/verify_supplementary_archives.py /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03 /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/formal-runs
+Working directory: backend
+Start time: 2026-09-30 18:18:18 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+Known parent directory:
+total 24
+drwxr-xr-x@  6 alvintubtub  staff    192 Sep 30 18:05 .
+drwxr-xr-x@ 25 alvintubtub  staff    800 Sep 21 11:11 ..
+-rw-r--r--@  1 alvintubtub  staff  10244 Sep 30 18:07 .DS_Store
+drwx------@  9 alvintubtub  staff    288 Sep 21 11:11 FORECASTPH_SUPPLEMENTARY_20260921_01
+drwx------@  9 alvintubtub  staff    288 Sep 21 11:27 FORECASTPH_SUPPLEMENTARY_20260921_02
+drwx------@ 10 alvintubtub  staff    320 Sep 30 18:06 FORECASTPH_SUPPLEMENTARY_20260921_03
+Candidate contents:
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/.DS_Store
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/historical/change_diagnostics.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/historical/formal_holdout_index.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/historical/mase_denominator_audit.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/historical/paired_mase_evidence.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/historical/reporting_semantics.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/methodology/arima_diagnostic_status.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/methodology/lir_feature_contract.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/prospective/prospective_validation_snapshot.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/run.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/source/code_provenance.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/source/formal_source.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/source/prospective_source.json
+/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/state.json
+Candidate: /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03
+Exists: True
+Integrity manifest present: True
+Integrity result:
+{
+  "checks": {
+    "aggregate_sha256": true,
+    "exact_file_set": false,
+    "file_hashes": true,
+    "file_sizes": true,
+    "manifest_paths_unique_ordered": true,
+    "manifest_schema": true,
+    "run_schema": true,
+    "source_identity": true,
+    "state_finalized": true
+  },
+  "errors": [
+    "failed check: exact_file_set"
+  ],
+  "valid": false
+}
+State: FINALIZED
+Run schema: forecastph.supplementary-evidence-package v1
+Package ID: FORECASTPH_SUPPLEMENTARY_20260921_03
+Source formal run ID: FORECASTPH_FORMAL_20260911_01
+Manifest aggregate SHA-256: 1b21738672024b5e73915d50ae424e4345841b353400f0f56e680be7844bd29d
+Source formal aggregate SHA-256: c6991b3b9fa79f0eccb1761f8c40f87a79996646e2ec0eafe5a769c538be05f9
+Semantic/source verification error: SupplementaryEvidenceError: Package integrity verification failed: ('failed check: exact_file_set',)
+----- command result -----
+End time: 2026-09-30 18:18:19 +0800 PST
+Exit code: 1
+Elapsed seconds: 1
+Result: FAIL

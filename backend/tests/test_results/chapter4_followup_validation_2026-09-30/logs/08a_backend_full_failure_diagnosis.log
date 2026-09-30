@@ -1,0 +1,45 @@
+PSE Pulse validation command log
+Command: rg -n 'SUPPLEMENTARY_PACKAGE_ID|DEFAULT_SUPPLEMENTARY_RUNS_ROOT|Supplementary integrity validation failed' backend/scripts/export_research_results.py backend/src backend/tests/test_research_result_export.py; if [ -d backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03 ]; then echo 'Expected supplementary archive exists: YES'; else echo 'Expected supplementary archive exists: NO'; fi; rg '^FAILED ' backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log | wc -l; tail -n 8 backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log
+Working directory: .
+Start time: 2026-09-30 17:32:22 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+backend/scripts/export_research_results.py:47:SUPPLEMENTARY_PACKAGE_ID: Final[str] = "FORECASTPH_SUPPLEMENTARY_20260921_03"
+backend/scripts/export_research_results.py:71:DEFAULT_SUPPLEMENTARY_RUNS_ROOT = (
+backend/scripts/export_research_results.py:433:    supplementary_runs_root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+backend/scripts/export_research_results.py:445:        SUPPLEMENTARY_PACKAGE_ID,
+backend/scripts/export_research_results.py:451:            "Supplementary integrity validation failed: "
+backend/scripts/export_research_results.py:827:    supplementary_runs_root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+backend/scripts/export_research_results.py:841:        SUPPLEMENTARY_PACKAGE_ID, root=supplementary_runs_root
+backend/scripts/export_research_results.py:905:                  "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID}
+backend/scripts/export_research_results.py:1187:        evidence.supplementary_run.get("package_id") != SUPPLEMENTARY_PACKAGE_ID
+backend/scripts/export_research_results.py:1399:                    "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID,
+backend/scripts/export_research_results.py:1506:            "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID,
+backend/scripts/export_research_results.py:1596:                "supplementary_package_id": SUPPLEMENTARY_PACKAGE_ID,
+backend/scripts/export_research_results.py:2568:                or row["supplementary_package_id"] != SUPPLEMENTARY_PACKAGE_ID
+backend/scripts/export_research_results.py:3078:                SUPPLEMENTARY_PACKAGE_ID
+backend/scripts/export_research_results.py:3358:    supplementary_runs_root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+backend/scripts/export_research_results.py:3416:        default=DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+backend/tests/test_research_result_export.py:50:    SUPPLEMENTARY_PACKAGE_ID,
+backend/tests/test_research_result_export.py:379:            "package_id": SUPPLEMENTARY_PACKAGE_ID,
+backend/tests/test_research_result_export.py:1166:        assert all(row["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID for row in actual)
+backend/tests/test_research_result_export.py:1232:    assert entries["model_diagnostics.csv"]["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID
+backend/tests/test_research_result_export.py:1443:            assert row["supplementary_package_id"] == SUPPLEMENTARY_PACKAGE_ID
+backend/src/evaluation/supplementary_archive.py:23:DEFAULT_SUPPLEMENTARY_RUNS_ROOT = (
+backend/src/evaluation/supplementary_archive.py:94:    def __init__(self, package_id: str, *, root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT):
+backend/src/evaluation/supplementary_archive.py:108:        root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+Expected supplementary archive exists: NO
+      49
+FAILED tests/test_research_result_export.py::test_failed_closure_publication_restores_all_previous_files
+FAILED tests/test_research_result_export.py::test_manifest_validation_does_not_execute_research_or_model_paths
+49 failed, 424 passed, 2 warnings in 77.38s (0:01:17)
+----- command result -----
+End time: 2026-09-30 17:31:09 +0800 PST
+Exit code: 1
+Elapsed seconds: 78
+Result: FAIL
+----- command result -----
+End time: 2026-09-30 17:32:22 +0800 PST
+Exit code: 0
+Elapsed seconds: 0
+Result: PASS

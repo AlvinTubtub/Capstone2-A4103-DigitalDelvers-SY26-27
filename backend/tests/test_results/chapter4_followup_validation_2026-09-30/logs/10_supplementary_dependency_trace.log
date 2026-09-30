@@ -1,0 +1,226 @@
+PSE Pulse validation command log
+Command: python -c "from scripts.export_research_results import FORMAL_RUN_ID, FORMAL_AGGREGATE_SHA256, SUPPLEMENTARY_PACKAGE_ID, DEFAULT_FORMAL_RUNS_ROOT, DEFAULT_SUPPLEMENTARY_RUNS_ROOT; print('Supplementary package ID:', SUPPLEMENTARY_PACKAGE_ID); print('Expected supplementary path:', DEFAULT_SUPPLEMENTARY_RUNS_ROOT / SUPPLEMENTARY_PACKAGE_ID); print('Required formal run ID:', FORMAL_RUN_ID); print('Required formal aggregate SHA-256:', FORMAL_AGGREGATE_SHA256); print('Expected formal path:', DEFAULT_FORMAL_RUNS_ROOT / FORMAL_RUN_ID); print('Verifier: src.evaluation.supplementary_archive.SupplementaryEvidenceArchive.verify_integrity'); print('Semantic/source verifier: src.evaluation.supplementary_evidence.load_and_validate_finalized_payloads + verify_source_linkage')"; printf '%s\n' 'Archive verifier implementation:'; sed -n '243,311p' src/evaluation/supplementary_archive.py; printf '%s\n' 'Consumer dependency path:'; sed -n '430,480p' scripts/export_research_results.py; printf '%s\n' 'Formal linkage verification:'; sed -n '1000,1050p' src/evaluation/supplementary_evidence.py; printf '%s\n' 'Official verification command path:'; sed -n '55,95p' scripts/run_supplementary_evidence.py
+Working directory: backend
+Start time: 2026-09-30 18:15:25 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+Supplementary package ID: FORECASTPH_SUPPLEMENTARY_20260921_03
+Expected supplementary path: /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03
+Required formal run ID: FORECASTPH_FORMAL_20260911_01
+Required formal aggregate SHA-256: c6991b3b9fa79f0eccb1761f8c40f87a79996646e2ec0eafe5a769c538be05f9
+Expected formal path: /Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01
+Verifier: src.evaluation.supplementary_archive.SupplementaryEvidenceArchive.verify_integrity
+Semantic/source verifier: src.evaluation.supplementary_evidence.load_and_validate_finalized_payloads + verify_source_linkage
+Archive verifier implementation:
+    def verify_integrity(self) -> VerificationResult:
+        checks: dict[str, bool] = {}
+        errors: list[str] = []
+        try:
+            manifest = json.loads((self.path / "integrity_manifest.json").read_text(encoding="utf-8"))
+            run = json.loads((self.path / "run.json").read_text(encoding="utf-8"))
+            state_payload = json.loads((self.path / "state.json").read_text(encoding="utf-8"))
+            formal_source = json.loads(
+                (self.path / "source/formal_source.json").read_text(encoding="utf-8")
+            )
+            checks["state_finalized"] = self.state is SupplementaryPackageState.FINALIZED
+            checks["run_schema"] = (
+                run.get("schema_id") == SUPPLEMENTARY_EVIDENCE_SCHEMA_ID
+                and run.get("schema_version") == SUPPLEMENTARY_EVIDENCE_SCHEMA_VERSION
+                and run.get("package_id") == self.package_id
+                and state_payload.get("package_id") == self.package_id
+            )
+            checks["manifest_schema"] = (
+                manifest.get("schema_id") == SUPPLEMENTARY_MANIFEST_SCHEMA_ID
+                and manifest.get("schema_version") == SUPPLEMENTARY_EVIDENCE_SCHEMA_VERSION
+                and manifest.get("package_id") == self.package_id
+            )
+            checks["source_identity"] = (
+                manifest.get("source_formal_run_id")
+                == run.get("source_formal_run_id")
+                == formal_source.get("source_formal_run_id")
+                and manifest.get("source_formal_integrity_aggregate_sha256")
+                == formal_source.get("source_formal_integrity_aggregate_sha256")
+            )
+            entries = manifest.get("files")
+            if not isinstance(entries, list):
+                raise ValueError("manifest files must be a list")
+            paths = [entry.get("path") for entry in entries if isinstance(entry, dict)]
+            checks["manifest_paths_unique_ordered"] = paths == sorted(set(paths))
+            actual = {
+                path.relative_to(self.path).as_posix()
+                for path in self.path.rglob("*")
+                if path.is_file() and path.name != "integrity_manifest.json"
+            }
+            checks["exact_file_set"] = set(paths) == actual == set(MANIFESTED_PATHS)
+            hashes_ok = True
+            sizes_ok = True
+            for entry in entries:
+                relative = entry["path"]
+                path = self.path / relative
+                if not path.is_file():
+                    hashes_ok = sizes_ok = False
+                    continue
+                hashes_ok &= sha256_file(path) == entry.get("sha256")
+                sizes_ok &= path.stat().st_size == entry.get("size_bytes")
+            checks["file_hashes"] = hashes_ok
+            checks["file_sizes"] = sizes_ok
+            checks["aggregate_sha256"] = (
+                aggregate_entries(entries) == manifest.get("aggregate_sha256")
+            )
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+            errors.append(f"{type(exc).__name__}: {exc}")
+        for name, passed in checks.items():
+            if not passed:
+                errors.append(f"failed check: {name}")
+        return VerificationResult(not errors and all(checks.values()), checks, tuple(errors))
+Consumer dependency path:
+def load_authoritative_evidence(
+    *,
+    formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+    supplementary_runs_root: Path = DEFAULT_SUPPLEMENTARY_RUNS_ROOT,
+) -> ResearchEvidence:
+    """Load only integrity-verified evidence linked to the frozen formal run."""
+
+    formal = FormalRunArchive(FORMAL_RUN_ID, root=formal_runs_root)
+    if not formal.verify_integrity():
+        raise ResearchResultExportError("Formal-run integrity validation failed")
+    formal_manifest = _load_json(formal.path / "integrity_manifest.json")
+    if formal_manifest.get("aggregate_sha256") != FORMAL_AGGREGATE_SHA256:
+        raise ResearchResultExportError("Formal-run aggregate SHA-256 conflicts")
+
+    supplementary = SupplementaryEvidenceArchive(
+        SUPPLEMENTARY_PACKAGE_ID,
+        root=supplementary_runs_root,
+    )
+    supplementary_integrity = supplementary.verify_integrity()
+    if not supplementary_integrity.valid:
+        raise ResearchResultExportError(
+            "Supplementary integrity validation failed: "
+            + "; ".join(supplementary_integrity.errors)
+        )
+
+    company_evidence = {
+        company.symbol: _load_json(
+            formal.path / "companies" / company.symbol / "evidence.json"
+        )
+        for company in COMPANIES
+    }
+    return ResearchEvidence(
+        formal_run=_load_json(formal.path / "run.json"),
+        formal_model_config=_load_json(
+            formal.path / "configuration" / "model_config.json"
+        ),
+        company_evidence=company_evidence,
+        supplementary_source=_load_json(
+            supplementary.path / "source" / "formal_source.json"
+        ),
+        mase_audit=_load_json(
+            supplementary.path / "historical" / "mase_denominator_audit.json"
+        ),
+        reporting_semantics=_load_json(
+            supplementary.path / "historical" / "reporting_semantics.json"
+        ),
+        holdout_index=_load_json(
+            supplementary.path / "historical" / "formal_holdout_index.json"
+        ),
+        formal_across_company=_load_json(
+            formal.path / "statistics" / "across_company.json"
+Formal linkage verification:
+
+def verify_source_linkage(
+    package: SupplementaryEvidenceArchive,
+    *,
+    formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+    ledger_path: Path | None = None,
+) -> VerificationResult:
+    checks: dict[str, bool] = {}
+    errors: list[str] = []
+    try:
+        formal = _load_json(package.path / "source/formal_source.json")
+        archive = FormalRunArchive(str(formal["source_formal_run_id"]), root=formal_runs_root)
+        checks["formal_state_finalized"] = archive.state is FormalRunState.FINALIZED
+        checks["formal_integrity"] = archive.verify_integrity()
+        manifest_path = archive.path / "integrity_manifest.json"
+        manifest = _load_json(manifest_path)
+        checks["formal_aggregate"] = manifest.get("aggregate_sha256") == formal.get("source_formal_integrity_aggregate_sha256")
+        checks["formal_manifest_hash"] = sha256_file(manifest_path) == formal.get("source_formal_integrity_manifest_sha256")
+        if ledger_path is not None:
+            prospective = _load_json(package.path / "source/prospective_source.json")
+            observed = sha256_file(ledger_path) if ledger_path.is_file() else None
+            checks["ledger_hash"] = observed == prospective.get("ledger_sha256")
+    except (OSError, KeyError, SupplementaryEvidenceError) as exc:
+        errors.append(f"{type(exc).__name__}: {exc}")
+    for name, passed in checks.items():
+        if not passed:
+            errors.append(f"failed check: {name}")
+    return VerificationResult(not errors and all(checks.values()), checks, tuple(errors))
+
+
+def load_and_validate_finalized_payloads(
+    package: SupplementaryEvidenceArchive,
+    *,
+    formal_runs_root: Path = DEFAULT_FORMAL_RUNS_ROOT,
+) -> Mapping[str, Mapping[str, object]]:
+    """Load and semantically validate a byte-verified finalized package."""
+
+    integrity = package.verify_integrity()
+    if not integrity.valid:
+        raise SupplementaryEvidenceError(
+            f"Package integrity verification failed: {integrity.errors}"
+        )
+    payloads = {path: _load_json(package.path / path) for path in EVIDENCE_PATHS}
+    formal_id = str(payloads["source/formal_source.json"]["source_formal_run_id"])
+    source = FormalRunArchive(formal_id, root=formal_runs_root)
+    validate_supplementary_payloads(payloads, source_archive=source)
+    return payloads
+
+
+def finalize_supplementary_plan(
+    package_id: str,
+Official verification command path:
+    parser.add_argument("--ledger-path", type=Path, default=DEFAULT_FORECAST_LEDGER_PATH)
+    parser.add_argument("--verbose", action="store_true")
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    arguments = build_parser().parse_args(argv)
+    configure_structured_logging(verbose=arguments.verbose)
+    if (arguments.check_only or arguments.finalize) and not arguments.formal_run_id:
+        raise SystemExit("--formal-run-id is required with --check-only or --finalize")
+    try:
+        if arguments.verify:
+            package = SupplementaryEvidenceArchive(
+                arguments.package_id, root=arguments.supplementary_runs_root
+            )
+            integrity = package.verify_integrity()
+            if integrity.valid:
+                load_and_validate_finalized_payloads(
+                    package, formal_runs_root=arguments.formal_runs_root
+                )
+            linkage = verify_source_linkage(
+                package,
+                formal_runs_root=arguments.formal_runs_root,
+                ledger_path=arguments.ledger_path,
+            )
+            result = {
+                "action": "verify",
+                "package_id": arguments.package_id,
+                "integrity": integrity.as_dict(),
+                "source_linkage": linkage.as_dict(),
+            }
+            print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
+            return 0 if integrity.valid and linkage.valid else 1
+
+        plan = build_supplementary_evidence_plan(
+            arguments.formal_run_id,
+            formal_runs_root=arguments.formal_runs_root,
+            ledger_path=arguments.ledger_path,
+        )
+        arima_companies = plan.payloads[
+            "methodology/arima_diagnostic_status.json"
+----- command result -----
+End time: 2026-09-30 18:15:27 +0800 PST
+Exit code: 0
+Elapsed seconds: 2
+Result: PASS

@@ -1,0 +1,14 @@
+PSE Pulse validation command log
+Command: python -m pytest -q tests/test_research_result_export.py
+Working directory: backend
+Start time: 2026-09-30 18:21:12 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+........................................................................ [ 78%]
+....................                                                     [100%]
+92 passed in 28.34s
+----- command result -----
+End time: 2026-09-30 18:21:41 +0800 PST
+Exit code: 0
+Elapsed seconds: 29
+Result: PASS

@@ -1,0 +1,14 @@
+PSE Pulse validation command log
+Command: if [ -d backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03 ]; then printf '%s\n' 'Local supplementary archive present: YES'; find backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03 -maxdepth 3 -type f | sort; else printf '%s\n' 'Local supplementary archive present: NO' 'Expected path: backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03'; fi; git check-ignore -v backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json
+Working directory: .
+Start time: 2026-09-30 18:16:13 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+Local supplementary archive present: NO
+Expected path: backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03
+.gitignore:38:/backend/artifacts/	backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json
+----- command result -----
+End time: 2026-09-30 18:16:13 +0800 PST
+Exit code: 0
+Elapsed seconds: 0
+Result: PASS

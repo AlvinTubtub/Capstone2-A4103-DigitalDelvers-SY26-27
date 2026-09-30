@@ -1,0 +1,56 @@
+PSE Pulse validation command log
+Command: npm run build
+Working directory: frontend
+Start time: 2026-09-30 17:17:56 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+
+> forecastph-web@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.5
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/27) ...
+   Generating static pages (6/27) 
+   Generating static pages (13/27) 
+   Generating static pages (20/27) 
+ ✓ Generating static pages (27/27)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    771 B           101 kB
+├ ○ /_not-found                          140 B            88 kB
+├ ○ /about                               996 B           203 kB
+├ ƒ /api/chat                            0 B                0 B
+├ ○ /companies                           4.02 kB         212 kB
+├ ● /companies/[symbol]                  21.5 kB         216 kB
+├   ├ /companies/ALI
+├   ├ /companies/APX
+├   ├ /companies/BPI
+├   └ [+12 more paths]
+├ ○ /compare                             180 B           197 kB
+├ ○ /icon.png                            0 B                0 B
+├ ○ /learn                               140 B            88 kB
+├ ○ /learn-stocks                        13.5 kB         108 kB
+└ ○ /watchlist                           3.13 kB         211 kB
++ First Load JS shared by all            87.8 kB
+  ├ chunks/23-43373d375effecd4.js        32.2 kB
+  ├ chunks/fd9d1056-d14ef8459442c52c.js  53.6 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses getStaticProps)
+ƒ  (Dynamic)  server-rendered on demand
+
+----- command result -----
+End time: 2026-09-30 17:18:11 +0800 PST
+Exit code: 0
+Elapsed seconds: 15
+Result: PASS

@@ -1,0 +1,28 @@
+PSE Pulse validation command log
+Command: python tests/test_results/chapter4_followup_validation_2026-09-30/verify_formal_archives.py /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/post-formal-review/FORECASTPH_FORMAL_20260911_01 /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary/FORECASTPH_FORMAL_20260911_01 /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01
+Working directory: backend
+Start time: 2026-09-30 17:28:25 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+---
+Candidate: /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/post-formal-review/FORECASTPH_FORMAL_20260911_01
+Exists: True
+State: ERROR (FormalArchiveError: Formal run state is unreadable)
+Integrity verified: False
+---
+Candidate: /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/supplementary/FORECASTPH_FORMAL_20260911_01
+Exists: True
+State: ERROR (FormalArchiveError: Formal run state is unreadable)
+Integrity verified: False
+---
+Candidate: /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/backend/artifacts/evaluations/formal-runs/FORECASTPH_FORMAL_20260911_01
+Exists: True
+State: FINALIZED
+Integrity verified: True
+---
+Authentic finalized candidates: 1
+----- command result -----
+End time: 2026-09-30 17:28:27 +0800 PST
+Exit code: 0
+Elapsed seconds: 2
+Result: PASS

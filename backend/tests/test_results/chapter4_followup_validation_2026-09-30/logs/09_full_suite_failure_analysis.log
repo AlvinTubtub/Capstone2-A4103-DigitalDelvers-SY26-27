@@ -1,0 +1,72 @@
+PSE Pulse validation command log
+Command: printf '%s\n' 'Source log: backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log' 'Executed tests: 473 (424 passed + 49 failed)' 'Failure count:'; rg -c '^FAILED ' backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log; printf '%s\n' 'Unique failed test modules:'; rg '^FAILED ' backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log | sed -E 's#^FAILED ([^:]+)::.*#\1#' | sort -u; printf '%s\n' 'Exact failed tests:'; rg '^FAILED ' backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log; printf '%s\n' 'Repeated root exception/path:'; rg 'Supplementary integrity validation failed: FileNotFoundError' backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log | sort | uniq -c; printf '%s\n' 'Original summary:'; rg '^[0-9]+ failed, [0-9]+ passed, [0-9]+ warnings' backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log
+Working directory: .
+Start time: 2026-09-30 18:14:16 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+Source log: backend/tests/test_results/chapter4_followup_validation_2026-09-30/logs/08_backend_full_pytest.log
+Executed tests: 473 (424 passed + 49 failed)
+Failure count:
+49
+Unique failed test modules:
+tests/test_research_result_export.py
+Exact failed tests:
+FAILED tests/test_research_result_export.py::test_publication_is_deterministic_and_has_exact_schemas
+FAILED tests/test_research_result_export.py::test_phase_one_csv_bytes_remain_frozen
+FAILED tests/test_research_result_export.py::test_authoritative_phase_one_outputs_remain_byte_identical
+FAILED tests/test_research_result_export.py::test_failed_directory_swap_restores_all_previous_csvs
+FAILED tests/test_research_result_export.py::test_new_frozen_csvs_are_in_deterministic_manifest
+FAILED tests/test_research_result_export.py::test_missing_new_frozen_csv_fails_closed[holdout_predictions.csv]
+FAILED tests/test_research_result_export.py::test_missing_new_frozen_csv_fails_closed[formal_scope.csv]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[holdout_predictions.csv-0-lag_reg_prediction--numeric]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[holdout_predictions.csv-0-naive_prediction-nan-finite]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[holdout_predictions.csv-1-target_date-2025-09-10-dates conflict]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[holdout_predictions.csv-0-origin_date-2026-09-11-not earlier]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[formal_scope.csv-0-raw_row_count-1634-conflicts]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[formal_scope.csv-0-development_pair_count-1387-pair scope]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[formal_scope.csv-0-cv_split_count-4-conflicts]
+FAILED tests/test_research_result_export.py::test_new_csv_corruption_fails_package_validation[formal_scope.csv-0-shuffle_used-true-conflicts]
+FAILED tests/test_research_result_export.py::test_publication_preserves_existing_research_index
+FAILED tests/test_research_result_export.py::test_invalid_new_rows_are_rejected_before_publication
+FAILED tests/test_research_result_export.py::test_frozen_provenance_exact_schema_and_source_evidence
+FAILED tests/test_research_result_export.py::test_finalized_diagnostic_rows_keep_fitted_and_holdout_scopes_distinct
+FAILED tests/test_research_result_export.py::test_malformed_finalized_diagnostic_fails_closed[path0-None-stability_flag missing]
+FAILED tests/test_research_result_export.py::test_malformed_finalized_diagnostic_fails_closed[path1-nan-finite]
+FAILED tests/test_research_result_export.py::test_malformed_finalized_diagnostic_fails_closed[path2-inf-finite]
+FAILED tests/test_research_result_export.py::test_malformed_finalized_diagnostic_fails_closed[path3-2.0-p-value]
+FAILED tests/test_research_result_export.py::test_missing_finalized_diagnostic_and_unavailability_reason_fail_closed
+FAILED tests/test_research_result_export.py::test_phase_6a2_manifest_and_package_validation
+FAILED tests/test_research_result_export.py::test_phase_6a2_package_corruption_fails_closed[data_provenance.csv-raw_sha256-bad-SHA-256]
+FAILED tests/test_research_result_export.py::test_phase_6a2_package_corruption_fails_closed[data_provenance.csv-formal_run_id-wrong-formal_run_id]
+FAILED tests/test_research_result_export.py::test_phase_6a2_package_corruption_fails_closed[model_diagnostics.csv-p_value-nan-finite]
+FAILED tests/test_research_result_export.py::test_phase_6a2_package_corruption_fails_closed[model_diagnostics.csv-evidence_source--provenance]
+FAILED tests/test_research_result_export.py::test_phase_6a2_package_corruption_fails_closed[model_diagnostics.csv-supplementary_package_id-wrong-provenance]
+FAILED tests/test_research_result_export.py::test_manifest_contract_cross_file_validation_and_determinism
+FAILED tests/test_research_result_export.py::test_package_content_hash_changes_when_valid_substantive_bytes_change
+FAILED tests/test_research_result_export.py::test_missing_substantive_csv_fails_closed
+FAILED tests/test_research_result_export.py::test_missing_research_closure_csv_fails_closed[data_quality_rules.csv]
+FAILED tests/test_research_result_export.py::test_missing_research_closure_csv_fails_closed[principal_win_summary.csv]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[selected_configurations.csv-0-symbol-APX-company symbols]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[holdout_metrics.csv-3-method-lag_reg-duplicate row]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[benchmark_vs_naive_dm.csv-0-raw_p_value-0.9-does not match]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[within_company_dm.csv-0-holm_family_size-5-Holm family size]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[across_company_tests.csv-1-performed-true-Wilcoxon gate]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[principal_winners.csv-0-best_principal_model-arima-winner conflicts]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[sector_peer_summary.csv-0-company_name-Wrong Company-company name]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[data_quality.csv-0-rule_version-wrong-rule-frozen contract]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[data_quality_rules.csv-3-threshold_value-4-locked data-quality-v1 rules]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[principal_win_summary.csv-0-win_count-5-conflicts with principal_winners]
+FAILED tests/test_research_result_export.py::test_cross_file_corruption_fails_closed[holdout_metrics.csv-0-formal_run_id-wrong-run-formal_run_id]
+FAILED tests/test_research_result_export.py::test_malformed_csv_fails_closed
+FAILED tests/test_research_result_export.py::test_failed_closure_publication_restores_all_previous_files
+FAILED tests/test_research_result_export.py::test_manifest_validation_does_not_execute_research_or_model_paths
+Repeated root exception/path:
+  47 E           scripts.export_research_results.ResearchResultExportError: Supplementary integrity validation failed: FileNotFoundError: [Errno 2] No such file or directory: '/Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json'
+   2 E         Actual message: "Supplementary integrity validation failed: FileNotFoundError: [Errno 2] No such file or directory: '/Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json'"
+Original summary:
+49 failed, 424 passed, 2 warnings in 77.38s (0:01:17)
+----- command result -----
+End time: 2026-09-30 18:14:16 +0800 PST
+Exit code: 0
+Elapsed seconds: 0
+Result: PASS

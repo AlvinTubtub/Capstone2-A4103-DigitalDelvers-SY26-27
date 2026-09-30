@@ -1,0 +1,48 @@
+PSE PULSE CHAPTER IV FOLLOW-UP VALIDATION
+
+Repository commit tested:
+57fed9821850dc4aeff946433d32793b963b3ed0
+
+FRONTEND
+npm ci: PASS — 5 seconds
+TypeScript: PASS — 2 seconds
+Next.js build: PASS — 15 seconds
+
+CORPORATE-ACTION SCREENING
+Initial: 8 passed, 1 failed
+Root cause: gitignored formal archive absent
+Formal archive verified: YES
+Final: 9 passed in 2.15 seconds
+
+FORMAL ARCHIVE
+Found: YES
+Integrity verified: YES
+
+SUPPLEMENTARY / RESEARCH RESULT EXPORT
+Initial full-suite failures: 49
+Archive:
+FORECASTPH_SUPPLEMENTARY_20260921_03
+Authentic archive found: YES
+Integrity verified: YES after excluding only unmanifested .DS_Store from the recovery copy
+Targeted research-result-export test:
+92 passed in 28.34 seconds
+
+FULL BACKEND
+Initial:
+424 passed, 49 failed, 2 warnings
+
+Final:
+473 passed, 2 warnings in 55.96 seconds
+
+CODE CHANGES
+Made: NO
+Commit: N/A
+
+FORMAL RESEARCH RESULTS MODIFIED:
+NO
+
+SUPPLEMENTARY RESEARCH RESULTS MODIFIED:
+NO
+
+Evidence directory:
+/Users/alvintubtub/Desktop/PSE_Pulse_Validation_2026-09-30_163754/backend/tests/test_results/chapter4_followup_validation_2026-09-30

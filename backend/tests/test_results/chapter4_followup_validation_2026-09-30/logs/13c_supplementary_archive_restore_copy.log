@@ -1,0 +1,12 @@
+PSE Pulse validation command log
+Command: test ! -e backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03; mkdir -p backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03; rsync -a /tmp/pse-pulse-supplementary-recovery-20260930/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/ backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/; git check-ignore -v backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json
+Working directory: .
+Start time: 2026-09-30 18:20:45 +0800 PST
+Commit SHA: 57fed9821850dc4aeff946433d32793b963b3ed0
+----- stdout/stderr -----
+.gitignore:38:/backend/artifacts/	backend/artifacts/evaluations/supplementary-runs/FORECASTPH_SUPPLEMENTARY_20260921_03/integrity_manifest.json
+----- command result -----
+End time: 2026-09-30 18:20:45 +0800 PST
+Exit code: 0
+Elapsed seconds: 0
+Result: PASS
