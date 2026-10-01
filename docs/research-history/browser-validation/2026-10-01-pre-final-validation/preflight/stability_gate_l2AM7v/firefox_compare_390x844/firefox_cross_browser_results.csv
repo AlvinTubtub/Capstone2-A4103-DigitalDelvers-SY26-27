@@ -1,0 +1,11 @@
+run_id,timestamp,browser_engine,browser_version,route,viewport,http_status,primary_content_visible,horizontal_overflow,pageerror_count,console_error_count,critical_request_failure_count,status,notes
+"firefox_compare_390x844","2026-10-01T03:43:58.668Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 1/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:01.834Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 2/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:05.131Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 3/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:08.144Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 4/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:11.288Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 5/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:14.595Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 6/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:17.701Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 7/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:20.870Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 8/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:24.151Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 9/10 | "
+"firefox_compare_390x844","2026-10-01T03:44:27.208Z","firefox","157.0","/compare","390x844","200","true","false","0","0","0","PASS","attempt 10/10 | "

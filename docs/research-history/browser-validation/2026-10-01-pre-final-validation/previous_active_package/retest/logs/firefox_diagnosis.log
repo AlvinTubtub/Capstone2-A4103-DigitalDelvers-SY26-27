@@ -1,0 +1,89 @@
+$ node --version
+v24.16.0
+
+
+$ npm --version
+11.13.0
+
+
+$ npx playwright --version
+Version 1.63.0
+
+
+$ npx playwright install --dry-run
+Chrome for Testing 153.0.8010.12 (playwright chromium v1243)
+  Install location:    /Users/alvintubtub/Library/Caches/ms-playwright/chromium-1243
+  Download url:        https://cdn.playwright.dev/builds/cft/153.0.8010.12/mac-arm64/chrome-mac-arm64.zip
+
+Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243)
+  Install location:    /Users/alvintubtub/Library/Caches/ms-playwright/chromium_headless_shell-1243
+  Download url:        https://cdn.playwright.dev/builds/cft/153.0.8010.12/mac-arm64/chrome-headless-shell-mac-arm64.zip
+
+Firefox 155.0 (playwright firefox v1543)
+  Install location:    /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543
+  Download url:        https://cdn.playwright.dev/dbazure/download/playwright/builds/firefox/1543/firefox-mac-arm64.zip
+  Download fallback 1: https://playwright.download.prss.microsoft.com/dbazure/download/playwright/builds/firefox/1543/firefox-mac-arm64.zip
+  Download fallback 2: https://cdn.playwright.dev/builds/firefox/1543/firefox-mac-arm64.zip
+
+WebKit 26.6 (playwright webkit v2359)
+  Install location:    /Users/alvintubtub/Library/Caches/ms-playwright/webkit-2359
+  Download url:        https://cdn.playwright.dev/dbazure/download/playwright/builds/webkit/2359/webkit-mac-26-arm64.zip
+  Download fallback 1: https://playwright.download.prss.microsoft.com/dbazure/download/playwright/builds/webkit/2359/webkit-mac-26-arm64.zip
+  Download fallback 2: https://cdn.playwright.dev/builds/webkit/2359/webkit-mac-26-arm64.zip
+
+FFmpeg (playwright ffmpeg v1011)
+  Install location:    /Users/alvintubtub/Library/Caches/ms-playwright/ffmpeg-1011
+  Download url:        https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-mac-arm64.zip
+  Download fallback 1: https://playwright.download.prss.microsoft.com/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-mac-arm64.zip
+  Download fallback 2: https://cdn.playwright.dev/builds/ffmpeg/1011/ffmpeg-mac-arm64.zip
+
+
+
+$ sw_vers 
+ProductName:		macOS
+ProductVersion:		27.0
+BuildVersion:		26A428
+
+
+$ uname -m
+arm64
+
+
+$ ls -ld /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543
+drwxr-xr-x@ 5 alvintubtub  staff    160 Oct  1 09:22 /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543
+-rwxr-xr-x@ 1 alvintubtub  staff  72304 Oct  1 09:22 /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox
+
+
+$ file /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox
+/Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox: Mach-O 64-bit executable arm64
+
+
+$ xattr -l /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox
+com.apple.provenance: 
+
+
+Playwright Firefox executable: /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox
+
+Firefox launch: FAIL
+browserType.launch: Failed to launch the browser process.
+Browser logs:
+
+<launching> /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-Oa0CR8 -juggler-pipe -silent
+<launched> pid=5742
+[pid=5742][err] *** You are running in headless mode.
+[pid=5742] <process did exit: exitCode=null, signal=SIGABRT>
+[pid=5742] starting temporary directories cleanup
+Call log:
+[2m  - <launching> /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-Oa0CR8 -juggler-pipe -silent[22m
+[2m  - <launched> pid=5742[22m
+[2m  - [pid=5742][err] *** You are running in headless mode.[22m
+[2m  - [pid=5742] <process did exit: exitCode=null, signal=SIGABRT>[22m
+[2m  - [pid=5742] starting temporary directories cleanup[22m
+[2m  - [pid=5742] <gracefully close start>[22m
+[2m  - [pid=5742] <kill>[22m
+[2m  - [pid=5742] <skipped force kill spawnedProcess.killed=false processClosed=true>[22m
+[2m  - [pid=5742] finished temporary directories cleanup[22m
+[2m  - [pid=5742] <gracefully close end>[22m
+
+    at /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/diagnose_firefox.mjs:29:33
+    at async node:internal/modules/esm/loader:633:26

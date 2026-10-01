@@ -1,0 +1,13 @@
+# Chromium no-document timeout diagnosis
+
+The prior stability gate had four failed logical configurations: `/about` at 1440×900, `/companies` at 1440×900, and `/learn-stocks` at 390×844 and 1440×900. Each prior failure was a navigation timeout before any main-document response, not a completed UI assertion. The preserved gate evidence remains unchanged.
+
+On 2026-10-01, 20 independent curl GETs per affected route returned HTTP 200 (60/60). Total times ranged from 167.43–477.87 ms for `/about`, 135.49–1572.99 ms for `/companies`, and 165.00–259.85 ms for `/learn-stocks`. DNS lookup returned `NOERROR`; see `curl_route_stability.csv`, `dig_resolution.txt`, and `nslookup_resolution.txt`. This shows that the routes were reachable from the test machine, but does not rule out intermittent browser transport failure.
+
+The corrected Chromium probe used 20 fresh contexts per configuration, with a 30-second navigation ceiling and no UI assertions. It delivered 76/80 main documents. Four attempts had no main-document response or navigation commit: `/about` 1440×900 attempts 3 and 5, and `/learn-stocks` 390×844 attempts 5 and 7. Each recorded `net::ERR_TIMED_OUT` after about 30 seconds. `/companies` 1440×900 and `/learn-stocks` 1440×900 delivered 20/20. The four failures classify as `TRANSPORT_NO_DOCUMENT`; none was an HTTP 4xx/5xx, post-document API, application-runtime, or UI-assertion failure. Browser request timing for these failed requests did not provide DNS/TCP/TLS substage measurements, so the precise network substage is undetermined. See `chromium_transport_probe.csv` and `.raw.json`.
+
+An initial 28-attempt diagnostic probe incorrectly required immediate usable DOM after navigation commit. Its raw output is retained as `invalid_preflight_*` and is excluded from the counts above. The corrected probe classifies main-document delivery by its HTTP response/commit.
+
+The compatibility harness now permits one retry only when the first attempt has no main-document response, no application DOM, no evaluated UI assertions, and a navigation error. It waits one second, creates a new context/session, and preserves both attempts. It never retries after a delivered document, application failure, UI failure, or slow result. The 80 performance trials have no retry or replacement policy.
+
+The subsequent targeted gate ran ten logical cases for each of the four configurations. All 40/40 passed normal application assertions. One first attempt (`/companies` 1440×900 case 8) was `TRANSPORT_NO_DOCUMENT`; its single retry passed. There were no exhausted retries or application/UI failures. See `targeted_transport_retry_validation.csv`, `.raw.json`, and `transport_attempts.json`.

@@ -1,0 +1,33 @@
+1790828581791	geckodriver	INFO	Listening on 127.0.0.1:56649
+1790828581807	webdriver::server	DEBUG	-> GET /status 
+1790828581809	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790828581813	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"re ... e-protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox"},"pageLoadStrategy":"none","webSocketUrl":true}}}
+1790828581816	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790828581821	geckodriver::capabilities	DEBUG	Found version 157.0
+1790828581821	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790828581844	geckodriver::marionette	DEBUG	Connection to Marionette established on 127.0.0.1:2828.
+1790828582630	webdriver::server	DEBUG	<- 200 OK {"value":{"sessionId":"f61e74f8-41b5-462e-ae29-4ba5d220251e","capabilities":{"acceptInsecureCerts":false,"browserNa ...  rv:157.0) Gecko/20100101 Firefox/157.0","webSocketUrl":"ws://127.0.0.1:9222/session/f61e74f8-41b5-462e-ae29-4ba5d220251e"}}}
+1790828582632	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/timeouts {"pageLoad":30000,"script":15000}
+1790828582633	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790828582634	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/window/rect {"x":0,"y":0,"width":390,"height":844}
+1790828583403	webdriver::server	DEBUG	<- 200 OK {"value":{"x":0,"y":0,"width":500,"height":844}}
+1790828583442	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/url {"url":"https://pse-pulse.vercel.app/"}
+1790828583454	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790828583456	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/execute/sync {"script":"return location.href","args":[]}
+1790828583458	webdriver::server	DEBUG	<- 500 Internal Server Error {"value":{"error":"unsupported operation","message":"The command does not support browsing conte ... ontent/marionette/server.sys.mjs:263:9\n_onJSONObjectReady/<@chrome://remote/content/marionette/transport.sys.mjs:493:20\n"}}
+1790828583661	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/execute/sync {"script":"return location.href","args":[]}
+1790828583667	webdriver::server	DEBUG	<- 200 OK {"value":"https://pse-pulse.vercel.app/"}
+1790828583669	webdriver::server	DEBUG	-> GET /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/window 
+1790828583669	webdriver::server	DEBUG	<- 200 OK {"value":"2fdc0fea-642a-4aa5-b116-fbc7fc3476a2"}
+1790828583861	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/execute/sync {"script":"return {width: innerWidth, height: innerHeight}","args":[]}
+1790828583888	webdriver::server	DEBUG	<- 200 OK {"value":{"height":844,"width":390}}
+1790828583890	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/execute/sync {"script":"return !!document.querySelector(\"main h1\") && !!document.querySelector(\"main h1\").getBoundingClientRect().height","args":[]}
+1790828583901	webdriver::server	DEBUG	<- 200 OK {"value":true}
+1790828583904	webdriver::server	DEBUG	-> POST /session/f61e74f8-41b5-462e-ae29-4ba5d220251e/execute/sync {"script":"return ((route, width) => {\n    const main = d ... performance.getEntriesByType('navigation')[0]?.loadEventEnd || null,\n    };\n  }).apply(null, arguments);","args":["/",390]}
+1790828583911	webdriver::server	DEBUG	<- 200 OK {"value":{"bodyWidth":383,"core":true,"documentReadyState":"interactive","documentWidth":383,"domcontentloadedMs":4 ... ":false,"navUsable":true,"navigationStatus":200,"primary":true,"viewportHeight":844,"viewportWidth":390,"windowLoadMs":null}}
+1790828584164	webdriver::server	DEBUG	-> DELETE /session/f61e74f8-41b5-462e-ae29-4ba5d220251e 
+1790828584166	webdriver::server	DEBUG	Teardown session
+1790828584166	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790828584167	webdriver::server	INFO	Shutting down
+1790828584167	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790828584167	webdriver::server	DEBUG	Teardown session

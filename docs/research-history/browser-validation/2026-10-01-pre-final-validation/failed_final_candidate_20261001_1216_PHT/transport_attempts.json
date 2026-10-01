@@ -1,0 +1,5186 @@
+[
+  {
+    "logical_case_id": "responsive_chromium_390x844_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:11.536Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:11.536Z",
+          "response_received_ms": 183.82408399999997,
+          "domcontentloaded_time_ms": 334.2846249999999,
+          "window_load_time_ms": 894.3447499999999,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 394.96570899999995,
+          "usable_page_load_ms": 394.96570899999995,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:12.718Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:12.718Z",
+          "response_received_ms": 145.49041699999998,
+          "domcontentloaded_time_ms": 213.51199999999972,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 250.346583,
+          "usable_page_load_ms": 250.346583,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:13.303Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:13.303Z",
+          "response_received_ms": 160.23562500000025,
+          "domcontentloaded_time_ms": 330.2957080000001,
+          "window_load_time_ms": 434.5846670000001,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 506.45787500000006,
+          "usable_page_load_ms": 506.45787500000006,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:14.200Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:14.200Z",
+          "response_received_ms": 164.55441699999983,
+          "domcontentloaded_time_ms": 228.47204199999987,
+          "window_load_time_ms": 317.3433329999998,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 391.4175829999999,
+          "usable_page_load_ms": 391.4175829999999,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:14.900Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:14.900Z",
+          "response_received_ms": 144.856084,
+          "domcontentloaded_time_ms": 298.65175,
+          "window_load_time_ms": 390.67954200000077,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 357.63379200000054,
+          "usable_page_load_ms": 357.63379200000054,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:15.579Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:15.579Z",
+          "response_received_ms": 168.83487500000047,
+          "domcontentloaded_time_ms": 251.78091700000004,
+          "window_load_time_ms": 370.0382090000003,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 380.61504200000036,
+          "usable_page_load_ms": 380.61504200000036,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:16.337Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:16.337Z",
+          "response_received_ms": 141.87704099999974,
+          "domcontentloaded_time_ms": 307.73641599999974,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 347.6549159999995,
+          "usable_page_load_ms": 347.6549159999995,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_390x844_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:17.176Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:17.176Z",
+          "response_received_ms": 225.04804200000035,
+          "domcontentloaded_time_ms": 322.6465840000001,
+          "window_load_time_ms": 406.3756250000006,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 448.9126670000005,
+          "usable_page_load_ms": 448.9126670000005,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:18.266Z",
+          "route": "/",
+          "http_status": "",
+          "navigation_start": "2026-10-01T04:17:18.266Z",
+          "response_received_ms": null,
+          "domcontentloaded_time_ms": 30131.490833000003,
+          "window_load_time_ms": 30131.512375,
+          "document_ready_state": "",
+          "primary_landmark_visible_ms": null,
+          "usable_page_load_ms": null,
+          "browser_navigation_error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/\", waiting until \"commit\"\u001b[22m\n",
+          "primary_content_visible": false,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 1,
+          "status": "FAIL",
+          "notes": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/\", waiting until \"commit\"\u001b[22m\n | https://pse-pulse.vercel.app/: net::ERR_TIMED_OUT"
+        },
+        "screenshot": "",
+        "status": "FAIL",
+        "transport_status": "TRANSPORT_NO_DOCUMENT",
+        "main_document_response_received": false,
+        "app_dom_available": false,
+        "assertions_executed": false,
+        "http_status": null,
+        "browser_navigation_error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/\", waiting until \"commit\"\u001b[22m\n"
+      },
+      {
+        "attempt": 2,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:49.577Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:17:49.577Z",
+          "response_received_ms": 194.59966700000223,
+          "domcontentloaded_time_ms": 339.27395799999795,
+          "window_load_time_ms": 590.805124999999,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 353.6434999999983,
+          "usable_page_load_ms": 353.6434999999983,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:17:50.229Z",
+          "route": "/companies",
+          "http_status": "",
+          "navigation_start": "2026-10-01T04:17:50.229Z",
+          "response_received_ms": null,
+          "domcontentloaded_time_ms": 30142.834000000003,
+          "window_load_time_ms": 30143.427958,
+          "document_ready_state": "",
+          "primary_landmark_visible_ms": null,
+          "usable_page_load_ms": null,
+          "browser_navigation_error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/companies\", waiting until \"commit\"\u001b[22m\n",
+          "primary_content_visible": false,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 1,
+          "status": "FAIL",
+          "notes": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/companies\", waiting until \"commit\"\u001b[22m\n | https://pse-pulse.vercel.app/companies: net::ERR_TIMED_OUT"
+        },
+        "screenshot": "",
+        "status": "FAIL",
+        "transport_status": "TRANSPORT_NO_DOCUMENT",
+        "main_document_response_received": false,
+        "app_dom_available": false,
+        "assertions_executed": false,
+        "http_status": null,
+        "browser_navigation_error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/companies\", waiting until \"commit\"\u001b[22m\n"
+      },
+      {
+        "attempt": 2,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:21.553Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:21.553Z",
+          "response_received_ms": 201.8222919999971,
+          "domcontentloaded_time_ms": 286.9483340000006,
+          "window_load_time_ms": 457.8959590000013,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 315.75766699999804,
+          "usable_page_load_ms": 315.75766699999804,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:22.166Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:22.166Z",
+          "response_received_ms": 226.52641600000788,
+          "domcontentloaded_time_ms": 293.4783330000064,
+          "window_load_time_ms": 388.54087500000605,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 462.58000000000175,
+          "usable_page_load_ms": 462.58000000000175,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:22.930Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:22.930Z",
+          "response_received_ms": 211.77637500000128,
+          "domcontentloaded_time_ms": 277.67704100000265,
+          "window_load_time_ms": 481.9080830000021,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 605.4957500000019,
+          "usable_page_load_ms": 605.4957500000019,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:23.826Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:23.826Z",
+          "response_received_ms": 158.79629199999908,
+          "domcontentloaded_time_ms": 277.2457080000022,
+          "window_load_time_ms": 330.74862500000745,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 286.6909580000065,
+          "usable_page_load_ms": 286.6909580000065,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:24.424Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:24.424Z",
+          "response_received_ms": 139.78116700000828,
+          "domcontentloaded_time_ms": 214.68533399999433,
+          "window_load_time_ms": 325.53158399999666,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 337.4123749999999,
+          "usable_page_load_ms": 337.4123749999999,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:25.069Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:25.069Z",
+          "response_received_ms": 142.67124999999942,
+          "domcontentloaded_time_ms": 236.8680000000022,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 311.6947499999951,
+          "usable_page_load_ms": 311.6947499999951,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_412x915_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "412x915",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:25.671Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:25.671Z",
+          "response_received_ms": 149.60400000000664,
+          "domcontentloaded_time_ms": 368.00500000000466,
+          "window_load_time_ms": 403.4560000000056,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 435.2201250000071,
+          "usable_page_load_ms": 435.2201250000071,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 412,
+            "bodyWidth": 412,
+            "viewportWidth": 412,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:26.415Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:26.415Z",
+          "response_received_ms": 191.29079099999217,
+          "domcontentloaded_time_ms": 263.9262909999961,
+          "window_load_time_ms": 645.321082999988,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 312.5461660000001,
+          "usable_page_load_ms": 312.5461660000001,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:27.568Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:27.568Z",
+          "response_received_ms": 137.95908300000883,
+          "domcontentloaded_time_ms": 200.45995800000674,
+          "window_load_time_ms": 552.3912910000072,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 251.88866599999892,
+          "usable_page_load_ms": 251.88866599999892,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:28.200Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:28.200Z",
+          "response_received_ms": 142.85733400000026,
+          "domcontentloaded_time_ms": 203.41112500001327,
+          "window_load_time_ms": 706.6073750000069,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 380.34491700000945,
+          "usable_page_load_ms": 380.34491700000945,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:29.033Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:29.033Z",
+          "response_received_ms": 192.4924580000079,
+          "domcontentloaded_time_ms": 291.76362500000687,
+          "window_load_time_ms": 350.0771250000107,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 429.42654200000106,
+          "usable_page_load_ms": 429.42654200000106,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:29.765Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:29.765Z",
+          "response_received_ms": 160.5391249999957,
+          "domcontentloaded_time_ms": 291.5277090000018,
+          "window_load_time_ms": 440.9769169999927,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 299.07470899999316,
+          "usable_page_load_ms": 299.07470899999316,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:30.363Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:30.363Z",
+          "response_received_ms": 159.12174999999115,
+          "domcontentloaded_time_ms": 334.3341669999936,
+          "window_load_time_ms": 475.6307919999963,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 561.4589579999883,
+          "usable_page_load_ms": 561.4589579999883,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:31.355Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:31.355Z",
+          "response_received_ms": 145.7760830000043,
+          "domcontentloaded_time_ms": 233.68666599999415,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 310.2674160000024,
+          "usable_page_load_ms": 310.2674160000024,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_768x1024_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "768x1024",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:32.200Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:32.200Z",
+          "response_received_ms": 167.3636250000127,
+          "domcontentloaded_time_ms": 314.75587500000256,
+          "window_load_time_ms": 338.93745900000795,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 375.35737500000687,
+          "usable_page_load_ms": 375.35737500000687,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 768,
+            "bodyWidth": 768,
+            "viewportWidth": 768,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:33.284Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:33.284Z",
+          "response_received_ms": 145.9776669999992,
+          "domcontentloaded_time_ms": 217.07870800000092,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 268.9826250000042,
+          "usable_page_load_ms": 268.9826250000042,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:33.854Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:33.854Z",
+          "response_received_ms": 135.92149999999674,
+          "domcontentloaded_time_ms": 191.53666599999997,
+          "window_load_time_ms": 347.3102079999953,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 232.109540999998,
+          "usable_page_load_ms": 232.109540999998,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:34.382Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:34.382Z",
+          "response_received_ms": 145.07562499999767,
+          "domcontentloaded_time_ms": 242.91516600000614,
+          "window_load_time_ms": 312.0446660000016,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 379.66525000000547,
+          "usable_page_load_ms": 379.66525000000547,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:35.064Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:35.064Z",
+          "response_received_ms": 142.96091599999636,
+          "domcontentloaded_time_ms": 360.1063329999888,
+          "window_load_time_ms": 421.64033299998846,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 490.5879999999888,
+          "usable_page_load_ms": 490.5879999999888,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:35.857Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:35.857Z",
+          "response_received_ms": 178.74287499999627,
+          "domcontentloaded_time_ms": 305.67579199999454,
+          "window_load_time_ms": 348.77920900000026,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 326.9871669999993,
+          "usable_page_load_ms": 326.9871669999993,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:36.496Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:36.496Z",
+          "response_received_ms": 146.1004580000008,
+          "domcontentloaded_time_ms": 219.02266699999745,
+          "window_load_time_ms": 329.830375000005,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 336.8896669999958,
+          "usable_page_load_ms": 336.8896669999958,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:37.138Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:37.138Z",
+          "response_received_ms": 148.00274999999965,
+          "domcontentloaded_time_ms": 306.6105830000015,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 350.12399999999616,
+          "usable_page_load_ms": 350.12399999999616,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_820x1180_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "820x1180",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:37.779Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:37.779Z",
+          "response_received_ms": 224.85570899999584,
+          "domcontentloaded_time_ms": 313.5824999999895,
+          "window_load_time_ms": 396.794167,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 432.7988339999865,
+          "usable_page_load_ms": 432.7988339999865,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 820,
+            "bodyWidth": 820,
+            "viewportWidth": 820,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:38.519Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:38.519Z",
+          "response_received_ms": 141.48325000000477,
+          "domcontentloaded_time_ms": 228.73504200000025,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 270.52379200000723,
+          "usable_page_load_ms": 270.52379200000723,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:39.086Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:39.086Z",
+          "response_received_ms": 139.64258400000108,
+          "domcontentloaded_time_ms": 245.7592089999962,
+          "window_load_time_ms": 323.6898749999964,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 256.5494999999937,
+          "usable_page_load_ms": 256.5494999999937,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:39.647Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:39.647Z",
+          "response_received_ms": 160.37104199999885,
+          "domcontentloaded_time_ms": 262.75679200000013,
+          "window_load_time_ms": 345.34891700001026,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 458.38079200001084,
+          "usable_page_load_ms": 458.38079200001084,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:40.408Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:40.408Z",
+          "response_received_ms": 224.745207999993,
+          "domcontentloaded_time_ms": 293.43804100000125,
+          "window_load_time_ms": 399.5782079999917,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 513.3724159999983,
+          "usable_page_load_ms": 513.3724159999983,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:41.224Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:41.224Z",
+          "response_received_ms": 143.15045799998916,
+          "domcontentloaded_time_ms": 203.3009999999922,
+          "window_load_time_ms": 335.2669579999929,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 290.4926669999986,
+          "usable_page_load_ms": 290.4926669999986,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:41.830Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:41.830Z",
+          "response_received_ms": 138.17666699999245,
+          "domcontentloaded_time_ms": 210.7699169999978,
+          "window_load_time_ms": 437.12695799999346,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 530.3938749999943,
+          "usable_page_load_ms": 530.3938749999943,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:42.661Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:42.661Z",
+          "response_received_ms": 205.38941700001305,
+          "domcontentloaded_time_ms": 295.07345900000655,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 394.0097090000054,
+          "usable_page_load_ms": 394.0097090000054,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1366x768_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "1366x768",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:43.372Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:43.372Z",
+          "response_received_ms": 156.27412499999627,
+          "domcontentloaded_time_ms": 216.94254199998977,
+          "window_load_time_ms": 308.5431669999962,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 344.90908299999137,
+          "usable_page_load_ms": 344.90908299999137,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1366,
+            "bodyWidth": 1366,
+            "viewportWidth": 1366,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:44.022Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:44.022Z",
+          "response_received_ms": 141.42466699999932,
+          "domcontentloaded_time_ms": 363.23362500000803,
+          "window_load_time_ms": 1472.25,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 380.3805830000056,
+          "usable_page_load_ms": 380.3805830000056,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:45.554Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:45.554Z",
+          "response_received_ms": 148.29995800000324,
+          "domcontentloaded_time_ms": 221.78666599999997,
+          "window_load_time_ms": 472.4269159999967,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 252.93966600000567,
+          "usable_page_load_ms": 252.93966600000567,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:46.219Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:46.219Z",
+          "response_received_ms": 234.2850000000035,
+          "domcontentloaded_time_ms": 350.5595830000093,
+          "window_load_time_ms": 405.851250000007,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 485.9878330000065,
+          "usable_page_load_ms": 485.9878330000065,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:47.117Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:47.117Z",
+          "response_received_ms": 141.2592089999962,
+          "domcontentloaded_time_ms": 251.2050420000014,
+          "window_load_time_ms": 411.481375000003,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 546.051833999998,
+          "usable_page_load_ms": 546.051833999998,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:47.969Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:47.969Z",
+          "response_received_ms": 157.50733399999444,
+          "domcontentloaded_time_ms": 282.24829200000386,
+          "window_load_time_ms": 318.05583399999887,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 292.6292090000061,
+          "usable_page_load_ms": 292.6292090000061,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:48.575Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:18:48.575Z",
+          "response_received_ms": 143.0300830000051,
+          "domcontentloaded_time_ms": 229.23133300000336,
+          "window_load_time_ms": 357.4094999999943,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 446.4395829999994,
+          "usable_page_load_ms": 446.4395829999994,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:18:49.450Z",
+          "route": "/learn-stocks",
+          "http_status": "",
+          "navigation_start": "2026-10-01T04:18:49.450Z",
+          "response_received_ms": null,
+          "domcontentloaded_time_ms": 30175.910290999993,
+          "window_load_time_ms": 30175.913791,
+          "document_ready_state": "",
+          "primary_landmark_visible_ms": null,
+          "usable_page_load_ms": null,
+          "browser_navigation_error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/learn-stocks\", waiting until \"commit\"\u001b[22m\n",
+          "primary_content_visible": false,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 1,
+          "status": "FAIL",
+          "notes": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/learn-stocks\", waiting until \"commit\"\u001b[22m\n | https://pse-pulse.vercel.app/learn-stocks: net::ERR_TIMED_OUT"
+        },
+        "screenshot": "",
+        "status": "FAIL",
+        "transport_status": "TRANSPORT_NO_DOCUMENT",
+        "main_document_response_received": false,
+        "app_dom_available": false,
+        "assertions_executed": false,
+        "http_status": null,
+        "browser_navigation_error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pse-pulse.vercel.app/learn-stocks\", waiting until \"commit\"\u001b[22m\n"
+      },
+      {
+        "attempt": 2,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:20.807Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:20.807Z",
+          "response_received_ms": 187.3215829999972,
+          "domcontentloaded_time_ms": 265.7585410000029,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 396.0610410000081,
+          "usable_page_load_ms": 396.0610410000081,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1440x900_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:21.875Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:21.875Z",
+          "response_received_ms": 226.11758300001384,
+          "domcontentloaded_time_ms": 352.2419579999987,
+          "window_load_time_ms": 377.5260410000046,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 415.1598750000121,
+          "usable_page_load_ms": 415.1598750000121,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:23.227Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:23.227Z",
+          "response_received_ms": 154.1451249999809,
+          "domcontentloaded_time_ms": 274.3476249999949,
+          "window_load_time_ms": 1134.2288750000007,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 289.5177079999994,
+          "usable_page_load_ms": 289.5177079999994,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:24.414Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:24.414Z",
+          "response_received_ms": 157.12708400000702,
+          "domcontentloaded_time_ms": 308.971749999997,
+          "window_load_time_ms": 405.81816699999035,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 358.00224999999045,
+          "usable_page_load_ms": 358.00224999999045,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:25.188Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:25.188Z",
+          "response_received_ms": 138.77529199997662,
+          "domcontentloaded_time_ms": 199.78537499997765,
+          "window_load_time_ms": 278.16204199998174,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 367.90508299999055,
+          "usable_page_load_ms": 367.90508299999055,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:26.003Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:26.003Z",
+          "response_received_ms": 240.18766699999105,
+          "domcontentloaded_time_ms": 299.9043750000128,
+          "window_load_time_ms": 395.03737500001444,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 472.4569590000028,
+          "usable_page_load_ms": 472.4569590000028,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:26.782Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:26.782Z",
+          "response_received_ms": 139.70154099998763,
+          "domcontentloaded_time_ms": 198.7862909999967,
+          "window_load_time_ms": 285.56795799999963,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 274.0248330000031,
+          "usable_page_load_ms": 274.0248330000031,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:27.370Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:27.370Z",
+          "response_received_ms": 150.9127500000177,
+          "domcontentloaded_time_ms": 267.1465420000022,
+          "window_load_time_ms": 354.7699169999978,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 459.80004200001713,
+          "usable_page_load_ms": 459.80004200001713,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:28.302Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:28.302Z",
+          "response_received_ms": 163.86475000000792,
+          "domcontentloaded_time_ms": 327.1557080000057,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 366.9124170000141,
+          "usable_page_load_ms": 366.9124170000141,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_1920x1080_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "1920x1080",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:29.239Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:29.239Z",
+          "response_received_ms": 234.9860420000041,
+          "domcontentloaded_time_ms": 368.07741700002225,
+          "window_load_time_ms": 394.9045000000042,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 436.1687920000113,
+          "usable_page_load_ms": 436.1687920000113,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1920,
+            "bodyWidth": 1920,
+            "viewportWidth": 1920,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:30.582Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:30.582Z",
+          "response_received_ms": 140.69929199997569,
+          "domcontentloaded_time_ms": 219.2052089999779,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 276.8087499999965,
+          "usable_page_load_ms": 276.8087499999965,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:31.166Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:31.166Z",
+          "response_received_ms": 139.0507079999952,
+          "domcontentloaded_time_ms": 198.7639579999959,
+          "window_load_time_ms": 461.21066700000665,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 260.72454200001084,
+          "usable_page_load_ms": 260.72454200001084,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:31.721Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:31.721Z",
+          "response_received_ms": 145.49258399999235,
+          "domcontentloaded_time_ms": 291.21187499997905,
+          "window_load_time_ms": 396.44470900000306,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 464.921875,
+          "usable_page_load_ms": 464.921875,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:32.486Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:32.486Z",
+          "response_received_ms": 177.28483299998334,
+          "domcontentloaded_time_ms": 240.68083299999125,
+          "window_load_time_ms": 325.80529099999694,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 403.9875409999804,
+          "usable_page_load_ms": 403.9875409999804,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:33.191Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:33.191Z",
+          "response_received_ms": 146.3867920000048,
+          "domcontentloaded_time_ms": 203.00766699999804,
+          "window_load_time_ms": 285.4209170000104,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 274.11329200002365,
+          "usable_page_load_ms": 274.11329200002365,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:33.779Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:33.779Z",
+          "response_received_ms": 136.26699999999255,
+          "domcontentloaded_time_ms": 250.89566700000432,
+          "window_load_time_ms": 425.43504199999734,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 434.1062089999905,
+          "usable_page_load_ms": 434.1062089999905,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:34.516Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:34.516Z",
+          "response_received_ms": 165.03424999999697,
+          "domcontentloaded_time_ms": 263.64574999999604,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 364.6879590000026,
+          "usable_page_load_ms": 364.6879590000026,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "responsive_chromium_2560x1440_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "2560x1440",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:35.179Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:35.179Z",
+          "response_received_ms": 139.21516600000905,
+          "domcontentloaded_time_ms": 227.4004159999895,
+          "window_load_time_ms": 306.39583299998776,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 342.56529100000625,
+          "usable_page_load_ms": 342.56529100000625,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 2560,
+            "bodyWidth": 2560,
+            "viewportWidth": 2560,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:35.832Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:35.832Z",
+          "response_received_ms": 142.13891599999624,
+          "domcontentloaded_time_ms": 262.7620830000087,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 274.74158299999544,
+          "usable_page_load_ms": 274.74158299999544,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:36.398Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:36.398Z",
+          "response_received_ms": 133.61204199999338,
+          "domcontentloaded_time_ms": 201.11350000000675,
+          "window_load_time_ms": 382.2559579999943,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 238.21387500001583,
+          "usable_page_load_ms": 238.21387500001583,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:36.928Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:36.928Z",
+          "response_received_ms": 142.8314170000085,
+          "domcontentloaded_time_ms": 243.3160420000204,
+          "window_load_time_ms": 428.3724999999977,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 544.8705420000188,
+          "usable_page_load_ms": 544.8705420000188,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:37.844Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:37.844Z",
+          "response_received_ms": 140.15491700000712,
+          "domcontentloaded_time_ms": 201.29945900000166,
+          "window_load_time_ms": 348.17204199999105,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 365.2725839999912,
+          "usable_page_load_ms": 365.2725839999912,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:38.580Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:38.580Z",
+          "response_received_ms": 141.17037499998696,
+          "domcontentloaded_time_ms": 296.98741699999664,
+          "window_load_time_ms": 397.5466249999881,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 373.1170839999977,
+          "usable_page_load_ms": 373.1170839999977,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:39.260Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:39.260Z",
+          "response_received_ms": 230.4006250000093,
+          "domcontentloaded_time_ms": 290.56816700001946,
+          "window_load_time_ms": 401.6092500000086,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 413.6638340000063,
+          "usable_page_load_ms": 413.6638340000063,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:39.994Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:39.994Z",
+          "response_received_ms": 145.9880000000121,
+          "domcontentloaded_time_ms": 312.448166999995,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 355.48233400000026,
+          "usable_page_load_ms": 355.48233400000026,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_390x844_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:40.638Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:40.638Z",
+          "response_received_ms": 145.34070800000336,
+          "domcontentloaded_time_ms": 311.51833299998543,
+          "window_load_time_ms": 408.05695800000103,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 424.67699999999604,
+          "usable_page_load_ms": 424.67699999999604,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 390,
+            "bodyWidth": 390,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_home",
+    "browser": "chromium",
+    "route": "/",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:41.383Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:41.383Z",
+          "response_received_ms": 192.7748749999737,
+          "domcontentloaded_time_ms": 297.4394999999786,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 312.2736670000013,
+          "usable_page_load_ms": 312.2736670000013,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_companies",
+    "browser": "chromium",
+    "route": "/companies",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:41.991Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:41.991Z",
+          "response_received_ms": 153.80124999998952,
+          "domcontentloaded_time_ms": 231.0547920000099,
+          "window_load_time_ms": 327.30562500000815,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 266.0080420000013,
+          "usable_page_load_ms": 266.0080420000013,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_companies_ALI",
+    "browser": "chromium",
+    "route": "/companies/ALI",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:42.557Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:42.557Z",
+          "response_received_ms": 144.02812499998254,
+          "domcontentloaded_time_ms": 217.97683299999335,
+          "window_load_time_ms": 292.630582999991,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 378.0006669999857,
+          "usable_page_load_ms": 378.0006669999857,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_companies_GLO",
+    "browser": "chromium",
+    "route": "/companies/GLO",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:43.238Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:43.238Z",
+          "response_received_ms": 141.5032920000085,
+          "domcontentloaded_time_ms": 204.83950000000186,
+          "window_load_time_ms": 438.50687499999185,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 435.12758400000166,
+          "usable_page_load_ms": 435.12758400000166,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_watchlist",
+    "browser": "chromium",
+    "route": "/watchlist",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:43.981Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:43.981Z",
+          "response_received_ms": 215.36283299999195,
+          "domcontentloaded_time_ms": 282.3507909999753,
+          "window_load_time_ms": 378.5779159999802,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 320.0620829999971,
+          "usable_page_load_ms": 320.0620829999971,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_compare",
+    "browser": "chromium",
+    "route": "/compare",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:44.608Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:44.608Z",
+          "response_received_ms": 138.87416700000176,
+          "domcontentloaded_time_ms": 250.8965840000019,
+          "window_load_time_ms": 338.03912500001024,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 345.04966700001387,
+          "usable_page_load_ms": 345.04966700001387,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_learn-stocks",
+    "browser": "chromium",
+    "route": "/learn-stocks",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:45.409Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:45.409Z",
+          "response_received_ms": 226.06995800000732,
+          "domcontentloaded_time_ms": 382.9377500000119,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 413.6706669999985,
+          "usable_page_load_ms": 413.6706669999985,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_chromium_1440x900_about",
+    "browser": "chromium",
+    "route": "/about",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:46.112Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:46.112Z",
+          "response_received_ms": 178.90687499998603,
+          "domcontentloaded_time_ms": 241.83954199997243,
+          "window_load_time_ms": 331.59941699999035,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 365.56533399998443,
+          "usable_page_load_ms": 365.56533399998443,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_home",
+    "browser": "webkit",
+    "route": "/",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:47.283Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:47.283Z",
+          "response_received_ms": 309.81212499999674,
+          "domcontentloaded_time_ms": 602.5297089999949,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 706.3145420000073,
+          "usable_page_load_ms": 706.3145420000073,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 386,
+            "bodyWidth": 386,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_companies",
+    "browser": "webkit",
+    "route": "/companies",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:48.426Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:48.426Z",
+          "response_received_ms": 148.17491699999664,
+          "domcontentloaded_time_ms": 233.73258300000452,
+          "window_load_time_ms": 292.5835000000079,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 331.971749999997,
+          "usable_page_load_ms": 331.971749999997,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_companies_ALI",
+    "browser": "webkit",
+    "route": "/companies/ALI",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:49.191Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:49.191Z",
+          "response_received_ms": 172.60033400001703,
+          "domcontentloaded_time_ms": 287.34525000001304,
+          "window_load_time_ms": 348.4922920000099,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 480.78129199999967,
+          "usable_page_load_ms": 480.78129199999967,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_companies_GLO",
+    "browser": "webkit",
+    "route": "/companies/GLO",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:50.150Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:50.150Z",
+          "response_received_ms": 211.30804199998965,
+          "domcontentloaded_time_ms": 335.5253339999763,
+          "window_load_time_ms": 420.79054200000246,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 525.9979999999923,
+          "usable_page_load_ms": 525.9979999999923,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_watchlist",
+    "browser": "webkit",
+    "route": "/watchlist",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:51.101Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:51.101Z",
+          "response_received_ms": 163.40974999999162,
+          "domcontentloaded_time_ms": 382.6492909999797,
+          "window_load_time_ms": 427.12837500000023,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 449.8911659999867,
+          "usable_page_load_ms": 449.8911659999867,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_compare",
+    "browser": "webkit",
+    "route": "/compare",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:52.006Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:52.006Z",
+          "response_received_ms": 148.10691699999734,
+          "domcontentloaded_time_ms": 255.3689580000064,
+          "window_load_time_ms": 304.55937500001164,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 388.8066669999971,
+          "usable_page_load_ms": 388.8066669999971,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_learn-stocks",
+    "browser": "webkit",
+    "route": "/learn-stocks",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:52.829Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:52.829Z",
+          "response_received_ms": 212.64258400001563,
+          "domcontentloaded_time_ms": 358.0331250000163,
+          "window_load_time_ms": 482.2550420000043,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 448.3785000000207,
+          "usable_page_load_ms": 448.3785000000207,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_390x844_about",
+    "browser": "webkit",
+    "route": "/about",
+    "viewport": "390x844",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:53.715Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:53.715Z",
+          "response_received_ms": 149.52954200000386,
+          "domcontentloaded_time_ms": 398.95429199998034,
+          "window_load_time_ms": 480.81562499998836,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 506.62187499998254,
+          "usable_page_load_ms": 506.62187499998254,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 382,
+            "bodyWidth": 382,
+            "viewportWidth": 390,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_home",
+    "browser": "webkit",
+    "route": "/",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:54.683Z",
+          "route": "/",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:54.683Z",
+          "response_received_ms": 156.79341700000805,
+          "domcontentloaded_time_ms": 257.23379200001364,
+          "window_load_time_ms": null,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 332.2505419999943,
+          "usable_page_load_ms": 332.2505419999943,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1436,
+            "bodyWidth": 1436,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_companies",
+    "browser": "webkit",
+    "route": "/companies",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:55.439Z",
+          "route": "/companies",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:55.439Z",
+          "response_received_ms": 221.41562499999418,
+          "domcontentloaded_time_ms": 321.85295899998164,
+          "window_load_time_ms": 375.1719999999914,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 391.6456669999752,
+          "usable_page_load_ms": 391.6456669999752,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_companies_ALI",
+    "browser": "webkit",
+    "route": "/companies/ALI",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:56.271Z",
+          "route": "/companies/ALI",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:56.271Z",
+          "response_received_ms": 150.27570800000103,
+          "domcontentloaded_time_ms": 238.05516600000556,
+          "window_load_time_ms": 599.7500830000208,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 439.87100000001374,
+          "usable_page_load_ms": 439.87100000001374,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1432,
+            "bodyWidth": 1432,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_companies_GLO",
+    "browser": "webkit",
+    "route": "/companies/GLO",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:57.129Z",
+          "route": "/companies/GLO",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:57.129Z",
+          "response_received_ms": 181.8348330000008,
+          "domcontentloaded_time_ms": 437.01579200002016,
+          "window_load_time_ms": 628.4092080000264,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 652.811875000014,
+          "usable_page_load_ms": 652.811875000014,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1432,
+            "bodyWidth": 1432,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_watchlist",
+    "browser": "webkit",
+    "route": "/watchlist",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:58.207Z",
+          "route": "/watchlist",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:58.207Z",
+          "response_received_ms": 163.1651659999916,
+          "domcontentloaded_time_ms": 287.4794159999874,
+          "window_load_time_ms": 328.3664160000044,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 344.6312500000058,
+          "usable_page_load_ms": 344.6312500000058,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_compare",
+    "browser": "webkit",
+    "route": "/compare",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:58.991Z",
+          "route": "/compare",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:58.991Z",
+          "response_received_ms": 147.3045829999901,
+          "domcontentloaded_time_ms": 325.6264160000137,
+          "window_load_time_ms": 388.20766600000206,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 494.47716599999694,
+          "usable_page_load_ms": 494.47716599999694,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1432,
+            "bodyWidth": 1432,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_learn-stocks",
+    "browser": "webkit",
+    "route": "/learn-stocks",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:19:59.994Z",
+          "route": "/learn-stocks",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:19:59.994Z",
+          "response_received_ms": 147.6765000000014,
+          "domcontentloaded_time_ms": 273.9327920000069,
+          "window_load_time_ms": 467.8943750000035,
+          "document_ready_state": "interactive",
+          "primary_landmark_visible_ms": 346.66929200000595,
+          "usable_page_load_ms": 346.66929200000595,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1432,
+            "bodyWidth": 1432,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  },
+  {
+    "logical_case_id": "cross_browser_webkit_1440x900_about",
+    "browser": "webkit",
+    "route": "/about",
+    "viewport": "1440x900",
+    "attempts": [
+      {
+        "attempt": 1,
+        "common": {
+          "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+          "timestamp": "2026-10-01T04:20:00.773Z",
+          "route": "/about",
+          "http_status": 200,
+          "navigation_start": "2026-10-01T04:20:00.773Z",
+          "response_received_ms": 2343.371958999982,
+          "domcontentloaded_time_ms": 2493.5101670000004,
+          "window_load_time_ms": 2568.8791669999773,
+          "document_ready_state": "complete",
+          "primary_landmark_visible_ms": 2590.262541999982,
+          "usable_page_load_ms": 2590.262541999982,
+          "browser_navigation_error": "",
+          "primary_content_visible": true,
+          "horizontal_overflow": false,
+          "pageerror_count": 0,
+          "console_error_count": 0,
+          "critical_request_failure_count": 0,
+          "status": "PASS",
+          "notes": ""
+        },
+        "checks": {
+          "primary": true,
+          "core": true,
+          "navUsable": true,
+          "layout": {
+            "documentWidth": 1432,
+            "bodyWidth": 1432,
+            "viewportWidth": 1440,
+            "headingClipped": false,
+            "navOverflow": false,
+            "fixedCover": 0
+          }
+        },
+        "screenshot": "",
+        "status": "PASS",
+        "transport_status": "DOCUMENT_DELIVERED",
+        "main_document_response_received": true,
+        "app_dom_available": true,
+        "assertions_executed": true,
+        "http_status": 200,
+        "browser_navigation_error": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,7 @@
+validation,status,measured_result,evidence,notes
+"Mobile responsive testing","FAIL","15/16 passed","responsive_test_results.csv","1 timed-out visit(s); see per-case notes and screenshots"
+"Tablet responsive testing","FAIL","15/16 passed","responsive_test_results.csv","1 timed-out visit(s); see per-case notes and screenshots"
+"Laptop/desktop browser testing","FAIL","31/32 passed","responsive_test_results.csv","1 timed-out visit(s); see per-case notes and screenshots"
+"Cross-browser compatibility","BLOCKED","32/48 passed; 16 Firefox cases blocked","cross_browser_results.csv","Chromium and WebKit completed; Firefox binary failed to launch in this macOS environment"
+"Page-load/performance measurement","PASS","80/80 valid fresh-context trials","performance_results.csv","7 navigation timeouts counted as threshold failures"
+"90% within five-second performance threshold","PASS","73/80 = 91.25% (required ≥90.00%)","performance_summary.json","Unthrottled live Chromium 1440×900; Lighthouse excluded"

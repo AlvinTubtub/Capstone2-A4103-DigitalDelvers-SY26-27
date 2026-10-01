@@ -1,0 +1,11 @@
+Timestamp: 2026-10-01T02:43:10.181Z
+Method: LaunchServices + isolated temporary Firefox profile + documented geckodriver --connect-existing
+Temporary profile: /private/tmp/pse-pulse-firefox-profile-DstaMK
+$ open -n -a /Applications/Firefox.app --args -headless -no-remote -profile /private/tmp/pse-pulse-firefox-profile-DstaMK --marionette
+(open returned no output)
+Isolated Firefox Marionette PID: 6958
+Browser version: 157.0
+Page title: PSE Pulse | Philippine Stock Forecasting
+Final URL: https://pse-pulse.vercel.app/
+Smoke result: PASS
+Stopped isolated Firefox PID 6958

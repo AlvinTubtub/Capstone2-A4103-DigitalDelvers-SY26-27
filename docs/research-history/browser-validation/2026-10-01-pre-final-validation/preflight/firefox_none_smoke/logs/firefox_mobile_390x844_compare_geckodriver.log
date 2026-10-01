@@ -1,0 +1,27 @@
+1790825860346	geckodriver	INFO	Listening on 127.0.0.1:54827
+1790825860361	webdriver::server	DEBUG	-> GET /status 
+1790825860363	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790825860373	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"re ... e-protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox"},"pageLoadStrategy":"none","webSocketUrl":true}}}
+1790825860376	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790825860383	geckodriver::capabilities	DEBUG	Found version 157.0
+1790825860383	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790825860501	geckodriver::marionette	DEBUG	Connection to Marionette established on 127.0.0.1:2828.
+1790825861024	webdriver::server	DEBUG	<- 200 OK {"value":{"sessionId":"5791fbc0-6764-47c7-9b7e-460d10d68fc6","capabilities":{"acceptInsecureCerts":false,"browserNa ...  rv:157.0) Gecko/20100101 Firefox/157.0","webSocketUrl":"ws://127.0.0.1:9222/session/5791fbc0-6764-47c7-9b7e-460d10d68fc6"}}}
+1790825861026	webdriver::server	DEBUG	-> POST /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6/timeouts {"pageLoad":30000,"script":15000}
+1790825861034	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790825861036	webdriver::server	DEBUG	-> POST /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6/window/rect {"x":0,"y":0,"width":390,"height":844}
+1790825861831	webdriver::server	DEBUG	<- 200 OK {"value":{"x":0,"y":0,"width":500,"height":844}}
+1790825861895	webdriver::server	DEBUG	-> POST /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6/url {"url":"https://pse-pulse.vercel.app/compare"}
+1790825861908	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790825861910	webdriver::server	DEBUG	-> GET /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6/window 
+1790825861914	webdriver::server	DEBUG	<- 200 OK {"value":"52c0cef6-4c3e-4744-a225-dfa3e8683e7b"}
+1790825861921	webdriver::server	DEBUG	-> GET /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6/screenshot 
+1790825861922	webdriver::server	DEBUG	<- 500 Internal Server Error {"value":{"error":"unsupported operation","message":"The command does not support browsing conte ... ontent/marionette/server.sys.mjs:263:9\n_onJSONObjectReady/<@chrome://remote/content/marionette/transport.sys.mjs:493:20\n"}}
+1790825861923	webdriver::server	DEBUG	-> GET /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6/source 
+1790825861923	webdriver::server	DEBUG	<- 500 Internal Server Error {"value":{"error":"unsupported operation","message":"The command does not support browsing conte ... ontent/marionette/server.sys.mjs:263:9\n_onJSONObjectReady/<@chrome://remote/content/marionette/transport.sys.mjs:493:20\n"}}
+1790825861928	webdriver::server	DEBUG	-> DELETE /session/5791fbc0-6764-47c7-9b7e-460d10d68fc6 
+1790825861930	webdriver::server	DEBUG	Teardown session
+1790825861930	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790825861940	webdriver::server	INFO	Shutting down
+1790825861941	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790825861941	webdriver::server	DEBUG	Teardown session

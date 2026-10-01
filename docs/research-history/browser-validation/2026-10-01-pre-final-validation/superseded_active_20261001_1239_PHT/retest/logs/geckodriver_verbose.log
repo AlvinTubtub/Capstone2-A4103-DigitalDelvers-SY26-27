@@ -1,0 +1,103 @@
+1790822440669	geckodriver	INFO	Listening on 127.0.0.1:52429
+1790822440669	webdriver::server	TRACE	Build standard route for /status
+1790822440669	webdriver::server	TRACE	Build standard route for /session
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/url
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/url
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/back
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/forward
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/refresh
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/title
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/source
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/handles
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/new
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/size
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/size
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/position
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/position
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/rect
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/rect
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/minimize
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/maximize
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window/fullscreen
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/window
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/frame
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/frame/parent
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/element
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/elements
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/elements
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/shadow/{shadowId}/element
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/shadow/{shadowId}/elements
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/active
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/shadow
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/displayed
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/selected
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/attribute/{name}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/property/{name}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/css/{propertyName}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/text
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/computedlabel
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/computedrole
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/name
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/rect
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/enabled
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/execute/sync
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/execute/async
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/cookie
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/cookie/{name}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/cookie
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/cookie
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/cookie/{name}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/timeouts
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/timeouts
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/click
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/clear
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/value
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/alert/dismiss
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/alert/accept
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/alert/text
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/alert/text
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/screenshot
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/element/{elementId}/screenshot
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/actions
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/actions
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/permissions
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/print
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/privacy
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/privacy
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator/{authenticatorId}/credential
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator/{authenticatorId}/credentials
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator/{authenticatorId}/credentials
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator/{authenticatorId}/credentials/{credentialId}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator/{authenticatorId}
+1790822440669	webdriver::server	TRACE	Build standard route for /session/{sessionId}/webauthn/authenticator/{authenticatorId}/uv
+1790822440669	webdriver::server	TRACE	Build vendor route for /session/{sessionId}/moz/context
+1790822440669	webdriver::server	TRACE	Build vendor route for /session/{sessionId}/moz/context
+1790822440669	webdriver::server	TRACE	Build vendor route for /session/{sessionId}/moz/addon/install
+1790822440669	webdriver::server	TRACE	Build vendor route for /session/{sessionId}/moz/addon/uninstall
+1790822440669	webdriver::server	TRACE	Build vendor route for /session/{sessionId}/moz/screenshot/full
+1790822440683	webdriver::server	DEBUG	-> GET /status 
+1790822440683	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790822440685	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"re ... protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox","args":["-headless"]},"pageLoadStrategy":"eager"}}}
+1790822440685	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790822440685	geckodriver::capabilities	DEBUG	Found version 157.0
+1790822440688	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" "/Applications/Firefox. ... e" "-headless" "-foreground" "-no-remote" "-profile" "/var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/rust_mozprofile7QEnRd"
+1790822440688	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790822440688	geckodriver::browser	TRACE	Failed to open /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/rust_mozprofile7QEnRd/MarionetteActivePort
+1790822440688	geckodriver::marionette	TRACE	Retrying in 100ms
+1790822440793	geckodriver::browser	TRACE	Failed to open /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/rust_mozprofile7QEnRd/MarionetteActivePort
+1790822440793	geckodriver::marionette	TRACE	Retrying in 100ms
+*** You are running in headless mode.
+1790822440896	geckodriver::browser	TRACE	Failed to open /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/rust_mozprofile7QEnRd/MarionetteActivePort
+1790822440896	geckodriver::marionette	TRACE	Retrying in 100ms
+Could not find profile folder.
+1790822440996	geckodriver::browser	DEBUG	Browser process stopped: exit status: 1
+1790822440997	geckodriver::browser	WARN	Couldn't read files from minidumps folder '/var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/rust_mozprofile7QEnRd/minidumps'
+1790822440997	webdriver::server	DEBUG	<- 500 Internal Server Error {"value":{"error":"unknown error","message":"Process (pid=6871) unexpectedly closed with status 1","stacktrace":""}}
+1790822440998	webdriver::server	INFO	Shutting down
+1790822440998	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790822440998	webdriver::server	DEBUG	Teardown session

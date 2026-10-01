@@ -1,0 +1,2 @@
+run_id,timestamp,browser_engine,browser_version,route,viewport,http_status,primary_content_visible,horizontal_overflow,pageerror_count,console_error_count,critical_request_failure_count,status,notes
+"PREFLIGHT_FIREFOX_compare_desktop","2026-10-01T03:40:23.171Z","firefox","157.0","/compare","1440x900","200","true","false","0","0","0","PASS",""

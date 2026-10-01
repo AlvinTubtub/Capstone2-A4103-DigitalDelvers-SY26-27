@@ -1,0 +1,68 @@
+{
+  "run_id": "FINAL_20261001",
+  "production_url": "https://pse-pulse.vercel.app/",
+  "threshold_ms": 5000,
+  "required_pass_rate_pct": 90,
+  "planned_trials": 80,
+  "valid_trials": 80,
+  "within_threshold_trials": 76,
+  "overall_pass_rate_pct": 95,
+  "measurement_status": "PASS",
+  "threshold_status": "PASS",
+  "median_usable_load_ms": 408.005,
+  "p90_usable_load_ms": 565.69,
+  "p95_usable_load_ms": 1146.14,
+  "maximum_usable_load_ms": 30002.65,
+  "censored_timeout_trials": 4,
+  "percentile_caveat": "Timeout elapsed values are lower bounds, not completed usable loads.",
+  "per_route": {
+    "/": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 9,
+      "pass_rate_pct": 90
+    },
+    "/companies": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/companies/ALI": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 8,
+      "pass_rate_pct": 80
+    },
+    "/companies/GLO": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/watchlist": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/compare": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 9,
+      "pass_rate_pct": 90
+    },
+    "/learn-stocks": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/about": {
+      "planned_trials": 10,
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    }
+  }
+}

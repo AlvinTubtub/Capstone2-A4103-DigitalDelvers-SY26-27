@@ -1,0 +1,139 @@
+{
+  "created_at": "2026-10-01T03:44:30.314Z",
+  "source_repository_sha": "8acda4af140e02ae55dc40b29541c4089bded597",
+  "required_attempts_per_configuration": 10,
+  "results": [
+    {
+      "browser": "chromium",
+      "route": "/",
+      "width": 1440,
+      "height": 900,
+      "source": "pre-final performance",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_home_1440x900.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/about",
+      "width": 820,
+      "height": 1180,
+      "source": "TOUT-002",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_about_820x1180.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/about",
+      "width": 1440,
+      "height": 900,
+      "source": "pre-final cross",
+      "attempts": 10,
+      "passed": 9,
+      "status": "FAIL",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_about_1440x900.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/about",
+      "width": 2560,
+      "height": 1440,
+      "source": "TOUT-003",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_about_2560x1440.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/companies",
+      "width": 412,
+      "height": 915,
+      "source": "pre-final responsive",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_companies_412x915.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/companies",
+      "width": 1440,
+      "height": 900,
+      "source": "TOUT-006",
+      "attempts": 10,
+      "passed": 9,
+      "status": "FAIL",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_companies_1440x900.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/companies/ALI",
+      "width": 1440,
+      "height": 900,
+      "source": "pre-final performance",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_companies_ALI_1440x900.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/compare",
+      "width": 1440,
+      "height": 900,
+      "source": "pre-final performance",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_compare_1440x900.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/learn-stocks",
+      "width": 390,
+      "height": 844,
+      "source": "pre-final cross",
+      "attempts": 10,
+      "passed": 9,
+      "status": "FAIL",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_learn-stocks_390x844.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/learn-stocks",
+      "width": 1440,
+      "height": 900,
+      "source": "TOUT-010",
+      "attempts": 10,
+      "passed": 9,
+      "status": "FAIL",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_learn-stocks_1440x900.json"
+    },
+    {
+      "browser": "chromium",
+      "route": "/watchlist",
+      "width": 1440,
+      "height": 900,
+      "source": "TOUT-007",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/chromium_watchlist_1440x900.json"
+    },
+    {
+      "browser": "firefox",
+      "route": "/compare",
+      "width": 390,
+      "height": 844,
+      "source": "pre-final cross",
+      "attempts": 10,
+      "passed": 10,
+      "status": "PASS",
+      "evidence": "/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/docs/research-history/browser-validation/2026-10-01-pre-final-validation/preflight/stability_gate_l2AM7v/firefox_compare_390x844/firefox_cross_browser_results.raw.json"
+    }
+  ]
+}

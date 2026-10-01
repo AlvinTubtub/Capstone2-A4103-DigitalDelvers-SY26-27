@@ -1,0 +1,7 @@
+validation,status,measured_result,evidence
+"Mobile responsive testing","PASS","16/16 cases passed","responsive_test_results.csv"
+"Tablet responsive testing","PASS","16/16 cases passed","responsive_test_results.csv"
+"Laptop/desktop browser testing","PASS","32/32 cases passed","responsive_test_results.csv"
+"Cross-browser compatibility","FAIL","46/48 cases passed","cross_browser_results.csv"
+"Page-load/performance measurement","PASS","80/80 valid trials","performance_results.csv"
+"90% within five-second performance threshold","PASS","76/80 (95.00%) within 5.0 seconds","performance_summary.json"

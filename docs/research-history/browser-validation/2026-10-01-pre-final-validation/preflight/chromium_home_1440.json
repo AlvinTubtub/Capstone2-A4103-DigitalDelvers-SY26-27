@@ -1,0 +1,31 @@
+[
+  {
+    "timestamp": "2026-10-01T03:39:32.903Z",
+    "engine": "chromium",
+    "route": "/",
+    "viewport": "1440x900",
+    "attempt": 1,
+    "navigation_start": "2026-10-01T03:39:33.109Z",
+    "response_received": 215.84920799999986,
+    "http_status": 200,
+    "domcontentloaded_time": 467.164125,
+    "document_ready_state": "interactive",
+    "primary_landmark_visible_time": 475.31333300000006,
+    "usable_page_load_ms": 475.31333300000006,
+    "window_load_time": 1635.6699580000002,
+    "pageerror_count": 0,
+    "console_error_count": 0,
+    "critical_request_failure_count": 0,
+    "browser_navigation_error": null,
+    "status": "PASS",
+    "checks": {
+      "primary": true,
+      "core": true,
+      "navUsable": true,
+      "overflow": false,
+      "headingClipped": false,
+      "navOverflow": false,
+      "fixedCover": 0
+    }
+  }
+]

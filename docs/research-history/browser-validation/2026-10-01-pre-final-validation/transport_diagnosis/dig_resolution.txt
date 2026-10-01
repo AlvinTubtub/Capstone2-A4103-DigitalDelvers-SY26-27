@@ -1,0 +1,24 @@
+$ dig pse-pulse.vercel.app
+exit=0
+
+; <<>> DiG 9.10.6 <<>> pse-pulse.vercel.app
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52887
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1220
+;; QUESTION SECTION:
+;pse-pulse.vercel.app.		IN	A
+
+;; ANSWER SECTION:
+pse-pulse.vercel.app.	286	IN	A	64.29.17.131
+pse-pulse.vercel.app.	286	IN	A	216.198.79.131
+
+;; Query time: 12 msec
+;; SERVER: 192.168.254.254#53(192.168.254.254)
+;; WHEN: Thu Oct 01 12:06:11 PST 2026
+;; MSG SIZE  rcvd: 81
+
+

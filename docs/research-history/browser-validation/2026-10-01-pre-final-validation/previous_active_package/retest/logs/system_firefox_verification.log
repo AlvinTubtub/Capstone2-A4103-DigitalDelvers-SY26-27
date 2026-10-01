@@ -1,0 +1,57 @@
+Timestamp: 2026-10-01T02:38:19.376Z
+
+Playwright version: 1.63.0
+
+Installed Mozilla Firefox executable: /Applications/Firefox.app/Contents/MacOS/firefox
+
+Bundled Playwright Firefox executable: /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox
+
+$ ls -ld /Applications/Firefox.app
+drwxr-xr-x@ 3 alvintubtub  admin  96 Sep 24 19:27 /Applications/Firefox.app
+
+
+$ ls -l /Applications/Firefox.app/Contents/MacOS/
+total 817448
+-rwxr-xr-x@ 1 alvintubtub  admin  348260704 Sep 24 19:27 XUL
+-rwxr-xr-x@ 1 alvintubtub  admin    1277008 Sep 24 19:27 crashhelper
+drwxr-xr-x@ 3 alvintubtub  admin         96 Sep 24 19:27 crashreporter.app
+-rwxr-xr-x@ 1 alvintubtub  admin     174928 Sep 24 19:27 firefox
+drwxr-xr-x@ 3 alvintubtub  admin         96 Sep 24 19:28 gpu-helper.app
+-rwxr-xr-x@ 1 alvintubtub  admin     244768 Sep 24 19:27 libEGL.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    8639136 Sep 24 19:28 libGLESv2.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    2373488 Sep 24 19:27 libfreebl3.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin   15881168 Sep 24 19:27 libgkcodecs.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin     401712 Sep 24 19:28 liblgpllibs.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    6012896 Sep 24 19:28 libmozavcodec.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    1061584 Sep 24 19:28 libmozavutil.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    1205728 Sep 24 19:27 libmozglue.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    6360816 Sep 24 19:27 libmozinference.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin    5580768 Sep 24 19:27 libnss3.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin   18356736 Sep 24 19:28 libonnxruntime.dylib
+-rwxr-xr-x@ 1 alvintubtub  admin     737840 Sep 24 19:27 libsoftokn3.dylib
+drwxr-xr-x@ 3 alvintubtub  admin         96 Sep 24 19:27 media-plugin-helper.app
+-rwxr-xr-x@ 1 alvintubtub  admin    1709968 Sep 24 19:27 nmhproxy
+-rwxr-xr-x@ 1 alvintubtub  admin     220272 Sep 24 19:27 pingsender
+drwxr-xr-x@ 3 alvintubtub  admin         96 Sep 24 19:28 plugin-container.app
+drwxr-xr-x@ 3 alvintubtub  admin         96 Sep 24 19:28 updater.app
+
+
+$ /Applications/Firefox.app/Contents/MacOS/firefox --version
+Mozilla Firefox 157.0
+
+
+$ file /Applications/Firefox.app/Contents/MacOS/firefox
+/Applications/Firefox.app/Contents/MacOS/firefox: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64:Mach-O 64-bit executable arm64]
+/Applications/Firefox.app/Contents/MacOS/firefox (for architecture x86_64):	Mach-O 64-bit executable x86_64
+/Applications/Firefox.app/Contents/MacOS/firefox (for architecture arm64):	Mach-O 64-bit executable arm64
+
+
+$ sw_vers 
+ProductName:		macOS
+ProductVersion:		27.0
+BuildVersion:		26A428
+
+
+$ mdls /Applications/Firefox.app
+EXIT 1: /Applications/Firefox.app: could not find /Applications/Firefox.app.
+

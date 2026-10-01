@@ -1,0 +1,7 @@
+validation,status,measured_result,evidence,notes
+"Mobile responsive testing","FAIL","15/16 final cases passed","final_run/responsive_test_results.csv",""
+"Tablet responsive testing","PASS","16/16 final cases passed","final_run/responsive_test_results.csv",""
+"Laptop/desktop browser testing","PASS","32/32 final cases passed","final_run/responsive_test_results.csv",""
+"Cross-browser compatibility","FAIL","45/48 final cases passed","final_run/cross_browser_results.csv",""
+"Page-load/performance measurement","PASS","80/80 valid trials completed","final_run/performance_results.csv","4 censored timeout(s)"
+"90% within five-second performance threshold","PASS","76/80 (95.00%) completed within 5.0 seconds","final_run/performance_summary.json","Required >=90.00%; unthrottled Chromium 1440x900"

@@ -1,0 +1,10 @@
+Started: 2026-10-01T02:18:40.060Z
+$ npx playwright install firefox
+Exit status: 0
+Signal: none
+Error: none
+STDOUT:
+
+STDERR:
+
+Completed: 2026-10-01T02:18:40.802Z

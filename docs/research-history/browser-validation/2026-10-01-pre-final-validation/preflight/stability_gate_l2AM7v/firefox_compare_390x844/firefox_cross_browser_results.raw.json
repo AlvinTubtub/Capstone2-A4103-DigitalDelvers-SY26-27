@@ -1,0 +1,1872 @@
+[
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:43:58.668Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 1/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "ac9b60a2-85bd-4950-be49-6ba20ba62eb8"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:01.834Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 2/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "39151169-6617-4e1d-9acc-2af1383625bd"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:05.131Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 3/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "b30130a8-a6d6-4a7e-a49a-90960cc2bf62"
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:08.144Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 4/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "b5d957cd-e172-48db-94a5-caf9444100d0"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:11.288Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 5/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "11b249ac-dbb9-45f1-b8c9-1ad6d1ee849b"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:14.595Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 6/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "0f6da68f-c3f4-4171-9f66-bbb122eff5e5"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:17.701Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 7/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "91845cdd-cf79-40f5-b860-9d3779449f0a"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:20.870Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 8/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "059d2612-f1d7-4151-ae5f-9a0378764feb"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:24.151Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 9/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "534f2a1d-29fa-49cd-98e7-e33d36fa9a1e"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  },
+  {
+    "row": {
+      "run_id": "firefox_compare_390x844",
+      "timestamp": "2026-10-01T03:44:27.208Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": 200,
+      "primary_content_visible": true,
+      "horizontal_overflow": false,
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "PASS",
+      "notes": "attempt 10/10 | "
+    },
+    "state": {
+      "bodyWidth": 375,
+      "core": true,
+      "documentWidth": 375,
+      "fixedCover": 0,
+      "headingClipped": false,
+      "navOverflow": false,
+      "navUsable": true,
+      "navigationStatus": 200,
+      "primary": true,
+      "viewportHeight": 844,
+      "viewportWidth": 390
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": [
+        {
+          "address": "https://pse-pulse.vercel.app/compare",
+          "code": 200,
+          "navigation": "95c2929d-4c43-453c-8ab1-32e5f51fca61"
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/layout-93a8f13670d65b9e.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/231-8b504721570a4393.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/fd9d1056-d14ef8459442c52c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/516-1fd0b0eda6db21c1.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/816-d53e45fac8736a4d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/main-app-73f5ef375823e32a.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/css/dc7b15f7f6b487a4.css",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/compare/page-a1ef9b53ccf45544.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/webpack-1615aa092b295111.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/23-43373d375effecd4.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/173-1f6e92ab7b1558f2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/page-048e04447c6d5b26.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "[screenshot intentionally excluded]?e6a9231c0fd3b157",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/companies?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/learn-stocks?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/about?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/watchlist?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/?_rsc=1t1qe",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/698-e368f76a2ce3fbd0.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/companies/page-2c8588c7b5b5500d.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/about/page-71cb16b4f0d82ed2.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/learn-stocks/page-c7a634713ba03d0c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/app/watchlist/page-e4a5199dc6e6493c.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/64-99e9cd7dabd27dac.js",
+          "code": 200,
+          "navigation": null
+        },
+        {
+          "address": "https://pse-pulse.vercel.app/_next/static/chunks/566-27c79da81b062b64.js",
+          "code": 200,
+          "navigation": null
+        }
+      ]
+    }
+  }
+]

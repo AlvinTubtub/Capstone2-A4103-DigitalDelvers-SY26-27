@@ -1,0 +1,386 @@
+[
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:46:53.899Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:46:56.483Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/companies",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:46:58.980Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/companies/ALI",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:01.450Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/companies/GLO",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:03.773Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/watchlist",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:06.117Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:08.360Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/learn-stocks",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:10.726Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/about",
+      "viewport": "390x844",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:13.061Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:14.867Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/companies",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:16.745Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/companies/ALI",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:18.655Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/companies/GLO",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:20.467Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/watchlist",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:22.384Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/compare",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:24.264Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/learn-stocks",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  },
+  {
+    "row": {
+      "run_id": "BROWSER_VALIDATION_FIREFOX_RETEST_20261001",
+      "timestamp": "2026-10-01T02:47:26.144Z",
+      "browser_engine": "firefox",
+      "browser_version": "157.0",
+      "route": "/about",
+      "viewport": "1440x900",
+      "http_status": "",
+      "primary_content_visible": false,
+      "horizontal_overflow": "",
+      "pageerror_count": 0,
+      "console_error_count": 0,
+      "critical_request_failure_count": 0,
+      "status": "FAIL",
+      "notes": "UnsupportedOperationError: The command does not support browsing contexts in privileged scope\n    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)\n    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)\n    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async Driver.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/webdriver.js:755:17)\n    at async setViewport (file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:25:20)\n    at async file:///Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_matrix.mjs:83:30"
+    },
+    "observed": {
+      "pageerrors": [],
+      "consoleErrors": [],
+      "criticalFailures": [],
+      "responses": []
+    }
+  }
+]

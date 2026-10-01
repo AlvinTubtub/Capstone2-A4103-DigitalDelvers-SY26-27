@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2026-10-01T03:33:23.504Z",
+    "engine": "firefox",
+    "route": "/compare",
+    "viewport": "390x844",
+    "attempt": 1,
+    "navigation_start": "2026-10-01T03:33:23.504Z",
+    "response_received": 3136.683792,
+    "http_status": null,
+    "domcontentloaded_time": null,
+    "document_ready_state": "interactive",
+    "primary_landmark_visible_time": null,
+    "usable_page_load_ms": null,
+    "window_load_time": null,
+    "pageerror_count": 0,
+    "console_error_count": 0,
+    "critical_request_failure_count": 0,
+    "browser_navigation_error": null,
+    "status": "FAIL"
+  },
+  {
+    "timestamp": "2026-10-01T03:33:26.742Z",
+    "engine": "firefox",
+    "route": "/compare",
+    "viewport": "390x844",
+    "attempt": 2,
+    "navigation_start": "2026-10-01T03:33:26.742Z",
+    "response_received": 2593.559583,
+    "http_status": null,
+    "domcontentloaded_time": null,
+    "document_ready_state": "interactive",
+    "primary_landmark_visible_time": null,
+    "usable_page_load_ms": null,
+    "window_load_time": null,
+    "pageerror_count": 0,
+    "console_error_count": 0,
+    "critical_request_failure_count": 0,
+    "browser_navigation_error": null,
+    "status": "FAIL"
+  }
+]

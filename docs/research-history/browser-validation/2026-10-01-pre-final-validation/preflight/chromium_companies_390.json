@@ -1,0 +1,31 @@
+[
+  {
+    "timestamp": "2026-10-01T03:39:45.040Z",
+    "engine": "chromium",
+    "route": "/companies",
+    "viewport": "390x844",
+    "attempt": 1,
+    "navigation_start": "2026-10-01T03:39:45.083Z",
+    "response_received": 155.93562499999996,
+    "http_status": 200,
+    "domcontentloaded_time": 245.84091699999993,
+    "document_ready_state": "interactive",
+    "primary_landmark_visible_time": 259.35445799999997,
+    "usable_page_load_ms": 259.35445799999997,
+    "window_load_time": 340.354208,
+    "pageerror_count": 0,
+    "console_error_count": 0,
+    "critical_request_failure_count": 0,
+    "browser_navigation_error": null,
+    "status": "PASS",
+    "checks": {
+      "primary": true,
+      "core": true,
+      "navUsable": true,
+      "overflow": false,
+      "headingClipped": false,
+      "navOverflow": false,
+      "fixedCover": 0
+    }
+  }
+]

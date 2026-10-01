@@ -1,0 +1,25 @@
+1790825711031	geckodriver	INFO	Listening on 127.0.0.1:54752
+1790825711043	webdriver::server	DEBUG	-> GET /status 
+1790825711043	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790825711044	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"re ... -protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox"},"pageLoadStrategy":"eager","webSocketUrl":true}}}
+1790825711044	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790825711044	geckodriver::capabilities	DEBUG	Found version 157.0
+1790825711044	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790825711129	geckodriver::marionette	DEBUG	Connection to Marionette established on 127.0.0.1:2828.
+1790825711812	webdriver::server	DEBUG	<- 200 OK {"value":{"sessionId":"0c105481-744e-4bef-bb57-66f76db59b6e","capabilities":{"acceptInsecureCerts":false,"browserNa ...  rv:157.0) Gecko/20100101 Firefox/157.0","webSocketUrl":"ws://127.0.0.1:9222/session/0c105481-744e-4bef-bb57-66f76db59b6e"}}}
+1790825711815	webdriver::server	DEBUG	-> POST /session/0c105481-744e-4bef-bb57-66f76db59b6e/timeouts {"pageLoad":30000,"script":15000}
+1790825711822	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790825711823	webdriver::server	DEBUG	-> POST /session/0c105481-744e-4bef-bb57-66f76db59b6e/window/rect {"x":0,"y":0,"width":390,"height":844}
+1790825712585	webdriver::server	DEBUG	<- 200 OK {"value":{"x":0,"y":0,"width":500,"height":844}}
+1790825712587	webdriver::server	DEBUG	-> POST /session/0c105481-744e-4bef-bb57-66f76db59b6e/url {"url":"https://pse-pulse.vercel.app/compare"}
+1790825712919	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790825712920	webdriver::server	DEBUG	-> POST /session/0c105481-744e-4bef-bb57-66f76db59b6e/execute/sync {"script":"return {url:location.href,ready:document.readyS ... lector(\"main h1\").getBoundingClientRect().height>0,chart:!!document.querySelector(\"main .recharts-surface\")};","args":[]}
+1790825712941	webdriver::server	DEBUG	<- 200 OK {"value":{"chart":false,"heading":true,"ready":"interactive","url":"https://pse-pulse.vercel.app/compare"}}
+1790825713142	webdriver::server	DEBUG	-> POST /session/0c105481-744e-4bef-bb57-66f76db59b6e/execute/sync {"script":"return {url:location.href,ready:document.readyS ... lector(\"main h1\").getBoundingClientRect().height>0,chart:!!document.querySelector(\"main .recharts-surface\")};","args":[]}
+1790825713157	webdriver::server	DEBUG	<- 200 OK {"value":{"chart":true,"heading":true,"ready":"complete","url":"https://pse-pulse.vercel.app/compare"}}
+1790825713158	webdriver::server	DEBUG	-> DELETE /session/0c105481-744e-4bef-bb57-66f76db59b6e 
+1790825713160	webdriver::server	DEBUG	Teardown session
+1790825713160	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790825713161	webdriver::server	INFO	Shutting down
+1790825713161	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790825713161	webdriver::server	DEBUG	Teardown session

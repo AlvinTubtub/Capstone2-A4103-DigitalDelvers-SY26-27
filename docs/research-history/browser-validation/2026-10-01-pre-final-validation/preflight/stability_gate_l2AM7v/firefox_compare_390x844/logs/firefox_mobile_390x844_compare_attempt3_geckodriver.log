@@ -1,0 +1,35 @@
+1790826245721	geckodriver	INFO	Listening on 127.0.0.1:55206
+1790826245731	webdriver::server	DEBUG	-> GET /status 
+1790826245731	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790826245731	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"re ... e-protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox"},"pageLoadStrategy":"none","webSocketUrl":true}}}
+1790826245731	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790826245732	geckodriver::capabilities	DEBUG	Found version 157.0
+1790826245732	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790826245829	geckodriver::marionette	DEBUG	Connection to Marionette established on 127.0.0.1:2828.
+1790826246581	webdriver::server	DEBUG	<- 200 OK {"value":{"sessionId":"9340bd54-a63e-44cd-b938-f91c4afbdc91","capabilities":{"acceptInsecureCerts":false,"browserNa ...  rv:157.0) Gecko/20100101 Firefox/157.0","webSocketUrl":"ws://127.0.0.1:9222/session/9340bd54-a63e-44cd-b938-f91c4afbdc91"}}}
+1790826246584	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/timeouts {"pageLoad":30000,"script":15000}
+1790826246585	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790826246585	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/window/rect {"x":0,"y":0,"width":390,"height":844}
+1790826247349	webdriver::server	DEBUG	<- 200 OK {"value":{"x":0,"y":0,"width":500,"height":844}}
+1790826247384	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/url {"url":"https://pse-pulse.vercel.app/compare"}
+1790826247398	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790826247399	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/execute/sync {"script":"return location.href","args":[]}
+1790826247399	webdriver::server	DEBUG	<- 500 Internal Server Error {"value":{"error":"unsupported operation","message":"The command does not support browsing conte ... ontent/marionette/server.sys.mjs:263:9\n_onJSONObjectReady/<@chrome://remote/content/marionette/transport.sys.mjs:493:20\n"}}
+1790826247602	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/execute/sync {"script":"return location.href","args":[]}
+1790826247606	webdriver::server	DEBUG	<- 200 OK {"value":"https://pse-pulse.vercel.app/compare"}
+1790826247607	webdriver::server	DEBUG	-> GET /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/window 
+1790826247607	webdriver::server	DEBUG	<- 200 OK {"value":"950e1f6e-47b2-4ba4-b418-9b664c84e52d"}
+1790826247757	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/execute/sync {"script":"return {width: innerWidth, height: innerHeight}","args":[]}
+1790826247788	webdriver::server	DEBUG	<- 200 OK {"value":{"height":844,"width":390}}
+1790826247790	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/execute/sync {"script":"return !!document.querySelector(\"main h1\") && !!document.querySelector(\"main h1\").getBoundingClientRect().height","args":[]}
+1790826247799	webdriver::server	DEBUG	<- 200 OK {"value":true}
+1790826247800	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/execute/sync {"script":"return !!document.querySelector(\"main .recharts-surface\")","args":[]}
+1790826247819	webdriver::server	DEBUG	<- 200 OK {"value":true}
+1790826247820	webdriver::server	DEBUG	-> POST /session/9340bd54-a63e-44cd-b938-f91c4afbdc91/execute/sync {"script":"return ((route, width) => {\n    const main = d ... ce.getEntriesByType('navigation')[0]?.responseStatus ?? null,\n    };\n  }).apply(null, arguments);","args":["/compare",390]}
+1790826247826	webdriver::server	DEBUG	<- 200 OK {"value":{"bodyWidth":375,"core":true,"documentWidth":375,"fixedCover":0,"headingClipped":false,"navOverflow":false,"navUsable":true,"navigationStatus":200,"primary":true,"viewportHeight":844,"viewportWidth":390}}
+1790826248078	webdriver::server	DEBUG	-> DELETE /session/9340bd54-a63e-44cd-b938-f91c4afbdc91 
+1790826248080	webdriver::server	DEBUG	Teardown session
+1790826248081	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790826248081	webdriver::server	INFO	Shutting down
+1790826248081	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790826248081	webdriver::server	DEBUG	Teardown session

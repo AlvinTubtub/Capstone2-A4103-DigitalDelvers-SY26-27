@@ -1,0 +1,9 @@
+# Final candidate outcome — not promoted
+
+Run `BROWSER_VALIDATION_FINAL_20261001_1216_PHT` completed all planned matrices. The live homepage returned HTTP 200 and the same HTML SHA-256 before and after the run. The candidate passed five of six predefined categories: responsive 64/64, Chromium compatibility 16/16, WebKit compatibility 16/16, 80/80 valid performance trials, and 76/80 (95%) within five seconds. Four slow/timed-out performance trials remained failures and were not replaced. Supplementary Lighthouse completed 24/24 planned measurements.
+
+Actual Mozilla Firefox compatibility was 14/16, so cross-browser compatibility was 46/48 and failed. The failed cases were `/watchlist` at 390×844 and `/companies/ALI` at 1440×900. In both isolated sessions, GeckoDriver accepted the navigation command but subsequent `executeScript` calls returned `unsupported operation` because the browsing context was unavailable. No main-document response or application DOM could be confirmed. The generic harness raw classification `APPLICATION_RUNTIME_FAILURE` must **not** be interpreted as a confirmed application defect: the GeckoDriver logs show an automation/context failure, and the page never reached assertions. Because DOM absence could not be positively established, neither case met the strict `TRANSPORT_NO_DOCUMENT` retry preconditions. Both failures are retained without retry.
+
+Three Playwright responsive cases used one qualifying no-document transport retry and subsequently passed. Every first attempt is preserved in `transport_attempts.json`. No UI, JavaScript, application, or performance failure was retried.
+
+Overall result: **5/6 categories, FAIL; promotion ineligible**. The earlier active pre-final package remains in place. This candidate is retained in research history, not presented as the authoritative Chapter IV result.

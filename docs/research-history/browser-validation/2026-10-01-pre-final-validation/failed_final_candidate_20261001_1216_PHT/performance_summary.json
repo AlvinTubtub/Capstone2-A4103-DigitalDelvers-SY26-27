@@ -1,0 +1,57 @@
+{
+  "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+  "production_url": "https://pse-pulse.vercel.app/",
+  "planned_trials": 80,
+  "valid_trials": 80,
+  "threshold_ms": 5000,
+  "required_pass_rate_pct": 90,
+  "within_threshold_trials": 76,
+  "overall_pass_rate_pct": 95,
+  "median_usable_load_ms": 407.485,
+  "p90_usable_load_ms": 533.45,
+  "p95_usable_load_ms": 988.69,
+  "maximum_usable_load_ms": 30005.8,
+  "censored_timeout_trials": 4,
+  "per_route": {
+    "/": {
+      "valid_trials": 10,
+      "within_threshold_trials": 9,
+      "pass_rate_pct": 90
+    },
+    "/companies": {
+      "valid_trials": 10,
+      "within_threshold_trials": 9,
+      "pass_rate_pct": 90
+    },
+    "/companies/ALI": {
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/companies/GLO": {
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/watchlist": {
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/compare": {
+      "valid_trials": 10,
+      "within_threshold_trials": 9,
+      "pass_rate_pct": 90
+    },
+    "/learn-stocks": {
+      "valid_trials": 10,
+      "within_threshold_trials": 10,
+      "pass_rate_pct": 100
+    },
+    "/about": {
+      "valid_trials": 10,
+      "within_threshold_trials": 9,
+      "pass_rate_pct": 90
+    }
+  }
+}

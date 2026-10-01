@@ -1,0 +1,15 @@
+{
+  "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+  "timestamp": "2026-10-01T04:26:38.955Z",
+  "route": "/companies",
+  "form_factor": "mobile",
+  "trial": 3,
+  "status": "PASS",
+  "performance_score": 95,
+  "fcp_ms": 827.4669,
+  "lcp_ms": 827.4669,
+  "speed_index_ms": 827.4669,
+  "tbt_ms": 3,
+  "cls": 0.14041170166304434,
+  "notes": ""
+}

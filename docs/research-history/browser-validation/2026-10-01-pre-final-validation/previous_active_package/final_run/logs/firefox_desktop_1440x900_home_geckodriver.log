@@ -1,0 +1,29 @@
+1790824097166	geckodriver	INFO	Listening on 127.0.0.1:54138
+1790824097176	webdriver::server	DEBUG	-> GET /status 
+1790824097177	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790824097179	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"re ... -protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox"},"pageLoadStrategy":"eager","webSocketUrl":true}}}
+1790824097180	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790824097180	geckodriver::capabilities	DEBUG	Found version 157.0
+1790824097180	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790824097209	geckodriver::marionette	DEBUG	Connection to Marionette established on 127.0.0.1:2828.
+1790824098114	webdriver::server	DEBUG	<- 200 OK {"value":{"sessionId":"dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e","capabilities":{"acceptInsecureCerts":false,"browserNa ...  rv:157.0) Gecko/20100101 Firefox/157.0","webSocketUrl":"ws://127.0.0.1:9222/session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e"}}}
+1790824098115	webdriver::server	DEBUG	-> POST /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/timeouts {"pageLoad":30000,"script":15000}
+1790824098116	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790824098117	webdriver::server	DEBUG	-> POST /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/window/rect {"x":0,"y":0,"width":1440,"height":900}
+1790824098383	webdriver::server	DEBUG	<- 200 OK {"value":{"x":0,"y":0,"width":1440,"height":900}}
+1790824098419	webdriver::server	DEBUG	-> POST /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/url {"url":"https://pse-pulse.vercel.app/"}
+1790824098750	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790824098752	webdriver::server	DEBUG	-> GET /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/window 
+1790824098752	webdriver::server	DEBUG	<- 200 OK {"value":"a7eb9117-e7f7-46e8-bfc5-e6f4bbce1364"}
+1790824098765	webdriver::server	DEBUG	-> POST /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/execute/sync {"script":"return {width: innerWidth, height: innerHeight}","args":[]}
+1790824098786	webdriver::server	DEBUG	<- 200 OK {"value":{"height":900,"width":1440}}
+1790824098788	webdriver::server	DEBUG	-> POST /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/execute/sync {"script":"return !!document.querySelector(\"main h1\") && !!document.querySelector(\"main h1\").getBoundingClientRect().height","args":[]}
+1790824098810	webdriver::server	DEBUG	<- 200 OK {"value":true}
+1790824098813	webdriver::server	DEBUG	-> POST /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e/execute/sync {"script":"return ((route, width) => {\n    const main = d ... formance.getEntriesByType('navigation')[0]?.responseStatus ?? null,\n    };\n  }).apply(null, arguments);","args":["/",1440]}
+1790824098870	webdriver::server	DEBUG	<- 200 OK {"value":{"bodyWidth":1433,"core":true,"documentWidth":1433,"fixedCover":0,"headingClipped":false,"navOverflow":false,"navUsable":true,"navigationStatus":200,"primary":true,"viewportHeight":900,"viewportWidth":1440}}
+1790824099165	webdriver::server	DEBUG	-> DELETE /session/dc0ef62d-2dd1-46a1-9e21-3ffe5e2c7e1e 
+1790824099203	webdriver::server	DEBUG	Teardown session
+1790824099203	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790824099204	webdriver::server	INFO	Shutting down
+1790824099204	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790824099204	webdriver::server	DEBUG	Teardown session

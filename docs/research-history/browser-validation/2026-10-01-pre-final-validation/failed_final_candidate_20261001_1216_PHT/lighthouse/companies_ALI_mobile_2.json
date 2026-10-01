@@ -1,0 +1,15 @@
+{
+  "run_id": "BROWSER_VALIDATION_FINAL_20261001_1216_PHT",
+  "timestamp": "2026-10-01T04:27:13.274Z",
+  "route": "/companies/ALI",
+  "form_factor": "mobile",
+  "trial": 2,
+  "status": "PASS",
+  "performance_score": 94,
+  "fcp_ms": 1404.8940078125001,
+  "lcp_ms": 3045.561,
+  "speed_index_ms": 1404.8940078125001,
+  "tbt_ms": 57.5,
+  "cls": 0,
+  "notes": ""
+}

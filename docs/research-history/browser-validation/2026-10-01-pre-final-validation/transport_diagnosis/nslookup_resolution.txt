@@ -1,0 +1,12 @@
+$ nslookup pse-pulse.vercel.app
+exit=0
+Server:		192.168.254.254
+Address:	192.168.254.254#53
+
+Non-authoritative answer:
+Name:	pse-pulse.vercel.app
+Address: 216.198.79.131
+Name:	pse-pulse.vercel.app
+Address: 64.29.17.131
+
+

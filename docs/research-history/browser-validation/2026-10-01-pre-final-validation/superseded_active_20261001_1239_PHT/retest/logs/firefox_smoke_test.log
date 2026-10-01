@@ -1,0 +1,27 @@
+Timestamp: 2026-10-01T02:18:51.670Z
+URL: https://pse-pulse.vercel.app/
+Smoke result: FAIL
+browserType.launch: Failed to launch the browser process.
+Browser logs:
+
+<launching> /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-DXJT1O -juggler-pipe -silent
+<launched> pid=5805
+[pid=5805][err] *** You are running in headless mode.
+[pid=5805][err] Could not find profile folder.
+[pid=5805] <process did exit: exitCode=1, signal=null>
+[pid=5805] starting temporary directories cleanup
+Call log:
+[2m  - <launching> /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-DXJT1O -juggler-pipe -silent[22m
+[2m  - <launched> pid=5805[22m
+[2m  - [pid=5805][err] *** You are running in headless mode.[22m
+[2m  - [pid=5805][err] Could not find profile folder.[22m
+[2m  - [pid=5805] <process did exit: exitCode=1, signal=null>[22m
+[2m  - [pid=5805] starting temporary directories cleanup[22m
+[2m  - [pid=5805] <gracefully close start>[22m
+[2m  - [pid=5805] <kill>[22m
+[2m  - [pid=5805] <skipped force kill spawnedProcess.killed=false processClosed=true>[22m
+[2m  - [pid=5805] finished temporary directories cleanup[22m
+[2m  - [pid=5805] <gracefully close end>[22m
+
+    at /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/firefox_smoke.mjs:10:27
+    at async node:internal/modules/esm/loader:633:26

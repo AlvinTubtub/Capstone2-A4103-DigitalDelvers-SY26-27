@@ -1,0 +1,9 @@
+Timestamp: 2026-10-01T02:39:56.283Z
+Firefox binary: /Applications/Firefox.app/Contents/MacOS/firefox
+Method: Selenium WebDriver with anonymous isolated Firefox profile
+Smoke result: FAIL
+WebDriverError: Process (pid=6823) unexpectedly closed with status 1
+    at Object.throwDecodedError (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/error.js:523:15)
+    at parseHttpResponse (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:527:13)
+    at Executor.execute (/Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/node_modules/selenium-webdriver/lib/http.js:459:28)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

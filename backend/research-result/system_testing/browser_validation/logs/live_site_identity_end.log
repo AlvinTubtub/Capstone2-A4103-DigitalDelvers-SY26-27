@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-01T04:46:49.908Z",
+  "request_url": "https://pse-pulse.vercel.app/",
+  "final_url": "https://pse-pulse.vercel.app/",
+  "http_status": 200,
+  "headers": {
+    "access-control-allow-origin": "*",
+    "age": "12387",
+    "cache-control": "public, max-age=0, must-revalidate",
+    "content-disposition": "inline",
+    "content-encoding": "br",
+    "content-type": "text/html; charset=utf-8",
+    "date": "Thu, 01 Oct 2026 04:46:49 GMT",
+    "etag": "W/\"871540452e95cfe99101ce90b2f83fb5\"",
+    "server": "Vercel",
+    "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+    "transfer-encoding": "chunked",
+    "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch",
+    "x-matched-path": "/",
+    "x-vercel-cache": "HIT",
+    "x-vercel-id": "sin1::lrzdj-1790830009849-184990782e71"
+  },
+  "html_sha256": "8ed46632857c392c6ed1e3835239b5898031bac951e059064f0e3b6460bf9e21",
+  "html_bytes": 153425,
+  "deployment_sha_note": "Public response does not independently identify a Git deployment SHA"
+}

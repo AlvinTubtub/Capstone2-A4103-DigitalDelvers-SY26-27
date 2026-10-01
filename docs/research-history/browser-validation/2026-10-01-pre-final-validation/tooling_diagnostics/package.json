@@ -1,0 +1,16 @@
+{
+  "name": "pse-pulse-browser-validation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node run.mjs",
+    "lighthouse": "node lighthouse.mjs",
+    "report": "node report.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "chrome-launcher": "1.2.2",
+    "lighthouse": "13.5.0",
+    "selenium-webdriver": "4.50.0"
+  }
+}

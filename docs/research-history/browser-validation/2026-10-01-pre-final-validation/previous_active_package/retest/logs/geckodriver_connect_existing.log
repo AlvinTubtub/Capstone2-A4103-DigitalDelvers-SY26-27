@@ -1,0 +1,27 @@
+1790822591034	geckodriver	INFO	Listening on 127.0.0.1:52502
+1790822591057	webdriver::server	DEBUG	-> GET /status 
+1790822591060	webdriver::server	DEBUG	<- 200 OK {"value":{"message":"","ready":true}}
+1790822591062	webdriver::server	DEBUG	-> POST /session {"capabilities":{"firstMatch":[{}],"alwaysMatch":{"browserName":"firefox","moz:firefoxOptions":{"prefs":{"remote.active-protocols":1},"binary":"/Applications/Firefox.app/Contents/MacOS/firefox"},"pageLoadStrategy":"eager"}}}
+1790822591065	geckodriver::capabilities	DEBUG	Trying to read firefox version from ini files
+1790822591069	geckodriver::capabilities	DEBUG	Found version 157.0
+1790822591069	geckodriver::marionette	DEBUG	Waiting 60s to connect to browser on 127.0.0.1
+1790822591078	geckodriver::marionette	DEBUG	Connection to Marionette established on 127.0.0.1:2828.
+1790822591758	webdriver::server	DEBUG	<- 200 OK {"value":{"sessionId":"6c9a85e1-19c0-45d2-be8f-e04a51d72465","capabilities":{"acceptInsecureCerts":false,"browserNa ... r":"dismiss and notify","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:157.0) Gecko/20100101 Firefox/157.0"}}}
+1790822591760	webdriver::server	DEBUG	-> POST /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465/timeouts {"pageLoad":30000,"script":15000}
+1790822591762	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790822591763	webdriver::server	DEBUG	-> POST /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465/url {"url":"https://pse-pulse.vercel.app/"}
+1790822592162	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790822592166	webdriver::server	DEBUG	-> POST /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465/elements {"using":"css selector","value":"main h1"}
+1790822592172	webdriver::server	DEBUG	<- 200 OK {"value":[{"element-6066-11e4-a52e-4f735466cecf":"4ccd108f-4745-4b91-bdff-4aa28e8c9b6b"}]}
+1790822592174	webdriver::server	DEBUG	-> POST /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465/execute/sync {"script":"/* isDisplayed */return (function isShownElemen ... ement-6066-11e4-a52e-4f735466cecf":"4ccd108f-4745-4b91-bdff-4aa28e8c9b6b","ELEMENT":"4ccd108f-4745-4b91-bdff-4aa28e8c9b6b"}]}
+1790822592208	webdriver::server	DEBUG	<- 200 OK {"value":true}
+1790822592213	webdriver::server	DEBUG	-> GET /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465/title 
+1790822592217	webdriver::server	DEBUG	<- 200 OK {"value":"PSE Pulse | Philippine Stock Forecasting"}
+1790822592220	webdriver::server	DEBUG	-> GET /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465/url 
+1790822592225	webdriver::server	DEBUG	<- 200 OK {"value":"https://pse-pulse.vercel.app/"}
+1790822592227	webdriver::server	DEBUG	-> DELETE /session/6c9a85e1-19c0-45d2-be8f-e04a51d72465 
+1790822592230	webdriver::server	DEBUG	Teardown session
+1790822592231	webdriver::server	DEBUG	<- 200 OK {"value":null}
+1790822592233	webdriver::server	INFO	Shutting down
+1790822592233	webdriver::server	DEBUG	Quit signal received, tearing down session
+1790822592233	webdriver::server	DEBUG	Teardown session

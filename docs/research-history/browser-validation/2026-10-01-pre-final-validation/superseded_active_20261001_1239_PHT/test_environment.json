@@ -1,0 +1,30 @@
+{
+  "run_id": "BROWSER_VALIDATION_20261001_0926_PHT",
+  "repository_url": "https://github.com/AlvinTubtub/Capstone2-A4103-DigitalDelvers-SY26-27.git",
+  "repository_sha": "8acda4af140e02ae55dc40b29541c4089bded597",
+  "branch": "main",
+  "production_url": "https://pse-pulse.vercel.app/",
+  "test_start_timestamp": "2026-10-01T01:27:27.171Z",
+  "timezone": "Asia/Manila",
+  "operating_system": "Darwin",
+  "macos_version": "27.0",
+  "cpu_architecture": "arm64",
+  "machine_model": "Mac14,2",
+  "node_version": "v24.16.0",
+  "npm_version": "11.13.0",
+  "playwright_version": "1.63.0",
+  "chromium_version": "153.0.8010.12",
+  "firefox_version": null,
+  "webkit_version": "26.6",
+  "browser_launch_errors": {
+    "firefox": "browserType.launch: Failed to launch the browser process.\nBrowser logs:\n\n<launching> /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-UGmzW4 -juggler-pipe -silent\n<launched> pid=3759\n[pid=3759][err] *** You are running in headless mode.\n[pid=3759][err] Could not find profile folder.\n[pid=3759] <process did exit: exitCode=1, signal=null>\n[pid=3759] starting temporary directories cleanup\nCall log:\n\u001b[2m  - <launching> /Users/alvintubtub/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-UGmzW4 -juggler-pipe -silent\u001b[22m\n\u001b[2m  - <launched> pid=3759\u001b[22m\n\u001b[2m  - [pid=3759][err] *** You are running in headless mode.\u001b[22m\n\u001b[2m  - [pid=3759][err] Could not find profile folder.\u001b[22m\n\u001b[2m  - [pid=3759] <process did exit: exitCode=1, signal=null>\u001b[22m\n\u001b[2m  - [pid=3759] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=3759] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=3759] <kill>\u001b[22m\n\u001b[2m  - [pid=3759] <skipped force kill spawnedProcess.killed=false processClosed=true>\u001b[22m\n\u001b[2m  - [pid=3759] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=3759] <gracefully close end>\u001b[22m\n"
+  },
+  "lighthouse_version": "13.5.0",
+  "network_test_mode": "Live production site over the current Mac network connection",
+  "network_throttling_used_for_primary_threshold": false,
+  "lighthouse_throttling": "Lighthouse default simulation; supplementary only",
+  "website_authentication_required": false,
+  "screen_capture_method": "Playwright page.screenshot (engine-rendered)",
+  "tester_environment": "Local macOS arm64 laptop; Playwright headless engines",
+  "deployment_sha_status": "Not independently resolved from public response"
+}

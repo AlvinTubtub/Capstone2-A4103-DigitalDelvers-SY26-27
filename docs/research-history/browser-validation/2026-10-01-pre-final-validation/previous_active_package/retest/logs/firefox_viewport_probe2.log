@@ -1,0 +1,6 @@
+Timestamp: 2026-10-01T02:50:51.680Z
+Window handles: ["7cb47fae-c68f-4fcc-b134-26687703b442"]
+Current handle: 7cb47fae-c68f-4fcc-b134-26687703b442
+BiDi tree: {"type":"success","id":1,"result":{"contexts":[{"children":[],"context":"7cb47fae-c68f-4fcc-b134-26687703b442","originalOpener":null,"url":"https://pse-pulse.vercel.app/","userContext":"default","clientWindow":"4e44c253-9840-4c8e-acf6-16db5ec3035c","parent":null}]}}
+Set viewport on 7cb47fae-c68f-4fcc-b134-26687703b442: {"type":"success","id":2,"result":{}}
+Measured: {"height":844,"width":390}

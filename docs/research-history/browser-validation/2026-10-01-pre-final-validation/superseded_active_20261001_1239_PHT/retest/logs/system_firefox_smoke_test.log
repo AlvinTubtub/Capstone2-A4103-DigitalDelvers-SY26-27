@@ -1,0 +1,28 @@
+Timestamp: 2026-10-01T02:38:39.238Z
+Executable: /Applications/Firefox.app/Contents/MacOS/firefox
+Method: Playwright firefox.launch({ executablePath }); isolated temporary context/profile
+Smoke result: FAIL
+browserType.launch: Failed to launch the browser process.
+Browser logs:
+
+<launching> /Applications/Firefox.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-LDPLmE -juggler-pipe -silent
+<launched> pid=6705
+[pid=6705][err] *** You are running in headless mode.
+[pid=6705][err] Could not find profile folder.
+[pid=6705] <process did exit: exitCode=1, signal=null>
+[pid=6705] starting temporary directories cleanup
+Call log:
+[2m  - <launching> /Applications/Firefox.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/1b/zt7kw7hj5x52x_qmcrk9x02m0000gn/T/playwright_firefoxdev_profile-LDPLmE -juggler-pipe -silent[22m
+[2m  - <launched> pid=6705[22m
+[2m  - [pid=6705][err] *** You are running in headless mode.[22m
+[2m  - [pid=6705][err] Could not find profile folder.[22m
+[2m  - [pid=6705] <process did exit: exitCode=1, signal=null>[22m
+[2m  - [pid=6705] starting temporary directories cleanup[22m
+[2m  - [pid=6705] <gracefully close start>[22m
+[2m  - [pid=6705] <kill>[22m
+[2m  - [pid=6705] <skipped force kill spawnedProcess.killed=false processClosed=true>[22m
+[2m  - [pid=6705] finished temporary directories cleanup[22m
+[2m  - [pid=6705] <gracefully close end>[22m
+
+    at /Users/alvintubtub/Downloads/Capstone2-A4103-DigitalDelvers-SY26-27/tools/browser_validation/system_firefox_playwright_smoke.mjs:11:27
+    at async node:internal/modules/esm/loader:633:26
