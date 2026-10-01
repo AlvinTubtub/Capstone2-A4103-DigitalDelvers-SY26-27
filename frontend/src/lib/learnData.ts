@@ -167,6 +167,86 @@ export interface TermDefinition {
 }
 
 export const GLOSSARY_TERMS: TermDefinition[] = [
+  // Foundational equity & ownership terms
+  {
+    term: "Stock",
+    category: "market",
+    shortDef: "Fractional ownership unit in a public corporation.",
+    detailedDef: "A stock (also known as equity) represents a fractional claim on a corporation's assets and future earnings. Buying stock makes you a part-owner of the company.",
+  },
+  {
+    term: "Share",
+    category: "market",
+    shortDef: "Single individual unit of stock ownership.",
+    detailedDef: "A corporation divides its total capital into equal units called shares. Owning shares entitles the holder to proportionate voting rights and dividend distributions.",
+  },
+  {
+    term: "Shareholder",
+    category: "market",
+    shortDef: "Individual or entity that legally owns shares in a company.",
+    detailedDef: "A shareholder (or stockholder) is any person, company, or institution that owns at least one share of a company's stock, sharing in its financial performance.",
+  },
+  {
+    term: "Stockholder",
+    category: "market",
+    shortDef: "Synonym for shareholder; an owner of corporation shares.",
+    detailedDef: "A stockholder holds equity shares in a company. The terms shareholder and stockholder are interchangeable in Philippine stock market terminology.",
+  },
+  {
+    term: "Dividend",
+    category: "market",
+    shortDef: "Distribution of corporate earnings paid to shareholders.",
+    detailedDef: "A dividend is a portion of a company's net profits declared by its board of directors and distributed to eligible shareholders, typically as cash or additional shares.",
+  },
+  {
+    term: "Cash Dividend",
+    category: "market",
+    shortDef: "Dividend distributed directly in Philippine Pesos (₱).",
+    detailedDef: "Cash dividends are paid in money directly into the shareholder's trading account on a per-share basis (e.g., ₱1.50 per share owned).",
+  },
+  {
+    term: "Stock Dividend",
+    category: "market",
+    shortDef: "Dividend distributed as additional shares instead of cash.",
+    detailedDef: "Stock dividends grant shareholders additional shares proportional to their existing holdings, retaining corporate cash while increasing the investor's total share count.",
+  },
+  {
+    term: "Common Stock",
+    category: "market",
+    shortDef: "Standard equity ownership with voting rights and variable dividends.",
+    detailedDef: "Common shares represent standard corporate ownership with voting rights at shareholder meetings and participation in capital growth, but have secondary priority behind preferred shares upon liquidation.",
+  },
+  {
+    term: "Preferred Stock",
+    category: "market",
+    shortDef: "Class of equity with fixed dividends and liquidation priority.",
+    detailedDef: "Preferred shares typically pay a predetermined fixed dividend and take precedence over common stock for dividend payments and asset liquidation, but usually carry no voting rights.",
+  },
+  {
+    term: "Dividend Yield",
+    category: "market",
+    shortDef: "Annual dividend payout expressed as a percentage of share price.",
+    detailedDef: "Calculated as (Annual Dividends per Share ÷ Current Stock Price) × 100. Shows the percentage return an investor receives solely from dividends relative to the price paid for the share.",
+  },
+  {
+    term: "Capital Gain",
+    category: "market",
+    shortDef: "Profit from selling a stock above its purchase price.",
+    detailedDef: "A capital gain is realized when an investor sells an equity asset for a price higher than the original purchase cost (cost basis).",
+  },
+  {
+    term: "Capital Loss",
+    category: "market",
+    shortDef: "Financial loss from selling a stock below its purchase price.",
+    detailedDef: "A capital loss occurs when a stock is sold for less money than was originally paid to acquire it.",
+  },
+  {
+    term: "Market Capitalization",
+    category: "market",
+    shortDef: "Total market value of a company's outstanding shares.",
+    detailedDef: "Calculated as Current Share Price × Total Number of Outstanding Shares. Reflects the aggregate public equity valuation of a corporation on the exchange.",
+  },
+  // Trading mechanics terms
   {
     term: "Bid",
     category: "market",
@@ -265,6 +345,30 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
     detailedDef: "A presentation view of the latest 60 out-of-sample evaluation sessions. Full metrics and statistical tests use the complete aligned holdout, whose count and dates are reported separately.",
   },
   {
+    term: "Lag-Informed Regression",
+    category: "forecastph",
+    shortDef: "Interpretable regression using price/volume lags with LASSO regularization.",
+    detailedDef: "Interpretable statistical machine learning model that analyzes historical price and volume lags with Partial Autocorrelation (PACF) lag selection and LASSO feature elimination.",
+  },
+  {
+    term: "ARIMA",
+    category: "forecastph",
+    shortDef: "Autoregressive Integrated Moving Average classical econometric model.",
+    detailedDef: "Classical statistical time-series standard that differences non-stationary historical prices and models autoregressive and moving-average error structures.",
+  },
+  {
+    term: "LSTM",
+    category: "forecastph",
+    shortDef: "Recurrent deep neural network designed for sequence patterns.",
+    detailedDef: "Long Short-Term Memory recurrent neural network with specialized gating mechanisms designed to learn non-linear temporal sequence patterns across multi-day horizons.",
+  },
+  {
+    term: "Naive Benchmark",
+    category: "forecastph",
+    shortDef: "Predicts tomorrow's Close equals today's observed Close.",
+    detailedDef: "A neutral random-walk baseline evaluated alongside principal models. It is strictly an evaluation benchmark, not a fourth production principal model.",
+  },
+  {
     term: "RMSE (Root Mean Squared Error)",
     category: "forecastph",
     shortDef: "Penalizes large errors; measured in Philippine Pesos (₱).",
@@ -287,5 +391,70 @@ export const GLOSSARY_TERMS: TermDefinition[] = [
     category: "forecastph",
     shortDef: "Supplementary held-out goodness-of-fit that can be negative.",
     detailedDef: "Compares squared holdout errors with a reference based on the holdout-period mean. R² can be negative, is not percentage accuracy, does not select or promote a model, and never guarantees future performance.",
+  },
+];
+
+/** Structured educational concepts for safe AI context injection across all routes */
+export const CORE_EDUCATIONAL_CONCEPTS = {
+  foundations: {
+    stock: "A stock (equity) represents fractional ownership in a corporation. Buying a stock makes you a part-owner (shareholder) of that company's assets and earnings.",
+    share: "A single unit of ownership in a company. Total equity is divided into individual shares.",
+    shareholder: "An individual or entity that owns shares of stock in a company, entitling them to proportionate earnings and voting rights.",
+    stockholder: "Synonym for shareholder; holds shares of stock in a corporation.",
+    dividend: "A distribution of corporate earnings to eligible shareholders, declared by the board of directors as cash or additional shares.",
+    cashDividend: "A dividend paid directly in cash (Philippine Pesos, ₱) per share into the shareholder's trading account.",
+    stockDividend: "A dividend paid in additional shares of stock rather than cash, increasing total shares owned.",
+    commonStock: "Standard corporate equity conferring voting rights and variable dividends, secondary to preferred stock in liquidation.",
+    preferredStock: "A class of equity that pays fixed dividends with priority over common stock, but typically without voting rights.",
+    dividendYield: "Annual dividend per share divided by current stock price, expressed as a percentage: (Annual Dividends ÷ Price) × 100.",
+    capitalGain: "The profit realized when selling a stock for more than its purchase price.",
+    capitalLoss: "The financial loss incurred when selling a stock below its purchase price.",
+    marketCapitalization: "Total market value of a company's shares, calculated as Current Share Price × Total Outstanding Shares.",
+  },
+  modelsAndForecasting: {
+    forecastedClose: "Algorithmic point estimate for the next trading day's closing price based on historical numerical patterns. Not a guarantee.",
+    backtesting: "Simulating model predictions over historical out-of-sample data to evaluate forecasting error before deploying.",
+    lagInformedRegression: "Interpretable regression using autoregressive price and volume features with LASSO regularization.",
+    arima: "Autoregressive Integrated Moving Average; classical statistical econometric model tracking cyclical trends and mean-reversion.",
+    lstm: "Long Short-Term Memory; recurrent neural network architecture learning non-linear multi-day temporal sequence patterns.",
+    naiveBenchmark: "Evaluation baseline predicting tomorrow's Close equals today's observed Close. It is a benchmark, not a production model.",
+  },
+  metrics: {
+    rmse: "Root Mean Squared Error in Philippine Pesos (₱). Lower is better. Squares misses to penalize large errors heavily.",
+    mae: "Mean Absolute Error in Philippine Pesos (₱). Lower is better. Represents the typical peso miss magnitude.",
+    mase: "Mean Absolute Scaled Error. Lower is better. Divides evaluation MAE by a development one-step change scale. Below 1.0 means below that development scale; compare holdout RMSE to determine if it beat Naive.",
+    holdoutR2: "Supplementary goodness-of-fit metric comparing squared holdout errors to sample mean reference. May be negative; not percentage accuracy; never selects or promotes a model.",
+  },
+};
+
+/** 4-Step sequential learning path displayed on /learn-stocks */
+export const LEARNING_PATH_STEPS = [
+  {
+    step: 1,
+    title: "Learn Before You Trade",
+    category: "Fundamentals",
+    description: "Understand shares, dividends, trading sessions, capital gains, and risk diversification.",
+    href: "/learn-stocks#trading-101",
+  },
+  {
+    step: 2,
+    title: "Understand a Forecast",
+    category: "Predictions",
+    description: "Learn how next-day price targets are generated, what expected movement means, and why prices diverge.",
+    href: "/learn-stocks#how-to-read",
+  },
+  {
+    step: 3,
+    title: "Check Historical Accuracy",
+    category: "Evaluation",
+    description: "Evaluate out-of-sample backtests, RMSE, MAE, MASE, and the separately evaluated Naive benchmark.",
+    href: "/learn-stocks#forecast-accuracy",
+  },
+  {
+    step: 4,
+    title: "Explore Companies",
+    category: "Practice",
+    description: "Inspect 15 PSE companies across 5 sectors, toggle Beginner/Advanced views, and add to Watchlist.",
+    href: "/companies",
   },
 ];

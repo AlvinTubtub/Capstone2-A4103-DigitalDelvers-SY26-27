@@ -1,6 +1,25 @@
 import { getCompanyDetail, getCompanies, getDashboard, getLatest, getMetrics } from "@/lib/data";
 import { formatDate, formatDateTimePht, formatNum, formatPct, formatPeso } from "@/lib/format";
 import { resolveCompanyModelReporting } from "@/lib/modelReporting";
+import { getCompanyProfile } from "@/lib/companyProfiles";
+import {
+  CORE_EDUCATIONAL_CONCEPTS,
+  GLOSSARY_TERMS,
+  PSE_MARKET_SCHEDULE,
+  PSE_MARKET_SCHEDULE_SOURCE,
+  BROKER_DIRECTORY,
+  EDUCATIONAL_VIDEOS,
+  LEARNING_PATH_STEPS,
+} from "@/lib/learnData";
+import {
+  HOME_SECTOR_CARDS,
+  HOME_BEGINNER_GUIDE_CARDS,
+  COMPANY_FIELD_EXPLANATIONS,
+  COMPANY_DETAIL_CHART_EXPLANATIONS,
+  WATCHLIST_EXPLANATIONS,
+  COMPARE_EXPLANATIONS,
+  ABOUT_EXPLANATIONS,
+} from "@/lib/siteContent";
 import type { CompanyDetail, CompanySummary, ModelMetric } from "@/lib/types";
 
 export interface ContextOptions {
@@ -26,9 +45,25 @@ const NEXT_CLOSE_IDS: Record<string, (typeof PRINCIPAL_MODEL_IDS)[number]> = {
   lstm: "lstm",
 };
 
-function asContext(page: string, facts: Record<string, unknown>): string {
-  return JSON.stringify({ page, source: "current PSE Pulse operational data", facts }, null, 2);
+function asContext(
+  page: string,
+  operationalFacts: Record<string, unknown>,
+  pageInformationalContent?: Record<string, unknown>,
+): string {
+  return JSON.stringify(
+    {
+      page,
+      source: "current PSE Pulse operational data & approved static educational content",
+      operationalData: operationalFacts,
+      pageInformationalContent: pageInformationalContent ?? {},
+      sharedEducationalConcepts: CORE_EDUCATIONAL_CONCEPTS,
+      facts: operationalFacts,
+    },
+    null,
+    2,
+  );
 }
+
 
 function finiteNumber(value: string | number | undefined): number | null {
   const parsed = typeof value === "number" ? value : Number(value);
@@ -148,6 +183,7 @@ export async function buildCompanyContext(symbol: string): Promise<string> {
     });
   }
 
+  const profile = getCompanyProfile(cleanSymbol);
   const chosenMetric = selectedMetric(company);
   const reporting = resolveCompanyModelReporting({
     metrics: company.metrics,
@@ -157,76 +193,118 @@ export async function buildCompanyContext(symbol: string): Promise<string> {
     bestPrincipalBeatsNaive: company.bestPrincipalBeatsNaive,
     allPrincipalsWorseThanNaive: company.allPrincipalsWorseThanNaive,
   });
-  return asContext("company", {
-    company: { ticker: company.symbol, name: company.name, sector: company.sector },
-    currentForecast: {
-      latestObservedClose: formatPeso(company.previousClose),
-      projectedNextClose: formatPeso(company.predictedClose),
-      projectedPesoChange: formatPeso(company.pesoChange),
-      projectedPercentageChange: formatPct(company.pctChange),
-      directionLabel: company.direction,
-      selectedPrincipalModel: company.model,
-      bestPrincipalModel: reporting?.bestPrincipalModel ?? company.model,
-      bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "unavailable",
-      bestPrincipalBeatNaive: reporting?.bestPrincipalBeatsNaive ?? "unavailable",
-      allPrincipalsHadHigherRmseThanNaive:
-        reporting?.allPrincipalsWorseThanNaive ?? "unavailable",
-      selectionRule: "Lowest RMSE among the three principal models on the common chronological out-of-sample evaluation.",
-      principalModelPredictions: predictionFacts(company),
-      modelPredictionSpread: modelPredictionSpread(company),
+  return asContext(
+    "company",
+    {
+      company: {
+        ticker: company.symbol,
+        name: company.name,
+        sector: company.sector,
+        industry: profile?.industry ?? "unavailable",
+        description: profile?.description ?? "unavailable",
+      },
+      currentForecast: {
+        latestObservedClose: formatPeso(company.previousClose),
+        projectedNextClose: formatPeso(company.predictedClose),
+        projectedPesoChange: formatPeso(company.pesoChange),
+        projectedPercentageChange: formatPct(company.pctChange),
+        directionLabel: company.direction,
+        selectedPrincipalModel: company.model,
+        bestPrincipalModel: reporting?.bestPrincipalModel ?? company.model,
+        bestEvaluatedMethod: reporting?.bestEvaluatedMethod ?? "unavailable",
+        bestPrincipalBeatNaive: reporting?.bestPrincipalBeatsNaive ?? "unavailable",
+        allPrincipalsHadHigherRmseThanNaive:
+          reporting?.allPrincipalsWorseThanNaive ?? "unavailable",
+        selectionRule: "Lowest RMSE among the three principal models on the common chronological out-of-sample evaluation.",
+        principalModelPredictions: predictionFacts(company),
+        modelPredictionSpread: modelPredictionSpread(company),
+      },
+      dates: {
+        marketDataThrough: company.dataAsOf ? formatDate(company.dataAsOf) : "unavailable",
+        forecastTargetDate: company.forecastDate ? formatDate(company.forecastDate) : "unavailable",
+        inferenceGeneratedAtPht: company.inferenceAt ? formatDateTimePht(company.inferenceAt) : "unavailable",
+      },
+      evaluation: {
+        metricsByModel: metricFacts(company.metrics),
+        selectedModelMetrics: chosenMetric
+          ? {
+              rmsePhp: formatNum(chosenMetric.rmse, 4),
+              maePhp: formatNum(chosenMetric.mae, 4),
+              mase: formatNum(chosenMetric.mase, 4),
+              r2: formatNum(chosenMetric.r2, 4),
+            }
+          : "unavailable",
+        visibleBacktestWindow: visibleBacktestFacts(company),
+      },
+      limitations: [
+        "Forecasts are model estimates, not guarantees or trading recommendations.",
+        "The operational data contains price/volume history and model outputs, not news, sentiment, fundamentals, dividends, or shareholders.",
+      ],
     },
-    dates: {
-      marketDataThrough: company.dataAsOf ? formatDate(company.dataAsOf) : "unavailable",
-      forecastTargetDate: company.forecastDate ? formatDate(company.forecastDate) : "unavailable",
-      inferenceGeneratedAtPht: company.inferenceAt ? formatDateTimePht(company.inferenceAt) : "unavailable",
+    {
+      aboutCompany: profile?.description ?? "unavailable",
+      chartExplanations: COMPANY_DETAIL_CHART_EXPLANATIONS,
+      viewModes: "Supports Beginner (selected model focus) and Advanced (all models) views on the company detail page.",
     },
-    evaluation: {
-      metricsByModel: metricFacts(company.metrics),
-      selectedModelMetrics: chosenMetric
-        ? {
-            rmsePhp: formatNum(chosenMetric.rmse, 4),
-            maePhp: formatNum(chosenMetric.mae, 4),
-            mase: formatNum(chosenMetric.mase, 4),
-            r2: formatNum(chosenMetric.r2, 4),
-          }
-        : "unavailable",
-      visibleBacktestWindow: visibleBacktestFacts(company),
-    },
-    limitations: [
-      "Forecasts are model estimates, not guarantees or trading recommendations.",
-      "The operational data contains price/volume history and model outputs, not news, sentiment, fundamentals, or causal explanations.",
-    ],
-  });
+  );
 }
 
 export async function buildHomeContext(): Promise<string> {
   const [dashboard, companies, latest] = await Promise.all([getDashboard(), getCompanies(), getLatest()]);
-  return asContext("home", {
-    project: "PSE Pulse is an educational next-session PSE closing-price forecasting and model-comparison project.",
-    trackedCompanyCount: companies.length,
-    marketDataThrough: "Not present in home summary data; use a company page for its symbol-specific dataAsOf date.",
-    forecastTargetDate: latest?.forecastDate ? formatDate(latest.forecastDate) : "unavailable",
-    generatedAtPht: latest?.generatedAt ? formatDateTimePht(latest.generatedAt) : "unavailable",
-    marketSnapshot: dashboard ? {
-      forecastedIncreases: dashboard.marketSummary.gainers,
-      forecastedDecreases: dashboard.marketSummary.losers,
-      unchanged: dashboard.marketSummary.unchanged,
-      strongestForecastedIncrease: dashboard.topGainer ? companySummary(dashboard.topGainer) : "unavailable",
-      strongestForecastedDecrease: dashboard.topLoser ? companySummary(dashboard.topLoser) : "unavailable",
-    } : "unavailable",
-    models: ["Lag-Informed Regression", "ARIMA", "LSTM"],
-    benchmark: "Naive benchmark (previous observed close as the next-close prediction)",
-    limitations: "Estimates reflect implemented historical-data patterns and may not capture unexpected events; they are not investment advice.",
-  });
+  return asContext(
+    "home",
+    {
+      project: "PSE Pulse is an educational next-session PSE closing-price forecasting and model-comparison project.",
+      trackedCompanyCount: companies.length,
+      marketDataThrough: "Not present in home summary data; use a company page for its symbol-specific dataAsOf date.",
+      forecastTargetDate: latest?.forecastDate ? formatDate(latest.forecastDate) : "unavailable",
+      generatedAtPht: latest?.generatedAt ? formatDateTimePht(latest.generatedAt) : "unavailable",
+      marketSnapshot: dashboard ? {
+        forecastedIncreases: dashboard.marketSummary.gainers,
+        forecastedDecreases: dashboard.marketSummary.losers,
+        unchanged: dashboard.marketSummary.unchanged,
+        strongestForecastedIncrease: dashboard.topGainer ? companySummary(dashboard.topGainer) : "unavailable",
+        strongestForecastedDecrease: dashboard.topLoser ? companySummary(dashboard.topLoser) : "unavailable",
+      } : "unavailable",
+      models: ["Lag-Informed Regression", "ARIMA", "LSTM"],
+      benchmark: "Naive benchmark (previous observed close as the next-close prediction)",
+      limitations: "Estimates reflect implemented historical-data patterns and may not capture unexpected events; they are not investment advice.",
+    },
+    {
+      purpose: "Cross-Sector Next-Day Stock Price Forecasting of Selected PSE-Listed Companies.",
+      supportedSectors: HOME_SECTOR_CARDS.map(({ name, description, tickers }) => ({
+        name,
+        description,
+        tickers,
+      })),
+      beginnerGuideSteps: HOME_BEGINNER_GUIDE_CARDS.map(({ step, title, description }) => ({
+        step,
+        title,
+        description,
+      })),
+      forecastMeaning:
+        "Forecasts are next-session statistical point estimates based on numerical historical market data. They are not guaranteed prices or trading triggers.",
+      limitations:
+        "Educational decision support only; never constitutes financial advice, buy/sell recommendations, or risk-free return claims.",
+    },
+  );
 }
 
 export async function buildCompaniesContext(): Promise<string> {
   const companies = await getCompanies();
-  return asContext("companies", {
-    trackedCompanyCount: companies.length,
-    companies: companies.map(companySummary),
-    comparisonNote: "Expected change is projected close versus latest observed close; it is not a buy/sell signal.",
-  });
+  return asContext(
+    "companies",
+    {
+      trackedCompanyCount: companies.length,
+      companies: companies.map(companySummary),
+      comparisonNote: "Expected change is projected close versus latest observed close; it is not a buy/sell signal.",
+    },
+    {
+      directoryPurpose: "15 PSE-listed companies with automated next-session forecasts organized across 5 core sectors.",
+      sectors: ["Financials", "Industrial", "Mining and Oil", "Property", "Services"],
+      fieldExplanations: COMPANY_FIELD_EXPLANATIONS,
+    },
+  );
 }
 
 export async function buildWatchlistContext(watchlist?: string[]): Promise<string> {
@@ -236,11 +314,17 @@ export async function buildWatchlistContext(watchlist?: string[]): Promise<strin
   const companies = await getCompanies();
   const selected = companies.filter((company) => requested.includes(company.symbol));
   if (!selected.length) {
-    return asContext("watchlist", {
-      storage: "Browser-only, maximum five companies.",
-      pinnedCompanyCount: 0,
-      status: "No valid pinned companies were supplied by the current browser watchlist.",
-    });
+    return asContext(
+      "watchlist",
+      {
+        storage: "Browser-only, maximum five companies.",
+        pinnedCompanyCount: 0,
+        status: "No valid pinned companies were supplied by the current browser watchlist.",
+      },
+      {
+        watchlistGuide: WATCHLIST_EXPLANATIONS,
+      },
+    );
   }
 
   const details = (await Promise.all(selected.map(({ symbol }) => getCompanyDetail(symbol))))
@@ -278,38 +362,86 @@ export async function buildWatchlistContext(watchlist?: string[]): Promise<strin
   };
   const spreadRows = rows.filter((row) => spreadValue(row) !== -Infinity);
 
-  return asContext("watchlist", {
-    storage: "Browser-only, maximum five companies.",
-    pinnedCompanyCount: rows.length,
-    pinnedTickers: rows.map(({ ticker }) => ticker),
-    companies: rows,
-    strongestForecastedIncrease: companySummary(byChange[byChange.length - 1]),
-    strongestForecastedDecline: byChange[0].pctChange < 0
-      ? companySummary(byChange[0])
-      : "No pinned company has a negative expected change.",
-    lowestSelectedModelRmse: rmseRows.length
-      ? [...rmseRows].sort((a, b) => rowRmse(a) - rowRmse(b))[0]
-      : "unavailable",
-    largestModelPredictionSpread: spreadRows.length
-      ? [...spreadRows].sort((a, b) => spreadValue(b) - spreadValue(a))[0]
-      : "unavailable",
-    spreadDefinition: "Maximum principal-model prediction minus minimum principal-model prediction; not a confidence interval.",
-  });
+  return asContext(
+    "watchlist",
+    {
+      storage: "Browser-only, maximum five companies.",
+      pinnedCompanyCount: rows.length,
+      pinnedTickers: rows.map(({ ticker }) => ticker),
+      companies: rows,
+      strongestForecastedIncrease: companySummary(byChange[byChange.length - 1]),
+      strongestForecastedDecline: byChange[0].pctChange < 0
+        ? companySummary(byChange[0])
+        : "No pinned company has a negative expected change.",
+      lowestSelectedModelRmse: rmseRows.length
+        ? [...rmseRows].sort((a, b) => rowRmse(a) - rowRmse(b))[0]
+        : "unavailable",
+      largestModelPredictionSpread: spreadRows.length
+        ? [...spreadRows].sort((a, b) => spreadValue(b) - spreadValue(a))[0]
+        : "unavailable",
+      spreadDefinition: "Maximum principal-model prediction minus minimum principal-model prediction; not a confidence interval.",
+    },
+    {
+      watchlistGuide: WATCHLIST_EXPLANATIONS,
+    },
+  );
 }
 
 export function buildLearnStocksContext(): string {
-  return asContext("learn-stocks", {
-    mode: "Beginner educational tutor for stocks, tickers, the PSE, OHLCV, closing price, forecasts, backtesting, metrics, the Naive benchmark, and model disagreement.",
-    modelNames: ["Lag-Informed Regression", "ARIMA", "LSTM"],
-    benchmark: "Naive benchmark uses the previous observed close as the next-close prediction.",
-    metricGuide: {
-      RMSE: "Lower is better; measured in pesos and penalizes larger errors more strongly.",
-      MAE: "Lower is better; average absolute forecast error in pesos.",
-      MASE: "Lower is better; evaluation MAE divided by the common one-step scale from development Close. Below 1 is below that scale, but does not by itself prove lower held-out error than the evaluated Naive method.",
-      R2: "Holdout R² is supplementary. It compares squared errors with an evaluation-period mean reference, can be negative, is not percentage accuracy, and never selects or promotes a model.",
+  return asContext(
+    "learn-stocks",
+    {
+      mode: "Beginner educational tutor for stocks, tickers, the PSE, OHLCV, closing price, forecasts, backtesting, metrics, the Naive benchmark, and model disagreement.",
+      modelNames: ["Lag-Informed Regression", "ARIMA", "LSTM"],
+      benchmark: "Naive benchmark uses the previous observed close as the next-close prediction.",
+      metricGuide: {
+        RMSE: "Lower is better; measured in pesos and penalizes larger errors more strongly.",
+        MAE: "Lower is better; average absolute forecast error in pesos.",
+        MASE: "Lower is better; evaluation MAE divided by the common one-step scale from development Close. Below 1 is below that scale, but does not by itself prove lower held-out error than the evaluated Naive method.",
+        R2: "Holdout R² is supplementary. It compares squared errors with an evaluation-period mean reference, can be negative, is not percentage accuracy, and never selects or promotes a model.",
+      },
+      boundaries: "Explain concepts, not personalized investment decisions. Current schedules and broker details should be verified with official sources.",
     },
-    boundaries: "Explain concepts, not personalized investment decisions. Current schedules and broker details should be verified with official sources.",
-  });
+    {
+      learningPath: LEARNING_PATH_STEPS,
+      pseMarketSchedule: PSE_MARKET_SCHEDULE,
+      pseScheduleSource: PSE_MARKET_SCHEDULE_SOURCE,
+      brokerDirectory: BROKER_DIRECTORY.map((b) => ({
+        name: b.name,
+        parentEntity: b.parentEntity,
+        pseStatus: b.pseStatus,
+        isOnlineTrading: b.isOnlineTrading,
+        description: b.description,
+        website: b.websiteUrl,
+      })),
+      brokerChecklist: [
+        "Valid Philippine government-issued ID (Passport, UMID, Driver's License, PhilID)",
+        "Philippine Tax Identification Number (TIN)",
+        "Active Philippine bank account for online funding and dividend withdrawals",
+        "Proof of billing address dated within the last 3 months",
+      ],
+      antiScamAdvisory:
+        "Always verify that your broker is listed on official SEC and PSE directories. Never send money to personal bank accounts, crypto wallets, or social media 'investment managers' promising guaranteed returns.",
+      educationalVideos: EDUCATIONAL_VIDEOS.map((v) => ({
+        title: v.title,
+        topic: v.topic,
+        channel: v.channel,
+        description: v.description,
+      })),
+      priceDivergenceFactors: {
+        companyDisclosures: "Earnings surprises, dividend declarations, executive changes, or mergers.",
+        macroeconomicData: "BSP interest rate decisions, inflation reports, or currency fluctuations.",
+        marketSentiment: "Global equity market trends, geopolitical events, or foreign institutional fund flows.",
+        sectorDynamics: "Commodity prices (oil, metals), regulatory changes, or utility tariff decisions.",
+      },
+      glossary: Object.fromEntries(
+        GLOSSARY_TERMS.map((t) => [
+          t.term,
+          { shortDef: t.shortDef, detailedDef: t.detailedDef, category: t.category },
+        ]),
+      ),
+    },
+  );
 }
 
 export async function buildAboutContext(): Promise<string> {
@@ -357,138 +489,56 @@ export async function buildAboutContext(): Promise<string> {
     });
   }
 
-  return asContext("about", {
-    project:
-      "PSE Pulse is an educational next-session PSE closing-price forecasting and model-comparison platform.",
-    objective:
-      "Cross-Sector Next-Day Stock Price Forecasting of Selected PSE-Listed Companies.",
-    trackedCompanyCount: companies.length || 15,
-    trackedSectors: dashboard?.sectors?.map((s) => s.name) ?? [
-      "Financials",
-      "Industrial",
-      "Mining and Oil",
-      "Property",
-      "Services",
-    ],
-    forecastTargetDate: latest?.forecastDate
-      ? formatDate(latest.forecastDate)
-      : "unavailable",
-    lastPipelineRunPht:
-      latest?.lastRunAt || dashboard?.lastRunAt
-        ? formatDateTimePht(latest?.lastRunAt || dashboard?.lastRunAt)
+  return asContext(
+    "about",
+    {
+      project:
+        "PSE Pulse is an educational next-session PSE closing-price forecasting and model-comparison platform.",
+      objective:
+        "Cross-Sector Next-Day Stock Price Forecasting of Selected PSE-Listed Companies.",
+      trackedCompanyCount: companies.length || 15,
+      trackedSectors: dashboard?.sectors?.map((s) => s.name) ?? [
+        "Financials",
+        "Industrial",
+        "Mining and Oil",
+        "Property",
+        "Services",
+      ],
+      forecastTargetDate: latest?.forecastDate
+        ? formatDate(latest.forecastDate)
         : "unavailable",
-    models: {
-      principalModels: [
-        "Lag-Informed Regression (LASSO regularized autoregression with causal lag, volume, and technical features)",
-        "ARIMA (classical econometric autoregressive integrated moving average)",
-        "LSTM (recurrent deep neural network over closing price differences)",
-      ],
-      benchmark:
-        "Naive benchmark (predicts next Close equals previous observed Close; strictly an evaluation benchmark, not a production principal model)",
-    },
-    lifecycle: [
-      "Historical / EOD market data ingestion from official PSE Daily Quotations Reports",
-      "Validation and feature preparation with zero lookahead bias",
-      "Diverse modeling methodology across LIR, ARIMA, and LSTM",
-      "Chronological out-of-sample evaluation (85% dev / 15% holdout split)",
-      "Production refit of all three principal models on 100% of validated history",
-      "Persisted-model next-session forward inference without retraining",
-      "Frontend forecast presentation via atomic JSON exports",
-    ],
-    modelTrainingSchedule:
-      "Quarterly fresh model training and evaluation (scheduled Feb 28, May 28, Aug 28, Nov 28 at 8:00 AM PHT). The daily pipeline does NOT retrain models; it performs persisted-model inference only.",
-    evaluationSafeguards: [
-      "Chronological Evaluation: strictly no random train/test shuffling.",
-      "Common Evaluation Dates: all four methods evaluated on identical target sessions.",
-      "Naive Benchmark: previous Close evaluated alongside principal models.",
-      "Common MASE Scaling: single development-series denominator per company.",
-      "Frozen Research Evidence: historical formal evaluation is preserved separately from live monitoring.",
-      "Post-Formal Monitoring: prospective ledger tracking never rewrites frozen historical metrics.",
-      "Tamper-Detectable Evidence: integrity verification ensures complete provenance.",
-    ],
-    accuracyMetrics: {
-      RMSE: "Root Mean Square Error; lower is better; peso-denominated; penalizes large errors heavily.",
-      MAE: "Mean Absolute Error; lower is better; average absolute error in pesos.",
-      MASE: "Mean Absolute Scaled Error; lower is better; scale-independent comparison against development-period one-step baseline. Value < 1.0 indicates error below development scale.",
-      R2: "Holdout R²; supplementary metric; may be negative; not percentage accuracy; not the selection/promotion criterion.",
-      significanceNote:
-        "Lower historical error does not automatically prove statistical significance. Metrics differences describe lower holdout error only.",
-    },
-    modelPerformanceSummary: metrics
-      ? {
-          principalModelWinnerCounts: wins,
-          bestPrincipalModelByCompany: bestByCompany,
-          aggregateMetrics: metrics.aggregate,
-        }
-      : "Current model evaluation metrics are loading or unavailable.",
-    researchQuestions: [
-      "RQ1 (Model Comparison): How do Lag-Informed Regression, ARIMA, and LSTM compare in next-session forecasting accuracy across the selected companies?",
-      "RQ2 (Benchmark Utility): Do the principal forecasting models achieve lower historical out-of-sample error than a previous-close Naive benchmark?",
-      "RQ3 (Cross-Sector Behavior): Does the model with the lowest historical evaluation error remain consistent across companies and PSE sectors?",
-    ],
-    researchScope: {
-      included: [
-        "Daily Philippine Stock Exchange OHLCV market data",
-        "Next-session closing-price forecasting",
-        "15 selected PSE-listed companies across five sectors",
-        "Lag-Informed Regression",
-        "ARIMA",
-        "LSTM",
-        "Previous-close Naive evaluation benchmark",
-        "Chronological out-of-sample evaluation",
-        "Post-formal prospective forecast monitoring",
-      ],
-      outsideScope: [
-        "Intraday price forecasting",
-        "Automated trading or order execution",
-        "Buy/sell recommendations",
-        "Portfolio optimization",
-        "Personalized investment advice",
-        "News or social-media sentiment forecasting",
-        "Fundamental valuation models",
-        "Guaranteed price or return predictions",
-      ],
-      scopeNote:
-        "The implemented forecasting models primarily use historical numerical market data. Unexpected news, corporate events, policy changes, macroeconomic shocks, and other external information may affect actual market outcomes without being represented directly in the model inputs.",
-    },
-    systemArchitecture: {
-      pipelineFlow:
-        "PSE End-of-Day Market Data -> Python Forecasting & Evaluation Backend -> Validated Forecast / Model Artifacts -> Frontend Forecast JSON -> Next.js PSE Pulse Website",
-      technologyGroups: {
-        dataAndModeling: [
-          "Python",
-          "Pandas",
-          "NumPy",
-          "scikit-learn",
-          "statsmodels",
-          "PyTorch",
+      lastPipelineRunPht:
+        latest?.lastRunAt || dashboard?.lastRunAt
+          ? formatDateTimePht(latest?.lastRunAt || dashboard?.lastRunAt)
+          : "unavailable",
+      models: {
+        principalModels: [
+          "Lag-Informed Regression (LASSO regularized autoregression with causal lag, volume, and technical features)",
+          "ARIMA (classical econometric autoregressive integrated moving average)",
+          "LSTM (recurrent deep neural network over closing price differences)",
         ],
-        researchAndAutomation: [
-          "Chronological evaluation",
-          "Persisted model artifacts",
-          "Integrity validation",
-          "GitHub Actions",
-          "Scheduled pipeline automation",
-        ],
-        webPresentation: [
-          "Next.js",
-          "TypeScript",
-          "Tailwind CSS",
-          "Vercel",
-          "Frontend JSON data layer",
-        ],
+        benchmark:
+          "Naive benchmark (predicts next Close equals previous observed Close; strictly an evaluation benchmark, not a production principal model)",
       },
-      frontendInferenceNote:
-        "The public Next.js frontend reads validated exported forecast data and does not run Python model training or inference on Vercel.",
+      modelPerformanceSummary: metrics
+        ? {
+            principalModelWinnerCounts: wins,
+            bestPrincipalModelByCompany: bestByCompany,
+            aggregateMetrics: metrics.aggregate,
+          }
+        : "Current model evaluation metrics are loading or unavailable.",
     },
-    limitations: [
-      "Educational decision support only; never constitutes financial advice or trading signals.",
-      "Historical pattern limitation: past accuracy does not guarantee future performance.",
-      "Unexpected events: breaking news, corporate actions, and macroeconomic shocks cannot be captured by price-pattern models.",
-      "Model uncertainty: different forecasting models can disagree and all forecasts contain error.",
-      "Independent due diligence: users must verify information independently before making investment decisions.",
-    ],
-  });
+    {
+      formalTitle: ABOUT_EXPLANATIONS.projectTitle,
+      researchQuestions: ABOUT_EXPLANATIONS.researchQuestions,
+      lifecyclePipeline: ABOUT_EXPLANATIONS.methodologySteps,
+      trainingSchedule: ABOUT_EXPLANATIONS.modelTrainingSchedule,
+      integritySafeguards: ABOUT_EXPLANATIONS.integritySafeguards,
+      researchScope: ABOUT_EXPLANATIONS.researchScope,
+      systemArchitecture: ABOUT_EXPLANATIONS.systemArchitecture,
+      limitations: ABOUT_EXPLANATIONS.limitations,
+    },
+  );
 }
 
 export async function buildCompareContext(): Promise<string> {
@@ -522,48 +572,62 @@ export async function buildCompareContext(): Promise<string> {
     };
   });
 
-  return asContext("compare", {
-    source: "Current fresh-training chronological out-of-sample evaluation.",
-    companiesEvaluated: companies.length,
-    evaluationSessionCount: "Not present in metrics.json; do not infer or invent it.",
-    forecastTargetDate: latest?.forecastDate ? formatDate(latest.forecastDate) : "unavailable",
-    metricsGeneratedAtPht: metrics.generatedAt ? formatDateTimePht(metrics.generatedAt) : "unavailable",
-    principalModelWinnerCounts: wins,
-    bestPrincipalModelByCompany: bestByCompany,
-    descriptiveAggregateStatistic: metrics.aggregateStatistic ?? "legacy unspecified",
-    descriptiveAggregateMetrics: Object.fromEntries(
-      Object.entries(metrics.aggregate).map(([name, values]) => [
-        name === "Naive baseline" ? "Naive benchmark" : name,
-        {
-          rmsePhp: formatNum(values.rmse, 4),
-          maePhp: formatNum(values.mae, 4),
-          mase: formatNum(values.mase, 4),
-          r2: formatNum(values.r2, 4),
-        },
-      ]),
-    ),
-    perCompanyMetrics: Object.fromEntries(companies.map(({ symbol }) => [symbol, metricFacts(metrics.perCompany[symbol]?.metrics)])),
-    comparisonRules: {
-      principalSelection: "The best principal model is the lowest-RMSE LIR, ARIMA, or LSTM result per company on the common chronological out-of-sample evaluation.",
-      evaluatedSelection: "The best evaluated method uses the same RMSE rule but also includes Naive, so it can differ from the best principal model.",
-      crossCompany: "Do not select a winner from median or mean raw-peso RMSE/MAE. Use median MASE, within-company ranks, win counts, and counts beating Naive.",
-      r2: "Holdout R² is supplementary, uses the evaluation-period mean reference, may be negative, and is not percentage accuracy or a selection or promotion criterion.",
-      naive: "Separately evaluated benchmark, not a production principal model.",
-      statisticalSignificance: "No finalized formal-run evidence is supplied in current operational context. Describe numerical differences only as lower error during the evaluation period; do not make statistical-significance claims.",
+  return asContext(
+    "compare",
+    {
+      source: "Current fresh-training chronological out-of-sample evaluation.",
+      companiesEvaluated: companies.length,
+      evaluationSessionCount: "Not present in metrics.json; do not infer or invent it.",
+      forecastTargetDate: latest?.forecastDate ? formatDate(latest.forecastDate) : "unavailable",
+      metricsGeneratedAtPht: metrics.generatedAt ? formatDateTimePht(metrics.generatedAt) : "unavailable",
+      principalModelWinnerCounts: wins,
+      bestPrincipalModelByCompany: bestByCompany,
+      descriptiveAggregateStatistic: metrics.aggregateStatistic ?? "legacy unspecified",
+      descriptiveAggregateMetrics: Object.fromEntries(
+        Object.entries(metrics.aggregate).map(([name, values]) => [
+          name === "Naive baseline" ? "Naive benchmark" : name,
+          {
+            rmsePhp: formatNum(values.rmse, 4),
+            maePhp: formatNum(values.mae, 4),
+            mase: formatNum(values.mase, 4),
+            r2: formatNum(values.r2, 4),
+          },
+        ]),
+      ),
+      perCompanyMetrics: Object.fromEntries(companies.map(({ symbol }) => [symbol, metricFacts(metrics.perCompany[symbol]?.metrics)])),
+      comparisonRules: {
+        principalSelection: "The best principal model is the lowest-RMSE LIR, ARIMA, or LSTM result per company on the common chronological out-of-sample evaluation.",
+        evaluatedSelection: "The best evaluated method uses the same RMSE rule but also includes Naive, so it can differ from the best principal model.",
+        crossCompany: "Do not select a winner from median or mean raw-peso RMSE/MAE. Use median MASE, within-company ranks, win counts, and counts beating Naive.",
+        r2: "Holdout R² is supplementary, uses the evaluation-period mean reference, may be negative, and is not percentage accuracy or a selection or promotion criterion.",
+        naive: "Separately evaluated benchmark, not a production principal model.",
+        statisticalSignificance: "No finalized formal-run evidence is supplied in current operational context. Describe numerical differences only as lower error during the evaluation period; do not make statistical-significance claims.",
+      },
     },
-  });
+    {
+      modelsExplained: COMPARE_EXPLANATIONS.models,
+      metricsExplained: COMPARE_EXPLANATIONS.metrics,
+      rulesExplained: COMPARE_EXPLANATIONS.rules,
+    },
+  );
 }
 
 export async function buildGeneralContext(): Promise<string> {
   const companies = await getCompanies();
-  return asContext("general", {
-    project: "PSE Pulse is an educational next-session PSE closing-price forecasting project.",
-    trackedCompanyCount: companies.length,
-    trackedTickers: companies.map(({ symbol }) => symbol),
-    principalModels: ["Lag-Informed Regression", "ARIMA", "LSTM"],
-    benchmark: "Naive benchmark",
-    limitation: "Forecasts are estimates, not guarantees or investment advice.",
-  });
+  return asContext(
+    "general",
+    {
+      project: "PSE Pulse is an educational next-session PSE closing-price forecasting project.",
+      trackedCompanyCount: companies.length,
+      trackedTickers: companies.map(({ symbol }) => symbol),
+      principalModels: ["Lag-Informed Regression", "ARIMA", "LSTM"],
+      benchmark: "Naive benchmark",
+      limitation: "Forecasts are estimates, not guarantees or investment advice.",
+    },
+    {
+      purpose: "Cross-Sector Next-Day Stock Price Forecasting of Selected PSE-Listed Companies.",
+    },
+  );
 }
 
 export async function buildContextForRequest(options?: ContextOptions): Promise<string> {

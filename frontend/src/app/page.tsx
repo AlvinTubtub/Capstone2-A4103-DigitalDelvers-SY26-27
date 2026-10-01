@@ -5,90 +5,10 @@ import ChangeBadge from "@/components/ChangeBadge";
 import { getCompanies, getDashboard } from "@/lib/data";
 import { formatDate, formatDateTimePht, formatPct, formatPeso } from "@/lib/format";
 
-interface SectorCardItem {
-  name: string;
-  queryParam: string;
-  image: string;
-  description: string;
-  tickers: string[];
-}
-
-const SECTOR_CARDS: SectorCardItem[] = [
-  {
-    name: "Financials",
-    queryParam: "Financials",
-    image: "/images/sectors/financials.jpg",
-    description: "Banking, capital markets & financial institutions",
-    tickers: ["BPI", "MBT", "SECB"],
-  },
-  {
-    name: "Industrial",
-    queryParam: "Industrial",
-    image: "/images/sectors/industrial.jpg",
-    description: "Utilities, power distribution & food manufacturing",
-    tickers: ["MER", "JFC", "SHLPH"],
-  },
-  {
-    name: "Mining & Oil",
-    queryParam: "Mining and Oil",
-    image: "/images/sectors/mining-and-oil.jpg",
-    description: "Resource extraction, minerals & energy generation",
-    tickers: ["APX", "NIKL", "SCC"],
-  },
-  {
-    name: "Property",
-    queryParam: "Property",
-    image: "/images/sectors/property.jpg",
-    description: "Real estate development, commercial leasing & malls",
-    tickers: ["ALI", "SMPH", "MEG"],
-  },
-  {
-    name: "Services",
-    queryParam: "Services",
-    image: "/images/sectors/services.jpg",
-    description: "Telecommunications, retail grocers & port management",
-    tickers: ["GLO", "PGOLD", "ICT"],
-  },
-];
-
-interface BeginnerGuideCardItem {
-  step: number;
-  title: string;
-  image: string;
-  alt: string;
-  href: string;
-  description: string;
-}
-
-const BEGINNER_GUIDE_CARDS: BeginnerGuideCardItem[] = [
-  {
-    step: 1,
-    title: "Understand the Forecast",
-    image: "/images/learn/understand-forecast.jpg",
-    alt: "Trader inspecting stock forecast projections on transparent display",
-    href: "/learn-stocks#how-to-read",
-    description:
-      "PSE Pulse predicts the estimated next trading-day closing price based on numerical historical market data. Predictions are statistical estimates and are not guaranteed.",
-  },
-  {
-    step: 2,
-    title: "Check Historical Accuracy",
-    image: "/images/learn/check-historical-accuracy.jpg",
-    alt: "Analyst inspecting stock market line chart and historical prediction accuracy",
-    href: "/learn-stocks#forecast-accuracy",
-    description:
-      "Always review the Backtest, Forecast Error, RMSE, MAE, MASE, and supplementary holdout R² to understand historical evaluation performance before interpreting a forecast.",
-  },
-  {
-    step: 3,
-    title: "Learn Before You Trade",
-    image: "/images/learn/learn-before-you-trade.jpg",
-    alt: "Traders reviewing market candlestick charts on laptop and tablet",
-    href: "/learn-stocks#trading-101",
-    description:
-      "Build a strong foundation in Philippine stock market fundamentals, risk management, and order types before making financial decisions.",
-  },
-];
+import {
+  HOME_SECTOR_CARDS as SECTOR_CARDS,
+  HOME_BEGINNER_GUIDE_CARDS as BEGINNER_GUIDE_CARDS,
+} from "@/lib/siteContent";
 
 export default async function HomePage() {
   const [dashboard, companies] = await Promise.all([

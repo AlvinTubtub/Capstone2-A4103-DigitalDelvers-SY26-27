@@ -522,7 +522,7 @@ export default function LearnStocksPage() {
                       : "bg-dark-bg border border-dark-border text-slate-400 hover:text-white"
                   }`}
                 >
-                  Market Terms (12)
+                  Market Terms ({GLOSSARY_TERMS.filter((t) => t.category === "market").length})
                 </button>
                 <button
                   type="button"
@@ -533,7 +533,7 @@ export default function LearnStocksPage() {
                       : "bg-dark-bg border border-dark-border text-slate-400 hover:text-white"
                   }`}
                 >
-                  PSE Pulse Terminology (8)
+                  PSE Pulse Terminology ({GLOSSARY_TERMS.filter((t) => t.category === "forecastph").length})
                 </button>
               </div>
 
