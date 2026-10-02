@@ -17,9 +17,11 @@ export default function CompanyCard({ company }: { company: CompanySummary }) {
       <div className="pointer-events-none relative flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <CompanyLogo symbol={company.symbol} name={company.name} size="md" />
-          <p className="text-lg font-bold leading-tight text-white transition-colors group-hover:text-brand-300">{company.symbol}</p>
+          <p className="text-lg font-bold leading-tight text-white transition-colors group-hover:text-brand-300">
+            {company.symbol}
+          </p>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-2">
           <span className="pointer-events-auto relative z-20">
             <WatchlistStar symbol={company.symbol} showLabel size="sm" />
           </span>
@@ -39,7 +41,7 @@ export default function CompanyCard({ company }: { company: CompanySummary }) {
 
         <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
           {company.forecastDate ? (
-            <span className="text-slate-400">Forecast for {formatDate(company.forecastDate)}</span>
+            <span>Forecast for {formatDate(company.forecastDate)}</span>
           ) : (
             <span />
           )}

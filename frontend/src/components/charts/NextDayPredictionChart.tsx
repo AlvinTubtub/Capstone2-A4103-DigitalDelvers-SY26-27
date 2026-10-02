@@ -11,6 +11,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import ChartGestureControls, { ChartResetButton } from "./ChartGestureControls";
+import InfoTooltip from "@/components/InfoTooltip";
 import { useChartInteractions } from "@/hooks/useChartTouchGestures";
 import type { OhlcvPoint } from "@/lib/types";
 import { formatDate, formatPeso } from "@/lib/format";
@@ -342,25 +343,32 @@ export default function NextDayPredictionChart({
               <span className="w-2 h-2 rounded-full bg-[#f97316] inline-block -ml-2.5"></span>
               <span className="font-medium text-slate-800 dark:text-slate-200">LSTM (next day)</span>
             </div>
+            <span className="inline-flex items-center gap-1 text-slate-400">
+              <span>Legend</span>
+              <InfoTooltip id="chart-nextday-legend" />
+            </span>
           </div>
         )}
 
         {/* Range Buttons */}
-        <div className="flex items-center gap-1 self-end sm:self-auto bg-dark-bg border border-dark-border rounded-lg p-0.5 text-xs">
-          {[15, 25, 40, 60].map((size) => (
-            <button
-              key={size}
-              type="button"
-              onClick={() => setWindowSize(size)}
-              className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
-                windowSize === size
-                  ? "bg-brand-600 text-white font-medium shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              {size}d
-            </button>
-          ))}
+        <div className="flex items-center gap-1.5 self-end sm:self-auto">
+          <div className="flex items-center gap-1 bg-dark-bg border border-dark-border rounded-lg p-0.5 text-xs">
+            {[15, 25, 40, 60].map((size) => (
+              <button
+                key={size}
+                type="button"
+                onClick={() => setWindowSize(size)}
+                className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                  windowSize === size
+                    ? "bg-brand-600 text-white font-medium shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                {size}d
+              </button>
+            ))}
+          </div>
+          <InfoTooltip id="chart-nextday-presets" align="right" />
         </div>
       </div>
 
@@ -488,9 +496,12 @@ export default function NextDayPredictionChart({
               <p className="text-[10px] text-slate-500">{dataAsOf ? `as of ${formatDate(dataAsOf)}` : ""}</p>
             </div>
             <div className="bg-dark-bg border border-[#a855f7]/30 rounded-lg p-2.5 text-center">
-              <p className="text-[11px] text-[#c084fc] font-medium uppercase tracking-wider">
-                ARIMA Forecast
-              </p>
+              <div className="flex items-center justify-center gap-1">
+                <p className="text-[11px] text-[#c084fc] font-medium uppercase tracking-wider">
+                  ARIMA Forecast
+                </p>
+                <InfoTooltip id="forecast-arima" />
+              </div>
               <p className="text-sm sm:text-base font-bold text-[#c084fc] mt-0.5">
                 {nextClose.arima !== undefined ? formatPeso(nextClose.arima) : "--"}
               </p>
@@ -501,9 +512,12 @@ export default function NextDayPredictionChart({
               </p>
             </div>
             <div className="bg-dark-bg border border-[#38bdf8]/30 rounded-lg p-2.5 text-center">
-              <p className="text-[11px] text-[#38bdf8] font-medium uppercase tracking-wider">
-                Lag-Reg Forecast
-              </p>
+              <div className="flex items-center justify-center gap-1">
+                <p className="text-[11px] text-[#38bdf8] font-medium uppercase tracking-wider">
+                  Lag-Reg Forecast
+                </p>
+                <InfoTooltip id="forecast-lagreg" />
+              </div>
               <p className="text-sm sm:text-base font-bold text-[#38bdf8] mt-0.5">
                 {nextClose.lag !== undefined ? formatPeso(nextClose.lag) : "--"}
               </p>
@@ -514,9 +528,12 @@ export default function NextDayPredictionChart({
               </p>
             </div>
             <div className="bg-dark-bg border border-[#f97316]/30 rounded-lg p-2.5 text-center">
-              <p className="text-[11px] text-[#fb923c] font-medium uppercase tracking-wider">
-                LSTM Forecast
-              </p>
+              <div className="flex items-center justify-center gap-1">
+                <p className="text-[11px] text-[#fb923c] font-medium uppercase tracking-wider">
+                  LSTM Forecast
+                </p>
+                <InfoTooltip id="forecast-lstm" />
+              </div>
               <p className="text-sm sm:text-base font-bold text-[#fb923c] mt-0.5">
                 {nextClose.lstm !== undefined ? formatPeso(nextClose.lstm) : "--"}
               </p>

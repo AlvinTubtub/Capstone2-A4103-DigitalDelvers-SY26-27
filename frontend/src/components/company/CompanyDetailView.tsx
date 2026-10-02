@@ -7,6 +7,7 @@ import PredictionChart from "@/components/charts/PredictionChart";
 import ErrorChart from "@/components/charts/ErrorChart";
 import ChangeBadge from "@/components/ChangeBadge";
 import CompanyLogo from "@/components/CompanyLogo";
+import InfoTooltip from "@/components/InfoTooltip";
 import StatCard from "@/components/StatCard";
 import WatchlistStar from "@/components/watchlist/WatchlistStar";
 import { getCompanyProfile } from "@/lib/companyProfiles";
@@ -221,60 +222,69 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
           {/* Date context */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400 bg-dark-card border border-dark-border px-3.5 py-2 rounded-xl">
             {company.dataAsOf && (
-              <div>
-                <span className="text-slate-500">Data as of: </span>
-                <strong className="text-slate-300 font-medium">{formatDate(company.dataAsOf)}</strong>
+              <div className="flex items-center gap-1">
+                <div>
+                  <span className="text-slate-500">Data as of: </span>
+                  <strong className="text-slate-300 font-medium">{formatDate(company.dataAsOf)}</strong>
+                </div>
+                <InfoTooltip id="detail-data-asof" />
               </div>
             )}
             {company.dataAsOf && company.forecastDate && <span>&middot;</span>}
             {company.forecastDate && (
-              <div>
-                <span className="text-slate-500">Forecast for: </span>
-                <strong className="text-brand-300 font-semibold">
-                  {formatDate(company.forecastDate)}
-                </strong>
+              <div className="flex items-center gap-1">
+                <div>
+                  <span className="text-slate-500">Forecast for: </span>
+                  <strong className="text-brand-300 font-semibold">
+                    {formatDate(company.forecastDate)}
+                  </strong>
+                </div>
+                <InfoTooltip id="detail-forecast-for" />
               </div>
             )}
           </div>
 
           {/* Accessible Beginner / Advanced Segmented Control */}
-          <div
-            role="radiogroup"
-            aria-label="Detail view mode"
-            className="inline-flex items-center p-1 rounded-xl bg-dark-card border border-dark-border shadow-xs"
-          >
-            <button
-              ref={beginnerBtnRef}
-              type="button"
-              role="radio"
-              aria-checked={viewMode === "beginner"}
-              tabIndex={viewMode === "beginner" ? 0 : -1}
-              onClick={() => handleModeChange("beginner")}
-              onKeyDown={(e) => handleKeyDown(e, "beginner")}
-              className={`relative px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
-                viewMode === "beginner"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
-              }`}
+          <div className="flex items-center gap-1.5">
+            <div
+              role="radiogroup"
+              aria-label="Detail view mode"
+              className="inline-flex items-center p-1 rounded-xl bg-dark-card border border-dark-border shadow-xs"
             >
-              Beginner
-            </button>
-            <button
-              ref={advancedBtnRef}
-              type="button"
-              role="radio"
-              aria-checked={viewMode === "advanced"}
-              tabIndex={viewMode === "advanced" ? 0 : -1}
-              onClick={() => handleModeChange("advanced")}
-              onKeyDown={(e) => handleKeyDown(e, "advanced")}
-              className={`relative px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
-                viewMode === "advanced"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
-              }`}
-            >
-              Advanced
-            </button>
+              <button
+                ref={beginnerBtnRef}
+                type="button"
+                role="radio"
+                aria-checked={viewMode === "beginner"}
+                tabIndex={viewMode === "beginner" ? 0 : -1}
+                onClick={() => handleModeChange("beginner")}
+                onKeyDown={(e) => handleKeyDown(e, "beginner")}
+                className={`relative px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
+                  viewMode === "beginner"
+                    ? "bg-brand-600 text-white shadow-sm"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                }`}
+              >
+                Beginner
+              </button>
+              <button
+                ref={advancedBtnRef}
+                type="button"
+                role="radio"
+                aria-checked={viewMode === "advanced"}
+                tabIndex={viewMode === "advanced" ? 0 : -1}
+                onClick={() => handleModeChange("advanced")}
+                onKeyDown={(e) => handleKeyDown(e, "advanced")}
+                className={`relative px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
+                  viewMode === "advanced"
+                    ? "bg-brand-600 text-white shadow-sm"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                }`}
+              >
+                Advanced
+              </button>
+            </div>
+            <InfoTooltip id="detail-view-mode" align="right" />
           </div>
         </div>
       </div>
@@ -346,18 +356,26 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
         } gap-4`}
       >
         {/* Item 1: Previous Close (Shown in Beginner & Advanced) */}
-        <StatCard label="Previous Close" value={formatPeso(company.previousClose)} />
+        <StatCard
+          label="Previous Close"
+          value={formatPeso(company.previousClose)}
+          tooltipId="metric-prev-close"
+        />
 
         {/* Item 2: Forecasted Close (Shown in Beginner & Advanced) */}
         <StatCard
           label="Forecasted Close"
           value={formatPeso(company.predictedClose)}
           accent="text-white"
+          tooltipId="metric-forecast-close"
         />
 
         {/* Item 3: Expected Change (Shown in Beginner & Advanced) */}
         <div className="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Expected Change</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs uppercase tracking-wide text-slate-400">Expected Change</p>
+            <InfoTooltip id="metric-expected-change" />
+          </div>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-white">{formatPeso(company.pesoChange)}</span>
             <ChangeBadge pctChange={company.pctChange} />
@@ -367,7 +385,10 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
         {/* Item 4: Best Principal Model Card (Hidden in Beginner, Shown in Advanced) */}
         {viewMode === "advanced" && (
           <div className="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-slate-400 mb-1">Best Principal Model</p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs uppercase tracking-wide text-slate-400">Best Principal Model</p>
+              <InfoTooltip id="metric-best-model" />
+            </div>
             <p className="text-base font-bold text-white truncate" title={company.model}>
               {company.model}
             </p>
@@ -464,14 +485,20 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
 
       {/* 4. Historical OHLCV (Shown in Beginner & Advanced) */}
       <section className="bg-dark-card border border-dark-border rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Historical OHLCV</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <h2 className="text-lg font-semibold text-white">Historical OHLCV</h2>
+          <InfoTooltip id="chart-ohlcv-title" />
+        </div>
         <HistoryChart data={company.ohlcv} />
       </section>
 
       {/* 5. Next-Day Prediction (Shown in Beginner & Advanced) */}
       <section className="bg-dark-card border border-dark-border rounded-xl p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
-          <h2 className="text-lg font-semibold text-white">Next-Day Prediction</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-white">Next-Day Prediction</h2>
+            <InfoTooltip id="chart-nextday-title" />
+          </div>
         </div>
         <p className="text-sm text-slate-400 mb-4">
           {viewMode === "beginner"
@@ -498,14 +525,17 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
               ? "Predicted vs. Actual"
               : "Predicted vs. Actual — Formal Evaluation + Post-Formal Monitoring"}
           </h2>
-          <span className="rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
-            Chronological evaluation
-          </span>
-          {hasRealizedProductionHistory && (
-            <span className="rounded-md border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300">
-              Post-formal monitoring
+          <div className="inline-flex items-center gap-1">
+            <span className="rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
+              Chronological evaluation
             </span>
-          )}
+            {hasRealizedProductionHistory && (
+              <span className="rounded-md border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300">
+                Post-formal monitoring
+              </span>
+            )}
+            <InfoTooltip id="chart-pva-badges" />
+          </div>
         </div>
         <p className="text-sm text-slate-400 mb-4">
           {viewMode === "beginner" ? (
@@ -517,8 +547,12 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
               followed by {verifiedProductionDates.length} realized post-formal
               {verifiedProductionDates.length === 1 ? " session" : " sessions"}. Full formal
               evaluation: {formatDate(company.evaluationMetadata.fullStartDate)} –{" "}
-              {formatDate(company.evaluationMetadata.fullEndDate)}. Formal metrics and statistical
-              tests continue to use only the complete frozen evaluation.
+              {formatDate(company.evaluationMetadata.fullEndDate)}.
+              <span className="inline-flex items-center gap-1 mx-1">
+                <span>Formal cutoff</span>
+                <InfoTooltip id="chart-pva-banner" />
+              </span>
+              Formal metrics and statistical tests continue to use only the complete frozen evaluation.
             </>
           ) : (
             <>
@@ -528,11 +562,12 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             </>
           )}
           {viewMode === "advanced" && (
-            <>
+            <span className="inline-flex items-center gap-1">
               {" "}{company.evaluationMetadata?.displayedSessionCount ?? auditedDates.length} formal
               evaluation sessions + {verifiedProductionDates.length} post-formal
               {verifiedProductionDates.length === 1 ? " session" : " sessions"} are displayed.
-            </>
+              <InfoTooltip id="chart-pva-info" />
+            </span>
           )}
         </p>
         <PredictionChart
@@ -553,6 +588,7 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             <h2 className="text-lg font-semibold text-white">
               Forecast Error Over Time — Formal Evaluation + Post-Formal Monitoring
             </h2>
+            <InfoTooltip id="chart-error-time" />
             <span className="rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
               Chronological evaluation
             </span>
@@ -568,6 +604,10 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             {" "}realized post-formal {verifiedProductionDates.length === 1 ? "session" : "sessions"}.
             The fixed boundary marks the formal evaluation end date. Formal metrics and statistical
             tests exclude production history. Error is predicted close minus actual close (₱).
+            <span className="inline-flex items-center gap-1 ml-2 text-xs">
+              <span className="text-slate-300 font-medium">Error distribution</span>
+              <InfoTooltip id="chart-error-dist" />
+            </span>
           </p>
           <ErrorChart
             dates={chartDates}
@@ -584,9 +624,12 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
       {viewMode === "advanced" && (
         <section className="bg-dark-card border border-dark-border rounded-xl p-6 overflow-x-auto">
           <div className="mb-4">
-            <h2 className="text-lg font-semibold text-white mb-1">
-              Model Performance for {company.symbol}
-            </h2>
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-lg font-semibold text-white">
+                Model Performance for {company.symbol}
+              </h2>
+              <InfoTooltip id="lb-title" />
+            </div>
             <p className="text-xs text-slate-400">
               Current chronological-evaluation metrics across all forecasting models and the naive
               baseline.
@@ -597,10 +640,30 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
             <thead className="text-xs text-slate-400 uppercase bg-dark-bg/80 border-b border-dark-border">
               <tr>
                 <th className="text-left py-2 px-3">Model</th>
-                <th className="text-right py-2 px-3">RMSE (₱)</th>
-                <th className="text-right py-2 px-3">MAE (₱)</th>
-                <th className="text-right py-2 px-3">MASE</th>
-                <th className="text-right py-2 px-3">Holdout R² (supp.)</th>
+                <th className="text-right py-2 px-3">
+                  <span className="inline-flex items-center justify-end gap-1">
+                    <span>RMSE (₱)</span>
+                    <InfoTooltip id="lb-rmse" align="right" />
+                  </span>
+                </th>
+                <th className="text-right py-2 px-3">
+                  <span className="inline-flex items-center justify-end gap-1">
+                    <span>MAE (₱)</span>
+                    <InfoTooltip id="lb-mae" align="right" />
+                  </span>
+                </th>
+                <th className="text-right py-2 px-3">
+                  <span className="inline-flex items-center justify-end gap-1">
+                    <span>MASE</span>
+                    <InfoTooltip id="lb-mase" align="right" />
+                  </span>
+                </th>
+                <th className="text-right py-2 px-3">
+                  <span className="inline-flex items-center justify-end gap-1">
+                    <span>Holdout R² (supp.)</span>
+                    <InfoTooltip id="lb-rsquared" align="right" />
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -616,13 +679,19 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                     <td className="py-2.5 px-3 font-medium text-white">
                       {modelLabels[m]}
                       {modelLabels[m] === company.model && (
-                        <span className="ml-2 text-[10px] uppercase text-brand-400 border border-brand-500/40 rounded px-1.5 py-0.5">
-                          Selected
+                        <span className="ml-2 inline-flex items-center gap-1">
+                          <span className="text-[10px] uppercase text-brand-400 border border-brand-500/40 rounded px-1.5 py-0.5">
+                            Selected
+                          </span>
+                          <InfoTooltip id="lb-selected" />
                         </span>
                       )}
                       {m === "naive" && (
-                        <span className="ml-2 text-[10px] uppercase text-slate-400 border border-slate-600 rounded px-1.5 py-0.5">
-                          Benchmark
+                        <span className="ml-2 inline-flex items-center gap-1">
+                          <span className="text-[10px] uppercase text-slate-400 border border-slate-600 rounded px-1.5 py-0.5">
+                            Benchmark
+                          </span>
+                          <InfoTooltip id="lb-benchmark" />
                         </span>
                       )}
                     </td>

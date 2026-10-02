@@ -32,7 +32,7 @@ export default function CompanyGrid({ companies }: { companies: CompanySummary[]
   return (
     <div>
       <div className="mb-6 max-w-xs">
-        <label htmlFor="sector-filter" className="sr-only">
+        <label htmlFor="sector-filter" className="block text-xs font-medium text-slate-400 mb-1.5">
           Filter by sector
         </label>
         <select

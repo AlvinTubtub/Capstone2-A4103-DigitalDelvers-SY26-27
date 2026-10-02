@@ -13,6 +13,7 @@ import {
   Legend,
 } from "recharts";
 import ChartGestureControls, { ChartResetButton } from "./ChartGestureControls";
+import InfoTooltip from "@/components/InfoTooltip";
 import { useChartInteractions } from "@/hooks/useChartTouchGestures";
 import type { OhlcvPoint } from "@/lib/types";
 
@@ -179,6 +180,7 @@ export default function HistoryChart({ data }: { data: OhlcvPoint[] }) {
               />
             </svg>
             <span>Period:</span>
+            <InfoTooltip id="chart-ohlcv-period" />
           </div>
 
           {/* Date Pickers */}
@@ -270,7 +272,10 @@ export default function HistoryChart({ data }: { data: OhlcvPoint[] }) {
       {/* 2. Series Toggles */}
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-slate-400 font-medium">Series:</span>
+          <div className="flex items-center gap-1">
+            <span className="text-slate-400 font-medium">Series:</span>
+            <InfoTooltip id="chart-ohlcv-series" />
+          </div>
           <button
             type="button"
             onClick={() => toggleSeries("open")}
@@ -326,6 +331,11 @@ export default function HistoryChart({ data }: { data: OhlcvPoint[] }) {
           >
             Volume
           </button>
+        </div>
+
+        <div className="flex items-center gap-1 text-slate-400">
+          <span>Legend</span>
+          <InfoTooltip id="chart-ohlcv-legend" align="right" />
         </div>
       </div>
 
