@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-01T16:03:03.949407+08:00",
-  "forecastDate": "2026-10-02",
-  "lastRunAt": "2026-10-01T16:03:03.949407+08:00",
+  "generatedAt": "2026-10-02T16:02:54.293652+08:00",
+  "forecastDate": "2026-10-05",
+  "lastRunAt": "2026-10-02T16:02:54.293652+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 6,
-    "losers": 5,
+    "gainers": 5,
+    "losers": 6,
     "unchanged": 4
   },
   "topGainer": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 867.0,
-    "predictedClose": 880.4168229132616,
-    "pctChange": 1.5474997593150666,
+    "latestClose": 860.0,
+    "predictedClose": 882.756806190032,
+    "pctChange": 2.64614025465488,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-02"
+    "forecastDate": "2026-10-05"
   },
   "topLoser": {
     "symbol": "ALI",
     "name": "Ayala Land, Inc.",
     "sector": "Property",
-    "latestClose": 15.1,
-    "predictedClose": 15.083048094940661,
-    "pctChange": -0.1122642719161477,
+    "latestClose": 15.14,
+    "predictedClose": 15.123048094940662,
+    "pctChange": -0.11196766881993593,
     "direction": "bearish",
     "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-10-02"
+    "forecastDate": "2026-10-05"
   }
 }
