@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-02T16:02:54.293652+08:00",
-  "forecastDate": "2026-10-05",
-  "lastRunAt": "2026-10-02T16:02:54.293652+08:00",
+  "generatedAt": "2026-10-05T17:32:47.229587+08:00",
+  "forecastDate": "2026-10-06",
+  "lastRunAt": "2026-10-05T17:32:47.229587+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 5,
-    "losers": 6,
+    "gainers": 4,
+    "losers": 7,
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "ICT",
-    "name": "International Container Terminal Services, Inc.",
-    "sector": "Services",
-    "latestClose": 860.0,
-    "predictedClose": 882.756806190032,
-    "pctChange": 2.64614025465488,
+    "symbol": "APX",
+    "name": "Apex Mining Co., Inc.",
+    "sector": "Mining and Oil",
+    "latestClose": 17.6,
+    "predictedClose": 17.622423541857874,
+    "pctChange": 0.12740648782881936,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-05"
+    "forecastDate": "2026-10-06"
   },
   "topLoser": {
-    "symbol": "ALI",
-    "name": "Ayala Land, Inc.",
+    "symbol": "SMPH",
+    "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 15.14,
-    "predictedClose": 15.123048094940662,
-    "pctChange": -0.11196766881993593,
+    "latestClose": 16.54,
+    "predictedClose": 16.37746136960138,
+    "pctChange": -0.9827003047074866,
     "direction": "bearish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-10-05"
+    "bestModel": "LSTM",
+    "forecastDate": "2026-10-06"
   }
 }
