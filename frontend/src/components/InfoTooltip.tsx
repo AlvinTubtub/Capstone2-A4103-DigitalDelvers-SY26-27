@@ -162,10 +162,10 @@ export default function InfoTooltip({
             toggleTooltip();
           }
         }}
-        className="group inline-flex items-center justify-center p-0.5 rounded-full text-slate-400 hover:text-brand-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-1 focus-visible:ring-offset-dark-bg cursor-pointer transition-colors"
+        className="group inline-flex items-center justify-center p-0.5 rounded-full text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 dark:focus-visible:ring-brand-400 focus-visible:ring-offset-1 focus-visible:ring-offset-white dark:focus-visible:ring-offset-dark-bg cursor-pointer transition-colors"
       >
         <svg
-          className="w-3.5 h-3.5 text-slate-400 group-hover:text-brand-300 group-focus-visible:text-brand-300 transition-colors"
+          className="w-3.5 h-3.5 text-slate-500 group-hover:text-brand-600 group-focus-visible:text-brand-600 dark:text-slate-400 dark:group-hover:text-brand-300 dark:group-focus-visible:text-brand-300 transition-colors"
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -183,7 +183,7 @@ export default function InfoTooltip({
           ref={tooltipRef}
           id={tooltipElementId}
           role="tooltip"
-          className={`absolute z-50 w-64 max-w-[calc(100vw-2rem)] p-3 rounded-xl bg-slate-900 border border-slate-700/90 shadow-2xl shadow-black/80 text-left select-text pointer-events-auto transition-opacity duration-150 animate-in fade-in-0 zoom-in-95 ${
+          className={`absolute z-50 w-64 max-w-[calc(100vw-2rem)] p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/90 shadow-xl shadow-slate-900/10 dark:shadow-2xl dark:shadow-black/80 text-left select-text pointer-events-auto transition-opacity duration-150 animate-in fade-in-0 zoom-in-95 ${
             verticalPlacement === "top"
               ? "bottom-full mb-1.5"
               : "top-full mt-1.5"
@@ -192,10 +192,10 @@ export default function InfoTooltip({
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <h4 className="text-xs font-semibold text-white tracking-tight mb-1">
+          <h4 className="text-xs font-semibold text-slate-900 dark:text-white tracking-tight mb-1">
             {tooltipContent.title}
           </h4>
-          <p className="text-[11px] leading-relaxed text-slate-300">
+          <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
             {tooltipContent.body}
           </p>
         </div>

@@ -230,3 +230,63 @@ test("Frontend Integration - All 29 detail tooltip IDs are integrated on company
     );
   }
 });
+
+test("Theme Awareness Regression - InfoTooltip contains explicit light and dark styling", () => {
+  const infoTooltipPath = path.join(SRC_DIR, "components/InfoTooltip.tsx");
+  assert.ok(fs.existsSync(infoTooltipPath), "InfoTooltip.tsx must exist");
+  const content = fs.readFileSync(infoTooltipPath, "utf-8");
+
+  // Popup card background (light & dark)
+  assert.ok(content.includes("bg-white"), "InfoTooltip must have light background bg-white");
+  assert.ok(content.includes("dark:bg-slate-900"), "InfoTooltip must have dark background dark:bg-slate-900");
+
+  // Popup card border (light & dark)
+  assert.ok(content.includes("border-slate-200"), "InfoTooltip must have light border border-slate-200");
+  assert.ok(content.includes("dark:border-slate-700/90"), "InfoTooltip must have dark border dark:border-slate-700/90");
+
+  // Title text (light & dark)
+  assert.ok(content.includes("text-slate-900 dark:text-white"), "InfoTooltip title must support light and dark modes");
+
+  // Body text (light & dark)
+  assert.ok(content.includes("text-slate-600 dark:text-slate-300"), "InfoTooltip body must support light and dark modes");
+
+  // Trigger treatment (light & dark)
+  assert.ok(content.includes("text-slate-500"), "InfoTooltip trigger must have light text text-slate-500");
+  assert.ok(content.includes("dark:text-slate-400"), "InfoTooltip trigger must have dark text dark:text-slate-400");
+  assert.ok(content.includes("hover:text-brand-600"), "InfoTooltip trigger must have light hover hover:text-brand-600");
+  assert.ok(content.includes("dark:hover:text-brand-300"), "InfoTooltip trigger must have dark hover dark:hover:text-brand-300");
+
+  // Focus ring offset (light & dark)
+  assert.ok(
+    content.includes("focus-visible:ring-offset-white"),
+    "InfoTooltip trigger must have light focus ring offset"
+  );
+  assert.ok(
+    content.includes("dark:focus-visible:ring-offset-dark-bg"),
+    "InfoTooltip trigger must have dark focus ring offset"
+  );
+});
+
+test("Theme Awareness Regression - About Company expand button contains explicit light and dark styling", () => {
+  const detailViewPath = path.join(SRC_DIR, "components/company/CompanyDetailView.tsx");
+  assert.ok(fs.existsSync(detailViewPath), "CompanyDetailView.tsx must exist");
+  const content = fs.readFileSync(detailViewPath, "utf-8");
+
+  // Background (light & dark)
+  assert.ok(content.includes("bg-white dark:bg-dark-card"), "About Company button must have light bg-white and dark:bg-dark-card");
+
+  // Border (light & dark)
+  assert.ok(content.includes("border-slate-300 dark:border-dark-border"), "About Company button must have light border-slate-300 and dark:border-dark-border");
+
+  // Text color (light & dark)
+  assert.ok(content.includes("text-slate-700 dark:text-slate-300"), "About Company button must have light text-slate-700 and dark:text-slate-300");
+
+  // Hover states (light & dark)
+  assert.ok(content.includes("hover:bg-slate-50 dark:hover:bg-slate-800/80"), "About Company button must have light and dark hover backgrounds");
+  assert.ok(content.includes("hover:text-slate-900 dark:hover:text-white"), "About Company button must have light and dark hover text");
+  assert.ok(content.includes("hover:border-slate-400 dark:hover:border-slate-600"), "About Company button must have light and dark hover borders");
+
+  // Icon colors (light & dark)
+  assert.ok(content.includes("text-brand-600 dark:text-brand-400"), "About Company icon must have light and dark brand colors");
+  assert.ok(content.includes("text-slate-500 dark:text-slate-400"), "About Company chevron must have light and dark colors");
+});

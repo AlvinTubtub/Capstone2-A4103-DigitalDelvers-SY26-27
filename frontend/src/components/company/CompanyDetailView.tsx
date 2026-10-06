@@ -184,10 +184,10 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                 onClick={() => setIsProfileOpen((prev) => !prev)}
                 aria-expanded={isProfileOpen}
                 aria-controls="company-profile-panel"
-                className="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-dark-card hover:bg-slate-800/80 border border-dark-border hover:border-slate-600 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-brand-500 shadow-2xs group"
+                className="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-dark-card border border-slate-300 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-slate-600 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-brand-500 shadow-2xs group"
               >
                 <svg
-                  className="w-3.5 h-3.5 text-brand-400 shrink-0"
+                  className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400 shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -202,8 +202,8 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
                 </svg>
                 <span>About {company.name}</span>
                 <svg
-                  className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ease-out ${
-                    isProfileOpen ? "rotate-180 text-brand-400" : ""
+                  className={`w-3.5 h-3.5 text-slate-500 dark:text-slate-400 transition-transform duration-200 ease-out ${
+                    isProfileOpen ? "rotate-180 text-brand-600 dark:text-brand-400" : ""
                   }`}
                   fill="none"
                   viewBox="0 0 24 24"
