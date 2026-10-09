@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-08T16:03:01.489567+08:00",
-  "forecastDate": "2026-10-09",
-  "lastRunAt": "2026-10-08T16:03:01.489567+08:00",
+  "generatedAt": "2026-10-09T16:02:18.098962+08:00",
+  "forecastDate": "2026-10-12",
+  "lastRunAt": "2026-10-09T16:02:18.098962+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 8,
-    "losers": 3,
+    "gainers": 3,
+    "losers": 8,
     "unchanged": 4
   },
   "topGainer": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 841.5,
-    "predictedClose": 855.8799769336858,
-    "pctChange": 1.7088504971700342,
+    "latestClose": 859.0,
+    "predictedClose": 862.8532755195001,
+    "pctChange": 0.4485768940046717,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-09"
+    "forecastDate": "2026-10-12"
   },
   "topLoser": {
-    "symbol": "ALI",
-    "name": "Ayala Land, Inc.",
-    "sector": "Property",
-    "latestClose": 15.26,
-    "predictedClose": 15.243048094940661,
-    "pctChange": -0.11108718911755112,
+    "symbol": "MER",
+    "name": "Manila Electric Company",
+    "sector": "Industrial",
+    "latestClose": 437.0,
+    "predictedClose": 435.7029730178051,
+    "pctChange": -0.29680251308807626,
     "direction": "bearish",
     "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-10-09"
+    "forecastDate": "2026-10-12"
   }
 }
