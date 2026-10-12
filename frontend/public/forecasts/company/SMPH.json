@@ -2,10 +2,10 @@
   "symbol": "SMPH",
   "name": "SM Prime Holdings, Inc.",
   "sector": "Property",
-  "previousClose": 15.88,
-  "predictedClose": 15.874018471533308,
-  "pesoChange": -0.005981528466692865,
-  "pctChange": -0.03766705583559738,
+  "previousClose": 16.0,
+  "predictedClose": 15.95592289568682,
+  "pesoChange": -0.044077104313180016,
+  "pctChange": -0.2754819019573751,
   "direction": "bearish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 15.94619905511537,
-    "arima": 15.876506721191074,
-    "lstm": 15.874018471533308
+    "lag": 15.949647874255692,
+    "arima": 15.970243417652703,
+    "lstm": 15.95592289568682
   },
   "ohlcv": [
     {
@@ -13279,6 +13279,14 @@
       "low": 15.8,
       "close": 15.88,
       "volume": 6778800.0
+    },
+    {
+      "date": "2026-10-12",
+      "open": 15.88,
+      "high": 16.18,
+      "low": 15.72,
+      "close": 16.0,
+      "volume": 20657400.0
     }
   ],
   "backtestDates": [
@@ -13675,7 +13683,8 @@
     "2026-10-06",
     "2026-10-07",
     "2026-10-08",
-    "2026-10-09"
+    "2026-10-09",
+    "2026-10-12"
   ],
   "productionBacktestActual": [
     17.74,
@@ -13697,7 +13706,8 @@
     15.86,
     16.3,
     15.82,
-    15.88
+    15.88,
+    16.0
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13720,7 +13730,8 @@
       16.363457066049644,
       15.938265858814367,
       16.150572483986902,
-      15.885341625887206
+      15.885341625887206,
+      15.94619905511537
     ],
     "ARIMA": [
       17.74929401004061,
@@ -13742,7 +13753,8 @@
       16.41862279593234,
       15.894534108592978,
       16.24025846611845,
-      15.85350612790981
+      15.85350612790981,
+      15.876506721191074
     ],
     "LSTM": [
       17.76687877119354,
@@ -13764,7 +13776,8 @@
       16.37746136960138,
       15.89299565032214,
       16.206193631064448,
-      15.857883319423806
+      15.857883319423806,
+      15.874018471533308
     ],
     "Naive baseline": [
       17.72,
@@ -13786,7 +13799,8 @@
       16.54,
       15.86,
       16.3,
-      15.82
+      15.82,
+      15.88
     ]
   },
   "productionBacktestProvenance": [
@@ -15089,11 +15103,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "SMPH",
+      "originDate": "2026-10-09",
+      "targetDate": "2026-10-12",
+      "actualClose": 16.0,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-5972646dc14d488d6744b181baa378eeae883cb61cd2bc6054bd8101bc6e272f",
+          "method": "lag_reg",
+          "prediction": 15.94619905511537,
+          "error": -0.05380094488462994,
+          "modelVersion": "backend-from-scratch-v1:287454d9a19775567d01e14ed4aea1b46cd177c4831796368793273f5d52ab4e",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-09T16:02:18.028774+08:00",
+          "observedAt": "2026-10-12T17:32:45.729006+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-5bd6294005b6ee0eb19db3112a8c245e382f37d778f6062a4c4d057ecb80f8bf",
+          "method": "arima",
+          "prediction": 15.876506721191074,
+          "error": -0.12349327880892602,
+          "modelVersion": "backend-from-scratch-v1:bfa8d07eebc98c3eef79782f257e1602b7a24dc0775c14b44a76486844d97756",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-09T16:02:18.028774+08:00",
+          "observedAt": "2026-10-12T17:32:45.729006+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-b3c0494401bb8ec90ebad8a429cedb40ae5727adc0c7cc2278007237da90eec4",
+          "method": "lstm",
+          "prediction": 15.874018471533308,
+          "error": -0.12598152846669208,
+          "modelVersion": "backend-from-scratch-v1:54535b2127cb9c8a4c916e2d7418465f583bbabeab486c989b929dbfdb3bc2e3",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-09T16:02:18.028774+08:00",
+          "observedAt": "2026-10-12T17:32:45.729006+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-f13bf7883207063e263cc83f2886cfcbaf998b55c97bd74ee4214ee0977add8d",
+          "method": "naive",
+          "prediction": 15.88,
+          "error": -0.11999999999999922,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-09T16:02:18.028774+08:00",
+          "observedAt": "2026-10-12T17:32:45.729006+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-10-12",
-  "dataAsOf": "2026-10-09",
-  "inferenceAt": "2026-10-09T16:02:18.028774+08:00",
+  "forecastDate": "2026-10-13",
+  "dataAsOf": "2026-10-12",
+  "inferenceAt": "2026-10-12T17:32:51.647848+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-09T16:02:18.098962+08:00",
-  "forecastDate": "2026-10-12",
-  "lastRunAt": "2026-10-09T16:02:18.098962+08:00",
+  "generatedAt": "2026-10-12T17:32:51.761276+08:00",
+  "forecastDate": "2026-10-13",
+  "lastRunAt": "2026-10-12T17:32:51.761276+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 3,
-    "losers": 8,
+    "gainers": 4,
+    "losers": 7,
     "unchanged": 4
   },
   "topGainer": {
+    "symbol": "MBT",
+    "name": "Metropolitan Bank & Trust Company",
+    "sector": "Financials",
+    "latestClose": 58.5,
+    "predictedClose": 58.75003397954589,
+    "pctChange": 0.42740851204425623,
+    "direction": "bullish",
+    "bestModel": "ARIMA",
+    "forecastDate": "2026-10-13"
+  },
+  "topLoser": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 859.0,
-    "predictedClose": 862.8532755195001,
-    "pctChange": 0.4485768940046717,
-    "direction": "bullish",
-    "bestModel": "LSTM",
-    "forecastDate": "2026-10-12"
-  },
-  "topLoser": {
-    "symbol": "MER",
-    "name": "Manila Electric Company",
-    "sector": "Industrial",
-    "latestClose": 437.0,
-    "predictedClose": 435.7029730178051,
-    "pctChange": -0.29680251308807626,
+    "latestClose": 884.0,
+    "predictedClose": 881.3436319215142,
+    "pctChange": -0.30049412652554275,
     "direction": "bearish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-10-12"
+    "bestModel": "LSTM",
+    "forecastDate": "2026-10-13"
   }
 }
