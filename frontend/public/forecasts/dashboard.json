@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-12T17:32:51.761276+08:00",
-  "forecastDate": "2026-10-13",
-  "lastRunAt": "2026-10-12T17:32:51.761276+08:00",
+  "generatedAt": "2026-10-13T16:02:33.009636+08:00",
+  "forecastDate": "2026-10-14",
+  "lastRunAt": "2026-10-13T16:02:33.009636+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 4,
-    "losers": 7,
+    "gainers": 7,
+    "losers": 4,
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "MBT",
-    "name": "Metropolitan Bank & Trust Company",
+    "symbol": "BPI",
+    "name": "Bank of the Philippine Islands",
     "sector": "Financials",
-    "latestClose": 58.5,
-    "predictedClose": 58.75003397954589,
-    "pctChange": 0.42740851204425623,
+    "latestClose": 93.0,
+    "predictedClose": 93.20157504825497,
+    "pctChange": 0.21674736371501752,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-10-13"
+    "forecastDate": "2026-10-14"
   },
   "topLoser": {
-    "symbol": "ICT",
-    "name": "International Container Terminal Services, Inc.",
-    "sector": "Services",
-    "latestClose": 884.0,
-    "predictedClose": 881.3436319215142,
-    "pctChange": -0.30049412652554275,
+    "symbol": "ALI",
+    "name": "Ayala Land, Inc.",
+    "sector": "Property",
+    "latestClose": 15.24,
+    "predictedClose": 15.223048094940662,
+    "pctChange": -0.11123297283030381,
     "direction": "bearish",
-    "bestModel": "LSTM",
-    "forecastDate": "2026-10-13"
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-10-14"
   }
 }
