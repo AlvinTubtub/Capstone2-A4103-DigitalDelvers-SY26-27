@@ -3,9 +3,9 @@
   "name": "Puregold Price Club, Inc.",
   "sector": "Services",
   "previousClose": 40.0,
-  "predictedClose": 40.01094858469797,
-  "pesoChange": 0.010948584697970887,
-  "pctChange": 0.027371461744927213,
+  "predictedClose": 40.0,
+  "pesoChange": 0.0,
+  "pctChange": 0.0,
   "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
@@ -36,8 +36,8 @@
   },
   "nextClose": {
     "lag": 40.00106183635228,
-    "arima": 40.01094858469797,
-    "lstm": 40.03923156261968
+    "arima": 40.0,
+    "lstm": 40.02897342139106
   },
   "ohlcv": [
     {
@@ -13303,6 +13303,14 @@
       "low": 39.55,
       "close": 40.0,
       "volume": 569900.0
+    },
+    {
+      "date": "2026-10-15",
+      "open": 40.0,
+      "high": 40.3,
+      "low": 39.8,
+      "close": 40.0,
+      "volume": 227500.0
     }
   ],
   "backtestDates": [
@@ -13702,7 +13710,8 @@
     "2026-10-09",
     "2026-10-12",
     "2026-10-13",
-    "2026-10-14"
+    "2026-10-14",
+    "2026-10-15"
   ],
   "productionBacktestActual": [
     39.85,
@@ -13727,6 +13736,7 @@
     41.0,
     40.5,
     40.15,
+    40.0,
     40.0
   ],
   "productionBacktestByModel": {
@@ -13753,7 +13763,8 @@
       40.00106183635228,
       41.00106183635228,
       40.50106183635228,
-      40.15106183635228
+      40.15106183635228,
+      40.00106183635228
     ],
     "ARIMA": [
       40.0,
@@ -13778,7 +13789,8 @@
       40.03649528232658,
       40.92700943534685,
       40.53649528232658,
-      40.175546697628604
+      40.175546697628604,
+      40.01094858469797
     ],
     "LSTM": [
       40.03058535464923,
@@ -13803,7 +13815,8 @@
       40.037222630940846,
       40.975100635797766,
       40.53275127629056,
-      40.1949223618223
+      40.1949223618223,
+      40.03923156261968
     ],
     "Naive baseline": [
       40.0,
@@ -13828,7 +13841,8 @@
       40.0,
       41.0,
       40.5,
-      40.15
+      40.15,
+      40.0
     ]
   },
   "productionBacktestProvenance": [
@@ -15326,11 +15340,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "PGOLD",
+      "originDate": "2026-10-14",
+      "targetDate": "2026-10-15",
+      "actualClose": 40.0,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-335f4c26497f60a5d56083aaf5d30ffbeb2bb350cf2a5d89df735f5ef0ac11d4",
+          "method": "lag_reg",
+          "prediction": 40.00106183635228,
+          "error": 0.0010618363522780783,
+          "modelVersion": "backend-from-scratch-v1:f1074a8f199f69c6dab9f48e6532992172d7e3faa2b6ab2c6869ddf666d44b62",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-14T16:03:13.683224+08:00",
+          "observedAt": "2026-10-15T16:02:36.561364+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-4ccd93379fdbd27484459807af41294ca128e64576b1b6c8939e7bcb22d191b2",
+          "method": "arima",
+          "prediction": 40.01094858469797,
+          "error": 0.010948584697970887,
+          "modelVersion": "backend-from-scratch-v1:ab1bb5a3ea4102c3ae2557ede179c03635d6c07c0c0486c6c55896efa82307a4",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-14T16:03:13.683224+08:00",
+          "observedAt": "2026-10-15T16:02:36.561364+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-8bc6134ce8aeb1a2f2a5b9a795b76f207a0dcc4cb29f8ad1336cf788e3447fc1",
+          "method": "lstm",
+          "prediction": 40.03923156261968,
+          "error": 0.0392315626196833,
+          "modelVersion": "backend-from-scratch-v1:69c7631800a35b9775b756f37b937c2d7385c9759e1e864db8d1cb3eabdcf878",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-14T16:03:13.683224+08:00",
+          "observedAt": "2026-10-15T16:02:36.561364+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-8232570f0a2e034724f584033522e0cba68b8a8babac33d33532ed4afa99859b",
+          "method": "naive",
+          "prediction": 40.0,
+          "error": 0.0,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-14T16:03:13.683224+08:00",
+          "observedAt": "2026-10-15T16:02:36.561364+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-10-15",
-  "dataAsOf": "2026-10-14",
-  "inferenceAt": "2026-10-14T16:03:13.683224+08:00",
+  "forecastDate": "2026-10-16",
+  "dataAsOf": "2026-10-15",
+  "inferenceAt": "2026-10-15T16:02:41.135026+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

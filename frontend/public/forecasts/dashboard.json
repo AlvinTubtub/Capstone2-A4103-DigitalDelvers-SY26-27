@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-14T16:03:14.720037+08:00",
-  "forecastDate": "2026-10-15",
-  "lastRunAt": "2026-10-14T16:03:14.720037+08:00",
+  "generatedAt": "2026-10-15T16:02:41.701787+08:00",
+  "forecastDate": "2026-10-16",
+  "lastRunAt": "2026-10-15T16:02:41.701787+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 5,
+    "gainers": 4,
     "losers": 6,
-    "unchanged": 4
+    "unchanged": 5
   },
   "topGainer": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 814.5,
-    "predictedClose": 829.2706376621534,
-    "pctChange": 1.8134607320016423,
+    "latestClose": 820.5,
+    "predictedClose": 831.9222345491751,
+    "pctChange": 1.3921065873461393,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-15"
+    "forecastDate": "2026-10-16"
   },
   "topLoser": {
-    "symbol": "MBT",
-    "name": "Metropolitan Bank & Trust Company",
-    "sector": "Financials",
-    "latestClose": 60.75,
-    "predictedClose": 60.49647487069232,
-    "pctChange": -0.4173253157328108,
+    "symbol": "SMPH",
+    "name": "SM Prime Holdings, Inc.",
+    "sector": "Property",
+    "latestClose": 16.68,
+    "predictedClose": 16.45595678562131,
+    "pctChange": -1.3431847384813491,
     "direction": "bearish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-10-15"
+    "bestModel": "LSTM",
+    "forecastDate": "2026-10-16"
   }
 }
