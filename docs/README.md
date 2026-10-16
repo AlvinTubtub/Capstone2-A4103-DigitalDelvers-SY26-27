@@ -18,7 +18,9 @@ This index points team members, advisers, reviewers, and maintainers to the curr
 
 The [frozen research-result evidence index](../backend/research-result/README.md) explains the authoritative formal result tables under `backend/research-result/`. Those CSV files are deterministic, read-only submission evidence.
 
-The [research question-to-evidence map](research-question-evidence-map.md) and its [structured CSV](research-question-evidence-map.csv) map RQ1–RQ12 to current research and implementation evidence and identify pending stakeholder and system-evaluation evidence.
+The [final UAT evidence guide](../backend/research-result/uat/README.md) indexes participant-reported usability and helpfulness evidence separately from the frozen forecasting results.
+
+The [research question-to-evidence map](research-question-evidence-map.md) and its [structured CSV](research-question-evidence-map.csv) map RQ1–RQ12 to research and implementation evidence. Their references to pending stakeholder and system-evaluation evidence may need a separate alignment review now that finalized UAT evidence is available; this documentation update does not change RQ1 or RQ12 status or imply that UAT alone satisfies every requirement.
 
 ## Data provenance and corrections
 

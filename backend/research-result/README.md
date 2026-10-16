@@ -1,6 +1,6 @@
 # Frozen Research-Result Evidence
 
-This directory contains deterministic, read-only submission and research evidence derived from the finalized formal evaluation.
+The root-level CSVs in this directory contain deterministic, read-only submission and research evidence derived from the finalized formal evaluation. The UAT subdirectory contains separate participant-reported evidence.
 
 - **Formal run:** `FORECASTPH_FORMAL_20260911_01`
 - **Formal cutoff:** `2026-09-11`
@@ -75,6 +75,10 @@ Phase 6A.2 exposes existing finalized evidence, not a new experiment.
 ### `results_manifest.csv`
 
 Deterministic file hashes, row counts, provenance fields, and package-integrity metadata.
+
+## User Acceptance Testing (UAT)
+
+The finalized [UAT evidence guide](uat/README.md) indexes the executed notebook and aggregate results from eight respondents across 47 rating items. This participant-reported evidence is separate from the frozen forecasting evaluation and is not included in `results_manifest.csv`.
 
 ## Corporate-Action and Material Price-Discontinuity Screening
 

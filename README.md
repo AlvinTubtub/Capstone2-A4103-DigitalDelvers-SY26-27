@@ -15,6 +15,7 @@ PSE Pulse is the current public-facing brand. Legacy internal identifiers contai
 - [Backend technical guide](backend/README.md)
 - [Frontend and routes guide](frontend/README.md)
 - [Frozen research-result evidence](backend/research-result/README.md)
+- [User Acceptance Testing (UAT) evidence](backend/research-result/uat/README.md)
 - [Historical research archive guide](docs/research-history/README.md)
 - [Data provenance and correction records](backend/data/corrections/)
 
