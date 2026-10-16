@@ -307,19 +307,6 @@ def run(workbook: Path, output: Path = HERE) -> dict:
     for name,table in tables.items():
         table.to_csv(output/name,index=False)
     LOG.info("Wrote %d aggregate CSV tables",len(tables))
-    validation=(f"# UAT data validation\n\nSource: researcher-supplied complete Google Forms response workbook, sheet `Form Responses 1`.\n\n"
-                f"SHA-256: `{meta['source_sha256']}`. The private workbook is not stored here.\n\n"
-                f"Submissions: {meta['submissions']}; eligible consenting responses: {meta['valid']}; exclusions: 0; unique email keys: {meta['unique_respondents']}. "
-                f"Duplicate email keys: {meta['duplicate_email']}; duplicate full rows: {meta['duplicate_rows']}. "
-                f"Timestamp range: {meta['first_timestamp']} to {meta['last_timestamp']} (workbook timezone unspecified).\n\n"
-                f"All {meta['valid']} consented and acknowledged educational/non-advisory use. All 47 rating items use permitted final-questionnaire labels. "
-                f"Missing rating responses: {sum(meta['missing'][f['id']] for f in fields if f['scale'])}; Q35 optional blanks: {meta['missing']['Q35']}. "
-                f"Other missing questionnaire answers: {sum(v for k,v in meta['missing'].items() if k!='Q35')}.\n\n"
-                "The PDF was exported on 2026-10-16 while responses began on 2026-10-13. The workbook has no per-response form-version field. "
-                "Headers, all final matrix rows, and observed option labels are compatible with the final PDF; this does not independently prove the form version each person saw. "
-                "Earlier submissions were retained as directed by the researcher. Any later version evidence should be reviewed before manuscript finalization.\n\n"
-                "No emails, names, timestamps at respondent level, row-level ratings, or raw free text are published. Qualitative output contains aggregate theme counts only.\n")
-    (output/"UAT_DATA_VALIDATION.md").write_text(validation)
     return dict(meta=meta,mapping=mapping,tables=tables)
 
 
