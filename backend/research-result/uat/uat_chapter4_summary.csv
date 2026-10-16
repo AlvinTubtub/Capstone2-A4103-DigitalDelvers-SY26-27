@@ -1,0 +1,5 @@
+section,items,respondents,valid_item_responses,favorable_item_responses,favorable_item_response_pct,lowest_item_id,lowest_item_mean
+Navigation/usability,21,8,168,168,100.0,Q13,4.625
+Feature helpfulness,9,8,72,72,100.0,Q28_02,4.625
+Desktop/laptop experience,8,8,64,64,100.0,Q29_03,4.625
+Tablet/mobile experience,9,8,72,72,100.0,Q33_06,4.375

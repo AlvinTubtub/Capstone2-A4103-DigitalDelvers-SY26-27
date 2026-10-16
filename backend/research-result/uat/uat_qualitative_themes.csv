@@ -1,0 +1,10 @@
+item_id,theme,respondent_n,denominator,coding_rule
+Q34,Ask AI learning support,3,8,"case-insensitive literal/regex terms: ask ai, ai assistant"
+Q34,Forecast information,4,8,"case-insensitive literal/regex terms: prediction, forecast, gainer"
+Q34,Historical data or charts,4,8,"case-insensitive literal/regex terms: historical, chart, data overview"
+Q34,Beginner/Advanced view,1,8,"case-insensitive literal/regex terms: beginner and advanced, mode toggle"
+Q35,Optional issue item left blank,8,8,Blank response; does not prove no defects
+Q36,Tooltips and terminology,3,8,"case-insensitive literal/regex terms: tooltip, question-mark, acronym, jargon, terms"
+Q36,First-time guidance,2,8,"case-insensitive literal/regex terms: walkthrough, guided tour"
+Q36,Visual design and chart legend,2,8,"case-insensitive literal/regex terms: color design, color legend"
+Q36,No additional change suggested,3,8,"case-insensitive literal/regex terms: ^none, everything already fine, all best for me"

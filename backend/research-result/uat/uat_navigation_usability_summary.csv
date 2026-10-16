@@ -1,0 +1,22 @@
+item_id,area,item,scale,valid_n,missing_n,mean,median,sample_sd,favorable_n,favorable_pct,middle_n,unfavorable_n,score_1_n,score_1_pct,score_2_n,score_2_pct,score_3_n,score_3_pct,score_4_n,score_4_pct,score_5_n,score_5_pct
+Q7,Home,How easy was it to find the main information on the Home page?,ease,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q8,Home,How clearly did the Home page present the latest forecast date and data refresh information?,clarity,8,0,5.0,5.0,0.0,8,100.0,0,0,0,0.0,0,0.0,0,0.0,0,0.0,8,100.0
+Q9,Home,How easy was it to find a company or sector to explore from the Home page?,ease,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q10,Companies and Company Details,"How easy was it to use the Companies page or search controls to select a specific company (e.g., GLO, BPI, or MEG) and open its company details?",ease,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q11,Companies and Company Details,"How easy was it to understand the selected company’s historical price and trading-volume information, including the displayed dates and trends?",ease,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q12,Companies and Company Details,How clearly did the forecast charts show the difference between actual historical prices and predicted values?,clarity,8,0,5.0,5.0,0.0,8,100.0,0,0,0,0.0,0,0.0,0,0.0,0,0.0,8,100.0
+Q13,Companies and Company Details,How easy was it to switch between Beginner and Advanced views on a company details page?,ease,8,0,4.625,5.0,0.518,8,100.0,0,0,0,0.0,0,0.0,0,0.0,3,37.5,5,62.5
+Q14,My Watchlist,How easy was it to add a company to My Watchlist?,ease,8,0,4.625,5.0,0.518,8,100.0,0,0,0,0.0,0,0.0,0,0.0,3,37.5,5,62.5
+Q15,My Watchlist,How easy was it to find and review the companies saved in My Watchlist?,ease,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q16,My Watchlist,How clearly did the page explain how many companies could be saved to the watchlist?,clarity,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q17,Learn Stocks,How easy was it to find a learning topic on the Learn Stocks page?,ease,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q18,Learn Stocks,How clearly did the learning content explain stock-market or forecasting concepts?,clarity,8,0,5.0,5.0,0.0,8,100.0,0,0,0,0.0,0,0.0,0,0.0,0,0.0,8,100.0
+Q19,Learn Stocks,How easy was it to follow the learning path and open its learning materials?,ease,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q20,About PSE Pulse,How easy was it to find information about the purpose of PSE Pulse?,ease,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q21,About PSE Pulse,How clearly did the About page explain the forecasting methods and how they are evaluated?,clarity,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q22,About PSE Pulse,How clearly did the page explain the scope and limitations of the forecasts?,clarity,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q23,About PSE Pulse,How easy was it to find information about the data source and update process?,ease,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q24,Ask AI,How easy was it to open Ask AI and start a question?,ease,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q25,Ask AI,How clear was the answer provided by Ask AI?,clarity,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q26,Ask AI,How relevant was the answer to the question you asked?,relevance,8,0,5.0,5.0,0.0,8,100.0,0,0,0,0.0,0,0.0,0,0.0,0,0.0,8,100.0
+Q27,Ask AI,How clearly did Ask AI explain its educational purpose and limits?,clarity,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0

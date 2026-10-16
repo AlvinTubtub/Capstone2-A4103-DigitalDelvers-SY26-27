@@ -1,0 +1,5 @@
+related_construct,desktop_item,mobile_item,desktop_valid_n,mobile_valid_n,desktop_favorable_pct,mobile_favorable_pct,desktop_mean,mobile_mean,interpretation
+Perceived loading,Q29_02,Q33_08,8,8,100.0,100.0,4.75,4.875,Related but differently worded items; descriptive comparison only
+Controls,Q29_06,Q33_07,8,8,100.0,100.0,4.875,4.875,Related but differently worded items; descriptive comparison only
+Readability,Q29_07,Q33_03,8,8,100.0,100.0,4.625,4.625,Related but differently worded items; descriptive comparison only
+Visual readability,Q29_08,Q33_04,8,8,100.0,100.0,4.625,4.625,Related but differently worded items; descriptive comparison only

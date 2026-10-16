@@ -1,0 +1,11 @@
+item_id,profile,response,count,valid_n,percentage
+Q4,Investing experience,Beginner,7,8,87.5
+Q4,Investing experience,Intermediate,1,8,12.5
+Q5,Desktop/laptop browser,Google Chrome,7,8,87.5
+Q5,Desktop/laptop browser,Mozilla Firefox,1,8,12.5
+Q6,Desktop/laptop theme,Dark mode,8,8,100.0
+Q30,Tablet/mobile device,Mobile Phone,7,8,87.5
+Q30,Tablet/mobile device,Tablet,1,8,12.5
+Q31,Tablet/mobile browser,Google Chrome,7,8,87.5
+Q31,Tablet/mobile browser,Safari,1,8,12.5
+Q32,Tablet/mobile theme,Dark mode,8,8,100.0

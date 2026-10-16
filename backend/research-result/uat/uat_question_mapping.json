@@ -1,0 +1,480 @@
+{
+  "questionnaire": "Final PDF, exported 2026-10-16",
+  "source_sheet": "Form Responses 1",
+  "rating_count": 47,
+  "scales_low_to_high": {
+    "ease": [
+      "Very Difficult",
+      "Somewhat Difficult",
+      "Neither Easy nor Difficult",
+      "Somewhat Easy",
+      "Very Easy"
+    ],
+    "clarity": [
+      "Very Unclear",
+      "Somewhat Unclear",
+      "Neither Clear nor Unclear",
+      "Somewhat Clear",
+      "Very Clear"
+    ],
+    "relevance": [
+      "Very Irrelevant",
+      "Somewhat Irrelevant",
+      "Neither Relevant nor Irrelevant",
+      "Somewhat Relevant",
+      "Very Relevant"
+    ],
+    "helpfulness": [
+      "Not Helpful",
+      "Slightly Helpful",
+      "Moderately Helpful",
+      "Very Helpful",
+      "Extremely Helpful"
+    ],
+    "agreement": [
+      "Strongly Disagree",
+      "Disagree",
+      "Neutral",
+      "Agree",
+      "Strongly Agree"
+    ]
+  },
+  "fields": [
+    {
+      "id": "Q4",
+      "section": "profile",
+      "label": "Investing experience",
+      "source_column": "Which statement best describes your current investing experience?",
+      "scale": null
+    },
+    {
+      "id": "Q5",
+      "section": "profile",
+      "label": "Desktop/laptop browser",
+      "source_column": "Which browser did you use to test PSE Pulse on your desktop computer or laptop?",
+      "scale": null
+    },
+    {
+      "id": "Q6",
+      "section": "profile",
+      "label": "Desktop/laptop theme",
+      "source_column": "Which display theme do you prefer while using PSE Pulse on your desktop computer or laptop?",
+      "scale": null
+    },
+    {
+      "id": "Q30",
+      "section": "profile",
+      "label": "Tablet/mobile device",
+      "source_column": "Which device did you use for tablet/mobile testing?",
+      "scale": null
+    },
+    {
+      "id": "Q31",
+      "section": "profile",
+      "label": "Tablet/mobile browser",
+      "source_column": "Which browser did you use to test the website on your tablet or mobile phone?",
+      "scale": null
+    },
+    {
+      "id": "Q32",
+      "section": "profile",
+      "label": "Tablet/mobile theme",
+      "source_column": "Which display theme do you prefer while using PSE Pulse on your tablet or mobile phone?",
+      "scale": null
+    },
+    {
+      "id": "Q34",
+      "section": "qualitative",
+      "label": "Most useful feature",
+      "source_column": "What specific feature of the website did you find most useful for your learning, and why?",
+      "scale": null
+    },
+    {
+      "id": "Q35",
+      "section": "qualitative",
+      "label": "Reported issues",
+      "source_column": "Did you encounter any confusing labels, broken charts, or navigation issues while using the website? If yes, please describe. (If none, just leave it blank.)",
+      "scale": null
+    },
+    {
+      "id": "Q36",
+      "section": "qualitative",
+      "label": "Improvement suggestions",
+      "source_column": "Please share any additional design improvements, visual changes, or recommendations that would make this website easier to use for beginners.",
+      "scale": null
+    },
+    {
+      "id": "Q7",
+      "section": "navigation",
+      "area": "Home",
+      "label": "How easy was it to find the main information on the Home page?",
+      "source_column": "How easy was it to find the main information on the Home page?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q8",
+      "section": "navigation",
+      "area": "Home",
+      "label": "How clearly did the Home page present the latest forecast date and data refresh information?",
+      "source_column": "How clearly did the Home page present the latest forecast date and data refresh information?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q9",
+      "section": "navigation",
+      "area": "Home",
+      "label": "How easy was it to find a company or sector to explore from the Home page?",
+      "source_column": "How easy was it to find a company or sector to explore from the Home page?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q10",
+      "section": "navigation",
+      "area": "Companies and Company Details",
+      "label": "How easy was it to use the Companies page or search controls to select a specific company (e.g., GLO, BPI, or MEG) and open its company details?",
+      "source_column": "How easy was it to use the Companies page or search controls to select a specific company (e.g., GLO, BPI, or MEG) and open its company details?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q11",
+      "section": "navigation",
+      "area": "Companies and Company Details",
+      "label": "How easy was it to understand the selected company’s historical price and trading-volume information, including the displayed dates and trends?",
+      "source_column": "How easy was it to understand the selected company’s historical price and trading-volume information, including the displayed dates and trends?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q12",
+      "section": "navigation",
+      "area": "Companies and Company Details",
+      "label": "How clearly did the forecast charts show the difference between actual historical prices and predicted values?",
+      "source_column": "How clearly did the forecast charts show the difference between actual historical prices and predicted values?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q13",
+      "section": "navigation",
+      "area": "Companies and Company Details",
+      "label": "How easy was it to switch between Beginner and Advanced views on a company details page?",
+      "source_column": "How easy was it to switch between Beginner and Advanced views on a company details page?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q14",
+      "section": "navigation",
+      "area": "My Watchlist",
+      "label": "How easy was it to add a company to My Watchlist?",
+      "source_column": "How easy was it to add a company to My Watchlist?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q15",
+      "section": "navigation",
+      "area": "My Watchlist",
+      "label": "How easy was it to find and review the companies saved in My Watchlist?",
+      "source_column": "How easy was it to find and review the companies saved in My Watchlist?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q16",
+      "section": "navigation",
+      "area": "My Watchlist",
+      "label": "How clearly did the page explain how many companies could be saved to the watchlist?",
+      "source_column": "How clearly did the page explain how many companies could be saved to the watchlist?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q17",
+      "section": "navigation",
+      "area": "Learn Stocks",
+      "label": "How easy was it to find a learning topic on the Learn Stocks page?",
+      "source_column": "How easy was it to find a learning topic on the Learn Stocks page?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q18",
+      "section": "navigation",
+      "area": "Learn Stocks",
+      "label": "How clearly did the learning content explain stock-market or forecasting concepts?",
+      "source_column": "How clearly did the learning content explain stock-market or forecasting concepts?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q19",
+      "section": "navigation",
+      "area": "Learn Stocks",
+      "label": "How easy was it to follow the learning path and open its learning materials?",
+      "source_column": "How easy was it to follow the learning path and open its learning materials?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q20",
+      "section": "navigation",
+      "area": "About PSE Pulse",
+      "label": "How easy was it to find information about the purpose of PSE Pulse?",
+      "source_column": "How easy was it to find information about the purpose of PSE Pulse?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q21",
+      "section": "navigation",
+      "area": "About PSE Pulse",
+      "label": "How clearly did the About page explain the forecasting methods and how they are evaluated?",
+      "source_column": "How clearly did the About page explain the forecasting methods and how they are evaluated?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q22",
+      "section": "navigation",
+      "area": "About PSE Pulse",
+      "label": "How clearly did the page explain the scope and limitations of the forecasts?",
+      "source_column": "How clearly did the page explain the scope and limitations of the forecasts?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q23",
+      "section": "navigation",
+      "area": "About PSE Pulse",
+      "label": "How easy was it to find information about the data source and update process?",
+      "source_column": "How easy was it to find information about the data source and update process?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q24",
+      "section": "navigation",
+      "area": "Ask AI",
+      "label": "How easy was it to open Ask AI and start a question?",
+      "source_column": "How easy was it to open Ask AI and start a question?",
+      "scale": "ease"
+    },
+    {
+      "id": "Q25",
+      "section": "navigation",
+      "area": "Ask AI",
+      "label": "How clear was the answer provided by Ask AI?",
+      "source_column": "How clear was the answer provided by Ask AI?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q26",
+      "section": "navigation",
+      "area": "Ask AI",
+      "label": "How relevant was the answer to the question you asked?",
+      "source_column": "How relevant was the answer to the question you asked?",
+      "scale": "relevance"
+    },
+    {
+      "id": "Q27",
+      "section": "navigation",
+      "area": "Ask AI",
+      "label": "How clearly did Ask AI explain its educational purpose and limits?",
+      "source_column": "How clearly did Ask AI explain its educational purpose and limits?",
+      "scale": "clarity"
+    },
+    {
+      "id": "Q28_01",
+      "section": "feature",
+      "label": "Historical Data Overview",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Historical Data Overview: Viewing past prices, trading volume, and dates for selected PSE stocks.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_02",
+      "section": "feature",
+      "label": "Next-Day Price Forecasts",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Next-Day Price Forecasts: Viewing the estimated closing price for the next trading day.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_03",
+      "section": "feature",
+      "label": "Forecast Charts",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Forecast Charts: Comparing historical prices with predicted values.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_04",
+      "section": "feature",
+      "label": "Model Ranking Summaries",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Model Ranking Summaries: Viewing a simple ranking showing which forecasting model was most accurate for the chosen stock. [Viewed in Advanced View]]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_05",
+      "section": "feature",
+      "label": "My Watchlist",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [My Watchlist: Saving selected companies for quicker access and monitoring on the device.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_06",
+      "section": "feature",
+      "label": "Learn Stocks",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Learn Stocks: Using educational content about stock-market concepts and PSE basics.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_07",
+      "section": "feature",
+      "label": "About PSE Pulse",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [About PSE Pulse: Learning about the project’s purpose, methods, data, and limitations.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_08",
+      "section": "feature",
+      "label": "Ask AI Assistant",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Ask AI Assistant: Using the context-aware chat feature to get explanations about charts, forecasts, and metrics.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q28_09",
+      "section": "feature",
+      "label": "Light and Dark Modes",
+      "source_column": "Based on your needs as a stock market learner, how helpful was each feature? [Light and Dark Modes: Choosing the display theme used on the website.]",
+      "scale": "helpfulness"
+    },
+    {
+      "id": "Q29_01",
+      "section": "desktop",
+      "label": "Clean organization",
+      "question_text": "The website effectively avoids information overload by keeping the interface clean and organized.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The website effectively avoids information overload by keeping the interface clean and organized.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_02",
+      "section": "desktop",
+      "label": "Perceived page speed",
+      "question_text": "The website loads quickly and transitions smoothly between different pages.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The website loads quickly and transitions smoothly between different pages.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_03",
+      "section": "desktop",
+      "label": "Learning use intent",
+      "question_text": "I would consider using this website as a starting point to learn about short-term stock behavior.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [I would consider using this website as a starting point to learn about short-term stock behavior.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_04",
+      "section": "desktop",
+      "label": "Recommendation intent",
+      "question_text": "I would recommend this educational dashboard to another beginner who wants to understand stock forecasts.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [I would recommend this educational dashboard to another beginner who wants to understand stock forecasts.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_05",
+      "section": "desktop",
+      "label": "Source and freshness visibility",
+      "question_text": "The source of the stock data and the date/freshness of the information were easy to identify.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The source of the stock data and the date/freshness of the information were easy to identify.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_06",
+      "section": "desktop",
+      "label": "Stock/sector/date controls",
+      "question_text": "The stock, sector, and date controls were easy to use and updated the displayed information as expected.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The stock, sector, and date controls were easy to use and updated the displayed information as expected.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_07",
+      "section": "desktop",
+      "label": "Desktop readability",
+      "question_text": "The dashboard remained readable and easy to use on the device I used, without cut-off content or difficult horizontal scrolling.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The dashboard remained readable and easy to use on the device I used, without cut-off content or difficult horizontal scrolling.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q29_08",
+      "section": "desktop",
+      "label": "Visual comfort",
+      "question_text": "The dashboard’s colors/theme, text, labels, and charts were comfortable and easy to read.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The dashboard’s colors/theme, text, labels, and charts were comfortable and easy to read.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_01",
+      "section": "mobile",
+      "label": "Mobile navigation",
+      "question_text": "The navigation menu was easy to open and use on this device.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The navigation menu was easy to open and use on this device.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_02",
+      "section": "mobile",
+      "label": "Touch controls",
+      "question_text": "Buttons and controls were easy to tap accurately.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [Buttons and controls were easy to tap accurately.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_03",
+      "section": "mobile",
+      "label": "Text readability",
+      "question_text": "Text and labels were readable without zooming in.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [Text and labels were readable without zooming in.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_04",
+      "section": "mobile",
+      "label": "Chart readability",
+      "question_text": "Chart details were readable on this device.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [Chart details were readable on this device.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_05",
+      "section": "mobile",
+      "label": "Content access",
+      "question_text": "I could access the information I needed without content being cut off.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [I could access the information I needed without content being cut off.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_06",
+      "section": "mobile",
+      "label": "Horizontal scrolling",
+      "question_text": "The amount of horizontal scrolling needed was manageable.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [The amount of horizontal scrolling needed was manageable.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_07",
+      "section": "mobile",
+      "label": "Company/sector/date controls",
+      "question_text": "Company, sector, and date controls were easy to use on this device.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [Company, sector, and date controls were easy to use on this device.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_08",
+      "section": "mobile",
+      "label": "Perceived page speed",
+      "question_text": "Pages loaded at an acceptable speed on this device.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [Pages loaded at an acceptable speed on this device.]",
+      "scale": "agreement"
+    },
+    {
+      "id": "Q33_09",
+      "section": "mobile",
+      "label": "Main task completion",
+      "question_text": "I could complete the same main tasks on this device as on the desktop/laptop.",
+      "source_column": "Please indicate your level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree). [I could complete the same main tasks on this device as on the desktop/laptop.]",
+      "scale": "agreement"
+    }
+  ],
+  "administrative_fields": [
+    "Timestamp",
+    "Email Address",
+    "Consent to participate",
+    "I understand that the dashboard is an educational/analytical tool and does not provide financial advice or direct trading recommendations."
+  ]
+}

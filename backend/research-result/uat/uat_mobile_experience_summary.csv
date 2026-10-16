@@ -1,0 +1,10 @@
+item_id,area,item,scale,valid_n,missing_n,mean,median,sample_sd,favorable_n,favorable_pct,middle_n,unfavorable_n,score_1_n,score_1_pct,score_2_n,score_2_pct,score_3_n,score_3_pct,score_4_n,score_4_pct,score_5_n,score_5_pct
+Q33_01,mobile,Mobile navigation,agreement,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q33_02,mobile,Touch controls,agreement,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q33_03,mobile,Text readability,agreement,8,0,4.625,5.0,0.518,8,100.0,0,0,0,0.0,0,0.0,0,0.0,3,37.5,5,62.5
+Q33_04,mobile,Chart readability,agreement,8,0,4.625,5.0,0.518,8,100.0,0,0,0,0.0,0,0.0,0,0.0,3,37.5,5,62.5
+Q33_05,mobile,Content access,agreement,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
+Q33_06,mobile,Horizontal scrolling,agreement,8,0,4.375,4.0,0.518,8,100.0,0,0,0,0.0,0,0.0,0,0.0,5,62.5,3,37.5
+Q33_07,mobile,Company/sector/date controls,agreement,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q33_08,mobile,Perceived page speed,agreement,8,0,4.875,5.0,0.354,8,100.0,0,0,0,0.0,0,0.0,0,0.0,1,12.5,7,87.5
+Q33_09,mobile,Main task completion,agreement,8,0,4.75,5.0,0.463,8,100.0,0,0,0,0.0,0,0.0,0,0.0,2,25.0,6,75.0
