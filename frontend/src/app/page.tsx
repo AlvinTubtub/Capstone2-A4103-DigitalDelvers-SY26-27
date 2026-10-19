@@ -2,8 +2,9 @@ import Link from "next/link";
 import CompanyLogo from "@/components/CompanyLogo";
 import BrandLogo from "@/components/BrandLogo";
 import ChangeBadge from "@/components/ChangeBadge";
+import HomepageSchedule from "@/components/HomepageSchedule";
 import { getCompanies, getDashboard } from "@/lib/data";
-import { formatDate, formatDateTimePht, formatPct, formatPeso } from "@/lib/format";
+import { formatDate, formatPct, formatPeso } from "@/lib/format";
 
 import {
   HOME_SECTOR_CARDS as SECTOR_CARDS,
@@ -57,23 +58,10 @@ export default async function HomePage() {
             models, and understand next-day price prediction techniques.
           </p>
 
-          {(dashboard?.forecastDate || dashboard?.lastRunAt) && (
-            <div className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 mt-6 px-4 py-2 rounded-full bg-slate-950/75 border border-white/20 text-xs !text-slate-200 backdrop-blur-md shadow-md drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
-              {dashboard?.forecastDate && (
-                <span className="!text-blue-300 font-semibold">
-                  Forecast for: {formatDate(dashboard.forecastDate)}
-                </span>
-              )}
-              {dashboard?.forecastDate && dashboard?.lastRunAt && (
-                <span className="!text-slate-400">&middot;</span>
-              )}
-              {dashboard?.lastRunAt && (
-                <span className="!text-slate-200">
-                  Last pipeline run: {formatDateTimePht(dashboard.lastRunAt)}
-                </span>
-              )}
-            </div>
-          )}
+          <HomepageSchedule
+            forecastDate={dashboard?.forecastDate}
+            lastRunAt={dashboard?.lastRunAt}
+          />
         </div>
       </section>
 

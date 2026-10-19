@@ -42,7 +42,7 @@ The ingestion command starts on the calendar day after the latest configured raw
 | Primary | Tuesday–Friday | 4:00 PM PHT | First normal post-session EOD attempt |
 | Fallback | Monday–Friday | 5:30 PM PHT | Recovery attempt when official EOD quotes are published later |
 
-Times use Philippine Time (`Asia/Manila`, UTC+8). Tuesday–Friday can intentionally receive both trigger attempts; that overlap is not a duplicate configuration error. Monday has only the 5:30 PM attempt. Both jobs target the same operational dispatch and workflow, not independent forecasting processes. The schedule is configured in Cron-job.org, not in repository YAML. A dashboard capture can later support Chapter IV implementation evidence; no private job configuration or screenshot is added here.
+Times use Philippine Time (`Asia/Manila`, UTC+8). Tuesday–Friday can intentionally receive both trigger attempts; that overlap is not a duplicate configuration error. Monday has only the 5:30 PM attempt. Both jobs target the same operational dispatch and workflow, not independent forecasting processes. The schedule is configured in Cron-job.org, not in repository YAML. The weekday triggers do not exclude PSE holidays; a holiday check may find no new trading report and produce no new data. A dashboard capture can later support Chapter IV implementation evidence; no private job configuration or screenshot is added here.
 
 ## 5. GitHub dispatch interface
 
