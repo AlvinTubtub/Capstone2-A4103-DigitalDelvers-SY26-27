@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import {
   PSE_MARKET_SCHEDULE,
@@ -13,10 +13,12 @@ import {
 function AccordionContent({
   id,
   isOpen,
+  disableTransition,
   children,
 }: {
   id: string;
   isOpen: boolean;
+  disableTransition: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -25,7 +27,7 @@ function AccordionContent({
       role="region"
       aria-labelledby={`${id}-button`}
       aria-hidden={!isOpen}
-      className={`grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none ${
+      className={`grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none ${disableTransition ? "!transition-none" : ""} ${
         isOpen
           ? "grid-rows-[1fr] opacity-100 visible"
           : "grid-rows-[0fr] opacity-0 invisible pointer-events-none"
@@ -44,6 +46,8 @@ export default function LearnStocksPage() {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     "trading-101": true,
   });
+  const [disableTransition, setDisableTransition] = useState(false);
+  const pendingScroll = useRef<string | null>(null);
 
   // Glossary category filter state
   const [termCategory, setTermCategory] = useState<"all" | "market" | "forecastph">("all");
@@ -51,22 +55,21 @@ export default function LearnStocksPage() {
   // Track expanded terms in glossary
   const [expandedTerms, setExpandedTerms] = useState<Record<string, boolean>>({});
 
-  const scrollToSection = (id: string) => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          const prefersReduced =
-            typeof window !== "undefined" &&
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          el.scrollIntoView({
-            behavior: prefersReduced ? "auto" : "smooth",
-            block: "start",
-          });
-        }
-      });
-    });
+  const openAndScroll = (id: string) => {
+    pendingScroll.current = id;
+    // Complete the accordion layout before placing its heading below the fixed navbar.
+    setDisableTransition(true);
+    setOpenSections({ [id]: true });
   };
+
+  useLayoutEffect(() => {
+    const id = pendingScroll.current;
+    if (!id || !openSections[id]) return;
+    pendingScroll.current = null;
+    document.getElementById(id)?.scrollIntoView({ behavior: "instant", block: "start" });
+    const frame = requestAnimationFrame(() => setDisableTransition(false));
+    return () => cancelAnimationFrame(frame);
+  }, [openSections]);
 
   // Auto-expand accordion if URL contains a hash
   useEffect(() => {
@@ -88,13 +91,7 @@ export default function LearnStocksPage() {
       };
 
       const targetId = aliasMap[hash] || hash;
-      setOpenSections({ [targetId]: true });
-      scrollToSection(targetId);
-
-      const timer = setTimeout(() => {
-        scrollToSection(targetId);
-      }, 120);
-      return () => clearTimeout(timer);
+      openAndScroll(targetId);
     };
 
     handleHash();
@@ -104,15 +101,15 @@ export default function LearnStocksPage() {
 
   const toggleSection = (id: string) => {
     const willOpen = !openSections[id];
-    setOpenSections(willOpen ? { [id]: true } : {});
     if (willOpen) {
-      scrollToSection(id);
+      openAndScroll(id);
+    } else {
+      setOpenSections({});
     }
   };
 
   const navigateToSection = (id: string) => {
-    setOpenSections({ [id]: true });
-    scrollToSection(id);
+    openAndScroll(id);
   };
 
   const toggleTerm = (term: string) => {
@@ -294,7 +291,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="trading-101" isOpen={Boolean(openSections["trading-101"])}>
+          <AccordionContent id="trading-101" isOpen={Boolean(openSections["trading-101"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Image Left, Text Right */}
               <div className="flex flex-col md:flex-row items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
@@ -401,7 +398,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="pse-basics" isOpen={Boolean(openSections["pse-basics"])}>
+          <AccordionContent id="pse-basics" isOpen={Boolean(openSections["pse-basics"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Text Left, Image Right */}
               <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
@@ -498,7 +495,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="trading-terms" isOpen={Boolean(openSections["trading-terms"])}>
+          <AccordionContent id="trading-terms" isOpen={Boolean(openSections["trading-terms"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-4 text-sm text-slate-300 leading-relaxed">
               {/* Category Filter */}
               <div className="flex flex-wrap items-center gap-2">
@@ -605,7 +602,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="how-to-read" isOpen={Boolean(openSections["how-to-read"])}>
+          <AccordionContent id="how-to-read" isOpen={Boolean(openSections["how-to-read"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Image Left, Text Right */}
               <div className="flex flex-col md:flex-row items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
@@ -728,7 +725,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="forecast-accuracy" isOpen={Boolean(openSections["forecast-accuracy"])}>
+          <AccordionContent id="forecast-accuracy" isOpen={Boolean(openSections["forecast-accuracy"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Text Left, Image Right */}
               <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
@@ -852,7 +849,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="forecast-charts" isOpen={Boolean(openSections["forecast-charts"])}>
+          <AccordionContent id="forecast-charts" isOpen={Boolean(openSections["forecast-charts"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Image Left, Text Right */}
               <div className="flex flex-col md:flex-row items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
@@ -955,7 +952,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="watch-learn" isOpen={Boolean(openSections["watch-learn"])}>
+          <AccordionContent id="watch-learn" isOpen={Boolean(openSections["watch-learn"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-4 text-sm text-slate-300 leading-relaxed">
               <p className="text-xs text-slate-400">
                 Curated educational videos from verified finance educators and market analysts covering Philippine equity fundamentals, financial modeling, and risk discipline.
@@ -1038,7 +1035,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="pse-brokers" isOpen={Boolean(openSections["pse-brokers"])}>
+          <AccordionContent id="pse-brokers" isOpen={Boolean(openSections["pse-brokers"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               {/* Alternating Feature Block: Text Left, Image Right */}
               <div className="flex flex-col md:flex-row-reverse items-center gap-5 p-5 sm:p-6 rounded-2xl bg-dark-bg/80 border border-dark-border">
@@ -1166,7 +1163,7 @@ export default function LearnStocksPage() {
             </span>
           </button>
 
-          <AccordionContent id="research-methodology" isOpen={Boolean(openSections["research-methodology"])}>
+          <AccordionContent id="research-methodology" isOpen={Boolean(openSections["research-methodology"])} disableTransition={disableTransition}>
             <div className="px-5 sm:px-6 pb-6 pt-3 border-t border-dark-border/60 space-y-6 text-sm text-slate-300 leading-relaxed">
               <p>
                 PSE Pulse is an academic capstone research project comparing machine learning and traditional time-series methods on the Philippine Stock Exchange across diverse market sectors.
