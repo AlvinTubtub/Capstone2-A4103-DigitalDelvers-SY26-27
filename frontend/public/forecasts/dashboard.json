@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-16T16:02:52.522960+08:00",
-  "forecastDate": "2026-10-19",
-  "lastRunAt": "2026-10-16T16:02:52.522960+08:00",
+  "generatedAt": "2026-10-19T17:32:42.471463+08:00",
+  "forecastDate": "2026-10-20",
+  "lastRunAt": "2026-10-19T17:32:42.471463+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -36,22 +36,22 @@
     "symbol": "APX",
     "name": "Apex Mining Co., Inc.",
     "sector": "Mining and Oil",
-    "latestClose": 17.2,
-    "predictedClose": 17.234575507033618,
-    "pctChange": 0.20102038973034242,
+    "latestClose": 16.94,
+    "predictedClose": 16.952003811336027,
+    "pctChange": 0.0708607516884646,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-19"
+    "forecastDate": "2026-10-20"
   },
   "topLoser": {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 17.06,
-    "predictedClose": 16.827810014450247,
-    "pctChange": -1.3610198449575148,
+    "latestClose": 17.4,
+    "predictedClose": 17.17172742679637,
+    "pctChange": -1.3119113402507416,
     "direction": "bearish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-19"
+    "forecastDate": "2026-10-20"
   }
 }
