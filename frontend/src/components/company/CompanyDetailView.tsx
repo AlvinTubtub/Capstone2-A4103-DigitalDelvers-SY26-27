@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import HistoryChart from "@/components/charts/HistoryChart";
 import NextDayPredictionChart from "@/components/charts/NextDayPredictionChart";
 import PredictionChart from "@/components/charts/PredictionChart";
@@ -21,8 +21,6 @@ interface CompanyDetailViewProps {
 
 type ViewMode = "beginner" | "advanced";
 
-const STORAGE_KEY = "forecastph_view_mode";
-
 export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("beginner");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -30,34 +28,8 @@ export default function CompanyDetailView({ company }: CompanyDetailViewProps) {
   const beginnerBtnRef = useRef<HTMLButtonElement>(null);
   const advancedBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Sync mode with localStorage on client mount & listen for storage changes
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved === "advanced" || saved === "beginner") {
-        setViewMode(saved);
-      }
-    } catch {
-      // localStorage may be unavailable in private browsing modes
-    }
-
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY && (e.newValue === "beginner" || e.newValue === "advanced")) {
-        setViewMode(e.newValue);
-      }
-    };
-
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
-
   const handleModeChange = (mode: ViewMode) => {
     setViewMode(mode);
-    try {
-      localStorage.setItem(STORAGE_KEY, mode);
-    } catch {
-      // ignore
-    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, currentMode: ViewMode) => {

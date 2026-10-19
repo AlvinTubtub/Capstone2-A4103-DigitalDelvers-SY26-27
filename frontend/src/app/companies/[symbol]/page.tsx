@@ -11,5 +11,5 @@ export default async function CompanyDetailPage({ params }: { params: { symbol: 
   const company = await getCompanyDetail(params.symbol);
   if (!company) notFound();
 
-  return <CompanyDetailView company={company} />;
+  return <CompanyDetailView key={company.symbol} company={company} />;
 }
