@@ -2,11 +2,11 @@
   "symbol": "NIKL",
   "name": "Nickel Asia Corporation",
   "sector": "Mining and Oil",
-  "previousClose": 3.85,
-  "predictedClose": 3.8489000118119487,
-  "pesoChange": -0.0010999881880513485,
-  "pctChange": -0.028571121767567494,
-  "direction": "bearish",
+  "previousClose": 3.72,
+  "predictedClose": 3.7235268320714354,
+  "pesoChange": 0.0035268320714352264,
+  "pctChange": 0.09480731374825878,
+  "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
     "lag_reg": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 3.8512304809494067,
-    "arima": 3.8489000118119487,
-    "lstm": 3.849197827032635
+    "lag": 3.721230480949407,
+    "arima": 3.7235268320714354,
+    "lstm": 3.7213561588082897
   },
   "ohlcv": [
     {
@@ -13327,6 +13327,14 @@
       "low": 3.8,
       "close": 3.85,
       "volume": 155000.0
+    },
+    {
+      "date": "2026-10-20",
+      "open": 3.86,
+      "high": 3.86,
+      "low": 3.66,
+      "close": 3.72,
+      "volume": 2407000.0
     }
   ],
   "backtestDates": [
@@ -13729,7 +13737,8 @@
     "2026-10-14",
     "2026-10-15",
     "2026-10-16",
-    "2026-10-19"
+    "2026-10-19",
+    "2026-10-20"
   ],
   "productionBacktestActual": [
     4.56,
@@ -13757,7 +13766,8 @@
     3.85,
     3.79,
     3.8,
-    3.85
+    3.85,
+    3.72
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13786,7 +13796,8 @@
       3.8312304809494067,
       3.8512304809494067,
       3.7912304809494066,
-      3.8012304809494064
+      3.8012304809494064,
+      3.8512304809494067
     ],
     "ARIMA": [
       4.54,
@@ -13814,7 +13825,8 @@
       3.831823483311914,
       3.850387476755208,
       3.7921310537126973,
-      3.8008792684184036
+      3.8008792684184036,
+      3.8489000118119487
     ],
     "LSTM": [
       4.5422926396963845,
@@ -13842,7 +13854,8 @@
       3.830835164437276,
       3.850029180122381,
       3.790847831620007,
-      3.8001703222620247
+      3.8001703222620247,
+      3.849197827032635
     ],
     "Naive baseline": [
       4.54,
@@ -13870,7 +13883,8 @@
       3.83,
       3.85,
       3.79,
-      3.8
+      3.8,
+      3.85
     ]
   },
   "productionBacktestProvenance": [
@@ -15563,11 +15577,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "NIKL",
+      "originDate": "2026-10-19",
+      "targetDate": "2026-10-20",
+      "actualClose": 3.72,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-f4dfb884d5dffb9c3b606b9efdc3b7c6fea41062f5e56c0586a09ca13f8f5cbe",
+          "method": "lag_reg",
+          "prediction": 3.8512304809494067,
+          "error": 0.13123048094940648,
+          "modelVersion": "backend-from-scratch-v1:07dbb58bec603e5b6005d0820e0c4cc267a3b53abb19cedd7a28877a2b526c3f",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-19T17:32:41.539714+08:00",
+          "observedAt": "2026-10-20T17:32:53.874842+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-de2835bde855d94e548d5206f442dff2ba24c4b84d31782ad2885426e1adad08",
+          "method": "arima",
+          "prediction": 3.8489000118119487,
+          "error": 0.12890001181194854,
+          "modelVersion": "backend-from-scratch-v1:13f112723d720f70a25e9d9bc1a1c049d15c4fa7852e6f6015c44f04856d4843",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-19T17:32:41.539714+08:00",
+          "observedAt": "2026-10-20T17:32:53.874842+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-066be770a1ce68d8089e375028fa9477910f1ac93aa4f7533f4846ba6b8d2a11",
+          "method": "lstm",
+          "prediction": 3.849197827032635,
+          "error": 0.12919782703263483,
+          "modelVersion": "backend-from-scratch-v1:6eab5f6c8532f96daaac89183166cb4d7fab9cff37a6add9526dcb1d7466e496",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-19T17:32:41.539714+08:00",
+          "observedAt": "2026-10-20T17:32:53.874842+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-21c64d02d1705d06e8bef7a7ab977e0e5ae54005200f145f033035fae2c4d774",
+          "method": "naive",
+          "prediction": 3.85,
+          "error": 0.1299999999999999,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-19T17:32:41.539714+08:00",
+          "observedAt": "2026-10-20T17:32:53.874842+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-10-20",
-  "dataAsOf": "2026-10-19",
-  "inferenceAt": "2026-10-19T17:32:41.539714+08:00",
+  "forecastDate": "2026-10-21",
+  "dataAsOf": "2026-10-20",
+  "inferenceAt": "2026-10-20T17:33:00.556392+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

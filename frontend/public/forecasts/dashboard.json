@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-19T17:32:42.471463+08:00",
-  "forecastDate": "2026-10-20",
-  "lastRunAt": "2026-10-19T17:32:42.471463+08:00",
+  "generatedAt": "2026-10-20T17:33:01.956316+08:00",
+  "forecastDate": "2026-10-21",
+  "lastRunAt": "2026-10-20T17:33:01.956316+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -33,25 +33,25 @@
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "APX",
-    "name": "Apex Mining Co., Inc.",
+    "symbol": "NIKL",
+    "name": "Nickel Asia Corporation",
     "sector": "Mining and Oil",
-    "latestClose": 16.94,
-    "predictedClose": 16.952003811336027,
-    "pctChange": 0.0708607516884646,
+    "latestClose": 3.72,
+    "predictedClose": 3.7235268320714354,
+    "pctChange": 0.09480731374825878,
     "direction": "bullish",
-    "bestModel": "LSTM",
-    "forecastDate": "2026-10-20"
+    "bestModel": "ARIMA",
+    "forecastDate": "2026-10-21"
   },
   "topLoser": {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 17.4,
-    "predictedClose": 17.17172742679637,
-    "pctChange": -1.3119113402507416,
+    "latestClose": 17.8,
+    "predictedClose": 17.559488885130534,
+    "pctChange": -1.3511860385925085,
     "direction": "bearish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-20"
+    "forecastDate": "2026-10-21"
   }
 }
