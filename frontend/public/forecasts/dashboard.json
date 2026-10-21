@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-20T17:33:01.956316+08:00",
-  "forecastDate": "2026-10-21",
-  "lastRunAt": "2026-10-20T17:33:01.956316+08:00",
+  "generatedAt": "2026-10-21T16:03:10.158573+08:00",
+  "forecastDate": "2026-10-22",
+  "lastRunAt": "2026-10-21T16:03:10.158573+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 3,
-    "losers": 8,
-    "unchanged": 4
+    "gainers": 5,
+    "losers": 5,
+    "unchanged": 5
   },
   "topGainer": {
-    "symbol": "NIKL",
-    "name": "Nickel Asia Corporation",
-    "sector": "Mining and Oil",
-    "latestClose": 3.72,
-    "predictedClose": 3.7235268320714354,
-    "pctChange": 0.09480731374825878,
+    "symbol": "MBT",
+    "name": "Metropolitan Bank & Trust Company",
+    "sector": "Financials",
+    "latestClose": 61.1,
+    "predictedClose": 61.18126073959556,
+    "pctChange": 0.13299630048372615,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-10-21"
+    "forecastDate": "2026-10-22"
   },
   "topLoser": {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 17.8,
-    "predictedClose": 17.559488885130534,
-    "pctChange": -1.3511860385925085,
+    "latestClose": 18.08,
+    "predictedClose": 17.860431553135744,
+    "pctChange": -1.2144272503553912,
     "direction": "bearish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-21"
+    "forecastDate": "2026-10-22"
   }
 }
