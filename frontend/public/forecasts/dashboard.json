@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-21T16:03:10.158573+08:00",
-  "forecastDate": "2026-10-22",
-  "lastRunAt": "2026-10-21T16:03:10.158573+08:00",
+  "generatedAt": "2026-10-22T16:02:32.593678+08:00",
+  "forecastDate": "2026-10-23",
+  "lastRunAt": "2026-10-22T16:02:32.593678+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 5,
-    "losers": 5,
+    "gainers": 4,
+    "losers": 6,
     "unchanged": 5
   },
   "topGainer": {
-    "symbol": "MBT",
-    "name": "Metropolitan Bank & Trust Company",
+    "symbol": "BPI",
+    "name": "Bank of the Philippine Islands",
     "sector": "Financials",
-    "latestClose": 61.1,
-    "predictedClose": 61.18126073959556,
-    "pctChange": 0.13299630048372615,
+    "latestClose": 97.0,
+    "predictedClose": 97.29302915414299,
+    "pctChange": 0.30209191148761366,
     "direction": "bullish",
     "bestModel": "ARIMA",
-    "forecastDate": "2026-10-22"
+    "forecastDate": "2026-10-23"
   },
   "topLoser": {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 18.08,
-    "predictedClose": 17.860431553135744,
-    "pctChange": -1.2144272503553912,
+    "latestClose": 17.9,
+    "predictedClose": 17.800828505768518,
+    "pctChange": -0.5540306940306188,
     "direction": "bearish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-22"
+    "forecastDate": "2026-10-23"
   }
 }
