@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-22T16:02:32.593678+08:00",
-  "forecastDate": "2026-10-23",
-  "lastRunAt": "2026-10-22T16:02:32.593678+08:00",
+  "generatedAt": "2026-10-23T16:02:56.850510+08:00",
+  "forecastDate": "2026-10-26",
+  "lastRunAt": "2026-10-23T16:02:56.850510+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 4,
-    "losers": 6,
-    "unchanged": 5
+    "gainers": 6,
+    "losers": 5,
+    "unchanged": 4
   },
   "topGainer": {
-    "symbol": "BPI",
-    "name": "Bank of the Philippine Islands",
-    "sector": "Financials",
-    "latestClose": 97.0,
-    "predictedClose": 97.29302915414299,
-    "pctChange": 0.30209191148761366,
-    "direction": "bullish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-10-23"
-  },
-  "topLoser": {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 17.9,
-    "predictedClose": 17.800828505768518,
-    "pctChange": -0.5540306940306188,
-    "direction": "bearish",
+    "latestClose": 17.12,
+    "predictedClose": 17.24004227134354,
+    "pctChange": 0.7011814914926366,
+    "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-10-23"
+    "forecastDate": "2026-10-26"
+  },
+  "topLoser": {
+    "symbol": "ALI",
+    "name": "Ayala Land, Inc.",
+    "sector": "Property",
+    "latestClose": 15.7,
+    "predictedClose": 15.683048094940661,
+    "pctChange": -0.10797391757540319,
+    "direction": "bearish",
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-10-26"
   }
 }
