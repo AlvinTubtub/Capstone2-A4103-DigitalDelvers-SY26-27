@@ -1,8 +1,8 @@
 {
   "schemaId": "forecastph.frontend-forecast-bundle",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-26T17:32:42.473061+08:00",
-  "forecastDate": "2026-10-27",
+  "generatedAt": "2026-10-27T16:03:22.224424+08:00",
+  "forecastDate": "2026-10-28",
   "expectedCompanyCount": 15,
   "documentContracts": {
     "companies": 1,

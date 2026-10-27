@@ -2,10 +2,10 @@
   "symbol": "APX",
   "name": "Apex Mining Co., Inc.",
   "sector": "Mining and Oil",
-  "previousClose": 15.8,
-  "predictedClose": 15.805661995830356,
-  "pesoChange": 0.005661995830354982,
-  "pctChange": 0.035835416647816344,
+  "previousClose": 16.48,
+  "predictedClose": 16.516383656804322,
+  "pesoChange": 0.03638365680432187,
+  "pctChange": 0.22077461653107933,
   "direction": "bullish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 15.811353056557657,
-    "arima": 15.822197289440641,
-    "lstm": 15.805661995830356
+    "lag": 16.493817789518296,
+    "arima": 16.47871877465628,
+    "lstm": 16.516383656804322
   },
   "ohlcv": [
     {
@@ -13367,6 +13367,14 @@
       "low": 15.68,
       "close": 15.8,
       "volume": 3161600.0
+    },
+    {
+      "date": "2026-10-27",
+      "open": 15.9,
+      "high": 16.48,
+      "low": 15.8,
+      "close": 16.48,
+      "volume": 4087500.0
     }
   ],
   "backtestDates": [
@@ -13774,7 +13782,8 @@
     "2026-10-21",
     "2026-10-22",
     "2026-10-23",
-    "2026-10-26"
+    "2026-10-26",
+    "2026-10-27"
   ],
   "productionBacktestActual": [
     17.88,
@@ -13807,7 +13816,8 @@
     16.7,
     16.68,
     16.4,
-    15.8
+    15.8,
+    16.48
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13841,7 +13851,8 @@
       16.926472770111662,
       16.707601328151622,
       16.689230935702533,
-      16.40993951166212
+      16.40993951166212,
+      15.811353056557657
     ],
     "ARIMA": [
       18.140017892939508,
@@ -13874,7 +13885,8 @@
       16.921317668015163,
       16.706379268225202,
       16.684972877111907,
-      16.41043211401665
+      16.41043211401665,
+      15.822197289440641
     ],
     "LSTM": [
       18.173418565736426,
@@ -13907,7 +13919,8 @@
       16.929537913184696,
       16.70627902691639,
       16.68791738157553,
-      16.405674458120224
+      16.405674458120224,
+      15.805661995830356
     ],
     "Naive baseline": [
       18.16,
@@ -13940,7 +13953,8 @@
       16.92,
       16.7,
       16.68,
-      16.4
+      16.4,
+      15.8
     ]
   },
   "productionBacktestProvenance": [
@@ -15958,11 +15972,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "APX",
+      "originDate": "2026-10-26",
+      "targetDate": "2026-10-27",
+      "actualClose": 16.48,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-65385c93e9e3eb50ce0b429039acb41fc33c85eb9ba319dcbe82db95fec1c4d5",
+          "method": "lag_reg",
+          "prediction": 15.811353056557657,
+          "error": -0.6686469434423437,
+          "modelVersion": "backend-from-scratch-v1:9d68a8641dbe93b2802b512c148e06db0a85cf9d4ba42e7c0995a0daff35b158",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-26T17:32:40.068979+08:00",
+          "observedAt": "2026-10-27T16:03:13.987485+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-f9047e4a8bc8abaeac2530a5895190b666d9a4866f1ac673232ef3dd5bbf81f6",
+          "method": "arima",
+          "prediction": 15.822197289440641,
+          "error": -0.6578027105593591,
+          "modelVersion": "backend-from-scratch-v1:560a08f48817aa6187c089954fe62c2a0bf7294f8ee189437af977db53b01fe9",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-26T17:32:40.068979+08:00",
+          "observedAt": "2026-10-27T16:03:13.987485+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-aa583c5ed1d0741777149664dfbdda3421ebb7a44888cbe1156124e884fd7e31",
+          "method": "lstm",
+          "prediction": 15.805661995830356,
+          "error": -0.6743380041696447,
+          "modelVersion": "backend-from-scratch-v1:1b8b92b4597a2454103ddf6bf487c1ba525923307953b1bbbd3c54686bb657bb",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-26T17:32:40.068979+08:00",
+          "observedAt": "2026-10-27T16:03:13.987485+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-476a0815166ac10a32eff9f744094cb354ee5d5f970b111688575f20423ba44b",
+          "method": "naive",
+          "prediction": 15.8,
+          "error": -0.6799999999999997,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-10-26T17:32:40.068979+08:00",
+          "observedAt": "2026-10-27T16:03:13.987485+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-10-27",
-  "dataAsOf": "2026-10-26",
-  "inferenceAt": "2026-10-26T17:32:40.068979+08:00",
+  "forecastDate": "2026-10-28",
+  "dataAsOf": "2026-10-27",
+  "inferenceAt": "2026-10-27T16:03:18.411838+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

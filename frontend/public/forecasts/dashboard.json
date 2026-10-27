@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-26T17:32:42.473061+08:00",
-  "forecastDate": "2026-10-27",
-  "lastRunAt": "2026-10-26T17:32:42.473061+08:00",
+  "generatedAt": "2026-10-27T16:03:22.224424+08:00",
+  "forecastDate": "2026-10-28",
+  "lastRunAt": "2026-10-27T16:03:22.224424+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 7,
-    "losers": 3,
-    "unchanged": 5
+    "gainers": 2,
+    "losers": 9,
+    "unchanged": 4
   },
   "topGainer": {
+    "symbol": "APX",
+    "name": "Apex Mining Co., Inc.",
+    "sector": "Mining and Oil",
+    "latestClose": 16.48,
+    "predictedClose": 16.516383656804322,
+    "pctChange": 0.22077461653107933,
+    "direction": "bullish",
+    "bestModel": "LSTM",
+    "forecastDate": "2026-10-28"
+  },
+  "topLoser": {
     "symbol": "BPI",
     "name": "Bank of the Philippine Islands",
     "sector": "Financials",
-    "latestClose": 93.8,
-    "predictedClose": 94.42092131328229,
-    "pctChange": 0.661963020556818,
-    "direction": "bullish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-10-27"
-  },
-  "topLoser": {
-    "symbol": "ALI",
-    "name": "Ayala Land, Inc.",
-    "sector": "Property",
-    "latestClose": 15.44,
-    "predictedClose": 15.423048094940661,
-    "pctChange": -0.10979213121333097,
+    "latestClose": 99.0,
+    "predictedClose": 98.37461936791289,
+    "pctChange": -0.6316976081688029,
     "direction": "bearish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-10-27"
+    "bestModel": "ARIMA",
+    "forecastDate": "2026-10-28"
   }
 }
