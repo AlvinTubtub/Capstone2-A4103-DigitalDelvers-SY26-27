@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-03T16:03:35.053235+08:00",
-  "forecastDate": "2026-11-04",
-  "lastRunAt": "2026-11-03T16:03:35.053235+08:00",
+  "generatedAt": "2026-11-04T16:03:36.854099+08:00",
+  "forecastDate": "2026-11-05",
+  "lastRunAt": "2026-11-04T16:03:36.854099+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 8,
-    "losers": 3,
+    "gainers": 5,
+    "losers": 6,
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "ICT",
-    "name": "International Container Terminal Services, Inc.",
-    "sector": "Services",
-    "latestClose": 811.5,
-    "predictedClose": 818.089920593722,
-    "pctChange": 0.8120666166016036,
+    "symbol": "MER",
+    "name": "Manila Electric Company",
+    "sector": "Industrial",
+    "latestClose": 427.2,
+    "predictedClose": 428.70294366960024,
+    "pctChange": 0.35181265674163303,
     "direction": "bullish",
-    "bestModel": "LSTM",
-    "forecastDate": "2026-11-04"
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-11-05"
   },
   "topLoser": {
-    "symbol": "ALI",
-    "name": "Ayala Land, Inc.",
-    "sector": "Property",
-    "latestClose": 15.4,
-    "predictedClose": 15.383048094940662,
-    "pctChange": -0.11007730558011883,
+    "symbol": "BPI",
+    "name": "Bank of the Philippine Islands",
+    "sector": "Financials",
+    "latestClose": 100.0,
+    "predictedClose": 98.8682103623735,
+    "pctChange": -1.1317896376264969,
     "direction": "bearish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-11-04"
+    "bestModel": "ARIMA",
+    "forecastDate": "2026-11-05"
   }
 }
