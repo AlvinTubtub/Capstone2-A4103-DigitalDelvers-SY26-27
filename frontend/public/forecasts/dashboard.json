@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-04T16:03:36.854099+08:00",
-  "forecastDate": "2026-11-05",
-  "lastRunAt": "2026-11-04T16:03:36.854099+08:00",
+  "generatedAt": "2026-11-05T16:02:54.516392+08:00",
+  "forecastDate": "2026-11-06",
+  "lastRunAt": "2026-11-05T16:02:54.516392+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 5,
-    "losers": 6,
+    "gainers": 2,
+    "losers": 9,
     "unchanged": 4
   },
   "topGainer": {
-    "symbol": "MER",
-    "name": "Manila Electric Company",
-    "sector": "Industrial",
-    "latestClose": 427.2,
-    "predictedClose": 428.70294366960024,
-    "pctChange": 0.35181265674163303,
+    "symbol": "APX",
+    "name": "Apex Mining Co., Inc.",
+    "sector": "Mining and Oil",
+    "latestClose": 17.0,
+    "predictedClose": 17.041120640552116,
+    "pctChange": 0.24188612089479775,
     "direction": "bullish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-11-05"
+    "bestModel": "LSTM",
+    "forecastDate": "2026-11-06"
   },
   "topLoser": {
-    "symbol": "BPI",
-    "name": "Bank of the Philippine Islands",
-    "sector": "Financials",
-    "latestClose": 100.0,
-    "predictedClose": 98.8682103623735,
-    "pctChange": -1.1317896376264969,
+    "symbol": "SMPH",
+    "name": "SM Prime Holdings, Inc.",
+    "sector": "Property",
+    "latestClose": 17.84,
+    "predictedClose": 17.67811193433709,
+    "pctChange": -0.907444314253985,
     "direction": "bearish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-11-05"
+    "bestModel": "LSTM",
+    "forecastDate": "2026-11-06"
   }
 }
