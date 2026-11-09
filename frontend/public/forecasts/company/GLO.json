@@ -2,10 +2,10 @@
   "symbol": "GLO",
   "name": "Globe Telecom, Inc.",
   "sector": "Services",
-  "previousClose": 1478.0,
-  "predictedClose": 1478.112495566314,
-  "pesoChange": 0.11249556631400992,
-  "pctChange": 0.007611337369012851,
+  "previousClose": 1464.0,
+  "predictedClose": 1464.077514049972,
+  "pesoChange": 0.07751404997202371,
+  "pctChange": 0.005294675544537139,
   "direction": "bullish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 1477.8007495315428,
-    "arima": 1478.0,
-    "lstm": 1478.112495566314
+    "lag": 1463.8007495315428,
+    "arima": 1464.0,
+    "lstm": 1464.077514049972
   },
   "ohlcv": [
     {
@@ -13431,6 +13431,14 @@
       "low": 1475.0,
       "close": 1478.0,
       "volume": 97705.0
+    },
+    {
+      "date": "2026-11-09",
+      "open": 1478.0,
+      "high": 1498.0,
+      "low": 1464.0,
+      "close": 1464.0,
+      "volume": 36685.0
     }
   ],
   "backtestDates": [
@@ -13846,7 +13854,8 @@
     "2026-11-03",
     "2026-11-04",
     "2026-11-05",
-    "2026-11-06"
+    "2026-11-06",
+    "2026-11-09"
   ],
   "productionBacktestActual": [
     1598.0,
@@ -13887,7 +13896,8 @@
     1530.0,
     1500.0,
     1499.0,
-    1478.0
+    1478.0,
+    1464.0
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13929,7 +13939,8 @@
       1529.8007495315428,
       1529.8007495315428,
       1499.8007495315428,
-      1498.8007495315428
+      1498.8007495315428,
+      1477.8007495315428
     ],
     "ARIMA": [
       1600.0,
@@ -13970,7 +13981,8 @@
       1530.0,
       1530.0,
       1500.0,
-      1499.0
+      1499.0,
+      1478.0
     ],
     "LSTM": [
       1599.5189459919764,
@@ -14011,7 +14023,8 @@
       1529.3122436441026,
       1529.1521618405288,
       1500.0392695605055,
-      1498.6317332012775
+      1498.6317332012775,
+      1478.112495566314
     ],
     "Naive baseline": [
       1600.0,
@@ -14052,7 +14065,8 @@
       1530.0,
       1530.0,
       1500.0,
-      1499.0
+      1499.0,
+      1478.0
     ]
   },
   "productionBacktestProvenance": [
@@ -16590,11 +16604,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "GLO",
+      "originDate": "2026-11-06",
+      "targetDate": "2026-11-09",
+      "actualClose": 1464.0,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-46111a0b49ac729f2c542e538f4b240430b22a91b5b6dd2f010441df8fcce78d",
+          "method": "lag_reg",
+          "prediction": 1477.8007495315428,
+          "error": 13.800749531542806,
+          "modelVersion": "backend-from-scratch-v1:b7180f13f53fa4c2f4f1e79a71dffc882f620726cc047e7b9585b32ed6eaf88e",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-06T16:02:50.000568+08:00",
+          "observedAt": "2026-11-09T17:32:58.176982+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-590bb9c8a72b272fd4309f8cf8d54027d264f1d303d851f5fd9f10045d4843a9",
+          "method": "arima",
+          "prediction": 1478.0,
+          "error": 14.0,
+          "modelVersion": "backend-from-scratch-v1:f28d1243297eb897d0c1af51452dc461b784c5c8214e779d05497d84bca2c2da",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-06T16:02:50.000568+08:00",
+          "observedAt": "2026-11-09T17:32:58.176982+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-e13e8bbcf0a8672330c1e565355085ac7cdb88e2ff9a1f0fe769f7dd8dd3c62d",
+          "method": "lstm",
+          "prediction": 1478.112495566314,
+          "error": 14.11249556631401,
+          "modelVersion": "backend-from-scratch-v1:2ec451351948b4ebe8445afc3accb6cd437bb43fd07cbea2c33d2f67eb082b4e",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-06T16:02:50.000568+08:00",
+          "observedAt": "2026-11-09T17:32:58.176982+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-9d26015e1b376e0bb1b37747b545a71fb250508f9cb58e1f33e9960e256f675f",
+          "method": "naive",
+          "prediction": 1478.0,
+          "error": 14.0,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-06T16:02:50.000568+08:00",
+          "observedAt": "2026-11-09T17:32:58.176982+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-11-09",
-  "dataAsOf": "2026-11-06",
-  "inferenceAt": "2026-11-06T16:02:50.000568+08:00",
+  "forecastDate": "2026-11-10",
+  "dataAsOf": "2026-11-09",
+  "inferenceAt": "2026-11-09T17:33:03.769321+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
