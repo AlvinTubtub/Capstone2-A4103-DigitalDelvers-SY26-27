@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-09T17:33:07.737293+08:00",
-  "forecastDate": "2026-11-10",
-  "lastRunAt": "2026-11-09T17:33:07.737293+08:00",
+  "generatedAt": "2026-11-10T16:03:26.540125+08:00",
+  "forecastDate": "2026-11-11",
+  "lastRunAt": "2026-11-10T16:03:26.540125+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 5,
-    "losers": 6,
+    "gainers": 6,
+    "losers": 5,
     "unchanged": 4
   },
   "topGainer": {
+    "symbol": "ICT",
+    "name": "International Container Terminal Services, Inc.",
+    "sector": "Services",
+    "latestClose": 800.0,
+    "predictedClose": 805.4296821174719,
+    "pctChange": 0.6787102646839855,
+    "direction": "bullish",
+    "bestModel": "LSTM",
+    "forecastDate": "2026-11-11"
+  },
+  "topLoser": {
     "symbol": "MER",
     "name": "Manila Electric Company",
     "sector": "Industrial",
-    "latestClose": 424.0,
-    "predictedClose": 426.4080322139004,
-    "pctChange": 0.5679321259199086,
-    "direction": "bullish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-11-10"
-  },
-  "topLoser": {
-    "symbol": "BPI",
-    "name": "Bank of the Philippine Islands",
-    "sector": "Financials",
-    "latestClose": 99.0,
-    "predictedClose": 98.85803615663724,
-    "pctChange": -0.14339782157854514,
+    "latestClose": 439.0,
+    "predictedClose": 438.2191085651172,
+    "pctChange": -0.17787959792318675,
     "direction": "bearish",
-    "bestModel": "ARIMA",
-    "forecastDate": "2026-11-10"
+    "bestModel": "Lag-Informed Regression",
+    "forecastDate": "2026-11-11"
   }
 }
