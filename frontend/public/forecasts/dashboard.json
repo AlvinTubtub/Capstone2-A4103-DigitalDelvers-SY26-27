@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-10T16:03:26.540125+08:00",
-  "forecastDate": "2026-11-11",
-  "lastRunAt": "2026-11-10T16:03:26.540125+08:00",
+  "generatedAt": "2026-11-11T16:02:54.658366+08:00",
+  "forecastDate": "2026-11-12",
+  "lastRunAt": "2026-11-11T16:02:54.658366+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 6,
-    "losers": 5,
-    "unchanged": 4
+    "gainers": 3,
+    "losers": 7,
+    "unchanged": 5
   },
   "topGainer": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
-    "latestClose": 800.0,
-    "predictedClose": 805.4296821174719,
-    "pctChange": 0.6787102646839855,
+    "latestClose": 780.0,
+    "predictedClose": 794.6918939847385,
+    "pctChange": 1.8835761518895513,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-11-11"
+    "forecastDate": "2026-11-12"
   },
   "topLoser": {
-    "symbol": "MER",
-    "name": "Manila Electric Company",
-    "sector": "Industrial",
-    "latestClose": 439.0,
-    "predictedClose": 438.2191085651172,
-    "pctChange": -0.17787959792318675,
+    "symbol": "SMPH",
+    "name": "SM Prime Holdings, Inc.",
+    "sector": "Property",
+    "latestClose": 17.4,
+    "predictedClose": 17.330784231345387,
+    "pctChange": -0.3977917738770791,
     "direction": "bearish",
-    "bestModel": "Lag-Informed Regression",
-    "forecastDate": "2026-11-11"
+    "bestModel": "LSTM",
+    "forecastDate": "2026-11-12"
   }
 }
