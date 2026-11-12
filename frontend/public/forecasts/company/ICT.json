@@ -3,9 +3,9 @@
   "name": "International Container Terminal Services, Inc.",
   "sector": "Services",
   "previousClose": 780.0,
-  "predictedClose": 794.6918939847385,
-  "pesoChange": 14.691893984738499,
-  "pctChange": 1.8835761518895513,
+  "predictedClose": 794.1484336782495,
+  "pesoChange": 14.14843367824949,
+  "pctChange": 1.8139017536217292,
   "direction": "bullish",
   "model": "LSTM",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 783.7683277617052,
-    "arima": 786.3187320558347,
-    "lstm": 794.6918939847385
+    "lag": 780.4671184519985,
+    "arima": 783.9286467785716,
+    "lstm": 794.1484336782495
   },
   "ohlcv": [
     {
@@ -13455,6 +13455,14 @@
       "low": 780.0,
       "close": 780.0,
       "volume": 1660830.0
+    },
+    {
+      "date": "2026-11-12",
+      "open": 780.0,
+      "high": 786.0,
+      "low": 749.0,
+      "close": 780.0,
+      "volume": 2797790.0
     }
   ],
   "backtestDates": [
@@ -13873,7 +13881,8 @@
     "2026-11-06",
     "2026-11-09",
     "2026-11-10",
-    "2026-11-11"
+    "2026-11-11",
+    "2026-11-12"
   ],
   "productionBacktestActual": [
     990.0,
@@ -13917,6 +13926,7 @@
     817.0,
     809.0,
     800.0,
+    780.0,
     780.0
   ],
   "productionBacktestByModel": {
@@ -13962,7 +13972,8 @@
       830.9202792489067,
       818.5120046848959,
       811.8811647194715,
-      800.6871157591694
+      800.6871157591694,
+      783.7683277617052
     ],
     "ARIMA": [
       982.8858342948924,
@@ -14006,7 +14017,8 @@
       830.4042809089997,
       819.9671744433084,
       812.5015550024968,
-      803.9927679489974
+      803.9927679489974,
+      786.3187320558347
     ],
     "LSTM": [
       984.0734743183978,
@@ -14050,7 +14062,8 @@
       829.5031039720528,
       819.4575985175,
       811.9886914231719,
-      805.4296821174719
+      805.4296821174719,
+      794.6918939847385
     ],
     "Naive baseline": [
       985.0,
@@ -14094,7 +14107,8 @@
       830.0,
       817.0,
       809.0,
-      800.0
+      800.0,
+      780.0
     ]
   },
   "productionBacktestProvenance": [
@@ -16827,11 +16841,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "ICT",
+      "originDate": "2026-11-11",
+      "targetDate": "2026-11-12",
+      "actualClose": 780.0,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-3898b8c001993a389a5fc3bb5098b3f4e8fe24c265746c0b6528edb4e52c311d",
+          "method": "lag_reg",
+          "prediction": 783.7683277617052,
+          "error": 3.7683277617052227,
+          "modelVersion": "backend-from-scratch-v1:1882adaa7faf5feb51a61f47298923100e8ad0b5642109a3be235f12cca87037",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-11T16:02:52.263737+08:00",
+          "observedAt": "2026-11-12T16:02:56.991295+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-c834266692b0838ac06d461986e90f429e00ca898e063da9a54c9e95c5d634e9",
+          "method": "arima",
+          "prediction": 786.3187320558347,
+          "error": 6.318732055834744,
+          "modelVersion": "backend-from-scratch-v1:4e560e2b2f4b9267914f79ae50ce0eb5ec92425a90c803b919f75b5c79d0929a",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-11T16:02:52.263737+08:00",
+          "observedAt": "2026-11-12T16:02:56.991295+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-cbbf7095821037e71f99f880a5fd0bda73fbeb08d76131a3bc317070508c9b5e",
+          "method": "lstm",
+          "prediction": 794.6918939847385,
+          "error": 14.691893984738499,
+          "modelVersion": "backend-from-scratch-v1:8d826206909b109e1a11dec31d86dc756af30c289736fc315ed644f4e8e079d4",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-11T16:02:52.263737+08:00",
+          "observedAt": "2026-11-12T16:02:56.991295+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-c6162ec97fde97cf9e8e44dfb4306eddce1fe9c5dd600ecda111a41e5e3b4574",
+          "method": "naive",
+          "prediction": 780.0,
+          "error": 0.0,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-11T16:02:52.263737+08:00",
+          "observedAt": "2026-11-12T16:02:56.991295+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-11-12",
-  "dataAsOf": "2026-11-11",
-  "inferenceAt": "2026-11-11T16:02:52.263737+08:00",
+  "forecastDate": "2026-11-13",
+  "dataAsOf": "2026-11-12",
+  "inferenceAt": "2026-11-12T16:03:03.168389+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

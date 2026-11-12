@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-11T16:02:54.658366+08:00",
-  "forecastDate": "2026-11-12",
-  "lastRunAt": "2026-11-11T16:02:54.658366+08:00",
+  "generatedAt": "2026-11-12T16:03:07.169066+08:00",
+  "forecastDate": "2026-11-13",
+  "lastRunAt": "2026-11-12T16:03:07.169066+08:00",
   "status": "complete",
   "totalCompanies": 15,
   "missingCompanies": [],
@@ -28,30 +28,30 @@
     }
   ],
   "marketSummary": {
-    "gainers": 3,
-    "losers": 7,
-    "unchanged": 5
+    "gainers": 5,
+    "losers": 6,
+    "unchanged": 4
   },
   "topGainer": {
     "symbol": "ICT",
     "name": "International Container Terminal Services, Inc.",
     "sector": "Services",
     "latestClose": 780.0,
-    "predictedClose": 794.6918939847385,
-    "pctChange": 1.8835761518895513,
+    "predictedClose": 794.1484336782495,
+    "pctChange": 1.8139017536217292,
     "direction": "bullish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-11-12"
+    "forecastDate": "2026-11-13"
   },
   "topLoser": {
     "symbol": "SMPH",
     "name": "SM Prime Holdings, Inc.",
     "sector": "Property",
-    "latestClose": 17.4,
-    "predictedClose": 17.330784231345387,
-    "pctChange": -0.3977917738770791,
+    "latestClose": 17.46,
+    "predictedClose": 17.389957821074315,
+    "pctChange": -0.4011579549008348,
     "direction": "bearish",
     "bestModel": "LSTM",
-    "forecastDate": "2026-11-12"
+    "forecastDate": "2026-11-13"
   }
 }
