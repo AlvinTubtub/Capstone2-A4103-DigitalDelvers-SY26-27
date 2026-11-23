@@ -3,14 +3,17 @@
 from datetime import date, datetime, timedelta
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from zoneinfo import ZoneInfo
 
 import pytest
 
 from config.model_config import ModelId
+from scripts import update_forecast_ledger
 from src.data.calendar import PSETradingCalendar
 from src.data.validator import OhlcvRecord
 from src.inference.next_day import CompanyNextDayForecast, NextDayPrediction
+from src.ledger import lifecycle
 from src.ledger.lifecycle import (
     LedgerLifecycleError,
     issue_company_forecasts,
@@ -60,12 +63,17 @@ def raw_record(trading_date: date, close: float) -> OhlcvRecord:
     )
 
 
-def company_forecast(*, target: date = date(2026, 1, 5)) -> CompanyNextDayForecast:
+def company_forecast(
+    *,
+    symbol: str = "ALI",
+    origin: date = date(2026, 1, 2),
+    target: date = date(2026, 1, 5),
+) -> CompanyNextDayForecast:
     predictions = tuple(
         NextDayPrediction(
-            symbol="ALI",
+            symbol=symbol,
             model=model,
-            origin_date=date(2026, 1, 2),
+            origin_date=origin,
             forecast_for=target,
             origin_close=100.0,
             predicted_delta=delta,
@@ -78,7 +86,7 @@ def company_forecast(*, target: date = date(2026, 1, 5)) -> CompanyNextDayForeca
             (ModelId.LSTM, 3.0),
         )
     )
-    return CompanyNextDayForecast("ALI", date(2026, 1, 2), target, predictions)
+    return CompanyNextDayForecast(symbol, origin, target, predictions)
 
 
 def test_forecast_issuance_is_materialized_pending_with_model_version(
@@ -199,6 +207,7 @@ def test_company_issuance_adds_aligned_naive_forecast(tmp_path: Path) -> None:
         calendar=PSETradingCalendar(frozenset()),
         production_run_id="98765",
         source_commit="a" * 40,
+        now=CREATED,
     )
     snapshot = ledger.read()
 
@@ -232,6 +241,87 @@ def test_company_issuance_rejects_wrong_target_date(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.parametrize(
+    ("utc_time", "should_issue"),
+    [("01:29:59", True), ("01:30:00", False), ("01:30:01", False)],
+    ids=["before-open", "at-open", "after-open"],
+)
+def test_issuance_uses_manila_market_open(
+    tmp_path: Path, utc_time: str, should_issue: bool
+) -> None:
+    ledger = ForecastLedger(tmp_path / "events.jsonl")
+    forecast = company_forecast()
+    options = {
+        "model_versions": {item.model: "verified-version" for item in forecast.predictions},
+        "calendar": PSETradingCalendar(),
+        "now": datetime.fromisoformat(f"2026-01-05T{utc_time}+00:00"),
+    }
+    history = (raw_record(forecast.origin_date, 100.0),)
+
+    if should_issue:
+        assert len(issue_company_forecasts(ledger, forecast, history, **options)) == 4
+        assert len(ledger.read().pending) == 4
+    else:
+        with pytest.raises(LedgerLifecycleError, match="ALI forecast target 2026-01-05"):
+            issue_company_forecasts(ledger, forecast, history, **options)
+        assert not ledger.path.exists()
+
+
+def test_cli_issuance_rejects_entire_batch_if_later_company_target_has_opened(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ledger = ForecastLedger(tmp_path / "events.jsonl")
+    ledger.append_issued(issuance())
+    original = ledger.path.read_bytes()
+    forecasts = {
+        "ALI": company_forecast(origin=date(2026, 1, 5), target=date(2026, 1, 6)),
+        "BPI": company_forecast(symbol="BPI"),
+    }
+    monkeypatch.setattr(update_forecast_ledger, "selected_symbols", lambda _: tuple(forecasts))
+    monkeypatch.setattr(
+        update_forecast_ledger,
+        "load_production_manifest",
+        lambda _: SimpleNamespace(run_id="98765", source_commit="a" * 40),
+    )
+    monkeypatch.setattr(update_forecast_ledger, "load_persisted_next_day_forecast",
+                        lambda symbol, **_: forecasts[symbol])
+    monkeypatch.setattr(update_forecast_ledger, "load_company_history",
+                        lambda symbol: (raw_record(forecasts[symbol].origin_date, 100.0),))
+    monkeypatch.setattr(
+        update_forecast_ledger,
+        "production_model_versions",
+        lambda symbol, **_: {item.model: "verified-version" for item in forecasts[symbol].predictions},
+    )
+    monkeypatch.setattr(
+        lifecycle, "manila_now", lambda: datetime(2026, 1, 5, 16, 0, tzinfo=MANILA)
+    )
+    args = ["--issue-forecasts", "--all", "--ledger-path", str(ledger.path)]
+    assert update_forecast_ledger.main(args) == 1
+    assert ledger.path.read_bytes() == original
+
+
+def test_issuance_rechecks_cutoff_after_locked_validation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ledger = ForecastLedger(tmp_path / "events.jsonl")
+    ledger.path.write_bytes(b"")
+    forecast = company_forecast()
+    market_open = datetime(2026, 1, 5, 9, 30, tzinfo=MANILA)
+    times = iter((market_open - timedelta(seconds=1), market_open))
+    monkeypatch.setattr(lifecycle, "manila_now", lambda: next(times))
+
+    with pytest.raises(LedgerLifecycleError, match="has reached market open"):
+        issue_company_forecasts(
+            ledger,
+            forecast,
+            (raw_record(forecast.origin_date, 100.0),),
+            model_versions={item.model: "verified-version" for item in forecast.predictions},
+            calendar=PSETradingCalendar(),
+        )
+
+    assert ledger.path.read_bytes() == b""
+
+
 def test_eod_resolution_uses_exact_target_close_and_preserves_issued_event(
     tmp_path: Path,
 ) -> None:
@@ -247,6 +337,7 @@ def test_eod_resolution_uses_exact_target_close_and_preserves_issued_event(
         history,
         model_versions=versions,
         calendar=PSETradingCalendar(frozenset()),
+        now=CREATED,
     )
     issued_lines = ledger.path.read_text(encoding="utf-8").splitlines()
 

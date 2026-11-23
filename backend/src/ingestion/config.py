@@ -10,6 +10,7 @@ from config.settings import SETTINGS
 
 
 PSE_EDGE_REPORT_BASE_URL: Final[str] = "https://documents.pse.com.ph/market_report"
+PSE_ARCHIVE_BASE_URL: Final[str] = "https://documents.pse.com.ph/wp-content/uploads/sites/15"
 PDF_SUFFIX: Final[str] = "-EOD.pdf"
 MAX_QUOTATION_PAGES: Final[int] = 11
 EARLIEST_SUPPORTED_REPORT_DATE: Final[date] = date(2026, 7, 1)
@@ -37,6 +38,7 @@ class IngestionSettings:
     max_retries: int = 3
     backoff_base_seconds: float = 2.0
     max_quotation_pages: int = MAX_QUOTATION_PAGES
+    archive_base_url: str = PSE_ARCHIVE_BASE_URL
 
 
 DEFAULT_INGESTION_SETTINGS: Final[IngestionSettings] = IngestionSettings()

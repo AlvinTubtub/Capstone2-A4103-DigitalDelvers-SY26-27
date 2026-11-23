@@ -71,7 +71,10 @@ def parse_quotation_line(
     # Volume, Value, and Net Foreign Buying/(Selling). Only OHLCV and Value
     # are retained; Net Foreign is outside the canonical ingestion contract.
     if len(remaining) != QUOTATION_VALUE_COUNT:
-        raise PdfParseError(f"Malformed quotation row for {company.symbol}: {line!r}")
+        raise PdfParseError(
+            f"Malformed quotation row for {company.symbol} on {report_date}; "
+            f"operator review required: {line!r}"
+        )
     try:
         return clean_quotation(
             report_date=report_date,
@@ -85,7 +88,10 @@ def parse_quotation_line(
             traded_value=remaining[7],
         )
     except NumericCleaningError as exc:
-        raise PdfParseError(f"Malformed quotation row for {company.symbol}: {exc}") from exc
+        raise PdfParseError(
+            f"Malformed quotation row for {company.symbol} on {report_date}; "
+            f"operator review required: {exc}"
+        ) from exc
 
 
 def _open_pdf(path: Path) -> Any:
@@ -98,7 +104,7 @@ def _open_pdf(path: Path) -> Any:
     return pdfplumber.open(path)
 
 
-def _filename_date(path: Path) -> date | None:
+def report_date_from_filename(path: Path) -> date | None:
     match = LOCAL_FILENAME_PATTERN.match(path.name)
     if match is None:
         return None
@@ -134,7 +140,7 @@ def parse_pdf(
     )
     if report_date is None:
         raise PdfParseError(f"Could not find a report date in {path.name}")
-    filename_date = _filename_date(path)
+    filename_date = report_date_from_filename(path)
     if filename_date is not None and filename_date != report_date:
         raise PdfParseError(
             f"Report date {report_date} does not match staged filename date {filename_date}"

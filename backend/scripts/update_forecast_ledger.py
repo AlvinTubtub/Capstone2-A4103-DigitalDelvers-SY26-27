@@ -15,7 +15,8 @@ from src.artifacts.production_manifest import load_production_manifest
 from src.data.calendar import PSETradingCalendar
 from src.data.loader import load_company_history
 from src.ledger.lifecycle import (
-    issue_company_forecasts,
+    CompanyIssuance,
+    issue_forecasts,
     load_persisted_next_day_forecast,
     production_model_versions,
     resolve_pending_outcomes,
@@ -88,34 +89,34 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         if arguments.issue_forecasts:
             manifest = load_production_manifest(arguments.artifacts_root)
-            appended = 0
-            idempotent = 0
-            calendar = PSETradingCalendar()
-            for symbol in symbols:
-                results = issue_company_forecasts(
-                    ledger,
+            companies = [
+                CompanyIssuance(
                     load_persisted_next_day_forecast(
                         symbol,
                         artifacts_root=arguments.artifacts_root,
                     ),
                     load_company_history(symbol),
-                    model_versions=production_model_versions(
+                    production_model_versions(
                         symbol,
                         artifacts_root=arguments.artifacts_root,
                     ),
-                    calendar=calendar,
-                    production_run_id=manifest.run_id,
-                    source_commit=manifest.source_commit,
                 )
-                appended += sum(item.appended for item in results)
-                idempotent += sum(not item.appended for item in results)
+                for symbol in symbols
+            ]
+            results = issue_forecasts(
+                ledger,
+                companies,
+                calendar=PSETradingCalendar(),
+                production_run_id=manifest.run_id,
+                source_commit=manifest.source_commit,
+            )
             print(
                 json.dumps(
                     {
                         "action": "issue_forecasts",
                         "requested_symbols": list(symbols),
-                        "forecasts_appended": appended,
-                        "idempotent_forecasts": idempotent,
+                        "forecasts_appended": sum(item.appended for item in results),
+                        "idempotent_forecasts": sum(not item.appended for item in results),
                         "production_run_id": manifest.run_id,
                         "source_commit": manifest.source_commit,
                     },

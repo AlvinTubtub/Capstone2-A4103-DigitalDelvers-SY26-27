@@ -85,6 +85,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     ):
         parser.error("--start-date cannot be after --end-date")
     configure_structured_logging(verbose=arguments.verbose)
+    logging.getLogger("pdfminer").setLevel(logging.WARNING)
     LOGGER.info("Starting ingestion-only command")
     result = run_ingestion(
         start_date=arguments.start_date,

@@ -1,6 +1,6 @@
 """Locked append-only JSONL storage for prospective forecast evidence."""
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 import fcntl
 import json
@@ -102,7 +102,12 @@ class ForecastLedger:
             )
         return AppendResult(event.forecast_id, False)
 
-    def _append(self, proposed: Sequence[LedgerEvent]) -> tuple[AppendResult, ...]:
+    def _append(
+        self,
+        proposed: Sequence[LedgerEvent],
+        *,
+        before_write: Callable[[], None] | None = None,
+    ) -> tuple[AppendResult, ...]:
         events = tuple(proposed)
         if not events:
             return ()
@@ -127,6 +132,8 @@ class ForecastLedger:
                         to_append.append(event)
                 materialize_events(tuple(working))
                 if to_append:
+                    if before_write is not None:
+                        before_write()
                     stream.seek(0, os.SEEK_END)
                     for event in to_append:
                         stream.write(
@@ -156,8 +163,10 @@ class ForecastLedger:
     def append_issuances(
         self,
         events: Sequence[ForecastIssued],
+        *,
+        before_write: Callable[[], None] | None = None,
     ) -> tuple[AppendResult, ...]:
-        return self._append(events)
+        return self._append(events, before_write=before_write)
 
     def append_outcome(self, event: ForecastOutcomeObserved) -> AppendResult:
         return self._append((event,))[0]

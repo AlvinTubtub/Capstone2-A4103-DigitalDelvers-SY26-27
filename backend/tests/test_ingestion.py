@@ -3,8 +3,9 @@ from __future__ import annotations
 import builtins
 from datetime import date, datetime
 from decimal import Decimal
+from functools import partial
 from pathlib import Path
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 import pytest
 
@@ -16,6 +17,7 @@ from src.ingestion.downloader import (
     DownloadResult,
     FetchResponse,
     download_one,
+    download_reports,
     report_filename,
     report_url,
 )
@@ -39,11 +41,11 @@ def _settings(tmp_path: Path, *, retries: int = 3) -> IngestionSettings:
     )
 
 
-def _quote(day: date, *, close: str = "101.00"):
+def _quote(day: date, *, close: str = "101.00", symbol: str = "BPI"):
     return clean_quotation(
         report_date=day,
-        issue_name="BANK PH ISLANDS",
-        symbol="BPI",
+        issue_name=next(company.pse_issue_name for company in COMPANIES if company.symbol == symbol),
+        symbol=symbol,
         open_value="100.00",
         high_value="103.00",
         low_value="99.00",
@@ -73,18 +75,8 @@ def test_pdf_filename_generation() -> None:
     assert report_filename(date(2026, 9, 7)) == "2026-09-07-EOD.pdf"
 
 
-def test_404_is_unpublished_and_not_failure(tmp_path: Path) -> None:
-    status, path, message = download_one(
-        date(2026, 9, 6),
-        settings=_settings(tmp_path),
-        fetcher=lambda _url, _timeout: FetchResponse(404, b""),
-        sleep_fn=lambda _seconds: pytest.fail("404 must not retry"),
-    )
-    assert (status, path, message) == ("unpublished", None, None)
-
-
-def test_transient_failure_retries_then_downloads(tmp_path: Path) -> None:
-    responses: list[object] = [URLError("temporary outage"), FetchResponse(200, b"%PDF-test")]
+def test_transient_failure_retries_then_downloads(tmp_path: Path, readable_pdf) -> None:
+    responses: list[object] = [URLError("temporary outage"), FetchResponse(200, b"%PDF-September 7, 2026")]
     waits: list[float] = []
 
     def fetcher(_url: str, _timeout: float) -> FetchResponse:
@@ -101,12 +93,12 @@ def test_transient_failure_retries_then_downloads(tmp_path: Path) -> None:
     )
     assert status == "downloaded"
     assert message is None
-    assert path is not None and path.read_bytes() == b"%PDF-test"
+    assert path is not None and path.read_bytes() == b"%PDF-September 7, 2026"
     assert waits == [2]
 
 
-def test_transient_server_error_retries(tmp_path: Path) -> None:
-    responses = [FetchResponse(503, b""), FetchResponse(200, b"%PDF-test")]
+def test_transient_server_error_retries(tmp_path: Path, readable_pdf) -> None:
+    responses = [FetchResponse(503, b""), FetchResponse(200, b"%PDF-September 7, 2026")]
     waits: list[float] = []
 
     status, path, _message = download_one(
@@ -153,6 +145,254 @@ class _Pdf:
 
     def __exit__(self, *_args):
         return None
+
+
+QUOTE_LINES = {
+    company.symbol: (
+        f"{company.pse_issue_name} {company.symbol} 99 100 100 103 99 101 123,000 12,345,000 1"
+    )
+    for company in COMPANIES
+}
+
+
+@pytest.fixture
+def readable_pdf(monkeypatch: pytest.MonkeyPatch) -> None:
+    import pdfplumber
+
+    def open_pdf(path: Path) -> _Pdf:
+        report_date, separator, quote_text = (
+            path.read_bytes().removeprefix(b"%PDF-").decode().partition("\n")
+        )
+        if not separator:
+            quote_text = "\n".join(QUOTE_LINES.values())
+        return _Pdf(
+            [
+                _Page(
+                    f"Daily Quotation Report {report_date}\n{quote_text}"
+                )
+            ]
+        )
+
+    monkeypatch.setattr(pdfplumber, "open", open_pdf)
+
+
+INCIDENT_DATE = date(2026, 11, 13)
+INCIDENT_PRIMARY_URL = "https://documents.pse.com.ph/market_report/November%2013,%202026-EOD.pdf"
+INCIDENT_ARCHIVE_URL = (
+    "https://documents.pse.com.ph/wp-content/uploads/sites/15/2026/11/stockQuotes_11132026.pdf"
+)
+
+
+@pytest.mark.parametrize("primary_status", [200, 404], ids=["primary", "archive"])
+def test_ingestion_uses_first_available_source(
+    tmp_path: Path, readable_pdf, caplog: pytest.LogCaptureFixture, primary_status: int
+) -> None:
+    checked = []
+
+    def fetcher(url: str, _timeout: float) -> FetchResponse:
+        checked.append(url)
+        if url == INCIDENT_PRIMARY_URL and primary_status == 404:
+            raise HTTPError(url, 404, "Not Found", None, None)
+        return FetchResponse(200, b"%PDF-November 13, 2026")
+
+    with caplog.at_level("INFO"):
+        result = run_ingestion(
+            start_date=INCIDENT_DATE,
+            end_date=INCIDENT_DATE,
+            settings=_settings(tmp_path),
+            download_function=partial(download_reports, fetcher=fetcher),
+        )
+
+    assert result.successful
+    assert result.rows_added == len(COMPANIES)
+    if primary_status == 200:
+        assert checked == [INCIDENT_PRIMARY_URL]
+        assert f"source=primary url={INCIDENT_PRIMARY_URL}" in caplog.text
+    else:
+        assert checked == [INCIDENT_PRIMARY_URL, INCIDENT_ARCHIVE_URL]
+        assert f"source=archive url={INCIDENT_ARCHIVE_URL}" in caplog.text
+
+
+def test_both_sources_404_on_latest_trading_day_is_no_update(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    raw = settings.raw_dir / "BPI.csv"
+    original = _write_raw(raw)
+    checked = []
+
+    def fetcher(url: str, _timeout: float) -> FetchResponse:
+        checked.append(url)
+        return FetchResponse(404, b"")
+
+    result = run_ingestion(
+        start_date=INCIDENT_DATE,
+        end_date=INCIDENT_DATE,
+        settings=settings,
+        download_function=partial(
+            download_reports, fetcher=fetcher, sleep_fn=lambda _: pytest.fail("404 must not retry")
+        ),
+    )
+
+    assert checked == [INCIDENT_PRIMARY_URL, INCIDENT_ARCHIVE_URL]
+    assert result.successful
+    assert result.unpublished_dates == [INCIDENT_DATE]
+    assert result.validation_status == "not_required_no_published_reports"
+    assert raw.read_bytes() == original
+
+
+def test_invalid_archive_pdf_is_rejected_before_caching(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    result = run_ingestion(
+        start_date=INCIDENT_DATE,
+        end_date=INCIDENT_DATE,
+        settings=settings,
+        download_function=partial(
+            download_reports,
+            fetcher=lambda url, _: (
+                FetchResponse(404, b"") if url == INCIDENT_PRIMARY_URL
+                else FetchResponse(200, b"<html>Not a PDF</html>")
+            ),
+        ),
+    )
+
+    assert not result.successful
+    assert result.validation_status == "failed"
+    [(day, message)] = result.failed_downloads
+    assert day == INCIDENT_DATE
+    assert f"archive ({INCIDENT_ARCHIVE_URL})" in message
+    assert "Could not read" in message
+    assert not list(settings.reports_dir.iterdir())
+    assert not settings.raw_dir.exists()
+
+
+def test_misdated_archive_is_rejected_before_caching(tmp_path: Path, readable_pdf) -> None:
+    settings = _settings(tmp_path)
+    status, path, message = download_one(
+        INCIDENT_DATE,
+        settings=settings,
+        fetcher=lambda url, _: (
+            FetchResponse(404, b"") if url == INCIDENT_PRIMARY_URL
+            else FetchResponse(200, b"%PDF-November 12, 2026")
+        ),
+    )
+
+    assert (status, path) == ("failed", None)
+    assert message is not None
+    assert f"archive ({INCIDENT_ARCHIVE_URL})" in message
+    assert "Report date 2026-11-12 does not match staged filename date 2026-11-13" in message
+    assert not list(settings.reports_dir.iterdir())
+
+
+def test_missing_earlier_session_blocks_later_raw_updates(
+    tmp_path: Path, readable_pdf
+) -> None:
+    settings = _settings(tmp_path)
+    raw = settings.raw_dir / "BPI.csv"
+    original = _write_raw(raw)
+    later_date = date(2026, 11, 16)
+    later_url = report_url(later_date)
+    checked = []
+
+    def fetcher(url: str, _timeout: float) -> FetchResponse:
+        checked.append(url)
+        if url == later_url:
+            return FetchResponse(200, b"%PDF-November 16, 2026")
+        return FetchResponse(404, b"")
+
+    result = run_ingestion(
+        start_date=INCIDENT_DATE,
+        end_date=later_date,
+        settings=settings,
+        download_function=partial(download_reports, fetcher=fetcher),
+    )
+
+    assert checked == [INCIDENT_PRIMARY_URL, INCIDENT_ARCHIVE_URL, later_url]
+    assert not result.successful
+    assert result.validation_status == "failed"
+    assert result.rows_added == 0
+    [error] = result.errors
+    assert "Missing expected PSE trading session 2026-11-13" in error
+    assert "before available session 2026-11-16" in error
+    assert INCIDENT_PRIMARY_URL in error
+    assert INCIDENT_ARCHIVE_URL in error
+    assert raw.read_bytes() == original
+
+
+@pytest.mark.parametrize("cached", [False, True], ids=["downloaded", "cached"])
+@pytest.mark.parametrize(
+    ("bpi_line", "detail"),
+    [
+        ("", "missing symbols BPI"),
+        ("BANK PH ISLANDS BPI 99 100 - - - - - - -", "no usable quote for BPI"),
+        ("BANK PH ISLANDS BPI 99 100 100 103 99 101 0 0 0", "no usable quote for BPI"),
+    ],
+    ids=["missing-ticker", "missing-close", "zero-volume"],
+)
+def test_incomplete_report_blocks_entire_batch(
+    tmp_path: Path, readable_pdf, cached: bool, bpi_line: str, detail: str
+) -> None:
+    settings = _settings(tmp_path)
+    raw = settings.raw_dir / "BPI.csv"
+    original = _write_raw(raw)
+    later_date = date(2026, 11, 16)
+    quote_lines = {**QUOTE_LINES, "BPI": bpi_line}
+    incomplete = "\n".join(["%PDF-November 16, 2026", *quote_lines.values()]).encode()
+    incomplete_path = settings.reports_dir / report_filename(later_date)
+    if cached:
+        incomplete_path.parent.mkdir()
+        incomplete_path.write_bytes(incomplete)
+
+    def fetcher(url: str, _timeout: float) -> FetchResponse:
+        if url == INCIDENT_PRIMARY_URL:
+            return FetchResponse(200, b"%PDF-November 13, 2026")
+        assert url == report_url(later_date)
+        return FetchResponse(200, incomplete)
+
+    result = run_ingestion(
+        start_date=INCIDENT_DATE,
+        end_date=later_date,
+        settings=settings,
+        download_function=partial(download_reports, fetcher=fetcher),
+    )
+
+    assert not result.successful
+    assert result.validation_status == "failed"
+    assert result.rows_added == 0
+    details = result.errors if cached else [message for _, message in result.failed_downloads]
+    assert any(f"{later_date}: {detail}" in message for message in details)
+    assert any("operator review required" in message for message in details)
+    assert incomplete_path.exists() is cached
+    assert list(settings.raw_dir.iterdir()) == [raw]
+    assert raw.read_bytes() == original
+
+
+def test_trailing_404_does_not_block_available_report_and_skips_closures(
+    tmp_path: Path, readable_pdf
+) -> None:
+    friday = date(2026, 10, 30)
+    tuesday = date(2026, 11, 3)
+    checked = []
+
+    def fetcher(url: str, _timeout: float) -> FetchResponse:
+        checked.append(url)
+        if url == report_url(friday):
+            return FetchResponse(200, b"%PDF-October 30, 2026")
+        return FetchResponse(404, b"")
+
+    result = run_ingestion(
+        start_date=friday,
+        end_date=tuesday,
+        settings=_settings(tmp_path),
+        download_function=partial(download_reports, fetcher=fetcher),
+    )
+
+    assert checked == [
+        report_url(friday),
+        report_url(tuesday),
+        "https://documents.pse.com.ph/wp-content/uploads/sites/15/2026/11/stockQuotes_11032026.pdf",
+    ]
+    assert result.successful
+    assert result.unpublished_dates == [tuesday]
+    assert result.rows_added == len(COMPANIES)
 
 
 def test_parser_extracts_only_configured_company_rows(tmp_path: Path) -> None:
@@ -362,7 +602,8 @@ def test_pipeline_validates_raw_after_merge(tmp_path: Path) -> None:
 
     def parsed(_paths, *, settings):
         return ParseBatchResult(
-            records=[_quote(date(2026, 9, 11))], parsed_reports=[report]
+            records=[_quote(date(2026, 9, 11), symbol=company.symbol) for company in COMPANIES],
+            parsed_reports=[report],
         )
 
     result = run_ingestion(
@@ -374,7 +615,7 @@ def test_pipeline_validates_raw_after_merge(tmp_path: Path) -> None:
     )
     assert result.successful
     assert result.validation_status == "passed"
-    assert result.rows_added == 1
+    assert result.rows_added == len(COMPANIES)
     assert validate_raw_file(settings.raw_dir / "BPI.csv")[-1].trading_date == date(
         2026, 9, 11
     )

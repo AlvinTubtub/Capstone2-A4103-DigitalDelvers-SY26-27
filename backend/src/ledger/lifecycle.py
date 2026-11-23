@@ -1,7 +1,8 @@
 """Prospective ledger steps surrounding persisted-model daily inference."""
 
 from collections.abc import Mapping, Sequence
-from datetime import date, datetime
+from dataclasses import dataclass
+from datetime import date, datetime, time
 import json
 import logging
 import math
@@ -9,14 +10,13 @@ from pathlib import Path
 
 from config.companies import get_company
 from config.model_config import ModelId
-from config.settings import SETTINGS, manila_now
+from config.settings import MANILA_TIMEZONE, SETTINGS, as_manila_time, manila_now
 from src.data.calendar import PSETradingCalendar
 from src.data.validator import OhlcvRecord, require_chronological_records
 from src.inference.next_day import CompanyNextDayForecast, NextDayPrediction
 from src.ledger.schema import (
     ForecastIssued,
     ForecastOutcomeObserved,
-    LedgerValidationError,
     NAIVE_MODEL_VERSION,
 )
 from src.ledger.store import AppendResult, ForecastLedger
@@ -27,10 +27,18 @@ from src.training.production_refit import (
 
 
 LOGGER = logging.getLogger(__name__)
+PSE_MARKET_OPEN = time(9, 30)
 
 
 class LedgerLifecycleError(RuntimeError):
     """Raised when EOD observations and prospective forecasts do not align."""
+
+
+@dataclass(frozen=True, slots=True)
+class CompanyIssuance:
+    forecast: CompanyNextDayForecast
+    records: Sequence[OhlcvRecord]
+    model_versions: Mapping[ModelId, str]
 
 
 def production_model_versions(
@@ -160,9 +168,75 @@ def issue_company_forecasts(
     calendar: PSETradingCalendar,
     production_run_id: str | None = None,
     source_commit: str | None = None,
+    now: datetime | None = None,
 ) -> tuple[AppendResult, ...]:
     """Append three deployed forecasts and the same-origin Naive benchmark."""
 
+    return issue_forecasts(
+        ledger,
+        (CompanyIssuance(forecast, records, model_versions),),
+        calendar=calendar,
+        production_run_id=production_run_id,
+        source_commit=source_commit,
+        now=now,
+    )
+
+
+def issue_forecasts(
+    ledger: ForecastLedger,
+    companies: Sequence[CompanyIssuance],
+    *,
+    calendar: PSETradingCalendar,
+    production_run_id: str | None = None,
+    source_commit: str | None = None,
+    now: datetime | None = None,
+) -> tuple[AppendResult, ...]:
+    """Validate the company batch and append only while every target is prospective."""
+
+    issuances = [
+        event
+        for company in companies
+        for event in _build_company_issuances(
+            company.forecast,
+            company.records,
+            model_versions=company.model_versions,
+            calendar=calendar,
+            production_run_id=production_run_id,
+            source_commit=source_commit,
+        )
+    ]
+
+    def check_cutoff() -> None:
+        checked_at = manila_now() if now is None else as_manila_time(now)
+        for company in companies:
+            forecast = company.forecast
+            market_open = datetime.combine(forecast.forecast_for, PSE_MARKET_OPEN, MANILA_TIMEZONE)
+            if checked_at >= market_open:
+                raise LedgerLifecycleError(
+                    f"{forecast.symbol} forecast target {forecast.forecast_for} has reached "
+                    f"market open ({market_open.isoformat()}). "
+                    "Wait for the next official EOD report and rerun."
+                )
+
+    check_cutoff()
+    results = ledger.append_issuances(issuances, before_write=check_cutoff)
+    LOGGER.info(
+        "Prospective issuance completed companies=%d appended=%d",
+        len(companies),
+        sum(result.appended for result in results),
+    )
+    return results
+
+
+def _build_company_issuances(
+    forecast: CompanyNextDayForecast,
+    records: Sequence[OhlcvRecord],
+    *,
+    model_versions: Mapping[ModelId, str],
+    calendar: PSETradingCalendar,
+    production_run_id: str | None,
+    source_commit: str | None,
+) -> list[ForecastIssued]:
     company = get_company(forecast.symbol)
     history = tuple(records)
     require_chronological_records(history)
@@ -228,11 +302,4 @@ def issue_company_forecasts(
             source_commit=source_commit,
         )
     )
-    results = ledger.append_issuances(issuances)
-    LOGGER.info(
-        "Prospective forecasts issued symbol=%s target=%s appended=%d",
-        company.symbol,
-        forecast.forecast_for,
-        sum(result.appended for result in results),
-    )
-    return results
+    return issuances

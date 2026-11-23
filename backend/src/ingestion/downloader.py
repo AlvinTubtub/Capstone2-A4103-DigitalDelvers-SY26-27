@@ -1,4 +1,4 @@
-"""Download official PSE EDGE EOD PDFs with bounded transient retries."""
+"""Download and stage official PSE EOD PDFs with bounded transient retries."""
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -6,11 +6,15 @@ from datetime import date, timedelta
 import logging
 import os
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from src.data.calendar import PSETradingCalendar
 from src.ingestion.config import DEFAULT_INGESTION_SETTINGS, IngestionSettings, PDF_SUFFIX
+from src.ingestion.parser import PdfParseError, parse_pdf
+from src.ingestion.validator import ExtractedQuoteValidationError, validate_extracted_quotes
 
 
 LOGGER = logging.getLogger(__name__)
@@ -47,6 +51,18 @@ def report_url(report_date: date, *, base_url: str = DEFAULT_INGESTION_SETTINGS.
     return f"{base_url.rstrip('/')}/{remote_name}"
 
 
+def report_sources(
+    report_date: date, *, settings: IngestionSettings
+) -> tuple[tuple[str, str], ...]:
+    """Return the primary report and the official archive copy in lookup order."""
+
+    archive_path = report_date.strftime("%Y/%m/stockQuotes_%m%d%Y.pdf")
+    return (
+        ("primary", report_url(report_date, base_url=settings.base_url)),
+        ("archive", f"{settings.archive_base_url.rstrip('/')}/{archive_path}"),
+    )
+
+
 def report_filename(report_date: date) -> str:
     return f"{report_date.isoformat()}{PDF_SUFFIX}"
 
@@ -61,16 +77,53 @@ def _retry_delay(settings: IngestionSettings, attempt: int) -> float:
     return settings.backoff_base_seconds**attempt
 
 
-def _write_download_atomically(destination: Path, content: bytes) -> None:
-    if not content:
-        raise OSError("PSE EDGE returned an empty response body")
-    temporary = destination.with_name(f".{destination.name}.part")
-    try:
-        temporary.write_bytes(content)
-        os.replace(temporary, destination)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
+def _stage_validated_report(
+    destination: Path, content: bytes, *, report_date: date, settings: IngestionSettings
+) -> None:
+    # Keep the canonical filename during validation so the parser checks the
+    # embedded date, then publish to the local cache only after validation.
+    with TemporaryDirectory(dir=destination.parent) as directory:
+        staged = Path(directory) / destination.name
+        staged.write_bytes(content)
+        validate_extracted_quotes(parse_pdf(staged, settings=settings), report_dates=(report_date,))
+        os.replace(staged, destination)
+
+
+def _fetch_report(
+    url: str,
+    *,
+    settings: IngestionSettings,
+    fetcher: Fetcher,
+    sleep_fn: Callable[[float], None],
+) -> FetchResponse:
+    last_error = "unknown download failure"
+    for attempt in range(1, settings.max_retries + 1):
+        try:
+            response = fetcher(url, settings.request_timeout_seconds)
+        except HTTPError as exc:
+            response = FetchResponse(exc.code, b"")
+        except (URLError, TimeoutError, OSError) as exc:
+            response = None
+            last_error = f"{type(exc).__name__}: {exc}"
+
+        if response is not None:
+            status = response.status_code
+            if status in (200, 404):
+                return response
+            last_error = f"HTTP {status}"
+            if status != 429 and status < 500:
+                break
+
+        LOGGER.warning(
+            "Transient EOD download failure url=%s attempt=%d/%d error=%s",
+            url,
+            attempt,
+            settings.max_retries,
+            last_error,
+        )
+        if attempt < settings.max_retries:
+            sleep_fn(_retry_delay(settings, attempt))
+    raise OSError(last_error)
 
 
 def download_one(
@@ -88,56 +141,27 @@ def download_one(
         LOGGER.info("EOD report already present date=%s path=%s", report_date, destination)
         return "already_present", destination, None
 
-    url = report_url(report_date, base_url=settings.base_url)
-    last_error = "unknown download failure"
-    for attempt in range(1, settings.max_retries + 1):
+    for source, url in report_sources(report_date, settings=settings):
         try:
-            response = fetcher(url, settings.request_timeout_seconds)
-            status_code = response.status_code
-            content = response.content
-        except HTTPError as exc:
-            status_code = exc.code
-            content = b""
-        except (URLError, TimeoutError, OSError) as exc:
-            last_error = f"{type(exc).__name__}: {exc}"
-            LOGGER.warning(
-                "Transient EOD download failure date=%s attempt=%d/%d error=%s",
-                report_date,
-                attempt,
-                settings.max_retries,
-                last_error,
-            )
-            if attempt < settings.max_retries:
-                sleep_fn(_retry_delay(settings, attempt))
+            response = _fetch_report(url, settings=settings, fetcher=fetcher, sleep_fn=sleep_fn)
+            if response.status_code == 404:
+                LOGGER.info("EOD report HTTP 404 date=%s source=%s url=%s", report_date, source, url)
                 continue
-            return "failed", None, last_error
-
-        if status_code == 200:
-            try:
-                _write_download_atomically(destination, content)
-            except OSError as exc:
-                return "failed", None, f"Could not save report: {exc}"
-            LOGGER.info("Downloaded EOD report date=%s bytes=%d", report_date, len(content))
-            return "downloaded", destination, None
-        if status_code == 404:
-            LOGGER.info("EOD report unpublished date=%s", report_date)
-            return "unpublished", None, None
-        if status_code == 429 or status_code >= 500:
-            last_error = f"HTTP {status_code}"
-            LOGGER.warning(
-                "Transient PSE EDGE response date=%s attempt=%d/%d status=%d",
-                report_date,
-                attempt,
-                settings.max_retries,
-                status_code,
+            _stage_validated_report(
+                destination, response.content, report_date=report_date, settings=settings
             )
-            if attempt < settings.max_retries:
-                sleep_fn(_retry_delay(settings, attempt))
-                continue
-            return "failed", None, last_error
-        return "failed", None, f"HTTP {status_code}"
+        except (OSError, PdfParseError, ExtractedQuoteValidationError) as exc:
+            message = f"{source} ({url}): {exc}"
+            LOGGER.error("EOD report rejected date=%s %s", report_date, message)
+            return "failed", None, message
 
-    return "failed", None, last_error
+        LOGGER.info(
+            "Downloaded EOD report date=%s source=%s url=%s bytes=%d",
+            report_date, source, url, len(response.content),
+        )
+        return "downloaded", destination, None
+
+    return "unpublished", None, None
 
 
 def download_reports(
@@ -148,13 +172,14 @@ def download_reports(
     fetcher: Fetcher = _fetch,
     sleep_fn: Callable[[float], None] = time.sleep,
 ) -> DownloadResult:
-    """Download every calendar date inclusively; 404 dates remain nonfatal."""
+    """Download expected PSE sessions within the inclusive date range."""
 
-    if start_date > end_date:
-        return DownloadResult()
     result = DownloadResult()
-    current = start_date
-    while current <= end_date:
+    calendar = PSETradingCalendar()
+    for offset in range((end_date - start_date).days + 1):
+        current = start_date + timedelta(days=offset)
+        if not calendar.is_trading_day(current):
+            continue
         status, path, message = download_one(
             current,
             settings=settings,
@@ -169,5 +194,4 @@ def download_reports(
             result.unpublished.append(current)
         else:
             result.failed.append((current, message or "unknown download failure"))
-        current += timedelta(days=1)
     return result

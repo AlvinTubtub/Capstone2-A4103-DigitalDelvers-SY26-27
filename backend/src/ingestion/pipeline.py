@@ -7,15 +7,16 @@ import logging
 from pathlib import Path
 
 from config.settings import as_manila_time, manila_now
+from src.data.calendar import PSETradingCalendar
 from src.ingestion.config import (
     DEFAULT_INGESTION_SETTINGS,
     EARLIEST_SUPPORTED_REPORT_DATE,
     IngestionSettings,
     configured_symbols,
 )
-from src.ingestion.downloader import DownloadResult, download_reports
+from src.ingestion.downloader import DownloadResult, download_reports, report_sources
 from src.ingestion.merger import MergeSummary, merge_into_raw, validate_raw_file
-from src.ingestion.parser import ParseBatchResult, parse_reports
+from src.ingestion.parser import ParseBatchResult, parse_reports, report_date_from_filename
 from src.ingestion.validator import validate_extracted_quotes
 
 
@@ -130,33 +131,58 @@ def run_ingestion(
 
         available = downloads.available_reports
         if not available:
-            result.validation_status = "not_required_no_published_reports"
             if result.failed_downloads:
+                result.validation_status = "failed"
                 result.errors.append("One or more requested reports failed to download")
+            else:
+                result.validation_status = "not_required_no_published_reports"
             return result
 
         parsed = parse_function(available, settings=settings)
         result.parsed_reports.extend(parsed.parsed_reports)
         result.parse_errors.extend(parsed.errors)
         result.parse_warnings.extend(parsed.warnings)
-        if parsed.warnings:
-            result.errors.extend(parsed.warnings)
-        if not parsed.records:
-            result.errors.append("No valid configured-company rows were parsed")
+        if result.failed_downloads:
+            result.errors.append("One or more requested reports failed to download")
+        if result.parse_errors:
+            result.errors.append("One or more available reports failed to parse")
+
+        available_dates = tuple(
+            day for path in available if (day := report_date_from_filename(path)) is not None
+        )
+        if available_dates:
+            latest_available = max(available_dates)
+            calendar = PSETradingCalendar()
+            for missing in sorted(downloads.unpublished):
+                if (
+                    effective_start <= missing < latest_available <= effective_end
+                    and calendar.is_trading_day(missing)
+                ):
+                    sources = ", ".join(
+                        f"{source} ({url})" for source, url in report_sources(missing, settings=settings)
+                    )
+                    message = (
+                        f"Missing expected PSE trading session {missing} before available "
+                        f"session {latest_available}; HTTP 404 from {sources}"
+                    )
+                    LOGGER.error(message)
+                    result.errors.append(message)
+        if not result.successful:
             result.validation_status = "failed"
             return result
 
-        validated = validate_extracted_quotes(parsed.records)
+        validated = validate_extracted_quotes(parsed.records, report_dates=available_dates)
+        result.errors.extend(parsed.warnings)
+        if not result.successful:
+            result.validation_status = "failed"
+            return result
+        LOGGER.info("Validated EOD report coverage reports=%d quotes=%d", len(available), len(validated))
         result.merge_summaries.extend(
             merge_into_raw(validated, raw_dir=settings.raw_dir)
         )
         for summary in result.merge_summaries:
             validate_raw_file(summary.path)
         result.validation_status = "passed"
-        if result.failed_downloads:
-            result.errors.append("One or more requested reports failed to download")
-        if result.parse_errors:
-            result.errors.append("One or more available reports failed to parse")
     except Exception as exc:
         LOGGER.exception("EOD ingestion failed")
         result.validation_status = "failed"

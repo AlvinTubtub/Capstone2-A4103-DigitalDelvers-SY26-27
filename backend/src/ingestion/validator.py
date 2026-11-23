@@ -1,7 +1,8 @@
 """Validation for cleaned PSE quotation rows before raw-data merging."""
 
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Iterable
+from datetime import date
 from decimal import Decimal
 
 from src.data.validator import OhlcvValidationError, parse_ohlcv_record
@@ -21,12 +22,48 @@ def _require_value(value: Decimal | None, *, field: str, record: QuotationRecord
     return value
 
 
+def _require_report_coverage(
+    rows: tuple[QuotationRecord, ...],
+    report_dates: Iterable[date],
+) -> None:
+    targets = configured_symbols()
+    symbols_by_date: dict[date, set[str]] = defaultdict(set)
+    unusable_by_date: dict[date, set[str]] = defaultdict(set)
+    for record in rows:
+        symbols_by_date[record.report_date].add(record.symbol)
+        if None in (record.open, record.high, record.low, record.close, record.volume) or (
+            record.volume == 0
+        ):
+            unusable_by_date[record.report_date].add(record.symbol)
+
+    coverage_errors = []
+    for report_date in sorted(set(report_dates) | symbols_by_date.keys()):
+        missing = targets - symbols_by_date[report_date]
+        unusable = unusable_by_date[report_date]
+        if missing:
+            coverage_errors.append(f"{report_date}: missing symbols {', '.join(sorted(missing))}")
+        if unusable:
+            coverage_errors.append(
+                f"{report_date}: no usable quote for {', '.join(sorted(unusable))} "
+                "(missing OHLCV or zero volume)"
+            )
+    if coverage_errors:
+        raise ExtractedQuoteValidationError(
+            "Incomplete PSE report coverage; operator review required. "
+            + " | ".join(coverage_errors)
+        )
+
+
 def validate_extracted_quotes(
     records: Iterable[QuotationRecord],
+    *,
+    report_dates: Iterable[date] | None = None,
 ) -> tuple[QuotationRecord, ...]:
-    """Validate target membership, uniqueness, and all extracted market values."""
+    """Validate quotations and require full coverage when validating reports."""
 
     rows = tuple(records)
+    if report_dates is not None:
+        _require_report_coverage(rows, report_dates)
     if not rows:
         raise ExtractedQuoteValidationError("No configured-company quotation rows were extracted")
     targets = configured_symbols()
