@@ -2,10 +2,10 @@
   "symbol": "MBT",
   "name": "Metropolitan Bank & Trust Company",
   "sector": "Financials",
-  "previousClose": 60.95,
-  "predictedClose": 60.99704760980916,
-  "pesoChange": 0.04704760980915523,
-  "pctChange": 0.07719050009705535,
+  "previousClose": 60.85,
+  "predictedClose": 60.866713059770305,
+  "pesoChange": 0.016713059770303573,
+  "pctChange": 0.027465997979134876,
   "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 61.03575036729556,
-    "arima": 60.99704760980916,
-    "lstm": 61.00931785957645
+    "lag": 60.979624436412145,
+    "arima": 60.866713059770305,
+    "lstm": 60.89239527118848
   },
   "ohlcv": [
     {
@@ -13463,6 +13463,62 @@
       "low": 60.85,
       "close": 60.95,
       "volume": 2013350.0
+    },
+    {
+      "date": "2026-11-13",
+      "open": 61.0,
+      "high": 61.35,
+      "low": 60.85,
+      "close": 61.0,
+      "volume": 2526220.0
+    },
+    {
+      "date": "2026-11-16",
+      "open": 61.0,
+      "high": 61.35,
+      "low": 60.5,
+      "close": 61.0,
+      "volume": 3562340.0
+    },
+    {
+      "date": "2026-11-17",
+      "open": 61.0,
+      "high": 61.35,
+      "low": 60.9,
+      "close": 61.25,
+      "volume": 1055490.0
+    },
+    {
+      "date": "2026-11-18",
+      "open": 61.25,
+      "high": 61.35,
+      "low": 60.85,
+      "close": 60.95,
+      "volume": 1568090.0
+    },
+    {
+      "date": "2026-11-19",
+      "open": 61.0,
+      "high": 61.1,
+      "low": 60.85,
+      "close": 61.0,
+      "volume": 2059050.0
+    },
+    {
+      "date": "2026-11-20",
+      "open": 61.1,
+      "high": 61.25,
+      "low": 60.85,
+      "close": 60.95,
+      "volume": 3853300.0
+    },
+    {
+      "date": "2026-11-23",
+      "open": 60.95,
+      "high": 61.45,
+      "low": 60.85,
+      "close": 60.85,
+      "volume": 4555480.0
     }
   ],
   "backtestDates": [
@@ -13882,7 +13938,8 @@
     "2026-11-09",
     "2026-11-10",
     "2026-11-11",
-    "2026-11-12"
+    "2026-11-12",
+    "2026-11-13"
   ],
   "productionBacktestActual": [
     63.3,
@@ -13927,7 +13984,8 @@
     61.5,
     61.55,
     61.0,
-    60.95
+    60.95,
+    61.0
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13973,7 +14031,8 @@
       61.165096677224966,
       61.43565486768621,
       61.416380021712655,
-      61.12962443641214
+      61.12962443641214,
+      61.03575036729556
     ],
     "ARIMA": [
       63.24233135573277,
@@ -14018,7 +14077,8 @@
       61.32133820015543,
       61.44617595593443,
       61.52137671396417,
-      61.06797020783132
+      61.06797020783132,
+      60.99704760980916
     ],
     "LSTM": [
       63.31950615953615,
@@ -14063,7 +14123,8 @@
       61.19903687866567,
       61.46076494179347,
       61.527361535336546,
-      61.09826866055001
+      61.09826866055001,
+      61.00931785957645
     ],
     "Naive baseline": [
       63.05,
@@ -14108,7 +14169,8 @@
       61.2,
       61.5,
       61.55,
-      61.0
+      61.0,
+      60.95
     ]
   },
   "productionBacktestProvenance": [
@@ -16906,11 +16968,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "MBT",
+      "originDate": "2026-11-12",
+      "targetDate": "2026-11-13",
+      "actualClose": 61.0,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-c6fc07b0abef8ed0ed6ac3b9891ac7dfd32dd4f7cf5d7b2649cfa9c41b1828ee",
+          "method": "lag_reg",
+          "prediction": 61.03575036729556,
+          "error": 0.035750367295563024,
+          "modelVersion": "backend-from-scratch-v1:290b927646fd092b7b33d46a603cef943508db119d2e5bb83b57b6b566a1ad56",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:03.965059+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-62ac9261335c28ec51b8657778b829e0a28348ecd09dd2a6a7123846a62c580b",
+          "method": "arima",
+          "prediction": 60.99704760980916,
+          "error": -0.0029523901908419248,
+          "modelVersion": "backend-from-scratch-v1:ed90c348d417c83c19c86abffe1b6e41723f17419dfcee0407c3e346a3110a45",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:03.965059+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-9fe5b429908976b465b48fef8f8dc62b2bf0f294955aaf054e3c5b994ba895a2",
+          "method": "lstm",
+          "prediction": 61.00931785957645,
+          "error": 0.009317859576448484,
+          "modelVersion": "backend-from-scratch-v1:1773297d27ec31cc5ed1d40e6a7586e51eb3d80477e141d39492f5196490ee07",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:03.965059+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-ef8a8ba6738fadd8551ac2ccf61c3c8096d53af73dc4d15bda1e70b8163fef6e",
+          "method": "naive",
+          "prediction": 60.95,
+          "error": -0.04999999999999716,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:03.965059+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-11-13",
-  "dataAsOf": "2026-11-12",
-  "inferenceAt": "2026-11-12T16:03:03.965059+08:00",
+  "forecastDate": "2026-11-24",
+  "dataAsOf": "2026-11-23",
+  "inferenceAt": "2026-11-23T23:12:00.610364+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",

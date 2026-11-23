@@ -2,10 +2,10 @@
   "symbol": "PGOLD",
   "name": "Puregold Price Club, Inc.",
   "sector": "Services",
-  "previousClose": 38.9,
-  "predictedClose": 38.925546697628604,
-  "pesoChange": 0.02554669762860584,
-  "pctChange": 0.06567274454654458,
+  "previousClose": 39.75,
+  "predictedClose": 39.75,
+  "pesoChange": 0.0,
+  "pctChange": 0.0,
   "direction": "bullish",
   "model": "ARIMA",
   "metrics": {
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 38.90106183635228,
-    "arima": 38.925546697628604,
-    "lstm": 38.943309026523046
+    "lag": 39.75106183635228,
+    "arima": 39.75,
+    "lstm": 39.783130263451156
   },
   "ohlcv": [
     {
@@ -13463,6 +13463,62 @@
       "low": 38.6,
       "close": 38.9,
       "volume": 1686200.0
+    },
+    {
+      "date": "2026-11-13",
+      "open": 39.75,
+      "high": 40.55,
+      "low": 39.25,
+      "close": 40.5,
+      "volume": 2796200.0
+    },
+    {
+      "date": "2026-11-16",
+      "open": 40.5,
+      "high": 41.0,
+      "low": 39.5,
+      "close": 39.75,
+      "volume": 1512600.0
+    },
+    {
+      "date": "2026-11-17",
+      "open": 39.75,
+      "high": 42.4,
+      "low": 39.75,
+      "close": 40.1,
+      "volume": 2939500.0
+    },
+    {
+      "date": "2026-11-18",
+      "open": 40.0,
+      "high": 41.1,
+      "low": 40.0,
+      "close": 40.6,
+      "volume": 2257100.0
+    },
+    {
+      "date": "2026-11-19",
+      "open": 40.6,
+      "high": 41.1,
+      "low": 39.8,
+      "close": 40.2,
+      "volume": 1725700.0
+    },
+    {
+      "date": "2026-11-20",
+      "open": 40.25,
+      "high": 40.25,
+      "low": 39.05,
+      "close": 39.75,
+      "volume": 1095800.0
+    },
+    {
+      "date": "2026-11-23",
+      "open": 39.75,
+      "high": 40.15,
+      "low": 39.5,
+      "close": 39.75,
+      "volume": 1967300.0
     }
   ],
   "backtestDates": [
@@ -13882,7 +13938,8 @@
     "2026-11-09",
     "2026-11-10",
     "2026-11-11",
-    "2026-11-12"
+    "2026-11-12",
+    "2026-11-13"
   ],
   "productionBacktestActual": [
     39.85,
@@ -13927,7 +13984,8 @@
     39.65,
     39.25,
     39.25,
-    38.9
+    38.9,
+    40.5
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -13973,7 +14031,8 @@
       39.10106183635228,
       39.65106183635228,
       39.25106183635228,
-      39.25106183635228
+      39.25106183635228,
+      38.90106183635228
     ],
     "ARIMA": [
       40.0,
@@ -14018,7 +14077,8 @@
       39.13284575409392,
       39.609855189440765,
       39.27919622586126,
-      39.25
+      39.25,
+      38.925546697628604
     ],
     "LSTM": [
       40.03058535464923,
@@ -14063,7 +14123,8 @@
       39.14132423589414,
       39.64961784344533,
       39.286133827362356,
-      39.2769352400441
+      39.2769352400441,
+      38.943309026523046
     ],
     "Naive baseline": [
       40.0,
@@ -14108,7 +14169,8 @@
       39.1,
       39.65,
       39.25,
-      39.25
+      39.25,
+      38.9
     ]
   },
   "productionBacktestProvenance": [
@@ -16906,11 +16968,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "PGOLD",
+      "originDate": "2026-11-12",
+      "targetDate": "2026-11-13",
+      "actualClose": 40.5,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-f76de1c7e97963be922843cd4d1701e30e8db3c8a1e4c76ff11a43f919187ed4",
+          "method": "lag_reg",
+          "prediction": 38.90106183635228,
+          "error": -1.5989381636477233,
+          "modelVersion": "backend-from-scratch-v1:f1074a8f199f69c6dab9f48e6532992172d7e3faa2b6ab2c6869ddf666d44b62",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:05.429298+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-72f7a92cad0c8ceb2801de2f70c9730f3f15dc95ac1c985d9777c649cf58c3fd",
+          "method": "arima",
+          "prediction": 38.925546697628604,
+          "error": -1.5744533023713956,
+          "modelVersion": "backend-from-scratch-v1:ab1bb5a3ea4102c3ae2557ede179c03635d6c07c0c0486c6c55896efa82307a4",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:05.429298+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-0bfbb314c62e75f093b9c4aa838ff444e7c3f30be970c39de6d1c8f5d88e233e",
+          "method": "lstm",
+          "prediction": 38.943309026523046,
+          "error": -1.5566909734769538,
+          "modelVersion": "backend-from-scratch-v1:69c7631800a35b9775b756f37b937c2d7385c9759e1e864db8d1cb3eabdcf878",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:05.429298+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-f4984bd65d77b4067c4fdf5e503135a719bc99ea6649cd0bfaa3c1fcf4acdf65",
+          "method": "naive",
+          "prediction": 38.9,
+          "error": -1.6000000000000014,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-12T16:03:05.429298+08:00",
+          "observedAt": "2026-11-23T23:11:56.245379+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-11-13",
-  "dataAsOf": "2026-11-12",
-  "inferenceAt": "2026-11-12T16:03:05.429298+08:00",
+  "forecastDate": "2026-11-24",
+  "dataAsOf": "2026-11-23",
+  "inferenceAt": "2026-11-23T23:12:01.497367+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
