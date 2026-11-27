@@ -2,8 +2,8 @@
   "symbol": "SCC",
   "name": "Semirara Mining and Power Corporation",
   "sector": "Mining and Oil",
-  "previousClose": 8.92,
-  "predictedClose": 8.92,
+  "previousClose": 8.87,
+  "predictedClose": 8.87,
   "pesoChange": 0.0,
   "pctChange": 0.0,
   "direction": "bullish",
@@ -35,9 +35,9 @@
     }
   },
   "nextClose": {
-    "lag": 9.041150904811444,
-    "arima": 8.92,
-    "lstm": 8.920293181592392
+    "lag": 8.92404501397224,
+    "arima": 8.87,
+    "lstm": 8.869925222576772
   },
   "ohlcv": [
     {
@@ -13543,6 +13543,14 @@
       "low": 8.89,
       "close": 8.92,
       "volume": 1793000.0
+    },
+    {
+      "date": "2026-11-27",
+      "open": 9.0,
+      "high": 9.24,
+      "low": 8.87,
+      "close": 8.87,
+      "volume": 15986000.0
     }
   ],
   "backtestDates": [
@@ -13966,7 +13974,8 @@
     "2026-11-13",
     "2026-11-24",
     "2026-11-25",
-    "2026-11-26"
+    "2026-11-26",
+    "2026-11-27"
   ],
   "productionBacktestActual": [
     17.24,
@@ -14015,7 +14024,8 @@
     10.4,
     8.92,
     8.87,
-    8.92
+    8.92,
+    8.87
   ],
   "productionBacktestByModel": {
     "Lag-Informed Regression": [
@@ -14065,7 +14075,8 @@
       10.19977876696894,
       8.46197865429749,
       9.05065056479312,
-      8.922475043939292
+      8.922475043939292,
+      9.041150904811444
     ],
     "ARIMA": [
       17.5,
@@ -14114,7 +14125,8 @@
       10.24,
       8.42,
       8.92,
-      8.87
+      8.87,
+      8.92
     ],
     "LSTM": [
       17.49861832574737,
@@ -14163,7 +14175,8 @@
       10.232057464461247,
       8.409461693105769,
       8.917236513455578,
-      8.869325817060487
+      8.869325817060487,
+      8.920293181592392
     ],
     "Naive baseline": [
       17.5,
@@ -14212,7 +14225,8 @@
       10.24,
       8.42,
       8.92,
-      8.87
+      8.87,
+      8.92
     ]
   },
   "productionBacktestProvenance": [
@@ -17270,11 +17284,76 @@
           "artifactTrainedThrough": null
         }
       }
+    },
+    {
+      "source": "prospective",
+      "symbol": "SCC",
+      "originDate": "2026-11-26",
+      "targetDate": "2026-11-27",
+      "actualClose": 8.87,
+      "models": {
+        "Lag-Informed Regression": {
+          "forecastId": "forecastph-v1-9240b219468c4e8f2e2dc0e5720490d9b84974662c5c00827cc489fdbe95afca",
+          "method": "lag_reg",
+          "prediction": 9.041150904811444,
+          "error": 0.17115090481144435,
+          "modelVersion": "backend-from-scratch-v1:bcbae9c6bcedf42ad1f1f6954632f8ec288143b768b583f0f8ed39033c344e94",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-26T16:02:45.169354+08:00",
+          "observedAt": "2026-11-27T16:02:32.313991+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "ARIMA": {
+          "forecastId": "forecastph-v1-155919b879cdf5025510ca2d155ad895e20a418b0ee2208b36e6d96284d08cbc",
+          "method": "arima",
+          "prediction": 8.92,
+          "error": 0.05000000000000071,
+          "modelVersion": "backend-from-scratch-v1:b45efe2428a89fca7f9d467bdb360edacc9df563ec655463c36f60439ac824f0",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-26T16:02:45.169354+08:00",
+          "observedAt": "2026-11-27T16:02:32.313991+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "LSTM": {
+          "forecastId": "forecastph-v1-d647f96d40fa758f1b18fba3bbe0cd62ac33c93f86de98a4a7ac9867637824d7",
+          "method": "lstm",
+          "prediction": 8.920293181592392,
+          "error": 0.0502931815923926,
+          "modelVersion": "backend-from-scratch-v1:a93b77ee89b04fc9f28da7ebeeb81f385e517221c4927f00097f6895277c27fb",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-26T16:02:45.169354+08:00",
+          "observedAt": "2026-11-27T16:02:32.313991+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        },
+        "Naive baseline": {
+          "forecastId": "forecastph-v1-8e80724a318944dc57e251d4de08919c019c00955547a3c86ff68cbc5e695157",
+          "method": "naive",
+          "prediction": 8.92,
+          "error": 0.05000000000000071,
+          "modelVersion": "naive-close-persistence-v1",
+          "productionRunId": "34867053589",
+          "sourceCommit": "8359270bffcd43dd41830a01bb2f4e2d4c527b56",
+          "createdAt": "2026-11-26T16:02:45.169354+08:00",
+          "observedAt": "2026-11-27T16:02:32.313991+08:00",
+          "artifactSha256": null,
+          "artifactCreatedAt": null,
+          "artifactTrainedThrough": null
+        }
+      }
     }
   ],
-  "forecastDate": "2026-11-27",
-  "dataAsOf": "2026-11-26",
-  "inferenceAt": "2026-11-26T16:02:45.169354+08:00",
+  "forecastDate": "2026-12-01",
+  "dataAsOf": "2026-11-27",
+  "inferenceAt": "2026-11-27T16:02:39.075598+08:00",
   "backtestMethodology": {
     "source": "chronological_out_of_sample_evaluation",
     "alignment": "common_target_date",
